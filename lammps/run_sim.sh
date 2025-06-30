@@ -18,7 +18,7 @@ if ! [[ "$TEMP" =~ ^[0-9]+$ ]]; then
 fi
 
 # Clone repository, navigate to directory, substitute temperature, and run LAMMPS
-git clone https://github.com/CamberCloud-Inc/prod_apps.git && \
-cd prod_apps/lammps/ && \
+# git clone https://github.com/CamberCloud-Inc/prod_apps.git && \
+# cd prod_apps/lammps/ && \
 sed -i "s/\$(temperature)/$TEMP/g" unbreakable.lmp && \
 lmp -in unbreakable.lmp
