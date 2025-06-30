@@ -1,12 +1,12 @@
 integrator = md
-nsteps = 100000
+nsteps = $(nsteps)
 dt = 0.001
 
 comm_mode = linear
 comm_grps = system
 
 gen-vel = yes
-gen-temp = 300
+gen-temp = $(temperature)
 
 cutoff-scheme = Verlet
 nstlist = 10
