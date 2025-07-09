@@ -1,0 +1,2 @@
+sample,fastq_1,fastq_2,strandedness
+MT_REP1,s3://camber-open-storage-prod/public/fastq/rnaseq/MT_rep1_1_Ch6.fastq.gz,s3://camber-open-storage-prod/public/fastq/rnaseq/MT_rep1_2_Ch6.fastq.gz,auto
