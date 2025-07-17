@@ -1,41 +1,4 @@
-{
-  "name": "mag9",
-  "description": "Me6tagenomic analysis enables the study of microbial communities, providing insights into their diversity and roles in various environments.",
-  "content": "2132",
-  "imageUrl": "https://image.jimcdn.com/app/cms/image/transf/none/path/sc907c1c4cc8c1f1e/image/iaeec5d7cb3c71fb9/version/1570524529/image.png",
-  "command": "rm -rf prod_apps && git clone git@github.com:CamberCloud-Inc/prod_apps.git && cd ./prod_apps/nextflow/mag/ && sh run_mag.sh",
-  "engineType": "NEXTFLOW",
-  "jobConfig": [
-    {
-      "type": "Select",
-      "label": "System Size",
-      "name": "system_size",
-      "options": [
-        {
-          "label": "default",
-          "value": "default",
-          "mapValue": {
-            "nodeSize": "XSMALL",
-            "numNodes": 8,
-            "withGpu": false
-          }
-        },
-        {
-          "label": "XSMALL",
-          "value": "1",
-          "mapValue": {
-            "nodeSize": "XSMALL",
-            "numNodes": 1,
-            "withGpu": false
-          }
-        }
-      ],
-      "defaultValue": "default"
-    }
-  ],
-  "spec": 
-
-  [
+[
   {
     "label": "input",
     "name": "input",
@@ -1503,6 +1466,3 @@
     "type": "Input"
   }
 ]
-
-
-}
