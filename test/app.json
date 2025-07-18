@@ -1,0 +1,32 @@
+{
+  "name": "test44",
+  "title": "test42",
+  "description": "purely for test porposes",
+  "content": "TBD",
+  "imageUrl": "",
+  "command": "test",
+  "engineType": "LAMMPS",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "default",
+      "name": "default",
+      "hidden": false,
+      "description": "123123",
+      "options": [
+        {
+          "label": "defaults1",
+          "value": "default",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "default"
+    }
+  ],
+  "spec": [
+  ]
+}

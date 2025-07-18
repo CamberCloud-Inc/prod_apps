@@ -1,6 +1,7 @@
 {
   "name": "lammps_gen",
-  "description": "Generic LAMMPS App",
+  "title": "Generic LAMMPS",
+  "description": "Accepts path to LAMMPS project folder & .inc filename as entry point for a simulation",
   "content": "TBD",
   "imageUrl": "",
   "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cd prod_apps/lammps_gen && sh ./run_sim.sh",
