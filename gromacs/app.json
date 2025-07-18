@@ -5,7 +5,7 @@
   "content": "TBD",
   "version": "1.0",
   "engineType": "GROMACS",
-  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cd prod_apps/grommacs && sh ./sim.sh",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cd prod_apps/gromacs && sh ./sim.sh",
   "imageUrl": "https://docs.dev.camber.cloud/demos/30-applications/03-molecular-dynamics/gromacs/sim.gif",
   "spec": [],
   "jobConfig": [
