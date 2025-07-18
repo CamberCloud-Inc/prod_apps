@@ -1,0 +1,41 @@
+{
+  "name": "lammps_gen",
+  "description": "Generic LAMMPS App",
+  "content": "TBD",
+  "imageUrl": "",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cd prod_apps/lammps_gen && sh ./run_sim.sh",
+  "engineType": "LAMMPS",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "default",
+      "name": "default",
+      "hidden": true,
+      "description": "",
+      "options": [
+        {
+          "label": "defaults",
+          "value": "default",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "default"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Multi Stash File",
+      "label": "Simulation Path",
+      "name": "sim_env",
+      "description": "Path to the folder with simulation scripts and excecution enviroment",
+      "defaultValue": [],
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    }
+  ]
+}

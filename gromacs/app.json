@@ -1,0 +1,39 @@
+{
+  "name": "gromacs",
+  "title": "Protein in Electrolyte",
+  "description": "It simulates a protein in electrolyte solution.",
+  "content": "TBD",
+  "version": "1.0",
+  "engineType": "GROMACS",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cd prod_apps/grommacs && sh ./sim.sh",
+  "imageUrl": "https://docs.dev.camber.cloud/demos/30-applications/03-molecular-dynamics/gromacs/sim.gif",
+  "spec": [],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "options": [
+        {
+          "label": "default",
+          "value": "default",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 8,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XSMALL",
+          "value": "1",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "default"
+    }
+  ]
+}
