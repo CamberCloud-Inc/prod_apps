@@ -1,5 +1,5 @@
 {
-  "name": "gromacs",
+  "name": "gromacs5",
   "title": "Protein in Electrolyte",
   "description": "It simulates a protein in electrolyte solution.",
   "content": "TBD",
@@ -13,6 +13,7 @@
       "type": "Select",
       "label": "System Size",
       "name": "system_size",
+      "hidden": false,
       "options": [
         {
           "label": "default",
@@ -24,7 +25,7 @@
           }
         },
         {
-          "label": "XSMALL",
+          "label": "XSMALL1",
           "value": "1",
           "mapValue": {
             "nodeSize": "XSMALL",

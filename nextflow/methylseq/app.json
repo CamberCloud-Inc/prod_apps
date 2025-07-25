@@ -1,0 +1,77 @@
+{
+  "name": "methylseq_tmp",
+  "description": "nf-core/methylseq is a bioinformatics analysis pipeline used for Methylation (Bisulfite) sequencing data. It pre-processes raw data from FastQ inputs, aligns the reads and performs extensive quality-control on the results.",
+  "content": "<h2 class=\"heading-node\"><strong>Introduction</strong></h2><p class=\"text-node\"><strong>nf-core/methylseq</strong> is a bioinformatics analysis pipeline used for Methylation (Bisulfite) sequencing data. It pre-processes raw data from FastQ inputs, aligns the reads and performs extensive quality-control on the results.</p><img src=\"https://raw.githubusercontent.com/nf-core/methylseq/4.0.0//docs/images/4.0.0_metromap.png\" alt=\"nf-core/methylseq metro map\" title=\"\" width=\"392\" height=\"256\"><p class=\"text-node\">The pipeline is built using <a class=\"link\" href=\"https://www.nextflow.io/\"><u>Nextflow</u></a>, a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker / Singularity containers making installation trivial and results highly reproducible.</p><p class=\"text-node\">On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources.The results obtained from the full-sized test can be viewed on the <a class=\"link\" href=\"https://nf-co.re/methylseq/results\"><u>nf-core website</u></a>.</p><blockquote class=\"block-node\"><p class=\"text-node\"><em>Read more about </em><strong><em>Bisulfite Sequencing &amp; Three-Base Aligners</em></strong><em> used in this pipeline </em><a class=\"link\" href=\"https://nf-co.re/methylseq/4.0.0/docs/bs-seq-primer/\"><em><u>here</u></em></a></p></blockquote><h2 class=\"heading-node\"><strong>Pipeline Summary</strong></h2><p class=\"text-node\">The pipeline allows you to choose between running either <a class=\"link\" href=\"https://github.com/FelixKrueger/Bismark\"><u>Bismark</u></a> or <a class=\"link\" href=\"https://github.com/brentp/bwa-meth\"><u>bwa-meth</u></a> / <a class=\"link\" href=\"https://github.com/dpryan79/methyldackel\"><u>MethylDackel</u></a>.</p><p class=\"text-node\">Choose between workflows by using <code class=\"inline\" spellcheck=\"false\">--aligner bismark</code> (default, uses bowtie2 for alignment), <code class=\"inline\" spellcheck=\"false\">--aligner bismark_hisat</code> or <code class=\"inline\" spellcheck=\"false\">--aligner bwameth</code>. For higher performance, the pipeline can leverage the <a class=\"link\" href=\"https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam_meth.html\"><u>Parabricks implementation of bwa-meth (fq2bammeth)</u></a>, which implements the baseline tool <code class=\"inline\" spellcheck=\"false\">bwa-meth</code> in a performant method using fq2bam (BWA-MEM + GATK) as a backend for processing on GPU. To use this option, include the <code class=\"inline\" spellcheck=\"false\">gpu</code> profile along with <code class=\"inline\" spellcheck=\"false\">--aligner bwameth</code>.</p>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/methylseq/1.6//docs/images/nf-core-methylseq_logo.png",
+  "command": "nextflow run nf-core/methylseq --input ${input} --outdir ${output} --genome ${genome} -r ${revision}",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Selecting a preset will prefill the node configuration below. You can still edit the values.",
+      "options": [
+        {
+          "label": "Default",
+          "value": "default",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "default"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Input",
+      "name": "input",
+      "description": "",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Stash File",
+      "label": "Output",
+      "name": "output",
+      "description": "",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Input",
+      "label": "Revision",
+      "name": "revision",
+      "description": "",
+      "defaultValue": "3.0.0",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Select",
+      "label": "Genome",
+      "name": "genome",
+      "description": "",
+      "defaultValue": "GRCh37",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "GRCh38",
+          "value": "GRCh37"
+        }
+      ]
+    }
+  ]
+}

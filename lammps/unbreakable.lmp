@@ -60,14 +60,14 @@ dump trajectory all custom 100 trajectory.lammpstrj id mol type x y z
 
 
 compute Tmid cnt_mid temp
-thermo $(temperature)
+thermo 300
 thermo_style custom step temp etotal v_Lcnt v_Fcnt
 thermo_modify temp Tmid line yaml
 
 timestep 1.0
 run 5000
 
-velocity cnt_top set 0.0005 0 0
-velocity cnt_bot set -0.0005 0 0
+velocity cnt_top set ${breakVelocity} 0 0
+velocity cnt_bot set -${breakVelocity} 0 0
 
 run 10000
