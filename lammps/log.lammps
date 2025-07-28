@@ -1,0 +1,157 @@
+LAMMPS (29 Aug 2024 - Update 1)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (src/src/comm.cpp:98)
+  using 1 OpenMP thread(s) per MPI task
+# Python script (License CC BY 4.0)
+# By Simon Gravelle, Jacob R. Gissinger, and Axel Kohlmeyer
+# The DOI will be added upon publication
+# Find more on GitHub: https://github.com/lammpstutorials
+
+# LEFT_FORCE_DURATION will be passed via -var flag
+# If not passed, LAMMPS will error and show the usage
+
+units real
+atom_style molecular
+boundary f f f
+
+pair_style lj/cut 14.0
+bond_style harmonic
+angle_style harmonic
+dihedral_style opls
+improper_style harmonic
+special_bonds lj 0.0 0.0 0.5
+
+read_data unbreakable.data
+Reading data file ...
+  orthogonal box = (-60 -40 -40) to (60 40 40)
+  2 by 2 by 2 MPI processor grid
+  reading atoms ...
+  700 atoms
+  scanning bonds ...
+  3 = max bonds/atom
+  scanning angles ...
+  3 = max angles/atom
+  scanning dihedrals ...
+  12 = max dihedrals/atom
+  scanning impropers ...
+  3 = max impropers/atom
+  orthogonal box = (-60 -40 -40) to (60 40 40)
+  2 by 2 by 2 MPI processor grid
+  reading bonds ...
+  1035 bonds
+  reading angles ...
+  2040 angles
+  reading dihedrals ...
+  4030 dihedrals
+  reading impropers ...
+  670 impropers
+Finding 1-2 1-3 1-4 neighbors ...
+  special bond factors lj:    0        0        0.5     
+  special bond factors coul:  0        0        0       
+     3 = max # of 1-2 neighbors
+     6 = max # of 1-3 neighbors
+    18 = max # of 1-4 neighbors
+    18 = max # of special neighbors
+  special bonds CPU = 0.001 seconds
+  read_data CPU = 0.052 seconds
+include unbreakable.inc
+# LAMMPS Input File (License CC BY 4.0)
+# By Simon Gravelle, Jacob R. Gissinger, and Axel Kohlmeyer
+# The DOI will be added upon publication
+# Find more on GitHub: https://github.com/lammpstutorials
+
+pair_coeff 1 1 0.066 3.4
+bond_coeff 1 469 1.4
+angle_coeff 1 63 120
+dihedral_coeff 1 0 7.25 0 0
+improper_coeff 1 5 180
+
+group carbon_atoms type 1
+700 atoms in group carbon_atoms
+variable xmax equal bound(carbon_atoms,xmax)-0.5
+variable xmin equal bound(carbon_atoms,xmin)+0.5
+region rtop block ${xmax} INF INF INF INF INF
+region rtop block 27.37 INF INF INF INF INF
+region rbot block INF ${xmin} INF INF INF INF
+region rbot block INF -27.37 INF INF INF INF
+region rmid block ${xmin} ${xmax} INF INF INF INF
+region rmid block -27.37 ${xmax} INF INF INF INF
+region rmid block -27.37 27.37 INF INF INF INF
+
+group cnt_top region rtop
+10 atoms in group cnt_top
+group cnt_bot region rbot
+10 atoms in group cnt_bot
+group cnt_mid region rmid
+680 atoms in group cnt_mid
+set group cnt_top mol 1
+Setting atom values ...
+  10 settings made for mol
+set group cnt_bot mol 2
+Setting atom values ...
+  10 settings made for mol
+set group cnt_mid mol 3
+Setting atom values ...
+  680 settings made for mol
+
+variable xmax_del equal ${xmax}-2
+variable xmax_del equal 27.37-2
+variable xmin_del equal ${xmin}+2
+variable xmin_del equal -27.37+2
+region rdel block ${xmin_del} ${xmax_del} INF INF INF INF
+region rdel block -25.37 ${xmax_del} INF INF INF INF
+region rdel block -25.37 25.37 INF INF INF INF
+group rdel region rdel
+630 atoms in group rdel
+delete_atoms random fraction 0.02 no rdel NULL 2793 bond yes
+WARNING: Ignoring 'compress yes' for molecular system (src/src/delete_atoms.cpp:141)
+Deleted 7 atoms, new total = 693
+Deleted 21 bonds, new total = 1014
+Deleted 62 angles, new total = 1978
+Deleted 164 dihedrals, new total = 3866
+Deleted 27 impropers, new total = 643
+
+reset_atoms id sort yes
+Resetting atom IDs ...
+Generated 0 of 0 mixed pair_coeff terms from geometric mixing rule
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 16
+  ghost atom cutoff = 16
+  binsize = 8, bins = 15 10 10
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair lj/cut, perpetual
+      attributes: half, newton on
+      pair build: half/bin/newton
+      stencil: half/bin/3d
+      bin: standard
+Finding 1-2 1-3 1-4 neighbors ...
+  special bond factors lj:    0        0        0.5     
+  special bond factors coul:  0        0        0       
+     3 = max # of 1-2 neighbors
+     6 = max # of 1-3 neighbors
+    18 = max # of 1-4 neighbors
+    18 = max # of special neighbors
+  special bonds CPU = 0.001 seconds
+velocity cnt_mid create 300 48455 mom yes rot yes
+
+fix mynve1 cnt_top nve
+fix mynve2 cnt_bot nve
+fix mynvt cnt_mid nvt temp 300 300 100
+
+fix mysf1 cnt_top setforce 0 0 0
+fix mysf2 cnt_bot setforce 0 0 0
+velocity cnt_top set 0 0 0
+velocity cnt_bot set 0 NULL NULL
+
+variable Lcnt equal xcm(cnt_top,x)-xcm(cnt_bot,x)
+variable Fcnt equal f_mysf1[1]-f_mysf2[1]
+
+# Add trajectory dump
+dump trajectory all custom 100 trajectory.lammpstrj id mol type x y z
+
+# Remove this line completely:
+# dump bonds all local 100 bonds.dat index c_bond[*][1] c_bond[*][2]
+
+# --- Add this at the top to ensure all thermo goes to a single file ---
+log thermo_full.log
