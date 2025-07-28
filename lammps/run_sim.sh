@@ -33,9 +33,43 @@ echo "Using Python: $PYTHON_BIN"
 echo "Checking Python dependencies..."
 if ! $PYTHON_BIN -c "import MDAnalysis" 2>/dev/null; then
     echo "Installing Python requirements..."
-    $PYTHON_BIN -m pip install --user -r requirements.txt
+    
+    # Try different methods to install packages
+    if $PYTHON_BIN -m pip --version >/dev/null 2>&1; then
+        # pip module is available
+        $PYTHON_BIN -m pip install --user -r requirements.txt
+    elif command -v pip3 >/dev/null 2>&1; then
+        # pip3 command is available
+        pip3 install --user -r requirements.txt
+    elif command -v pip >/dev/null 2>&1; then
+        # pip command is available
+        pip install --user -r requirements.txt
+    else
+        # Try to install pip first
+        echo "pip not found. Trying to install pip..."
+        if command -v apt-get >/dev/null 2>&1; then
+            # Debian/Ubuntu systems
+            echo "Please run: sudo apt-get update && sudo apt-get install python3-pip"
+        elif command -v yum >/dev/null 2>&1; then
+            # RHEL/CentOS systems
+            echo "Please run: sudo yum install python3-pip"
+        elif command -v dnf >/dev/null 2>&1; then
+            # Fedora systems
+            echo "Please run: sudo dnf install python3-pip"
+        else
+            echo "Please install pip for Python 3 manually"
+        fi
+        echo "Error: No pip installation method available!" >&2
+        exit 1
+    fi
+    
+    # Check if installation was successful
     if [ $? -ne 0 ]; then
         echo "Error: Failed to install Python requirements!" >&2
+        echo "You may need to install packages manually or with system package manager:" >&2
+        echo "  - python3-numpy" >&2
+        echo "  - python3-matplotlib" >&2
+        echo "  - python3-pandas" >&2
         exit 1
     fi
 fi
