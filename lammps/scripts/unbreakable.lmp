@@ -113,4 +113,4 @@ minimize 1.0e-4 1.0e-6 100 1000
 # run 2000
 # unfix mynvt2
 
-run 10000
+run 30000
