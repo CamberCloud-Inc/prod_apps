@@ -19,9 +19,11 @@ sh ./run_sim.sh 20000
 ```
 
 The script:
-1. Runs the LAMMPS simulation using MPI with 4 processes, passing left_force_duration as a variable
-2. Generates trajectory and temperature data files
-3. For visualization, use the separate `visualization.ipynb` Jupyter notebook
+1. Creates output directory and cleans previous simulation files
+2. Runs the LAMMPS simulation, passing left_force_duration as a variable
+3. Generates trajectory and temperature data files in `./output/`
+4. Automatically updates the `LEFT_FORCE_DURATION` parameter in `visualization.ipynb`
+5. For visualization, use the `visualization.ipynb` Jupyter notebook (parameter already set)
 
 ## Project Structure
 
@@ -71,9 +73,10 @@ The visualization combines:
 
 1. Run LAMMPS simulation: `./run_sim.sh 20000`
    - Creates output files in `./output/` directory
+   - Automatically updates `LEFT_FORCE_DURATION` in the visualization notebook
 2. Open `analysis/visualization.ipynb` in Jupyter
-3. Modify parameters if needed in the notebook
-4. Run all cells to generate `cnt_trajectory.gif` in `analysis/` folder
+3. Run all cells to generate `cnt_trajectory.gif` in `analysis/` folder
+   - No manual parameter adjustment needed
 
 ## Environment Requirements
 
@@ -88,7 +91,8 @@ The visualization combines:
 
 ## Usage Notes
 
-- The shell script now focuses purely on LAMMPS execution
-- All Python dependencies and visualization are handled in the Jupyter notebook
-- The notebook automatically detects simulation parameters and file paths
-- No environment variables required - the notebook handles dependency installation
+- The shell script is concise and handles both LAMMPS execution and notebook parameter updates
+- All Python dependencies are auto-installed in the Jupyter notebook
+- The `LEFT_FORCE_DURATION` parameter is automatically synchronized between the shell script and notebook
+- The `requirements.txt` file exists but is not used (notebook handles dependencies directly)
+- No manual parameter adjustment needed in the notebook after running the simulation
