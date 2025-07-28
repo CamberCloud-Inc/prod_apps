@@ -1,0 +1,13 @@
+LAMMPS (29 Aug 2024 - Update 1)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (src/src/comm.cpp:98)
+  using 1 OpenMP thread(s) per MPI task
+# Python script (License CC BY 4.0)
+# By Simon Gravelle, Jacob R. Gissinger, and Axel Kohlmeyer
+# The DOI will be added upon publication
+# Find more on GitHub: https://github.com/lammpstutorials
+
+# LEFT_FORCE_DURATION will be passed via -var flag
+# If not passed, LAMMPS will error and show the usage
+
+# --- Add this at the top to ensure all thermo goes to a single file ---
+log ../output/thermo_full.log
