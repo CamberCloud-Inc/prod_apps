@@ -19,18 +19,19 @@ sh ./run_sim.sh 20000
 ```
 
 The script:
-1. Substitutes the left_force_duration parameter in the LAMMPS input file
-2. Runs the LAMMPS simulation using MPI with 4 processes (with fixed velocity of 0.003)
-3. Generates trajectory visualization with force arrows that disappear when external forces are removed
+1. Runs the LAMMPS simulation using MPI with 4 processes, passing left_force_duration as a variable
+2. Generates trajectory and temperature data files
+3. For visualization, use the separate `visualization.ipynb` Jupyter notebook
 
 ## Key Files
 
 - `app.json` - Application configuration for the Camber Cloud platform, defines UI parameters and job configurations
-- `run_sim.sh` - Main simulation runner script that orchestrates the LAMMPS run and visualization
+- `run_sim.sh` - Main simulation runner script that runs LAMMPS only
 - `unbreakable.lmp` - Main LAMMPS input script with simulation parameters and force field definitions
 - `unbreakable.inc` - Force field coefficients (LJ, bond, angle, dihedral, improper parameters)
 - `unbreakable.data` - Initial atomic coordinates and topology for a 700-atom carbon nanotube system
-- `vis_stop.py` - Python visualization script that creates animated GIFs from trajectory data with temperature plots
+- `visualization.ipynb` - Jupyter notebook for Python-based visualization and analysis
+- `requirements.txt` - Python package dependencies for visualization
 - `trajectory_with_arrows.gif` - Output visualization showing nanotube deformation with force arrows
 
 ## Simulation Architecture
@@ -48,25 +49,37 @@ The force application follows this sequence:
 
 ## Visualization
 
-The `vis_stop.py` script automatically receives parameters from `run_sim.sh`:
-- `--left_force_duration` - Number of timesteps the force is applied (controls when arrows disappear)
-- `--left_velocity` - Fixed velocity magnitude (0.003) for arrow scaling
+The `visualization.ipynb` Jupyter notebook handles all Python-based analysis:
+- Automatically installs required dependencies
+- Configurable parameters (LEFT_FORCE_DURATION, LEFT_VELOCITY)
+- Interactive visualization development environment
 
 The visualization combines:
 - Molecular structure with bonds (pink lines, depth-based alpha)
-- Force arrows (blue) that disappear when external forces are removed
+- Force arrows (blue) - left arrow disappears when external forces are removed, right arrow stays throughout
 - Temperature vs time plot showing thermal response (automatically scaled to simulation length)
+
+## Workflow
+
+1. Run LAMMPS simulation: `./run_sim.sh 20000`
+2. Open `visualization.ipynb` in Jupyter
+3. Modify parameters if needed in the notebook
+4. Run all cells to generate `trajectory_with_arrows.gif`
 
 ## Environment Requirements
 
-- LAMMPS executable accessible via `$LAMMPS_BIN`
+### For LAMMPS Simulation:
+- LAMMPS executable (`lmp`) accessible in PATH
 - MPI (mpirun) for parallel execution
-- Apptainer/Singularity container system
-- Python dependencies: MDAnalysis, matplotlib, imageio, numpy, pandas
 
-## File Dependencies
+### For Visualization (Jupyter notebook):
+- Python 3.7+ with pip
+- Jupyter notebook environment
+- Dependencies (auto-installed): MDAnalysis, matplotlib, imageio, numpy, pandas
 
-The simulation expects these environment variables:
-- `$WORKDIR` - Working directory path
-- `$SIF` - Singularity image file path
-- `$LAMMPS_BIN` - LAMMPS executable path within container
+## Usage Notes
+
+- The shell script now focuses purely on LAMMPS execution
+- All Python dependencies and visualization are handled in the Jupyter notebook
+- The notebook automatically detects simulation parameters and file paths
+- No environment variables required - the notebook handles dependency installation
