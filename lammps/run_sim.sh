@@ -20,7 +20,7 @@ rm -f output/trajectory.lammpstrj output/temperature.csv output/thermo_full.log 
 
 # Change to scripts directory and run LAMMPS simulation
 cd scripts
-mpirun -np 4 lmp -in unbreakable.lmp -var LEFT_FORCE_DURATION $LEFT_FORCE_DURATION
+lmp -in unbreakable.lmp -var LEFT_FORCE_DURATION $LEFT_FORCE_DURATION
 cd ..
 
 # Check if simulation completed successfully
