@@ -6,6 +6,9 @@
 # LEFT_FORCE_DURATION will be passed via -var flag
 # If not passed, LAMMPS will error and show the usage
 
+# --- Add this at the top to ensure all thermo goes to a single file ---
+log output/thermo_full.log
+
 units real
 atom_style molecular
 boundary f f f
@@ -17,8 +20,8 @@ dihedral_style opls
 improper_style harmonic
 special_bonds lj 0.0 0.0 0.5
 
-read_data unbreakable.data
-include unbreakable.inc
+read_data scripts/unbreakable.data
+include scripts/unbreakable.inc
 
 group carbon_atoms type 1
 variable xmax equal bound(carbon_atoms,xmax)-0.5
@@ -60,9 +63,6 @@ dump trajectory all custom 100 output/trajectory.lammpstrj id mol type x y z
 
 # Remove this line completely:
 # dump bonds all local 100 bonds.dat index c_bond[*][1] c_bond[*][2]
-
-# --- Add this at the top to ensure all thermo goes to a single file ---
-log output/thermo_full.log
 
 # --- Temperature CSV output for complete simulation ---
 variable temp_all equal temp
