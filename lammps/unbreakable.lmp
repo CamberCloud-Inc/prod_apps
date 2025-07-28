@@ -78,7 +78,7 @@ thermo 300
 thermo_style custom step temp etotal v_Lcnt
 thermo_modify temp Tmid line yaml
 
-timestep 0.1
+timestep 0.05
 run 100
 
 velocity cnt_top set 0.003 0 0
