@@ -12,6 +12,9 @@ LEFT_FORCE_DURATION=${1:-20000}  # Use default value if not provided
 
 echo "Starting LAMMPS simulation with LEFT_FORCE_DURATION=$LEFT_FORCE_DURATION"
 
+# Create output directory if it doesn't exist
+mkdir -p output
+
 # Clean up previous simulation files
 rm -f output/trajectory.lammpstrj output/temperature.csv output/thermo_full.log output/log.lammps
 
