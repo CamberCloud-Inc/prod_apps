@@ -4,7 +4,8 @@
 # Find more on GitHub: https://github.com/lammpstutorials
 
 # Set default value for LEFT_FORCE_DURATION if not passed via -var
-variable LEFT_FORCE_DURATION default 20000
+# Use conditional assignment for older LAMMPS versions
+if "${LEFT_FORCE_DURATION}" == "" then "variable LEFT_FORCE_DURATION equal 20000"
 
 units real
 atom_style molecular

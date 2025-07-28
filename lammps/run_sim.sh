@@ -37,13 +37,13 @@ if ! $PYTHON_BIN -c "import MDAnalysis" 2>/dev/null; then
     # Try different methods to install packages
     if $PYTHON_BIN -m pip --version >/dev/null 2>&1; then
         # pip module is available
-        $PYTHON_BIN -m pip install --user -r requirements.txt
+        $PYTHON_BIN -m pip install --user --no-warn-script-location -r requirements.txt
     elif command -v pip3 >/dev/null 2>&1; then
         # pip3 command is available
-        pip3 install --user -r requirements.txt
+        pip3 install --user --no-warn-script-location -r requirements.txt
     elif command -v pip >/dev/null 2>&1; then
         # pip command is available
-        pip install --user -r requirements.txt
+        pip install --user --no-warn-script-location -r requirements.txt
     else
         # Try to install pip first
         echo "pip not found. Trying to install pip..."
@@ -72,6 +72,11 @@ if ! $PYTHON_BIN -c "import MDAnalysis" 2>/dev/null; then
         echo "  - python3-pandas" >&2
         exit 1
     fi
+fi
+
+# Add user's local bin to PATH if it exists
+if [ -d "$HOME/.local/bin" ] && [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+    export PATH="$HOME/.local/bin:$PATH"
 fi
 
 # Run LAMMPS simulation in parallel with LEFT_FORCE_DURATION parameter

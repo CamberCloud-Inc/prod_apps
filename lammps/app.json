@@ -1,7 +1,7 @@
 {
-  "name": "lammps4",
-  "title": "LAMMPS4: Carbon Nanotube",
-  "description": "Ultra-Strong, Ultra-Light, Atom by Atom",
+  "name": "lammps5",
+  "title": "Carbon Nanotube: Deformation and Breaking",
+  "description": "LAMMPS simulation of a carbon nanotube under uniaxial strain, followed by strain release to observe relaxation toward equilibrium, with temperature monitored throughout the process.",
   "content": "123",
   "imageUrl": "https://docs.dev.camber.cloud/demos/30-applications/03-molecular-dynamics/lammps/sim.gif",
   "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cd prod_apps/lammps && sh ./run_sim.sh ${stretchingTime}",
