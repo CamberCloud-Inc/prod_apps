@@ -1,41 +1,21 @@
 #!/bin/bash
-# Usage: ./run_sim.sh <left_force_duration>
-if [ $# -ne 1 ]; then
-    echo "Usage: $0 <left_force_duration>"
-    echo "Example: $0 20000"
-    echo ""
-    echo "After running this script, use visualization.ipynb for Python-based analysis"
-    exit 1
-fi
+[ $# -ne 1 ] && { echo "Usage: $0 <left_force_duration>"; exit 1; }
 
-LEFT_FORCE_DURATION=${1:-20000}  # Use default value if not provided
-
-echo "Starting LAMMPS simulation with LEFT_FORCE_DURATION=$LEFT_FORCE_DURATION"
-
-# Create output directory if it doesn't exist
+LEFT_FORCE_DURATION=$1
 mkdir -p output
+rm -f output/*.{lammpstrj,csv,log}
 
-# Clean up previous simulation files
-rm -f output/trajectory.lammpstrj output/temperature.csv output/thermo_full.log output/log.lammps
+cd scripts && lmp -in unbreakable.lmp -var LEFT_FORCE_DURATION $LEFT_FORCE_DURATION && cd .. || exit 1
 
-# Change to scripts directory and run LAMMPS simulation
-cd scripts
-lmp -in unbreakable.lmp -var LEFT_FORCE_DURATION $LEFT_FORCE_DURATION
-cd ..
-
-# Check if simulation completed successfully
-if [ $? -eq 0 ]; then
-    echo "LAMMPS simulation completed successfully!"
-    echo ""
-    echo "Generated files in ./output/:"
-    ls -la output/trajectory.lammpstrj output/temperature.csv output/thermo_full.log 2>/dev/null || echo "Some output files may be missing"
-    echo ""
-    echo "Next steps:"
-    echo "1. Open analysis/visualization.ipynb in Jupyter"
-    echo "2. Update LEFT_FORCE_DURATION parameter in the notebook if needed"
-    echo "3. Run all cells to generate cnt_trajectory.gif in analysis/ folder"
-else
-    echo "LAMMPS simulation failed!"
-    echo "Check the log files for errors"
-    exit 1
-fi
+python3 -c "
+import json
+with open('analysis/visualization.ipynb', 'r') as f: nb = json.load(f)
+for cell in nb['cells']:
+    if cell['cell_type'] == 'code' and 'LEFT_FORCE_DURATION' in ''.join(cell['source']):
+        for i, line in enumerate(cell['source']):
+            if 'LEFT_FORCE_DURATION' in line and '=' in line:
+                cell['source'][i] = line.split('=')[0] + f'= $LEFT_FORCE_DURATION, LEFT_VELOCITY = 0.0005\n'
+                break
+        break
+with open('analysis/visualization.ipynb', 'w') as f: json.dump(nb, f, indent=1)
+"
