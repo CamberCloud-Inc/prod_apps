@@ -13,22 +13,24 @@ LEFT_FORCE_DURATION=${1:-20000}  # Use default value if not provided
 echo "Starting LAMMPS simulation with LEFT_FORCE_DURATION=$LEFT_FORCE_DURATION"
 
 # Clean up previous simulation files
-rm -f trajectory.lammpstrj temperature.csv thermo_full.log log.lammps
+rm -f output/trajectory.lammpstrj output/temperature.csv output/thermo_full.log output/log.lammps
 
-# Run LAMMPS simulation in parallel with LEFT_FORCE_DURATION parameter
+# Change to scripts directory and run LAMMPS simulation
+cd scripts
 mpirun -np 4 lmp -in unbreakable.lmp -var LEFT_FORCE_DURATION $LEFT_FORCE_DURATION
+cd ..
 
 # Check if simulation completed successfully
 if [ $? -eq 0 ]; then
     echo "LAMMPS simulation completed successfully!"
     echo ""
-    echo "Generated files:"
-    ls -la trajectory.lammpstrj temperature.csv thermo_full.log 2>/dev/null || echo "Some output files may be missing"
+    echo "Generated files in ./output/:"
+    ls -la output/trajectory.lammpstrj output/temperature.csv output/thermo_full.log 2>/dev/null || echo "Some output files may be missing"
     echo ""
     echo "Next steps:"
-    echo "1. Open visualization.ipynb in Jupyter"
+    echo "1. Open analysis/visualization.ipynb in Jupyter"
     echo "2. Update LEFT_FORCE_DURATION parameter in the notebook if needed"
-    echo "3. Run all cells to generate trajectory_with_arrows.gif"
+    echo "3. Run all cells to generate cnt_trajectory.gif in analysis/ folder"
 else
     echo "LAMMPS simulation failed!"
     echo "Check the log files for errors"

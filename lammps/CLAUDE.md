@@ -23,16 +23,24 @@ The script:
 2. Generates trajectory and temperature data files
 3. For visualization, use the separate `visualization.ipynb` Jupyter notebook
 
-## Key Files
+## Project Structure
 
-- `app.json` - Application configuration for the Camber Cloud platform, defines UI parameters and job configurations
-- `run_sim.sh` - Main simulation runner script that runs LAMMPS only
-- `unbreakable.lmp` - Main LAMMPS input script with simulation parameters and force field definitions
-- `unbreakable.inc` - Force field coefficients (LJ, bond, angle, dihedral, improper parameters)
-- `unbreakable.data` - Initial atomic coordinates and topology for a 700-atom carbon nanotube system
-- `visualization.ipynb` - Jupyter notebook for Python-based visualization and analysis
-- `requirements.txt` - Python package dependencies for visualization
-- `trajectory_with_arrows.gif` - Output visualization showing nanotube deformation with force arrows
+```
+├── run_sim.sh              # Main simulation runner script
+├── app.json                 # Application configuration for Camber Cloud
+├── requirements.txt         # Python package dependencies
+├── scripts/                 # LAMMPS simulation files
+│   ├── unbreakable.lmp      # Main LAMMPS input script
+│   ├── unbreakable.inc      # Force field coefficients
+│   └── unbreakable.data     # Initial atomic coordinates and topology
+├── output/                  # Simulation output files
+│   ├── trajectory.lammpstrj # Trajectory data
+│   ├── temperature.csv      # Temperature vs time data
+│   └── thermo_full.log      # Complete thermodynamic output
+└── analysis/                # Analysis and visualization
+    ├── visualization.ipynb  # Jupyter notebook for visualization
+    └── cnt_trajectory.gif   # Generated animation (after running notebook)
+```
 
 ## Simulation Architecture
 
@@ -62,9 +70,10 @@ The visualization combines:
 ## Workflow
 
 1. Run LAMMPS simulation: `./run_sim.sh 20000`
-2. Open `visualization.ipynb` in Jupyter
+   - Creates output files in `./output/` directory
+2. Open `analysis/visualization.ipynb` in Jupyter
 3. Modify parameters if needed in the notebook
-4. Run all cells to generate `trajectory_with_arrows.gif`
+4. Run all cells to generate `cnt_trajectory.gif` in `analysis/` folder
 
 ## Environment Requirements
 
