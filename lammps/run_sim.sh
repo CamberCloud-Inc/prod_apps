@@ -6,7 +6,7 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
-LEFT_FORCE_DURATION=$1
+LEFT_FORCE_DURATION=${1:-20000}  # Use default value if not provided
 # Fixed velocity values for consistent simulation
 BREAK_VELOCITY=0.003
 
@@ -75,8 +75,17 @@ if ! $PYTHON_BIN -c "import MDAnalysis" 2>/dev/null; then
 fi
 
 # Add user's local bin to PATH if it exists
-if [ -d "$HOME/.local/bin" ] && [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
-    export PATH="$HOME/.local/bin:$PATH"
+if [ -d "$HOME/.local/bin" ]; then
+    case ":$PATH:" in
+        *":$HOME/.local/bin:"*) ;;
+        *) export PATH="$HOME/.local/bin:$PATH" ;;
+    esac
+fi
+
+# Also add Python user site-packages to PYTHONPATH
+USER_SITE_PACKAGES=$($PYTHON_BIN -m site --user-site 2>/dev/null)
+if [ -n "$USER_SITE_PACKAGES" ] && [ -d "$USER_SITE_PACKAGES" ]; then
+    export PYTHONPATH="$USER_SITE_PACKAGES:$PYTHONPATH"
 fi
 
 # Run LAMMPS simulation in parallel with LEFT_FORCE_DURATION parameter
