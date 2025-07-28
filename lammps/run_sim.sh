@@ -14,8 +14,7 @@ for cell in nb['cells']:
     if cell['cell_type'] == 'code' and 'LEFT_FORCE_DURATION' in ''.join(cell['source']):
         for i, line in enumerate(cell['source']):
             if 'LEFT_FORCE_DURATION' in line and '=' in line:
-                cell['source'][i] = f'LEFT_FORCE_DURATION = $LEFT_FORCE_DURATION\n'
-                cell['source'].insert(i+1, 'LEFT_VELOCITY = 0.0005\n')
+                cell['source'][i] = f'LEFT_FORCE_DURATION = $LEFT_FORCE_DURATION\n')
                 break
         break
 with open('analysis/visualization.ipynb', 'w') as f: json.dump(nb, f, indent=1)
