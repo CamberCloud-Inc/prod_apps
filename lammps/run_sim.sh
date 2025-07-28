@@ -1,40 +1,49 @@
 #!/bin/bash
-# Check if breakVelocity argument is provided
+# Usage: ./run_sim.sh <left_force_duration>
 if [ $# -ne 1 ]; then
-    echo "Usage: $0 <breakVelocity>"
-    echo "Example: $0 0.0005"
+    echo "Usage: $0 <left_force_duration>"
+    echo "Example: $0 20000"
     exit 1
 fi
 
-# Get breakVelocity from command line argument
-BREAK_VELOCITY=$1
+LEFT_FORCE_DURATION=$1
+# Fixed velocity values for consistent simulation
+BREAK_VELOCITY=0.003
 
-sed -i "s/\${breakVelocity}/$BREAK_VELOCITY/g" unbreakable.lmp && \
-lmp -in unbreakable.lmp
+# Function to find Python 3 binary
+find_python3() {
+    for cmd in python3 python3.9 python3.10 python3.11 python3.12 python; do
+        if command -v "$cmd" >/dev/null 2>&1; then
+            # Check if it's Python 3
+            if "$cmd" -c "import sys; exit(0 if sys.version_info[0] == 3 else 1)" 2>/dev/null; then
+                echo "$cmd"
+                return 0
+            fi
+        fi
+    done
+    echo "Error: Python 3 not found!" >&2
+    exit 1
+}
 
+# Get Python 3 binary
+PYTHON_BIN=$(find_python3)
+echo "Using Python: $PYTHON_BIN"
 
+# Install Python requirements if they don't exist
+echo "Checking Python dependencies..."
+if ! $PYTHON_BIN -c "import MDAnalysis" 2>/dev/null; then
+    echo "Installing Python requirements..."
+    $PYTHON_BIN -m pip install --user -r requirements.txt
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to install Python requirements!" >&2
+        exit 1
+    fi
+fi
 
-    // {
-    //   "type": "Select",
-    //   "label": "Breakup Velocity",
-    //   "name": "breakVelocity",
-    //   "description": "Sets the velocity of the front and back faces of the nanotube, aiming to tear it apart",
-    //   "defaultValue": "None",
-    //   "hidden": false,
-    //   "required": true,
-    //   "disabled": false,
-    //   "options": [
-    //     {
-    //       "label": "None",
-    //       "value": "0"
-    //     },
-    //     {
-    //       "label": "Weak",
-    //       "value": "0.0005"
-    //     },
-    //     {
-    //       "label": "Strong",
-    //       "value": "0.001"
-    //     }
-    //   ]
-    // }
+# Run LAMMPS simulation in parallel with LEFT_FORCE_DURATION parameter
+mpirun -np 4 lmp -in unbreakable.lmp -var LEFT_FORCE_DURATION $LEFT_FORCE_DURATION
+
+# Run visualization with correct arrow duration
+$PYTHON_BIN vis_stop.py --left_force_duration $LEFT_FORCE_DURATION --left_velocity $BREAK_VELOCITY
+
+NPROCS=$(nproc)

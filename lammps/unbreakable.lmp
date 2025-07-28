@@ -3,6 +3,9 @@
 # The DOI will be added upon publication
 # Find more on GitHub: https://github.com/lammpstutorials
 
+# Set default value for LEFT_FORCE_DURATION if not passed via -var
+variable LEFT_FORCE_DURATION default 20000
+
 units real
 atom_style molecular
 boundary f f f
@@ -47,7 +50,7 @@ fix mynvt cnt_mid nvt temp 300 300 100
 fix mysf1 cnt_top setforce 0 0 0
 fix mysf2 cnt_bot setforce 0 0 0
 velocity cnt_top set 0 0 0
-velocity cnt_bot set 0 0 0
+velocity cnt_bot set 0 NULL NULL
 
 variable Lcnt equal xcm(cnt_top,x)-xcm(cnt_bot,x)
 variable Fcnt equal f_mysf1[1]-f_mysf2[1]
@@ -58,16 +61,56 @@ dump trajectory all custom 100 trajectory.lammpstrj id mol type x y z
 # Remove this line completely:
 # dump bonds all local 100 bonds.dat index c_bond[*][1] c_bond[*][2]
 
+# --- Add this at the top to ensure all thermo goes to a single file ---
+log thermo_full.log
+
+# --- Temperature CSV output for complete simulation ---
+variable temp_all equal temp
+fix temp_output all print 1 "$(step),${temp_all}" file temperature.csv screen no title "Step,Temperature"
+
+
+# --- Use a consistent thermo_style for all runs ---
+thermo_style custom step temp etotal v_Lcnt
+thermo 100  # or 10 or 1 for higher resolution
 
 compute Tmid cnt_mid temp
 thermo 300
-thermo_style custom step temp etotal v_Lcnt v_Fcnt
+thermo_style custom step temp etotal v_Lcnt
 thermo_modify temp Tmid line yaml
 
-timestep 1.0
-run 5000
+timestep 0.1
+run 100
 
-velocity cnt_top set ${breakVelocity} 0 0
-velocity cnt_bot set -${breakVelocity} 0 0
+velocity cnt_top set 0.003 0 0
+velocity cnt_bot set -0.003 0 0
+
+run ${LEFT_FORCE_DURATION}
+
+# Remove force constraint from cnt_bot to let it jiggle
+unfix mysf2
+
+# Redefine Fcnt to avoid referencing mysf2, or skip outputting v_Fcnt
+thermo_style custom step temp etotal v_Lcnt
+thermo 100
+
+# Gradually release force constraint on cnt_bot
+fix mysf2 cnt_bot setforce 0.1 0.0 0.0
+run 100
+fix mysf2 cnt_bot setforce 0.01 0.0 0.0
+run 100
+fix mysf2 cnt_bot setforce 0.0 0.0 0.0
+run 100
+unfix mysf2
+# Optionally, add a short NVT equilibration
+fix mynvt2 cnt_bot nvt temp 300 300 500
+run 200
+unfix mynvt2
+
+# Optional: minimize or equilibrate
+minimize 1.0e-4 1.0e-6 100 1000
+# or
+# fix mynvt2 cnt_bot nvt temp 300 300 100
+# run 2000
+# unfix mynvt2
 
 run 10000

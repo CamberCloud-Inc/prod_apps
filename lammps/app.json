@@ -1,10 +1,10 @@
 {
-  "name": "lammps1",
-  "title": "LAMMPS: Carbon Nanotube",
+  "name": "lammps4",
+  "title": "LAMMPS4: Carbon Nanotube",
   "description": "Ultra-Strong, Ultra-Light, Atom by Atom",
   "content": "123",
   "imageUrl": "https://docs.dev.camber.cloud/demos/30-applications/03-molecular-dynamics/lammps/sim.gif",
-  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cd prod_apps/lammps && sh ./run_sim.sh ${breakVelocity}",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cd prod_apps/lammps && sh ./run_sim.sh ${stretchingTime}",
   "engineType": "LAMMPS",
   "jobConfig": [
     {
@@ -39,10 +39,10 @@
   "spec": [
     {
       "type": "Select",
-      "label": "Breakup Velocity",
-      "name": "breakVelocity",
+      "label": "Stretching Time",
+      "name": "stretchingTime",
       "description": "Sets the velocity of the front and back faces of the nanotube, aiming to tear it apart",
-      "defaultValue": "0.001",
+      "defaultValue": "0",
       "hidden": false,
       "required": true,
       "disabled": false,
@@ -53,11 +53,11 @@
         },
         {
           "label": "Weak",
-          "value": "0.0005"
+          "value": "10000"
         },
         {
           "label": "Strong",
-          "value": "0.001"
+          "value": "30000"
         }
       ]
     }
