@@ -7,8 +7,8 @@ if [ $# -ne 1 ]; then
 fi
 
 LEFT_FORCE_DURATION=${1:-20000}  # Use default value if not provided
-# Fixed velocity values for consistent simulation
-BREAK_VELOCITY=0.003
+# Fixed velocity values for consistent simulation (reduced for stability)
+BREAK_VELOCITY=0.001
 
 # Function to find Python 3 binary
 find_python3() {
@@ -87,6 +87,12 @@ USER_SITE_PACKAGES=$($PYTHON_BIN -m site --user-site 2>/dev/null)
 if [ -n "$USER_SITE_PACKAGES" ] && [ -d "$USER_SITE_PACKAGES" ]; then
     export PYTHONPATH="$USER_SITE_PACKAGES:$PYTHONPATH"
 fi
+
+# Debug: Show Python paths
+echo "PYTHONPATH: $PYTHONPATH"
+echo "PATH: $PATH"
+echo "Testing MDAnalysis import..."
+$PYTHON_BIN -c "import sys; print('Python paths:'); [print(p) for p in sys.path]; import MDAnalysis; print('MDAnalysis imported successfully')" || echo "MDAnalysis import failed"
 
 # Run LAMMPS simulation in parallel with LEFT_FORCE_DURATION parameter
 mpirun -np 4 lmp -in unbreakable.lmp -var LEFT_FORCE_DURATION $LEFT_FORCE_DURATION
