@@ -10,4 +10,4 @@ OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (src/src/comm.cp
 # If not passed, LAMMPS will error and show the usage
 
 # --- Add this at the top to ensure all thermo goes to a single file ---
-log output/thermo_full.log
+log ../output/thermo_full.log

@@ -7,7 +7,7 @@
 # If not passed, LAMMPS will error and show the usage
 
 # --- Add this at the top to ensure all thermo goes to a single file ---
-log output/thermo_full.log
+log ../output/thermo_full.log
 
 units real
 atom_style molecular
@@ -20,8 +20,8 @@ dihedral_style opls
 improper_style harmonic
 special_bonds lj 0.0 0.0 0.5
 
-read_data scripts/unbreakable.data
-include scripts/unbreakable.inc
+read_data unbreakable.data
+include unbreakable.inc
 
 group carbon_atoms type 1
 variable xmax equal bound(carbon_atoms,xmax)-0.5
@@ -59,14 +59,14 @@ variable Lcnt equal xcm(cnt_top,x)-xcm(cnt_bot,x)
 variable Fcnt equal f_mysf1[1]-f_mysf2[1]
 
 # Add trajectory dump
-dump trajectory all custom 100 output/trajectory.lammpstrj id mol type x y z
+dump trajectory all custom 100 ../output/trajectory.lammpstrj id mol type x y z
 
 # Remove this line completely:
 # dump bonds all local 100 bonds.dat index c_bond[*][1] c_bond[*][2]
 
 # --- Temperature CSV output for complete simulation ---
 variable temp_all equal temp
-fix temp_output all print 1 "$(step),${temp_all}" file output/temperature.csv screen no title "Step,Temperature"
+fix temp_output all print 1 "$(step),${temp_all}" file ../output/temperature.csv screen no title "Step,Temperature"
 
 
 # --- Use a consistent thermo_style for all runs ---
