@@ -1,0 +1,305 @@
+{
+  "name": "variant-calling-1",
+  "description": "nf-core/sarek is a Nextflow-based workflow for detecting genomic variants from whole genome or targeted sequencing data. Initially developed for human and mouse genomes, it can be adapted to any species with a reference genome. It supports tumor/normal pair analysis and relapse samples.",
+  "content": "<img src=\"https://raw.githubusercontent.com/nf-core/sarek/3.4.0//docs/images/sarek_workflow.png\" alt=\"\" title=\"\" width=\"293\" height=\"600\"><p class=\"text-node\"></p><p class=\"text-node\"><strong>nf-core/sarek</strong> is a Nextflow-based workflow for detecting genomic variants from whole genome or targeted sequencing data. Initially developed for human and mouse genomes, it can be adapted to any species with a reference genome. It supports tumor/normal pair analysis and relapse samples.</p><p class=\"text-node\"><strong>Key Features:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\">Built with <strong>Nextflow DSL2</strong>, using containerized processes (Docker/Singularity) for reproducibility and portability.</p></li><li><p class=\"text-node\">Compatible with multiple variant calling tools like <strong>GATK, DeepVariant, Mutect2, Strelka2</strong>, and more.</p></li><li><p class=\"text-node\">Supports <strong>UMI consensus reads</strong>, <strong>QC and trimming</strong>, <strong>read alignment</strong>, <strong>variant filtering/annotation</strong>, and <strong>QC summary reporting</strong>.</p></li><li><p class=\"text-node\">Modules are standardized via <strong>nf-core/modules</strong>, promoting reuse and community contributions.</p></li><li><p class=\"text-node\">Tested via continuous integration on full datasets using <strong>AWS</strong>, with results available on the nf-core website.</p></li><li><p class=\"text-node\">Registered on <strong>Elixir</strong> and <strong>Dockstore</strong>.</p></li></ul><p class=\"text-node\"><strong>Usage:</strong></p><ol class=\"list-node\"><li><p class=\"text-node\">Prepare a samplesheet.csv with FASTQ input.</p></li><li><p class=\"text-node\">Run with:</p></li></ol><pre class=\"block-node\"><code>nextflow run nf-core/sarek \\\n  -profile &lt;docker/singularity/...&gt; \\\n  --input samplesheet.csv \\\n  --outdir &lt;OUTDIR&gt;</code></pre>",
+  "imageUrl": "https://sateeshperi.github.io/nextflow_varcal/nextflow/images/nf-core-variantcall_logo_light.png",
+  "command": "nextflow run nf-core/sarek --input ${input} --outdir ${output} --tools ${tools} --genome ${genome} -r ${revision}",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Selecting a preset will prefill the node configuration below. You can still edit the values.",
+      "options": [
+        {
+          "label": "Default",
+          "value": "default",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "default"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Input",
+      "name": "input",
+      "description": "",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Stash File",
+      "label": "Output",
+      "name": "output",
+      "description": "",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Select",
+      "label": "Tools",
+      "name": "tools",
+      "description": "",
+      "defaultValue": "freebayes",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "ASCAT",
+          "value": "ascat"
+        },
+        {
+          "label": "CNVkit",
+          "value": "cnvkit"
+        },
+        {
+          "label": "Control-FREEC",
+          "value": "controlfreec"
+        },
+        {
+          "label": "DeepVariant",
+          "value": "deepvariant"
+        },
+        {
+          "label": "freebayes",
+          "value": "freebayes"
+        },
+        {
+          "label": "GATK HaplotypeCaller",
+          "value": "haplotypecaller"
+        },
+        {
+          "label": "Manta",
+          "value": "manta"
+        },
+        {
+          "label": "mpileup",
+          "value": "mpileup"
+        },
+        {
+          "label": "MSIsensor-pro",
+          "value": "msisensorpro"
+        },
+        {
+          "label": "Mutect2",
+          "value": "mutect2"
+        },
+        {
+          "label": "Sentieon Haplotyper",
+          "value": "sentieon_haplotyper"
+        },
+        {
+          "label": "Strelka2",
+          "value": "strelka"
+        },
+        {
+          "label": "TIDDIT",
+          "value": "tiddit"
+        }
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Genome",
+      "name": "genome",
+      "description": "Reference genome to use for alignment and variant calling",
+      "defaultValue": "GATK.GRCh38",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Human GRCh38 (GATK)",
+          "value": "GATK.GRCh38"
+        },
+        {
+          "label": "Human GRCh37 (GATK)",
+          "value": "GATK.GRCh37"
+        },
+        {
+          "label": "Human GRCh37 (Ensembl)",
+          "value": "Ensembl.GRCh37"
+        },
+        {
+          "label": "Human GRCh38 (NCBI)",
+          "value": "NCBI.GRCh38"
+        },
+        {
+          "label": "Human CHM13",
+          "value": "CHM13"
+        },
+        {
+          "label": "Human hg38",
+          "value": "hg38"
+        },
+        {
+          "label": "Human hg19",
+          "value": "hg19"
+        },
+        {
+          "label": "Mouse GRCm38",
+          "value": "GRCm38"
+        },
+        {
+          "label": "Mouse mm10",
+          "value": "mm10"
+        },
+        {
+          "label": "Arabidopsis TAIR10",
+          "value": "TAIR10"
+        },
+        {
+          "label": "Cow UMD3.1",
+          "value": "UMD3.1"
+        },
+        {
+          "label": "Cow bosTau8",
+          "value": "bosTau8"
+        },
+        {
+          "label": "C. elegans WBcel235",
+          "value": "WBcel235"
+        },
+        {
+          "label": "C. elegans ce10",
+          "value": "ce10"
+        },
+        {
+          "label": "Dog CanFam3.1",
+          "value": "CanFam3.1"
+        },
+        {
+          "label": "Dog canFam3",
+          "value": "canFam3"
+        },
+        {
+          "label": "Zebrafish GRCz10",
+          "value": "GRCz10"
+        },
+        {
+          "label": "Zebrafish danRer10",
+          "value": "danRer10"
+        },
+        {
+          "label": "Drosophila BDGP6",
+          "value": "BDGP6"
+        },
+        {
+          "label": "Drosophila dm6",
+          "value": "dm6"
+        },
+        {
+          "label": "Horse EquCab2",
+          "value": "EquCab2"
+        },
+        {
+          "label": "Horse equCab2",
+          "value": "equCab2"
+        },
+        {
+          "label": "Chicken Galgal4",
+          "value": "Galgal4"
+        },
+        {
+          "label": "Chicken galGal4",
+          "value": "galGal4"
+        },
+        {
+          "label": "Chimpanzee CHIMP2.1.4",
+          "value": "CHIMP2.1.4"
+        },
+        {
+          "label": "Chimpanzee panTro4",
+          "value": "panTro4"
+        },
+        {
+          "label": "Rat Rnor_5.0",
+          "value": "Rnor_5.0"
+        },
+        {
+          "label": "Rat Rnor_6.0",
+          "value": "Rnor_6.0"
+        },
+        {
+          "label": "Rat rn6",
+          "value": "rn6"
+        },
+        {
+          "label": "Yeast R64-1-1",
+          "value": "R64-1-1"
+        },
+        {
+          "label": "Yeast sacCer3",
+          "value": "sacCer3"
+        },
+        {
+          "label": "Pig Sscrofa10.2",
+          "value": "Sscrofa10.2"
+        },
+        {
+          "label": "Pig susScr3",
+          "value": "susScr3"
+        },
+        {
+          "label": "Maize AGPv3",
+          "value": "AGPv3"
+        },
+        {
+          "label": "Rice IRGSP-1.0",
+          "value": "IRGSP-1.0"
+        },
+        {
+          "label": "B. subtilis EB2",
+          "value": "EB2"
+        },
+        {
+          "label": "E. coli EB1",
+          "value": "EB1"
+        },
+        {
+          "label": "Soybean Gm01",
+          "value": "Gm01"
+        },
+        {
+          "label": "Macaque Mmul_1",
+          "value": "Mmul_1"
+        },
+        {
+          "label": "S. pombe EF2",
+          "value": "EF2"
+        },
+        {
+          "label": "Sorghum Sbi1",
+          "value": "Sbi1"
+        },
+        {
+          "label": "Test data",
+          "value": "testdata.nf-core.sarek"
+        }
+      ]
+    },
+    {
+      "type": "Input",
+      "label": "Revision",
+      "name": "revision",
+      "description": "",
+      "defaultValue": "3.5.1",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    }
+  ]
+}
