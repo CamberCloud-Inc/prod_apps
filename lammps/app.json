@@ -1,65 +1,52 @@
 {
-  "name": "lammps6",
-  "title": "Carbon Nanotube: Deformation and Breaking",
+  "name": "lammps-cnt",
+  "title": "Carbon Nanotube: Deformation and Relaxation",
   "description": "LAMMPS simulation of a carbon nanotube under uniaxial strain, followed by strain release to observe relaxation toward equilibrium, with temperature monitored throughout the process.",
-  "content": "<div style='text-align: center; margin-bottom: 20px;'><img src='https://github.com/CamberCloud-Inc/prod_apps/blob/main/lammps/assets/cnt_trajectory.gif?raw=true' alt='Carbon Nanotube Breaking Animation' style='max-width: 100%; height: auto;'/><br><em>Carbon nanotube under mechanical stress showing molecular bonds (pink), applied forces (blue arrows), and temperature evolution</em></div><h3>Overview</h3><p>This application simulates the mechanical deformation and failure of carbon nanotubes using <a href='https://www.lammps.org/' target='_blank'>LAMMPS</a> (Large-scale Atomic/Molecular Massively Parallel Simulator). The simulation applies opposing forces to stretch the nanotube, modeling real-world mechanical stress scenarios in nanomaterial applications.</p><h3>File Structure</h3><ul><li><code>run_sim.sh</code> - Main simulation script that executes LAMMPS and updates visualization parameters</li><li><code>scripts/</code> - LAMMPS input files (unbreakable.lmp, unbreakable.data, unbreakable.inc)</li><li><code>output/</code> - Generated simulation results (trajectory.lammpstrj, temperature.csv, thermo_full.log)</li><li><code>analysis/visualization.ipynb</code> - Jupyter notebook for creating animated visualizations</li></ul><h3>Creating the Animation</h3><p>After running the simulation, use the Camber platform's Jupyter environment to analyze data and create the animated GIF:</p><ol><li>Open <code>analysis/visualization.ipynb</code> in Jupyter on Camber</li><li>Execute all notebook cells to process trajectory data</li><li>The notebook automatically generates <code>cnt_trajectory.gif</code> showing molecular bonds, applied forces, and temperature evolution</li></ol><p>The visualization combines molecular structure rendering with real-time temperature plotting, providing comprehensive insights into nanotube mechanics under stress.</p>",
+  "content": "<img src=\"https://github.com/CamberCloud-Inc/prod_apps/blob/main/lammps/assets/cnt_trajectory.gif?raw=true\" alt=\"Carbon Nanotube Breaking Animation\" title=\"\" width=\"240\" height=\"180\"><p class=\"text-node\"><br><em>Carbon nanotube deformed by constant velocity loading showing molecular bonds (pink), velocity vectors (blue arrows), and temperature evolution</em></p><h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application simulates the mechanical deformation and relaxation of carbon nanotubes using <a class=\"link\" href=\"https://www.lammps.org/\" target=\"_blank\">LAMMPS</a> (Large-scale Atomic/Molecular Massively Parallel Simulator). The simulation applies constant velocity deformation to opposite ends of the nanotube, then releases the constraint to observe recovery dynamics.</p><h3 class=\"heading-node\">Scientific Relevance</h3><p class=\"text-node\">Understanding how carbon nanotubes (CNTs) relax after sudden strain release is key to unlocking their potential in dynamic mechanical systems. Their relaxation behavior is closely tied to temperature, making thermal monitoring essential for capturing the full dynamics of energy dissipation and recovery (Bai et al., Science, 2020). Under constant velocity loading, CNTs exhibit sequential buckling, localized deformation, and partial recovery depending on their structure and loading conditions, as shown in finite element simulations and experiments (Hutchens et al., J. Mech. Phys. Solids, 2011).</p><h3 class=\"heading-node\">Creating the Animation</h3><p class=\"text-node\">After simulation completion, open <code class=\"inline\" spellcheck=\"false\">analysis/visualization.ipynb</code> in JupyterHub on Camber and execute all cells to generate <code class=\"inline\" spellcheck=\"false\">cnt_trajectory.gif</code> showing molecular structure, forces, and temperature evolution.</p><h3 class=\"heading-node\">Project Structure</h3><pre class=\"block-node\"><code>lammps/\n├── run_sim.sh              # Main simulation runner\n├── scripts/\n│   ├── unbreakable.lmp      # LAMMPS input script\n│   ├── unbreakable.data     # Initial atomic coordinates\n│   └── unbreakable.inc      # Force field parameters\n├── output/\n│   ├── trajectory.lammpstrj # Molecular trajectory data\n│   ├── temperature.csv      # Temperature vs time\n│   └── thermo_full.log      # Complete thermodynamic output\n└── analysis/\n    ├── visualization.ipynb  # Animation generation notebook\n    └── cnt_trajectory.gif   # Generated visualization</code></pre>",
   "imageUrl": "https://docs.dev.camber.cloud/demos/30-applications/03-molecular-dynamics/lammps/sim.gif",
-  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cd prod_apps/lammps && sh ./run_sim.sh ${stretchingTime}",
+  "command": "cd ${simulationFolder} && rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cp -r prod_apps/lammps ./lammps && rm -rf prod_apps && cd lammps && sh ./run_sim.sh ${stretchingTime}",
   "engineType": "LAMMPS",
   "jobConfig": [
     {
       "type": "Select",
-      "label": "# of particles",
+      "label": "System Size",
       "name": "system_size",
       "hidden": true,
-      "description": "",
+      "description": "Select the configuration for the job",
       "options": [
         {
-          "label": "1e2 particles",
-          "value": "1e2",
+          "label": "Small",
+          "value": "small",
           "mapValue": {
-            "nodeSize": "XSMALL",
+            "nodeSize": "XXSMALL",
             "numNodes": 1,
             "withGpu": false
           }
-        },
-        {
-          "label": "1e6 particles",
-          "value": "1e6",
-          "mapValue": {
-            "nodeSize": "LARGE",
-            "numNodes": 1,
-            "withGpu": true
-          }
         }
       ],
-      "defaultValue": "1e2"
+      "defaultValue": "small"
     }
   ],
   "spec": [
     {
-      "type": "Select",
+      "type": "Input",
       "label": "Stretching Time",
       "name": "stretchingTime",
-      "description": "Sets the velocity of the front and back faces of the nanotube, aiming to tear it apart",
-      "defaultValue": "0",
+      "description": "Specifies the duration, in simulation timesteps, for which the nanotube remains under applied strain.",
+      "defaultValue": "20000",
       "hidden": false,
       "required": true,
-      "disabled": false,
-      "options": [
-        {
-          "label": "None",
-          "value": "0"
-        },
-        {
-          "label": "Weak",
-          "value": "10000"
-        },
-        {
-          "label": "Strong",
-          "value": "30000"
-        }
-      ]
+      "disabled": false
+    },
+    {
+      "type": "Stash File",
+      "label": "Simulation Folder",
+      "name": "simulationFolder",
+      "description": "Select the folder to store simulation scripts and output data; by default, this is the user's Stash root directory.",
+      "defaultValue": "./",
+      "hidden": false,
+      "required": true,
+      "disabled": false
     }
   ]
 }
