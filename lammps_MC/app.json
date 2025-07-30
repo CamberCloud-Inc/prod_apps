@@ -1,9 +1,9 @@
 {
   "name": "lammps-montecarlo",
-  "title": "2D Hex Lattice: Monte Carlo Relaxation Simulation",
-  "description": "This app performs Monte Carlo relaxation of a perturbed 2D hexagonal lattice using LAMMPS. The simulation creates a perfect 2D hex lattice, introduces disorder through random perturbations, then uses Monte Carlo moves with Boltzmann acceptance criteria to relax the system to lower energy states.",
-  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application demonstrates Monte Carlo (MC) relaxation using <a class=\"link\" href=\"https://www.lammps.org/\" target=\"_blank\">LAMMPS</a> as an energy evaluation engine. The simulation creates a perfect 2D hexagonal lattice, introduces disorder, then uses Metropolis Monte Carlo to relax the system to lower energy states.</p><h3 class=\"heading-node\">Scientific Relevance</h3><p class=\"text-node\">Monte Carlo methods are fundamental to statistical mechanics and materials science. This simulation demonstrates energy landscape exploration, thermal acceptance criteria, and lattice relaxation mechanisms. The Boltzmann factor governs move acceptance, providing insights into equilibrium sampling and defect annealing processes.</p><h3 class=\"heading-node\">Simulation Process</h3><ul class=\"bullet-list-node\"><li class=\"list-item-node\"><p class=\"text-node\"><strong>System:</strong> 100 atoms in 2D hexagonal lattice with Lennard-Jones interactions</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Algorithm:</strong> Single-atom displacement moves with energy-based acceptance/rejection</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Physics:</strong> Metropolis criterion using Boltzmann factor exp(-ΔE/kT)</p></li></ul><h3 class=\"heading-node\">Expected Results</h3><p class=\"text-node\">The system should relax from high initial energy (~20 LJ units) to lower final energy (~-2.7 LJ units), approaching the minimum lattice energy (-2.99 LJ units). Typical acceptance rates range from 15-20% depending on temperature and move size parameters.</p><h3 class=\"heading-node\">Job Validation</h3><p class=\"text-node\">Successfully validated with Job 3212: 1-second execution time, energy relaxation from 19.88 to -2.76 LJ units, 488 accepted moves out of 3000 attempts (16.3% acceptance rate), performance metrics within expected ranges.</p>",
-  "command": "cd ${simulationFolder} && rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cp -r prod_apps/lammps_MC ./lammps_MC && rm -rf prod_apps && cd lammps_MC && lmp -in in.mc",
+  "title": "2D Hex Lattice: Interactive Monte Carlo Relaxation",
+  "description": "Interactive Monte Carlo simulation of 2D hexagonal lattice relaxation with user-configurable parameters including temperature, move sizes, iteration count, and system properties. Demonstrates Metropolis algorithm with Boltzmann acceptance criteria.",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This interactive application demonstrates Monte Carlo (MC) relaxation using <a class=\"link\" href=\"https://www.lammps.org/\" target=\"_blank\">LAMMPS</a> as an energy evaluation engine. Users can adjust 6 key parameters to explore how Monte Carlo sampling behavior changes with different simulation conditions.</p><h3 class=\"heading-node\">Scientific Background</h3><p class=\"text-node\">The simulation creates a perfect 2D hexagonal lattice, introduces controlled disorder, then uses the Metropolis Monte Carlo algorithm to relax the system. The Boltzmann factor exp(-ΔE/kT) governs move acceptance, balancing energy minimization with thermal fluctuations.</p><h3 class=\"heading-node\">Simulation Algorithm</h3><ol class=\"numbered-list-node\"><li class=\"list-item-node\"><p class=\"text-node\"><strong>Initialization:</strong> Create perfect hex lattice with user-defined density</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Disorder:</strong> Apply random perturbations (controlled by perturbation size)</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>MC Moves:</strong> Random atom displacement (controlled by move size)</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Acceptance:</strong> Energy-based or Boltzmann probability (controlled by temperature)</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Iteration:</strong> Repeat for specified number of moves</p></li></ol><h3 class=\"heading-node\">Key Parameters</h3><ul class=\"bullet-list-node\"><li class=\"list-item-node\"><p class=\"text-node\"><strong>Temperature (kT):</strong> Lower values favor energy reduction, higher values allow uphill moves</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>MC Steps:</strong> More iterations = better relaxation but longer runtime</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Move Size:</strong> Optimal balance between acceptance rate and sampling efficiency</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Perturbation:</strong> Initial disorder level affects relaxation dynamics</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Density:</strong> Lattice packing affects interaction strength</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>RNG Seed:</strong> Controls reproducibility of random sequences</p></li></ul><h3 class=\"heading-node\">Expected Results</h3><p class=\"text-node\">Typical behavior: energy relaxation from ~20 LJ units (disordered) to ~-2.7 LJ units (relaxed), approaching the perfect lattice minimum of -2.99 LJ units. Acceptance rates of 15-20% indicate optimal sampling efficiency.</p><h3 class=\"heading-node\">Parameter Guidelines</h3><ul class=\"bullet-list-node\"><li class=\"list-item-node\"><p class=\"text-node\"><strong>Beginner:</strong> Use default values for standard Monte Carlo behavior</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Fast Run:</strong> Reduce MC steps to 1000, increase temperature to 0.1</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>High Quality:</strong> Increase MC steps to 5000, reduce temperature to 0.02</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Exploration:</strong> Vary move size (0.05-0.2) and perturbation (0.1-0.5) to study efficiency</p></li></ul>",
+  "command": "cd ${simulationFolder} && rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cp -r prod_apps/lammps_MC ./lammps_MC && rm -rf prod_apps && cd lammps_MC && lmp -var iter ${mcSteps} -var deltaperturb ${perturbSize} -var deltamove ${moveSize} -var density ${latticeDecision} -var kT ${temperature} -var seed ${randomSeed} -in in.mc",
   "engineType": "LAMMPS",
   "jobConfig": [
     {
@@ -27,6 +27,66 @@
     }
   ],
   "spec": [
+    {
+      "type": "Input",
+      "label": "Monte Carlo Steps",
+      "name": "mcSteps",
+      "description": "Number of Monte Carlo moves to attempt (1000-10000). More steps = better relaxation but longer runtime. Default 3000 gives good balance.",
+      "defaultValue": "3000",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Input",
+      "label": "Temperature (kT)",
+      "name": "temperature",
+      "description": "Effective temperature in Boltzmann factor (0.01-0.2 LJ units). Lower values = more selective acceptance, higher values = more random sampling. Default 0.05 is optimal.",
+      "defaultValue": "0.05",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Input",
+      "label": "Move Size (Δr)",
+      "name": "moveSize",
+      "description": "Maximum displacement per MC move (0.05-0.3 LJ units). Optimal value balances acceptance rate (~20%) and sampling efficiency. Default 0.1 works well.",
+      "defaultValue": "0.1",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Input",
+      "label": "Initial Perturbation",
+      "name": "perturbSize",
+      "description": "Max size of initial disorder per dimension (0.1-0.5 LJ units). Larger values create more initial disorder requiring more relaxation. Default 0.2.",
+      "defaultValue": "0.2",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Input",
+      "label": "Lattice Density",
+      "name": "latticeDecision",
+      "description": "Reduced density of atoms on hex lattice (0.5-2.0). Affects number of atoms and interaction strength. Default 1.0 creates ~100 atoms.",
+      "defaultValue": "1.0",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Input",
+      "label": "Random Seed",
+      "name": "randomSeed",
+      "description": "Random number generator seed (any integer). Different seeds produce different random sequences. Default 582783 for reproducibility.",
+      "defaultValue": "582783",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
     {
       "type": "Stash File",
       "label": "Simulation Folder",
