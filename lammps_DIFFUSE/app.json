@@ -1,0 +1,62 @@
+{
+  "name": "lammps-diffuse",
+  "title": "2D Lennard-Jones Fluid: Diffusion Coefficient Calculation",
+  "description": "LAMMPS simulation calculating diffusion coefficients of a 2D Lennard-Jones fluid using Mean-Squared Displacement (MSD) and Velocity Auto-Correlation Function (VACF) methods.",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application calculates diffusion coefficients for a 2D Lennard-Jones fluid using <a class=\"link\" href=\"https://www.lammps.org/\" target=\"_blank\">LAMMPS</a> (Large-scale Atomic/Molecular Massively Parallel Simulator). The simulation employs two complementary methods: Mean-Squared Displacement (MSD) and Velocity Auto-Correlation Function (VACF) to determine transport properties.</p><h3 class=\"heading-node\">Scientific Relevance</h3><p class=\"text-node\">Diffusion coefficient calculations are fundamental to understanding transport phenomena in fluids. The MSD method tracks particle displacement over time, while VACF analyzes velocity correlations. For 2D Lennard-Jones systems at ρ*=0.6, T*=1.0, typical diffusion coefficients range from 0.25-0.45, providing benchmarks for statistical mechanics simulations and validating molecular dynamics methodologies.</p><h3 class=\"heading-node\">Simulation Parameters</h3><ul class=\"bullet-list-node\"><li class=\"list-item-node\"><p class=\"text-node\"><strong>System:</strong> 3200 atoms in 2D Lennard-Jones fluid</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Density:</strong> ρ* = 0.6</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Temperature:</strong> T* = 1.0</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Cutoff:</strong> 2.5σ</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Duration:</strong> 100,000 timesteps (after equilibration)</p></li></ul><h3 class=\"heading-node\">Available Methods</h3><ul class=\"bullet-list-node\"><li class=\"list-item-node\"><p class=\"text-node\"><strong>MSD (in.msd.2d):</strong> Calculates diffusion from mean-squared displacement</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>VACF (in.vacf.2d):</strong> Calculates diffusion from velocity auto-correlation</p></li></ul><h3 class=\"heading-node\">Expected Results</h3><p class=\"text-node\">Both methods should yield diffusion coefficients in the range of 0.25-0.45 for this system. The MSD method typically gives values around 0.36, while VACF results may vary between 0.25-0.45 depending on integration parameters.</p>",
+  "imageUrl": "https://docs.dev.camber.cloud/demos/30-applications/03-molecular-dynamics/lammps/diffusion.gif",
+  "command": "cd ${simulationFolder} && rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cp -r prod_apps/lammps_DIFFUSE ./lammps_DIFFUSE && rm -rf prod_apps && cd lammps_DIFFUSE && lmp -in ${inputScript}",
+  "engineType": "LAMMPS",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Small",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "small"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Select",
+      "label": "Calculation Method",
+      "name": "inputScript",
+      "description": "Choose the method for calculating diffusion coefficient: MSD (Mean-Squared Displacement) or VACF (Velocity Auto-Correlation Function)",
+      "defaultValue": "in.msd.2d",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "MSD - Mean-Squared Displacement",
+          "value": "in.msd.2d"
+        },
+        {
+          "label": "VACF - Velocity Auto-Correlation Function", 
+          "value": "in.vacf.2d"
+        }
+      ]
+    },
+    {
+      "type": "Stash File",
+      "label": "Simulation Folder",
+      "name": "simulationFolder",
+      "description": "Select the folder to store simulation scripts and output data; by default, this is the user's Stash root directory.",
+      "defaultValue": "./",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    }
+  ]
+}

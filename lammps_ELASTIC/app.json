@@ -1,0 +1,52 @@
+{
+  "name": "lammps-elastic",
+  "title": "Crystal Elastic Constants: Stiffness Tensor Calculation",
+  "description": "LAMMPS simulation to compute the full elastic constant tensor for crystalline materials using finite deformation method with positive and negative strain displacements.",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application computes the complete elastic constant tensor for crystalline materials using <a class=\"link\" href=\"https://www.lammps.org/\" target=\"_blank\">LAMMPS</a> finite deformation method. The simulation applies small strain deformations in all six Voigt directions and measures the resulting stress changes to determine the full stiffness matrix.</p><h3 class=\"heading-node\">Scientific Relevance</h3><p class=\"text-node\">Elastic constants are fundamental material properties that describe the relationship between stress and strain in the linear elastic regime. They are crucial for understanding mechanical behavior, sound velocities, and thermodynamic properties of crystals. The finite deformation method provides accurate elastic constants by applying controlled strains and measuring stress responses, essential for materials design and validation of interatomic potentials.</p><h3 class=\"heading-node\">Methodology</h3><ul class=\"bullet-list-node\"><li class=\"list-item-node\"><p class=\"text-node\"><strong>Deformation Method:</strong> Finite strain approach with positive/negative displacements</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Voigt Notation:</strong> Six independent deformation components (1,2,3,4,5,6)</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Energy Minimization:</strong> Full atomic relaxation after each deformation</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Stress Calculation:</strong> Accurate stress tensor computation for stiffness matrix</p></li></ul><h3 class=\"heading-node\">System Configuration</h3><ul class=\"bullet-list-node\"><li class=\"list-item-node\"><p class=\"text-node\"><strong>Default System:</strong> Silicon crystal with Stillinger-Weber potential</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Deformation Magnitude:</strong> Configurable strain amplitude (typically 0.01)</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Minimization:</strong> Conjugate gradient with convergence criteria</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>Output:</strong> Complete 6x6 elastic stiffness matrix in GPa</p></li></ul><h3 class=\"heading-node\">Key Files</h3><ul class=\"bullet-list-node\"><li class=\"list-item-node\"><p class=\"text-node\"><strong>in.elastic:</strong> Main control script</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>init.mod:</strong> Crystal structure and deformation parameters</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>potential.mod:</strong> Interatomic potential definition</p></li><li class=\"list-item-node\"><p class=\"text-node\"><strong>displace.mod:</strong> Deformation and stress calculation routines</p></li></ul><h3 class=\"heading-node\">Expected Results</h3><p class=\"text-node\">For silicon with SW potential: C11≈150 GPa, C12≈65 GPa, C44≈80 GPa, providing benchmark values for cubic crystal elastic properties and validating simulation accuracy.</p>",
+  "imageUrl": "https://docs.dev.camber.cloud/demos/30-applications/03-molecular-dynamics/lammps/elastic.gif",
+  "command": "cd ${simulationFolder} && rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cp -r prod_apps/lammps_ELASTIC ./lammps_ELASTIC && rm -rf prod_apps && cd lammps_ELASTIC && lmp -in in.elastic",
+  "engineType": "LAMMPS",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Small",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "small"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Input",
+      "label": "Deformation Magnitude",
+      "name": "strainAmplitude",
+      "description": "Strain amplitude for elastic constant calculation (typical range: 0.005-0.02). Smaller values give more accurate results but require better convergence. This parameter is passed to the LAMMPS script as a variable.",
+      "defaultValue": "0.01",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Stash File",
+      "label": "Simulation Folder",
+      "name": "simulationFolder",
+      "description": "Select the folder to store simulation scripts and output data; by default, this is the user's Stash root directory.",
+      "defaultValue": "./",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    }
+  ]
+}
