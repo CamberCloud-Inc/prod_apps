@@ -1,39 +1,49 @@
 {
-  "name": "lammps_gen",
+  "name": "lammps-generic",
   "title": "Generic LAMMPS",
-  "description": "Accepts path to LAMMPS project folder & .inc filename as entry point for a simulation",
-  "content": "TBD",
+  "description": "Accepts path to LAMMPS project folder & .lmp filename as entry point for a simulation.",
+  "content": "Accepts path to LAMMPS project folder & .lmp filename as entry point for a simulation.",
   "imageUrl": "",
-  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cd prod_apps/lammps_gen && sh ./run_sim.sh",
+  "command": "cd ${simulationFolder} && lmp -in ${scriptFilename}",
   "engineType": "LAMMPS",
   "jobConfig": [
     {
       "type": "Select",
-      "label": "default",
-      "name": "default",
+      "label": "System Size",
+      "name": "system_size",
       "hidden": true,
-      "description": "",
+      "description": "Select the configuration for the job",
       "options": [
         {
-          "label": "defaults",
-          "value": "default",
+          "label": "Small",
+          "value": "small",
           "mapValue": {
-            "nodeSize": "XSMALL",
+            "nodeSize": "XXSMALL",
             "numNodes": 1,
             "withGpu": false
           }
         }
       ],
-      "defaultValue": "default"
+      "defaultValue": "small"
     }
   ],
   "spec": [
     {
-      "type": "Multi Stash File",
-      "label": "Simulation Path",
-      "name": "sim_env",
-      "description": "Path to the folder with simulation scripts and excecution enviroment",
-      "defaultValue": [],
+      "type": "Input",
+      "label": "Script Filename",
+      "name": "scriptFilename",
+      "description": "Specifies the LAMMPS input script to use for the simulation.",
+      "defaultValue": "lj.lmp",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Stash File",
+      "label": "Simulation Folder",
+      "name": "simulationFolder",
+      "description": "Select the folder with LAMMPS project files among which the script is located.",
+      "defaultValue": "",
       "hidden": false,
       "required": true,
       "disabled": false
