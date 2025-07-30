@@ -1,15 +1,15 @@
 # Monte Carlo relaxation of perturbed 2d hex lattice
+# Parameterized version - all variables come from command line -var flags
 
-# Note: Variables set via command line -var flags will override these defaults
+# Variables expected from command line:
+# -var iter <number>           # number of Monte Carlo moves
+# -var deltaperturb <value>    # max size of initial perturbation per dim  
+# -var deltamove <value>       # max size of MC move in one dimension
+# -var density <value>         # reduced LJ density of atoms on lattice
+# -var kT <value>              # effective T in Boltzmann factor
+# -var seed <integer>          # RNG seed
+
 # make sure neigh skin > 2*deltamove
-
-# Default values - will be overridden by command line -var arguments
-variable iter loop 3000            # number of Monte Carlo moves  
-variable deltaperturb equal 0.2    # max size of initial perturbation per dim
-variable deltamove equal 0.1       # max size of MC move in one dimension  
-variable density equal 1.0         # reduced LJ density of atoms on lattice
-variable kT equal 0.05             # effective T in Boltzmann factor
-variable seed equal 582783         # RNG seed
 
 # problem setup
 
