@@ -1,14 +1,14 @@
 # Monte Carlo relaxation of perturbed 2d hex lattice
 
-# set these parameters
+# set these parameters - use command line values or defaults
 # make sure neigh skin > 2*deltamove
 
-variable iter loop 3000            # number of Monte Carlo moves
-variable deltaperturb equal 0.2    # max size of initial perturbation per dim
-variable deltamove equal 0.1       # max size of MC move in one dimension
-variable density equal 1.0         # reduced LJ density of atoms on lattice
-variable kT equal 0.05             # effective T in Boltzmann factor
-variable seed equal 582783         # RNG seed
+variable iter loop $(v_iter,3000)               # number of Monte Carlo moves
+variable deltaperturb equal $(v_deltaperturb,0.2)    # max size of initial perturbation per dim
+variable deltamove equal $(v_deltamove,0.1)          # max size of MC move in one dimension
+variable density equal $(v_density,1.0)              # reduced LJ density of atoms on lattice
+variable kT equal $(v_kT,0.05)                       # effective T in Boltzmann factor
+variable seed equal $(v_seed,582783)                 # RNG seed
 
 # problem setup
 
