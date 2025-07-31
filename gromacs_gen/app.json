@@ -1,0 +1,52 @@
+{
+  "name": "gromacs-generic",
+  "title": "Generic GROMACS",
+  "description": "Accepts path to GROMACS project folder & shell script filename as entry point for a molecular dynamics simulation.",
+  "content": "<h3 class=\"heading-node\">Bring Your Own GROMACS</h3><p class=\"text-node\">Upload your own GROMACS (GROningen MAchine for Chemical Simulations) project files to Stash. Specify the shell script location and name in the app parameters, then launch your simulation. Your shell script should chain GROMACS commands like: <code>gmx_mpi pdb2gmx → gmx_mpi solvate → gmx_mpi grompp → gmx_mpi mdrun</code>. GROMACS users typically automate workflows using shell scripts since there's no built-in GROMACS scripting language. Learn more about <a class=\"link\" href=\"https://www.gromacs.org/\" target=\"_blank\">GROMACS here</a>.</p>",
+  "imageUrl": "",
+  "command": "cd ${simulationFolder} && ${scriptFilename}",
+  "engineType": "GROMACS",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Small",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "small"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Input",
+      "label": "Script Filename",
+      "name": "scriptFilename",
+      "description": "Specifies the shell script filename to use for the GROMACS simulation (e.g., 'sh run_gromacs.sh').",
+      "defaultValue": "sh run_gromacs.sh",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Stash File",
+      "label": "Simulation Folder",
+      "name": "simulationFolder",
+      "description": "Select the folder with GROMACS project files including topology, coordinate files, input parameters (.mdp), and shell script.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    }
+  ]
+}

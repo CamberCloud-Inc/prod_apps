@@ -2,7 +2,7 @@
   "name": "lammps-generic",
   "title": "Generic LAMMPS",
   "description": "Accepts path to LAMMPS project folder & .lmp filename as entry point for a simulation.",
-  "content": "Accepts path to LAMMPS project folder & .lmp filename as entry point for a simulation.",
+  "content": "<h3 class=\"heading-node\">Bring Your Own LAMMPS</h3><p class=\"text-node\">Upload your own LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) input scripts and data files to Stash. Specify the script location and name in the app parameters, then launch your simulation. Learn more about <a class=\"link\" href=\"https://www.lammps.org/\" target=\"_blank\">LAMMPS here</a>.</p>",
   "imageUrl": "",
   "command": "cd ${simulationFolder} && lmp -in ${scriptFilename}",
   "engineType": "LAMMPS",
