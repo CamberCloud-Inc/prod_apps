@@ -1,40 +1,91 @@
 {
-  "name": "gromacs5",
-  "title": "Protein in Electrolyte",
-  "description": "It simulates a protein in electrolyte solution.",
-  "content": "TBD",
-  "version": "1.0",
-  "engineType": "GROMACS",
-  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cd prod_apps/gromacs && sh ./sim.sh",
-  "imageUrl": "https://docs.dev.camber.cloud/demos/30-applications/03-molecular-dynamics/gromacs/sim.gif",
-  "spec": [],
-  "jobConfig": [
+  "name": "gromacs-protein-md",
+  "title": "GROMACS: Protein Molecular Dynamics Simulation",
+  "description": "Molecular dynamics simulation of protein systems using GROMACS with customizable physical parameters. This app performs a complete MD workflow including energy minimization, NVT equilibration, and NPT production run.",
+  "content": "# GROMACS Protein MD Simulation\n\nThis application runs a complete molecular dynamics simulation workflow for protein systems using GROMACS:\n\n## Simulation Workflow\n1. **Structure Preparation**: Convert PDB to GROMACS format and generate topology\n2. **Solvation**: Add water molecules around the protein\n3. **Energy Minimization**: Optimize geometry using steepest descent\n4. **Salt Addition**: Add ions to neutralize and set ionic strength\n5. **NVT Equilibration**: Temperature equilibration at constant volume\n6. **NPT Production**: Production run at constant pressure and temperature\n\n## Physical Parameters\n- **Temperature**: Controls molecular motion and kinetic energy (250-350 K typical range)\n- **Salt Concentration**: Affects electrostatic interactions and biological relevance (0.1-2.0 M)\n- **Simulation Time**: Duration of production MD run (10-1000 ps)\n- **Pressure**: System pressure for NPT ensemble (0.5-2.0 bar)\n- **Cutoff Distance**: Non-bonded interaction cutoff affecting accuracy vs performance (0.8-1.4 nm)\n- **Integrator**: Numerical integration algorithm (md=leap-frog, md-vv=velocity-verlet)\n\n## Expected Results\n- Temperature and pressure equilibration profiles\n- Density evolution during NPT\n- Final trajectory for structural analysis\n- Energy profiles throughout simulation\n\n## Applications\n- Protein stability studies\n- Conformational sampling\n- Solvent effects on protein structure\n- Temperature and pressure dependence\n- Method validation and benchmarking",
+  "command": "cd ${simulationFolder} && rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cp -r prod_apps/gromacs ./gromacs && rm -rf prod_apps && cd gromacs && ./run_gromacs.sh ${temperature} ${saltConcentration} ${simulationTime} ${pressure} ${cutoffDistance} ${integrator}",
+  "spec": [
+    {
+      "type": "Input",
+      "name": "temperature",
+      "label": "Temperature (K)",
+      "description": "Simulation temperature in Kelvin. Controls molecular motion and thermal equilibrium. Physiological temperature is ~310K, room temperature ~298K.",
+      "defaultValue": "300",
+      "validation": {
+        "type": "number",
+        "min": 250,
+        "max": 400
+      }
+    },
+    {
+      "type": "Input", 
+      "name": "saltConcentration",
+      "label": "Salt Concentration (M)",
+      "description": "Ionic strength in molar concentration. Affects electrostatic screening and protein stability. Physiological ~0.15M, high salt ~1-2M.",
+      "defaultValue": "0.15",
+      "validation": {
+        "type": "number",
+        "min": 0.01,
+        "max": 3.0
+      }
+    },
+    {
+      "type": "Input",
+      "name": "simulationTime", 
+      "label": "Simulation Time (ps)",
+      "description": "Duration of NPT production run in picoseconds. Longer simulations provide better sampling but take more computational time.",
+      "defaultValue": "100",
+      "validation": {
+        "type": "number",
+        "min": 10,
+        "max": 1000
+      }
+    },
+    {
+      "type": "Input",
+      "name": "pressure",
+      "label": "Pressure (bar)",
+      "description": "System pressure in bar. Standard atmospheric pressure is 1.01325 bar. Higher pressures can affect protein conformation.",
+      "defaultValue": "1.0",
+      "validation": {
+        "type": "number", 
+        "min": 0.1,
+        "max": 10.0
+      }
+    },
+    {
+      "type": "Input",
+      "name": "cutoffDistance",
+      "label": "Cutoff Distance (nm)",
+      "description": "Non-bonded interaction cutoff in nanometers. Larger values are more accurate but computationally expensive. 1.0-1.2 nm typical.",
+      "defaultValue": "1.0",
+      "validation": {
+        "type": "number",
+        "min": 0.8,
+        "max": 2.0
+      }
+    },
     {
       "type": "Select",
-      "label": "System Size",
-      "name": "system_size",
-      "hidden": false,
+      "name": "integrator",
+      "label": "MD Integrator",
+      "description": "Numerical integration algorithm. md=leap-frog (standard), md-vv=velocity-verlet (more accurate), sd=stochastic dynamics.",
+      "defaultValue": "md",
       "options": [
-        {
-          "label": "default",
-          "value": "default",
-          "mapValue": {
-            "nodeSize": "XSMALL",
-            "numNodes": 8,
-            "withGpu": false
-          }
-        },
-        {
-          "label": "XSMALL1",
-          "value": "1",
-          "mapValue": {
-            "nodeSize": "XSMALL",
-            "numNodes": 1,
-            "withGpu": false
-          }
-        }
-      ],
-      "defaultValue": "default"
+        {"label": "Leap-Frog (md)", "value": "md"},
+        {"label": "Velocity-Verlet (md-vv)", "value": "md-vv"},
+        {"label": "Stochastic Dynamics (sd)", "value": "sd"}
+      ]
+    },
+    {
+      "type": "Stash File",
+      "name": "simulationFolder",
+      "label": "Simulation Directory", 
+      "description": "Stash directory for running the simulation (will pull code from GitHub)",
+      "defaultValue": "stash://ivannovikau32295788/"
     }
-  ]
+  ],
+  "engine": "gromacs",
+  "size": "xsmall",
+  "with_gpu": true
 }
