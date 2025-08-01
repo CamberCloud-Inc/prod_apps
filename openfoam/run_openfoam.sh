@@ -88,33 +88,10 @@ cp -r 0 output/ 2>/dev/null || true
 
 echo "Simulation completed. Results in output/ directory."
 
-# Update visualization notebook parameters
-python3 -c "
-import json
-import os
+# Store simulation parameters for analysis
+echo "REYNOLDS_NUMBER = $REYNOLDS_NUMBER
+INLET_VELOCITY = $INLET_VELOCITY
+CYLINDER_RADIUS = $CYLINDER_RADIUS
+VISCOSITY = $VISCOSITY" > output/simulation_parameters.py
 
-notebook_path = 'analysis/visualization.ipynb'
-if os.path.exists(notebook_path):
-    with open(notebook_path, 'r') as f: 
-        nb = json.load(f)
-    
-    for cell in nb['cells']:
-        if cell['cell_type'] == 'code':
-            source_text = ''.join(cell['source'])
-            if 'REYNOLDS_NUMBER' in source_text:
-                for i, line in enumerate(cell['source']):
-                    if 'REYNOLDS_NUMBER' in line and '=' in line:
-                        cell['source'][i] = f'REYNOLDS_NUMBER = $REYNOLDS_NUMBER\n'
-                    elif 'INLET_VELOCITY' in line and '=' in line:
-                        cell['source'][i] = f'INLET_VELOCITY = $INLET_VELOCITY\n'
-                    elif 'CYLINDER_RADIUS' in line and '=' in line:
-                        cell['source'][i] = f'CYLINDER_RADIUS = $CYLINDER_RADIUS\n'
-                break
-    
-    with open(notebook_path, 'w') as f: 
-        json.dump(nb, f, indent=1)
-        
-    print('Updated visualization notebook parameters')
-else:
-    print('Visualization notebook not found, skipping parameter update')
-"
+echo "Simulation parameters saved to output/simulation_parameters.py"

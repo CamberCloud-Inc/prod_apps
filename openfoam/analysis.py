@@ -5,6 +5,24 @@ import pyvista as pv
 from scipy.interpolate import griddata
 from matplotlib.path import Path
 from scipy.spatial import ConvexHull
+import sys
+import os
+
+# Load simulation parameters
+try:
+    sys.path.append('output')
+    from simulation_parameters import REYNOLDS_NUMBER, INLET_VELOCITY, CYLINDER_RADIUS, VISCOSITY
+    print(f"Loaded simulation parameters:")
+    print(f"Reynolds Number: {REYNOLDS_NUMBER}")
+    print(f"Inlet Velocity: {INLET_VELOCITY} m/s")
+    print(f"Cylinder Radius: {CYLINDER_RADIUS} m")
+    print(f"Viscosity: {VISCOSITY} m²/s")
+except ImportError:
+    print("Warning: Could not load simulation parameters, using defaults")
+    REYNOLDS_NUMBER = 100
+    INLET_VELOCITY = 1.0
+    CYLINDER_RADIUS = 0.5
+    VISCOSITY = 0.01
 
 # ============================================================================
 # LOAD AND PROCESS VTK DATA FROM POTENTIALFOAM SIMULATION
@@ -75,6 +93,6 @@ plt.plot(poly_closed[:,0], poly_closed[:,1], 'k', lw=1.5)
 plt.axis('equal')      # Equal aspect ratio to preserve geometry
 plt.axis('off')        # Hide axes for cleaner scientific visualization
 plt.tight_layout()     # Optimize layout
-plt.title('Potential Flow Around Cylinder\n(Smooth streamlines, no separation)', 
+plt.title(f'Potential Flow Around Cylinder (Re = {REYNOLDS_NUMBER})\nSmooth streamlines, no separation', 
           fontsize=12, pad=20)
 plt.show()
