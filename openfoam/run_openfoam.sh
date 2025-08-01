@@ -74,9 +74,9 @@ runApplication $(getApplication) -withFunctionObjects -writePhi -writephi -write
 # Post-processing
 echo "Post-processing..."
 runApplication postProcess -func "(streamFunction writeCellCentres)"
-runApplication foamToVTK -time 0
 
-# Move results to output directory
+# Move results to output directory (ensure logs are captured)
+mv log.* output/ 2>/dev/null || true
 mv *.log output/ 2>/dev/null || true
 mv VTK/ output/ 2>/dev/null || true
 cp -r 0 output/ 2>/dev/null || true
