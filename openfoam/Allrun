@@ -26,7 +26,14 @@ canCompile || exit 0    # Dynamic code
 restore0Dir
 
 # Update blockMeshDict with cylinder radius parameter
+# Ensure rOuter is always at least 2x rInner to maintain valid geometry
+ROUTER=$(awk "BEGIN {print ${CYLINDER_RADIUS} * 2}")
+# Set domain size to be at least 4x the cylinder radius
+DOMAIN_SIZE=$(awk "BEGIN {print ${CYLINDER_RADIUS} * 4}")
 sed -i "s/^rInner[[:space:]]*[0-9.]*;$/rInner  ${CYLINDER_RADIUS};/" system/blockMeshDict
+sed -i "s/^rOuter[[:space:]]*[0-9.]*;$/rOuter  ${ROUTER};/" system/blockMeshDict
+sed -i "s/^xmax[[:space:]]*[0-9.]*;$/xmax    ${DOMAIN_SIZE};/" system/blockMeshDict
+sed -i "s/^ymax[[:space:]]*[0-9.]*;$/ymax    ${DOMAIN_SIZE};/" system/blockMeshDict
 
 # Update boundary conditions with inlet velocity
 sed -i "s/uniformValue.*constant.*/uniformValue    constant (${INLET_VELOCITY} 0 0);/" 0.orig/U
