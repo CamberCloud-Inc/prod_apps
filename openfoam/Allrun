@@ -26,10 +26,10 @@ canCompile || exit 0    # Dynamic code
 restore0Dir
 
 # Update blockMeshDict with cylinder radius parameter
-sed -i "s/cylinderRadius.*$/cylinderRadius ${CYLINDER_RADIUS};/" system/blockMeshDict
+sed -i "s/rInner.*$/rInner  ${CYLINDER_RADIUS};/" system/blockMeshDict
 
 # Update boundary conditions with inlet velocity
-sed -i "s/value.*uniform.*/value           uniform (${INLET_VELOCITY} 0 0);/" 0.orig/U
+sed -i "s/uniformValue.*constant.*/uniformValue    constant (${INLET_VELOCITY} 0 0);/" 0.orig/U
 
 runApplication blockMesh
 

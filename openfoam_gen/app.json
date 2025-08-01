@@ -1,0 +1,52 @@
+{
+  "name": "openfoam-generic",
+  "title": "Generic OpenFOAM",
+  "description": "Accepts path to OpenFOAM project folder & shell script filename as entry point for a computational fluid dynamics simulation.",
+  "content": "<h3 class=\"heading-node\">Bring Your Own OpenFOAM</h3><p class=\"text-node\">Upload your own OpenFOAM (Open Source Field Operation and Manipulation) project files to Stash. Specify the shell script location and name in the app parameters, then launch your simulation. Your shell script should chain OpenFOAM commands like: <code>blockMesh → potentialFoam → simpleFoam → paraFoam</code>. OpenFOAM users typically automate workflows using shell scripts for complex simulation pipelines. Learn more about <a class=\"link\" href=\"https://www.openfoam.com/\" target=\"_blank\">OpenFOAM here</a>.</p>",
+  "imageUrl": "",
+  "command": "cd ${simulationFolder} && ${scriptFilename}",
+  "engineType": "OpenFOAM",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Small",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "small"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Input",
+      "label": "Script Filename",
+      "name": "scriptFilename",
+      "description": "Specifies the shell script filename to use for the OpenFOAM simulation (e.g., 'sh run_openfoam.sh').",
+      "defaultValue": "sh run_openfoam.sh",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Stash File",
+      "label": "Simulation Folder",
+      "name": "simulationFolder",
+      "description": "Select the folder with OpenFOAM project files including mesh, boundary conditions, system settings, and shell script.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    }
+  ]
+}

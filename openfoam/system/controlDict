@@ -126,49 +126,6 @@ functions
             error.write();
         #};
     }
-
-    vtkWrite
-    {
-        type            surfaces;
-        libs            (sampling);
-        writeControl    writeTime;
-        writeInterval   1;
-
-        surfaceFormat   vtk;
-        fields          (U p);
-
-        surfaces
-        {
-            internal
-            {
-                type        isoSurface;
-                isoField    p;
-                isoValue    0;
-                interpolate true;
-            }
-        }
-    }
-
-    vtkBoundary
-    {
-        type            surfaces;
-        libs            (sampling);
-        writeControl    writeTime;
-        writeInterval   1;
-
-        surfaceFormat   vtk;
-        fields          (U p);
-
-        surfaces
-        {
-            cylinder
-            {
-                type        patch;
-                patches     (cylinder);
-                interpolate true;
-            }
-        }
-    }
 }
 
 
