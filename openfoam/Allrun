@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# External parameters with default values
+CYLINDER_RADIUS=${1:-0.5}    # Cylinder radius in meters (default: 0.5m)
+INLET_VELOCITY=${2:-1.0}     # Inlet velocity in m/s (default: 1.0 m/s)
+
+echo "Running OpenFOAM simulation with:"
+echo "  Cylinder radius: ${CYLINDER_RADIUS} m"
+echo "  Inlet velocity: ${INLET_VELOCITY} m/s"
+
+# ---- OpenFOAM + Spack -------------------------------------------------------
+source /opt/spack/share/spack/setup-env.sh          # enable Spack
+eval "$(spack load --sh openfoam@2312)"             # inject FOAM env vars
+export PATH=$WM_PROJECT_DIR/wmake:$PATH
+#   –OR, if you prefer–
+# source "$(spack location -i openfoam@2312)/etc/bashrc"
+
+# ---- run the tutorial -------------------------------------------------------
+
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+canCompile || exit 0    # Dynamic code
+
+restore0Dir
+
+# Update blockMeshDict with cylinder radius parameter
+sed -i "s/cylinderRadius.*$/cylinderRadius ${CYLINDER_RADIUS};/" system/blockMeshDict
+
+# Update boundary conditions with inlet velocity
+sed -i "s/value.*uniform.*/value           uniform (${INLET_VELOCITY} 0 0);/" 0.orig/U
+
+runApplication blockMesh
+
+runApplication $(getApplication) -withFunctionObjects -writePhi -writephi -writep
+
+runApplication postProcess -func "(streamFunction writeCellCentres)"
+
+runApplication foamToVTK -time 0
+
+#------------------------------------------------------------------------------

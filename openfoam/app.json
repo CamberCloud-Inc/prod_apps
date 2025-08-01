@@ -2,8 +2,8 @@
   "name": "openfoam-cylinder",
   "title": "Cylinder Flow: Potential Flow Analysis",
   "description": "OpenFOAM simulation of incompressible potential flow around a circular cylinder with configurable Reynolds number, inlet velocity, and cylinder geometry.",
-  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application simulates incompressible potential flow around a circular cylinder using <a class=\"link\" href=\"https://www.openfoam.com/\" target=\"_blank\">OpenFOAM</a> computational fluid dynamics solver. The simulation uses the potentialFoam solver to compute steady-state flow patterns, velocity fields, and pressure distributions around the cylinder geometry.</p><h3 class=\"heading-node\">Scientific Relevance</h3><p class=\"text-node\">Understanding flow around cylinders is fundamental in fluid mechanics and has applications in aerodynamics, offshore engineering, and heat exchanger design. The potential flow solution provides insight into ideal fluid behavior and serves as a baseline for more complex viscous flow analysis.</p><h3 class=\"heading-node\">Visualization</h3><p class=\"text-node\">After simulation completion, run <code class=\"inline\" spellcheck=\"false\">python analysis.py</code> to visualize real OpenFOAM data with streamlines, or open <code class=\"inline\" spellcheck=\"false\">analysis/visualization.ipynb</code> for interactive analysis.</p><h3 class=\"heading-node\">Project Structure</h3><pre class=\"block-node\"><code>openfoam/\n├── run_openfoam.sh          # Main simulation runner\n├── system/                   # OpenFOAM system files\n│   ├── controlDict          # Simulation control parameters\n│   ├── blockMeshDict        # Mesh generation definition\n│   ├── fvSchemes            # Numerical schemes\n│   └── fvSolution           # Solver settings\n├── 0.orig/                   # Initial and boundary conditions\n│   ├── U                    # Velocity field\n│   └── p                    # Pressure field\n├── output/                   # Simulation results\n│   ├── VTK/                 # Visualization data\n│   └── *.log                # Solver logs\n├── analysis.py              # Main analysis script (PyVista)\n└── analysis/                # Post-processing\n    └── visualization.ipynb  # Interactive PyVista analysis</code></pre>",
-  "command": "cd ${simulationFolder} && rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cp -r prod_apps/openfoam ./openfoam && rm -rf prod_apps && cd openfoam && ./run_openfoam.sh ${reynoldsNumber} ${inletVelocity} ${cylinderRadius}",
+  "content": "<img src=\"https://github.com/CamberCloud-Inc/prod_apps/blob/main/openfoam/flowfield.png?raw=true\" alt=\"OpenFOAM Cylinder Flow Streamlines\" width=\"480\" height=\"360\"><p class=\"text-node\"><h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application simulates incompressible potential flow around a circular cylinder using <a class=\"link\" href=\"https://www.openfoam.com/\" target=\"_blank\">OpenFOAM</a> computational fluid dynamics solver. The simulation uses the potentialFoam solver to compute steady-state flow patterns, velocity fields, and pressure distributions around the cylinder geometry.</p><h3 class=\"heading-node\">Scientific Relevance</h3><p class=\"text-node\">Understanding flow around cylinders is fundamental in fluid mechanics and has applications in aerodynamics, offshore engineering, and heat exchanger design. The potential flow solution provides insight into ideal fluid behavior and serves as a baseline for more complex viscous flow analysis.</p><h3 class=\"heading-node\">Visualization</h3><p class=\"text-node\">After simulation completion, open <code class=\"inline\" spellcheck=\"false\">analysis/visualization.ipynb</code> for interactive analysis and visualization of the potential flow results.</p><h3 class=\"heading-node\">Project Structure</h3><pre class=\"block-node\"><code>openfoam/\n├── Allrun                   # Main simulation runner with external parameters\n├── system/                  # OpenFOAM system files\n│   ├── controlDict         # Simulation control parameters\n│   ├── blockMeshDict       # Mesh generation definition\n│   ├── fvSchemes           # Numerical schemes\n│   └── fvSolution          # Solver settings\n├── 0.orig/                  # Initial and boundary conditions\n│   ├── U                   # Velocity field\n│   └── p                   # Pressure field\n├── VTK/                     # Simulation results\n│   └── *                   # Visualization data\n├── openfoam.ipynb          # Complete simulation notebook\n└── analysis/               # Post-processing\n    └── visualization.ipynb # Interactive PyVista analysis</code></pre>",
+  "command": "cd ${simulationFolder} && rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cp -r prod_apps/openfoam ./openfoam && rm -rf prod_apps && cd openfoam && ./Allrun ${cylinderRadius} ${inletVelocity}",
   "engineType": "OpenFOAM",
   "jobConfig": [
     {
@@ -17,7 +17,7 @@
           "label": "Small",
           "value": "small",
           "mapValue": {
-            "nodeSize": "XXSMALL",
+            "nodeSize": "XSMALL",
             "numNodes": 1,
             "withGpu": false
           }
@@ -26,7 +26,7 @@
           "label": "Medium",
           "value": "medium",
           "mapValue": {
-            "nodeSize": "XSMALL",
+            "nodeSize": "SMALL",
             "numNodes": 1,
             "withGpu": false
           }
@@ -38,14 +38,14 @@
   "spec": [
     {
       "type": "Input",
-      "name": "reynoldsNumber",
-      "label": "Reynolds Number",
-      "description": "Dimensionless Reynolds number characterizing the flow regime (1-1000). Controls the balance between inertial and viscous forces. Examples: 10 (creeping flow), 100 (moderate flow), 500 (high Re flow), 1000 (approaching turbulent). Default: 100.",
-      "defaultValue": "100",
+      "name": "cylinderRadius",
+      "label": "Cylinder Radius (m)",
+      "description": "Radius of the circular cylinder in meters (0.1-2.0). Affects the flow obstruction and pressure distribution. Examples: 0.2 (small), 0.5 (standard), 1.0 (large), 2.0 (maximum). Default: 0.5.",
+      "defaultValue": "0.5",
       "validation": {
         "type": "number",
-        "min": 1,
-        "max": 1000
+        "min": 0.1,
+        "max": 2.0
       }
     },
     {
@@ -58,18 +58,6 @@
         "type": "number",
         "min": 0.1,
         "max": 5.0
-      }
-    },
-    {
-      "type": "Input",
-      "name": "cylinderRadius",
-      "label": "Cylinder Radius (m)",
-      "description": "Radius of the circular cylinder in meters (0.1-2.0). Affects the flow obstruction and pressure distribution. Examples: 0.2 (small), 0.5 (standard), 1.0 (large), 2.0 (maximum). Default: 0.5.",
-      "defaultValue": "0.5",
-      "validation": {
-        "type": "number",
-        "min": 0.1,
-        "max": 2.0
       }
     },
     {
