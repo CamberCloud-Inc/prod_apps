@@ -5,17 +5,7 @@ LEFT_FORCE_DURATION=$1
 mkdir -p output
 rm -f output/*.{lammpstrj,csv,log}
 
-cd scripts && lmp -in unbreakable.lmp -var LEFT_FORCE_DURATION $LEFT_FORCE_DURATION && cd .. || exit 1
+# Store LEFT_FORCE_DURATION parameter in output file for visualization
+echo "LEFT_FORCE_DURATION=$LEFT_FORCE_DURATION" > output/parameters.txt
 
-python3 -c "
-import json
-with open('analysis/visualization.ipynb', 'r') as f: nb = json.load(f)
-for cell in nb['cells']:
-    if cell['cell_type'] == 'code' and 'LEFT_FORCE_DURATION' in ''.join(cell['source']):
-        for i, line in enumerate(cell['source']):
-            if 'LEFT_FORCE_DURATION' in line and '=' in line:
-                cell['source'][i] = f'LEFT_FORCE_DURATION = $LEFT_FORCE_DURATION\n'
-                break
-        break
-with open('analysis/visualization.ipynb', 'w') as f: json.dump(nb, f, indent=1)
-"
+cd scripts && lmp -in unbreakable.lmp -var LEFT_FORCE_DURATION $LEFT_FORCE_DURATION && cd .. || exit 1
