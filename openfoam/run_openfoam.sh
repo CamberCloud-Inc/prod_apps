@@ -30,13 +30,14 @@ cp -r 0.orig 0
 
 # Update parameters in blockMeshDict
 sed -i "s/rInner.*0.5;/rInner  $CYLINDER_RADIUS;/" system/blockMeshDict
-sed -i "s/rOuter.*1;/rOuter  $(echo "$CYLINDER_RADIUS * 2" | bc -l);/" system/blockMeshDict
+ROUTER=$(awk "BEGIN {print $CYLINDER_RADIUS * 2}")
+sed -i "s/rOuter.*1;/rOuter  $ROUTER;/" system/blockMeshDict
 
 # Update inlet velocity in boundary conditions
 sed -i "s/uniformValue.*constant (1 0 0);/uniformValue    constant ($INLET_VELOCITY 0 0);/" 0/U
 
 # Update simulation parameters based on Reynolds number
-VISCOSITY=$(echo "scale=8; $INLET_VELOCITY * $CYLINDER_RADIUS * 2 / $REYNOLDS_NUMBER" | bc -l)
+VISCOSITY=$(awk "BEGIN {printf \"%.8f\", $INLET_VELOCITY * $CYLINDER_RADIUS * 2 / $REYNOLDS_NUMBER}")
 echo "
 FoamFile
 {
@@ -50,7 +51,7 @@ transportModel  linear;
 
 linear
 {
-    nu              [$VISCOSITY];
+    nu              [0 2 -1 0 0 0 0] $VISCOSITY;
 }
 " > constant/transportProperties
 
