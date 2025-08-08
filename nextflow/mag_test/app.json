@@ -1,8 +1,8 @@
 {
-  "name": "methylseq-test",
-  "description": "nf-core/methylseq is a bioinformatics analysis pipeline used for Methylation (Bisulfite) sequencing data. It pre-processes raw data from FastQ inputs, aligns the reads and performs extensive quality-control on the results.",
-  "content": "Methylation analysis pipeline for bisulfite sequencing data with custom FASTA reference support.",
-  "imageUrl": "https://raw.githubusercontent.com/nf-core/methylseq/1.6//docs/images/nf-core-methylseq_logo.png",
+  "name": "mag-test",
+  "description": "nf-core/mag is a bioinformatics pipeline designed for comprehensive metagenome analysis, specifically focused on assembly, binning and annotation of metagenomes. It supports both short and long read sequencing, performs quality trimming, assigns taxonomic classification, conducts assembly and binning, and checks genome bin quality.",
+  "content": "The nf-core/mag pipeline provides a standardized workflow for processing and analyzing metagenomic data from initial sequencing to taxonomic classification and genome binning. Key features include quality trimming and adapter removal, taxonomic classification of reads, metagenome assembly using MEGAHIT and SPAdes, genome binning with MetaBAT2/MaxBin2/CONCOCT, and quality assessment using Busco and CheckM. Particularly useful for researchers working with complex microbial community samples.",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/mag/3.0.1/docs/images/nf-core-mag_logo_light.png",
   "command": "export NXF_CACHE_DIR=/camber_work/temp/.nextflow; export NXF_LOG_FILE=/home/camber/jobs/3302/outputs/nextflow.log; cd /home/camber/methylseq_clean && nextflow run nf-core/methylseq --input ${input} --outdir ${output} --fasta ${fasta} -r ${revision} -c /etc/mpi/nextflow.camber.config -ansi-log false -profile k8s",
   "engineType": "NEXTFLOW",
   "jobConfig": [
