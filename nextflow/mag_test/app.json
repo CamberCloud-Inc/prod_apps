@@ -1,10 +1,12 @@
 {
   "name": "mag-test",
-  "description": "nf-core/mag is a bioinformatics pipeline designed for comprehensive metagenome analysis, specifically focused on assembly, binning and annotation of metagenomes. It supports both short and long read sequencing, performs quality trimming, assigns taxonomic classification, conducts assembly and binning, and checks genome bin quality.",
-  "content": "The nf-core/mag pipeline provides a standardized workflow for processing and analyzing metagenomic data from initial sequencing to taxonomic classification and genome binning. Key features include quality trimming and adapter removal, taxonomic classification of reads, metagenome assembly using MEGAHIT and SPAdes, genome binning with MetaBAT2/MaxBin2/CONCOCT, and quality assessment using Busco and CheckM. Particularly useful for researchers working with complex microbial community samples.",
-  "imageUrl": "https://raw.githubusercontent.com/nf-core/mag/3.0.1/docs/images/nf-core-mag_logo_light.png",
-  "command": "export NXF_CACHE_DIR=/camber_work/temp/.nextflow; export NXF_LOG_FILE=/home/camber/jobs/3327/outputs/nextflow.log; cd /home/camber/nextflow/mag && export NXF_CACHE_DIR=/camber_work/temp/.nextflow; export NXF_LOG_FILE=/home/camber/jobs/outputs/nextflow.log; cd /home/camber/ && nextflow run nf-core/mag --input samplesheet.csv -r 3.0.1 --skip_krona --skip_gtdbtk --skip_maxbin2 --skip_prokka --skip_prodigal --skip_concoct --skip_checkm --skip_busco --megahit_fix_cpu_1 false --spades_fix_cpus 8 --bbnorm_target 50 --coassemble_group -c /etc/mpi/nextflow.camber.config -ansi-log false -profile k8s --outdir /home/camber/jobs/outputs",
+  "title": "nf-core/mag: Metagenome Assembly and Binning",
+  "description": "A comprehensive bioinformatics pipeline for assembly, binning and annotation of metagenomes supporting both short and long-read sequencing technologies.",
+  "content": "The nf-core/mag pipeline provides end-to-end metagenome analysis including quality trimming, taxonomic classification, assembly with MEGAHIT and SPAdes, genome binning using MetaBAT2/MaxBin2/CONCOCT, and quality assessment with Busco and CheckM. Features group-wise co-assembly, bin refinement with DAS Tool, and comprehensive annotation with GTDB-Tk for taxonomic classification.",
+  "version": "1.0.0",
   "engineType": "NEXTFLOW",
+  "command": "export NXF_CACHE_DIR=/camber_work/temp/.nextflow; export NXF_LOG_FILE=/home/camber/jobs/outputs/nextflow.log; cd /home/camber/ && nextflow run nf-core/mag --input ${input} --outdir ${output} --skip_krona ${skipKrona} --skip_gtdbtk ${skipGtdbtk} --skip_maxbin2 ${skipMaxbin2} --skip_prokka ${skipProkka} --skip_prodigal ${skipProdigal} --skip_concoct ${skipConcoct} --skip_checkm ${skipCheckm} --skip_busco ${skipBusco} --megahit_fix_cpu_1 ${megahitFixCpu1} --spades_fix_cpus ${spadesfixCpus} --bbnorm_target ${bbnormTarget} --coassemble_group ${coassembleGroup} -r ${revision} -c /etc/mpi/nextflow.camber.config -ansi-log false -profile k8s",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/mag/3.0.1/docs/images/nf-core-mag_logo_light.png",
   "jobConfig": [
     {
       "type": "Select",
@@ -26,5 +28,176 @@
       "defaultValue": "default"
     }
   ],
-  "spec": []
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Input Samplesheet",
+      "name": "input",
+      "description": "CSV samplesheet containing sample information with columns: sample, group, short_reads_1, short_reads_2, long_reads",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allowFiles": true,
+        "allowFolders": false,
+        "allowedFileTypes": [".csv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "output",
+      "description": "Output directory for pipeline results",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allowFiles": false,
+        "allowFolders": true,
+        "allowedFileTypes": []
+      }
+    },
+    {
+      "type": "Switch",
+      "label": "Skip Krona",
+      "name": "skipKrona",
+      "description": "Skip Krona taxonomy visualization",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Skip GTDB-Tk",
+      "name": "skipGtdbtk",
+      "description": "Skip GTDB-Tk taxonomic classification",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Skip MaxBin2",
+      "name": "skipMaxbin2",
+      "description": "Skip MaxBin2 binning tool",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Skip Prokka",
+      "name": "skipProkka",
+      "description": "Skip Prokka annotation",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Skip Prodigal",
+      "name": "skipProdigal",
+      "description": "Skip Prodigal gene prediction",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Skip CONCOCT",
+      "name": "skipConcoct",
+      "description": "Skip CONCOCT binning tool",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Skip CheckM",
+      "name": "skipCheckm",
+      "description": "Skip CheckM bin quality assessment",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Skip BUSCO",
+      "name": "skipBusco",
+      "description": "Skip BUSCO bin quality assessment",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "MEGAHIT Fix CPU 1",
+      "name": "megahitFixCpu1",
+      "description": "Fix MEGAHIT to use 1 CPU (false = use multiple CPUs)",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Input",
+      "label": "SPAdes Fix CPUs",
+      "name": "spadesfixCpus",
+      "description": "Number of CPUs to fix for SPAdes assembler",
+      "defaultValue": "8",
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Input",
+      "label": "BBnorm Target",
+      "name": "bbnormTarget",
+      "description": "Maximum depth for BBnorm normalization (default: 100)",
+      "defaultValue": "50",
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Co-assemble Group",
+      "name": "coassembleGroup",
+      "description": "Co-assemble samples within groups defined in samplesheet",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Select",
+      "label": "Pipeline Revision",
+      "name": "revision",
+      "description": "nf-core/mag pipeline version",
+      "defaultValue": "3.0.1",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "3.0.1",
+          "value": "3.0.1"
+        },
+        {
+          "label": "3.0.0", 
+          "value": "3.0.0"
+        }
+      ]
+    }
+  ]
 }
