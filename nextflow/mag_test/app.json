@@ -1,0 +1,71 @@
+{
+  "name": "methylseq-test",
+  "description": "nf-core/methylseq is a bioinformatics analysis pipeline used for Methylation (Bisulfite) sequencing data. It pre-processes raw data from FastQ inputs, aligns the reads and performs extensive quality-control on the results.",
+  "content": "Methylation analysis pipeline for bisulfite sequencing data with custom FASTA reference support.",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/methylseq/1.6//docs/images/nf-core-methylseq_logo.png",
+  "command": "export NXF_CACHE_DIR=/camber_work/temp/.nextflow; export NXF_LOG_FILE=/home/camber/jobs/3302/outputs/nextflow.log; cd /home/camber/methylseq_clean && nextflow run nf-core/methylseq --input ${input} --outdir ${output} --fasta ${fasta} -r ${revision} -c /etc/mpi/nextflow.camber.config -ansi-log false -profile k8s",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Selecting a preset will prefill the node configuration below. You can still edit the values.",
+      "options": [
+        {
+          "label": "Default",
+          "value": "default",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "default"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Input",
+      "name": "input",
+      "description": "CSV samplesheet containing sample information",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Stash File",
+      "label": "Output",
+      "name": "output",
+      "description": "Output directory for results",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Input",
+      "label": "FASTA Reference",
+      "name": "fasta",
+      "description": "FASTA reference file URL or path for alignment and methylation calling",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Input",
+      "label": "Revision",
+      "name": "revision",
+      "description": "Pipeline version to use",
+      "defaultValue": "3.0.0",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    }
+  ]
+}
