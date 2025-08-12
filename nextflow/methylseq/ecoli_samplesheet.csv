@@ -1,0 +1,2 @@
+sample,fastq_1,fastq_2
+Ecoli_10K_methylated,https://raw.githubusercontent.com/nf-core/test-datasets/methylseq/testdata/Ecoli_10K_methylated_R1.fastq.gz,https://raw.githubusercontent.com/nf-core/test-datasets/methylseq/testdata/Ecoli_10K_methylated_R2.fastq.gz

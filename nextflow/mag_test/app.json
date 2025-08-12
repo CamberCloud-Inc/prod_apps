@@ -60,6 +60,162 @@
       }
     },
     {
+      "type": "Switch",
+      "label": "Skip Krona",
+      "name": "skipKrona",
+      "description": "Skip Krona taxonomy visualization",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "mapToCommand": {
+        "true": "--skip_krona",
+        "false": ""
+      }
+    },
+    {
+      "type": "Switch",
+      "label": "Skip GTDB-Tk",
+      "name": "skipGtdbtk",
+      "description": "Skip GTDB-Tk taxonomic classification",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "mapToCommand": {
+        "true": "--skip_gtdbtk",
+        "false": ""
+      }
+    },
+    {
+      "type": "Switch",
+      "label": "Skip MaxBin2",
+      "name": "skipMaxbin2",
+      "description": "Skip MaxBin2 binning tool",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "mapToCommand": {
+        "true": "--skip_maxbin2",
+        "false": ""
+      }
+    },
+    {
+      "type": "Switch",
+      "label": "Skip Prokka",
+      "name": "skipProkka",
+      "description": "Skip Prokka annotation",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "mapToCommand": {
+        "true": "--skip_prokka",
+        "false": ""
+      }
+    },
+    {
+      "type": "Switch",
+      "label": "Skip Prodigal",
+      "name": "skipProdigal",
+      "description": "Skip Prodigal gene prediction",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "mapToCommand": {
+        "true": "--skip_prodigal",
+        "false": ""
+      }
+    },
+    {
+      "type": "Switch",
+      "label": "Skip CONCOCT",
+      "name": "skipConcoct",
+      "description": "Skip CONCOCT binning tool",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "mapToCommand": {
+        "true": "--skip_concoct",
+        "false": ""
+      }
+    },
+    {
+      "type": "Switch",
+      "label": "Skip CheckM",
+      "name": "skipCheckm",
+      "description": "Skip CheckM bin quality assessment",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "mapToCommand": {
+        "true": "--skip_checkm",
+        "false": ""
+      }
+    },
+    {
+      "type": "Switch",
+      "label": "Skip BUSCO",
+      "name": "skipBusco",
+      "description": "Skip BUSCO bin quality assessment",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "mapToCommand": {
+        "true": "--skip_busco",
+        "false": ""
+      }
+    },
+    {
+      "type": "Switch",
+      "label": "MEGAHIT Fix CPU 1",
+      "name": "megahitFixCpu1",
+      "description": "Fix MEGAHIT to use 1 CPU (false = use multiple CPUs)",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Input",
+      "label": "SPAdes Fix CPUs",
+      "name": "spadesfixCpus",
+      "description": "Number of CPUs to fix for SPAdes assembler",
+      "defaultValue": "8",
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Input",
+      "label": "BBnorm Target",
+      "name": "bbnormTarget",
+      "description": "Maximum depth for BBnorm normalization (default: 100)",
+      "defaultValue": "50",
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Co-assemble Group",
+      "name": "coassembleGroup",
+      "description": "Co-assemble samples within groups defined in samplesheet",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "mapToCommand": {
+        "true": "--coassemble_group",
+        "false": ""
+      }
+    },
+    {
       "type": "Select",
       "label": "Pipeline Revision",
       "name": "revision",

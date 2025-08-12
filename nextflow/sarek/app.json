@@ -1,0 +1,135 @@
+{
+  "name": "sarek_no_intervals",
+  "description": "nf-core/sarek is a Nextflow-based workflow for detecting genomic variants from whole genome or targeted sequencing data. Initially developed for human and mouse genomes, it can be adapted to any species with a reference genome. It supports tumor/normal pair analysis and relapse samples.",
+  "content": "<img src=\"https://raw.githubusercontent.com/nf-core/sarek/3.4.0//docs/images/sarek_workflow.png\" alt=\"\" title=\"\" width=\"293\" height=\"600\"><p class=\"text-node\"></p><p class=\"text-node\"><strong>nf-core/sarek</strong> is a Nextflow-based workflow for detecting genomic variants from whole genome or targeted sequencing data. Initially developed for human and mouse genomes, it can be adapted to any species with a reference genome. It supports tumor/normal pair analysis and relapse samples.</p><p class=\"text-node\"><strong>Key Features:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\">Built with <strong>Nextflow DSL2</strong>, using containerized processes (Docker/Singularity) for reproducibility and portability.</p></li><li><p class=\"text-node\">Compatible with multiple variant calling tools like <strong>GATK, DeepVariant, Mutect2, Strelka2</strong>, and more.</p></li><li><p class=\"text-node\">Supports <strong>UMI consensus reads</strong>, <strong>QC and trimming</strong>, <strong>read alignment</strong>, <strong>variant filtering/annotation</strong>, and <strong>QC summary reporting</strong>.</p></li><li><p class=\"text-node\">Modules are standardized via <strong>nf-core/modules</strong>, promoting reuse and community contributions.</p></li><li><p class=\"text-node\">Tested via continuous integration on full datasets using <strong>AWS</strong>, with results available on the nf-core website.</p></li><li><p class=\"text-node\">Registered on <strong>Elixir</strong> and <strong>Dockstore</strong>.</p></li></ul><p class=\"text-node\"><strong>Usage:</strong></p><ol class=\"list-node\"><li><p class=\"text-node\">Prepare a samplesheet.csv with FASTQ input.</p></li><li><p class=\"text-node\">Run with:</p></li></ol><pre class=\"block-node\"><code>nextflow run nf-core/sarek \\\n  -profile &lt;docker/singularity/...&gt; \\\n  --input samplesheet.csv \\\n  --outdir &lt;OUTDIR&gt;</code></pre>",
+  "imageUrl": "https://sateeshperi.github.io/nextflow_varcal/nextflow/images/nf-core-variantcall_logo_light.png",
+  "command": "nextflow run nf-core/sarek --input ${input} --outdir ${output} --tools ${tools} --no_intervals=${no_intervals} -r ${revision}",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Selecting a preset will prefill the node configuration below. You can still edit the values.",
+      "options": [
+        {
+          "label": "Default",
+          "value": "default",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "default"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Input",
+      "name": "input",
+      "description": "",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Stash File",
+      "label": "Output",
+      "name": "output",
+      "description": "",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Select",
+      "label": "Tools",
+      "name": "tools",
+      "description": "",
+      "defaultValue": "freebayes",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "ASCAT",
+          "value": "ascat"
+        },
+        {
+          "label": "CNVkit",
+          "value": "cnvkit"
+        },
+        {
+          "label": "Control-FREEC",
+          "value": "controlfreec"
+        },
+        {
+          "label": "DeepVariant",
+          "value": "deepvariant"
+        },
+        {
+          "label": "freebayes",
+          "value": "freebayes"
+        },
+        {
+          "label": "GATK HaplotypeCaller",
+          "value": "haplotypecaller"
+        },
+        {
+          "label": "Manta",
+          "value": "manta"
+        },
+        {
+          "label": "mpileup",
+          "value": "mpileup"
+        },
+        {
+          "label": "MSIsensor-pro",
+          "value": "msisensorpro"
+        },
+        {
+          "label": "Mutect2",
+          "value": "mutect2"
+        },
+        {
+          "label": "Sentieon Haplotyper",
+          "value": "sentieon_haplotyper"
+        },
+        {
+          "label": "Strelka2",
+          "value": "strelka"
+        },
+        {
+          "label": "TIDDIT",
+          "value": "tiddit"
+        }
+      ]
+    },
+    {
+      "type": "Switch",
+      "label": "No Intervals",
+      "name": "no_intervals",
+      "description": "Disable usage of intervals.",
+      "defaultValue": false,
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Input",
+      "label": "Revision",
+      "name": "revision",
+      "description": "",
+      "defaultValue": "3.5.1",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    }
+  ]
+}
