@@ -1,0 +1,71 @@
+{
+  "name": "crisprseq-targeted",
+  "description": "Advanced bioinformatics pipeline for analyzing CRISPR-edited data from next-generation sequencing experiments. Supports targeted analysis for gene editing quality evaluation and screening analysis for gene discovery from CRISPR screens.",
+  "content": "<h2 class=\"heading-node\"><strong>Introduction</strong></h2><p class=\"text-node\"><strong>nf-core/crisprseq</strong> is an advanced bioinformatics pipeline for comprehensive analysis of CRISPR-edited genomic data from next-generation sequencing experiments. Developed by researchers at Universitat Pompeu Fabra and Universität Tübingen, it provides robust, reproducible workflows for CRISPR data analysis.</p><img src=\"https://raw.githubusercontent.com/nf-core/crisprseq/dev/docs/images/crisprseq_targeted_metro_map_dark.png\" alt=\"nf-core/crisprseq targeted workflow\" title=\"\" width=\"600\" height=\"400\"><h2 class=\"heading-node\"><strong>Analysis Modes</strong></h2><p class=\"text-node\"><strong>Targeted Analysis:</strong> Evaluates gene editing experiment quality using targeted NGS data. The workflow includes read merging, quality control, adapter trimming, optional UMI clustering, read mapping, and edit calling for gene knockouts, knock-ins, base editing, and prime editing experiments.</p><p class=\"text-node\"><strong>Screening Analysis:</strong> Discovers important genes from CRISPR knockout or activation screens using pooled DNA. Includes read quality control, mapping, optional CNV correction, and sgRNA/gene ranking.</p><h2 class=\"heading-node\"><strong>Pipeline Outputs</strong></h2><p class=\"text-node\"><strong>Targeted Analysis Outputs:</strong> Quality control reports, processed reads, alignment files, edit calling results, and comprehensive summary statistics for evaluating CRISPR editing efficiency and specificity.</p><p class=\"text-node\"><strong>Screening Analysis Outputs:</strong> sgRNA counts, gene-level analysis, ranking tables for identifying significant hits, and quality control metrics for pooled screen validation.</p><p class=\"text-node\">The pipeline is built using <a class=\"link\" href=\"https://www.nextflow.io/\"><u>Nextflow</u></a> with modular design, containerized processes, and automated continuous integration testing for maximum reproducibility and reliability.</p>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/crisprseq/dev/docs/images/crisprseq_targeted_metro_map_dark.png",
+  "command": "export NXF_CACHE_DIR=/camber_work/temp/.nextflow; export NXF_LOG_FILE=/home/camber/jobs/${JOB_ID}/outputs/nextflow.log; nextflow run nf-core/crisprseq -r 2.3.0 --input ${samplesheet_location} --analysis ${analysis_type} --outdir ${outdir} --max_memory 3.GB --max_cpus 2 -c /etc/mpi/nextflow.camber.config -ansi-log false -profile k8s",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Selecting a preset will prefill the node configuration below. You can still edit the values.",
+      "options": [
+        {
+          "label": "Default",
+          "value": "default",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "default"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Samplesheet Location",
+      "name": "samplesheet_location",
+      "description": "Path to CSV file containing sample information with sample names and FASTQ file paths. Must end in .csv format.",
+      "defaultValue": "https://raw.githubusercontent.com/nf-core/test-datasets/crisprseq/testdata-edition/samplesheet_test.csv",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Select",
+      "label": "Analysis Type",
+      "name": "analysis_type",
+      "description": "Type of CRISPR analysis to perform: 'targeted' for gene editing quality evaluation or 'screening' for gene discovery from CRISPR screens",
+      "defaultValue": "targeted",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Targeted Analysis",
+          "value": "targeted"
+        },
+        {
+          "label": "Screening Analysis", 
+          "value": "screening"
+        }
+      ]
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory for analysis results. If not specified, results will be written to ~/jobs/<jobid>/outputs/",
+      "defaultValue": "./",
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+// create camber app from /home/ubuntu/prod_apps/test/app.json. make 10 same apps iteratively increase value of name key "name"    \
+// delete all apps from camber with "test42" in app title                
