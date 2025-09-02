@@ -1,0 +1,134 @@
+==========================================
+Starting ATAC-seq pipeline (TEST)
+Work directory: /home/ec2-user/data/nextflow/work_504
+Cache directory: /home/ec2-user/data/nextflow/singularity_cache
+TMPDIR: /home/ec2-user/data/nextflow/tmp
+SLURM Job ID: 504
+==========================================
+N E X T F L O W  ~  version 25.04.6
+Launching `https://github.com/nf-core/atacseq` [loving_angela] DSL2 - revision: 1a1dbe52ff [2.1.2]
+
+
+-[2m----------------------------------------------------[0m-
+                                        [0;32m,--.[0;30m/[0;32m,-.[0m
+[0;34m        ___     __   __   __   ___     [0;32m/,-._.--~'[0m
+[0;34m  |\ | |__  __ /  ` /  \ |__) |__         [0;33m}  {[0m
+[0;34m  | \| |       \__, \__/ |  \ |___     [0;32m\`-._,-`-,[0m
+                                        [0;32m`._,._,'[0m
+[0;35m  nf-core/atacseq v2.1.2-g1a1dbe5[0m
+-[2m----------------------------------------------------[0m-
+[1mCore Nextflow options[0m
+  [0;34mrevision                  : [0;32m2.1.2[0m
+  [0;34mrunName                   : [0;32mloving_angela[0m
+  [0;34mcontainerEngine           : [0;32msingularity[0m
+  [0;34mlaunchDir                 : [0;32m/home/ec2-user/prod_apps/nextflow/atacseq[0m
+  [0;34mworkDir                   : [0;32m/home/ec2-user/data/nextflow/work_504[0m
+  [0;34mprojectDir                : [0;32m/home/ec2-user/.nextflow/assets/nf-core/atacseq[0m
+  [0;34muserName                  : [0;32mec2-user[0m
+  [0;34mprofile                   : [0;32mtest,singularity[0m
+  [0;34mconfigFiles               : [0;32m[0m
+
+[1mInput/output options[0m
+  [0;34minput                     : [0;32mhttps://raw.githubusercontent.com/nf-core/test-datasets/atacseq/samplesheet/v2.0/samplesheet_test.csv[0m
+  [0;34mread_length               : [0;32m50[0m
+  [0;34moutdir                    : [0;32mresults[0m
+
+[1mReference genome options[0m
+  [0;34mfasta                     : [0;32mhttps://raw.githubusercontent.com/nf-core/test-datasets/atacseq/reference/genome.fa[0m
+  [0;34mgtf                       : [0;32mhttps://raw.githubusercontent.com/nf-core/test-datasets/atacseq/reference/genes.gtf[0m
+  [0;34mmito_name                 : [0;32mMT[0m
+
+[1mInstitutional config options[0m
+  [0;34mconfig_profile_name       : [0;32mTest profile[0m
+  [0;34mconfig_profile_description: [0;32mMinimal test dataset to check pipeline function[0m
+
+[1mMax job request options[0m
+  [0;34mmax_cpus                  : [0;32m8[0m
+  [0;34mmax_memory                : [0;32m32.GB[0m
+  [0;34mmax_time                  : [0;32m6.h[0m
+
+[1mGeneric options[0m
+  [0;34mfingerprint_bins          : [0;32m100[0m
+
+!! Only displaying parameters that differ from the pipeline defaults !!
+-[2m----------------------------------------------------[0m-
+If you use nf-core/atacseq for your analysis please cite:
+
+* The pipeline
+  https://doi.org/10.5281/zenodo.2634132
+
+* The nf-core framework
+  https://doi.org/10.1038/s41587-020-0439-x
+
+* Software dependencies
+  https://github.com/nf-core/atacseq/blob/master/CITATIONS.md
+
+WARN: =============================================================================
+  --macs_gsize parameter has not been provided.
+  It will be auto-calculated by 'khmer unique-kmers.py' using the '--read_length' parameter.
+  Explicitly provide '--macs_gsize macs2_genome_size' to change this behaviour.
+===================================================================================
+Pulling Singularity image https://depot.galaxyproject.org/singularity/python:3.8.3 [cache /tmp/nextflow/singularity_cache/depot.galaxyproject.org-singularity-python-3.8.3.img]
+Pulling Singularity image https://depot.galaxyproject.org/singularity/perl:5.26.2 [cache /tmp/nextflow/singularity_cache/depot.galaxyproject.org-singularity-perl-5.26.2.img]
+Pulling Singularity image https://depot.galaxyproject.org/singularity/samtools:1.16.1--h6899075_1 [cache /tmp/nextflow/singularity_cache/depot.galaxyproject.org-singularity-samtools-1.16.1--h6899075_1.img]
+Pulling Singularity image https://depot.galaxyproject.org/singularity/khmer:3.0.0a3--py37haa7609a_2 [cache /tmp/nextflow/singularity_cache/depot.galaxyproject.org-singularity-khmer-3.0.0a3--py37haa7609a_2.img]
+Pulling Singularity image https://depot.galaxyproject.org/singularity/bwa:0.7.17--hed695b0_7 [cache /tmp/nextflow/singularity_cache/depot.galaxyproject.org-singularity-bwa-0.7.17--hed695b0_7.img]
+[f9/43495c] Submitted process > NFCORE_ATACSEQ:ATACSEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)
+[9d/1085b7] Submitted process > NFCORE_ATACSEQ:ATACSEQ:PREPARE_GENOME:GTF2BED (genes.gtf)
+[27/2cf163] Submitted process > NFCORE_ATACSEQ:ATACSEQ:PREPARE_GENOME:BWA_INDEX (genome.fa)
+[30/5bbcbc] Submitted process > NFCORE_ATACSEQ:ATACSEQ:PREPARE_GENOME:CUSTOM_GETCHROMSIZES (genome.fa)
+[87/e2dbb6] Submitted process > NFCORE_ATACSEQ:ATACSEQ:PREPARE_GENOME:KHMER_UNIQUEKMERS (genome.fa)
+Pulling Singularity image https://depot.galaxyproject.org/singularity/bedtools:2.30.0--hc088bd4_0 [cache /tmp/nextflow/singularity_cache/depot.galaxyproject.org-singularity-bedtools-2.30.0--hc088bd4_0.img]
+[09/3657e3] Submitted process > NFCORE_ATACSEQ:ATACSEQ:PREPARE_GENOME:GET_AUTOSOMES (genome.fa.fai)
+[93/6c9cca] Submitted process > NFCORE_ATACSEQ:ATACSEQ:PREPARE_GENOME:GENOME_BLACKLIST_REGIONS (genome.fa.sizes)
+Pulling Singularity image https://depot.galaxyproject.org/singularity/ubuntu:20.04 [cache /tmp/nextflow/singularity_cache/depot.galaxyproject.org-singularity-ubuntu-20.04.img]
+[e1/06c01e] Submitted process > NFCORE_ATACSEQ:ATACSEQ:PREPARE_GENOME:TSS_EXTRACT
+Pulling Singularity image https://depot.galaxyproject.org/singularity/fastqc:0.11.9--0 [cache /tmp/nextflow/singularity_cache/depot.galaxyproject.org-singularity-fastqc-0.11.9--0.img]
+Pulling Singularity image https://depot.galaxyproject.org/singularity/trim-galore:0.6.7--hdfd78af_0 [cache /tmp/nextflow/singularity_cache/depot.galaxyproject.org-singularity-trim-galore-0.6.7--hdfd78af_0.img]
+[03/5cdcc3] Submitted process > NFCORE_ATACSEQ:ATACSEQ:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:FASTQC (OSMOTIC_STRESS_T100_SE_REP1_T1)
+[71/7084ff] Submitted process > NFCORE_ATACSEQ:ATACSEQ:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:FASTQC (OSMOTIC_STRESS_T100_SE_REP2_T1)
+ERROR ~ Error executing process > 'NFCORE_ATACSEQ:ATACSEQ:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:FASTQC (OSMOTIC_STRESS_T100_SE_REP1_T1)'
+
+Caused by:
+  Process `NFCORE_ATACSEQ:ATACSEQ:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:FASTQC (OSMOTIC_STRESS_T100_SE_REP1_T1)` terminated with an error exit status (1)
+
+
+Command executed:
+
+  printf "%s %s\n" SRR1822153_1.fastq.gz OSMOTIC_STRESS_T100_SE_REP1_T1.gz | while read old_name new_name; do
+      [ -f "${new_name}" ] || ln -s $old_name $new_name
+  done
+  
+  fastqc \
+      --quiet \
+      --threads 6 \
+      OSMOTIC_STRESS_T100_SE_REP1_T1.gz
+  
+  cat <<-END_VERSIONS > versions.yml
+  "NFCORE_ATACSEQ:ATACSEQ:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:FASTQC":
+      fastqc: $( fastqc --version | sed -e "s/FastQC v//g" )
+  END_VERSIONS
+
+Command exit status:
+  1
+
+Command output:
+  (empty)
+
+Command error:
+  INFO:    Environment variable SINGULARITYENV_TMPDIR is set, but APPTAINERENV_TMPDIR is preferred
+  INFO:    Environment variable SINGULARITYENV_NXF_TASK_WORKDIR is set, but APPTAINERENV_NXF_TASK_WORKDIR is preferred
+  INFO:    Environment variable SINGULARITYENV_NXF_DEBUG is set, but APPTAINERENV_NXF_DEBUG is preferred
+  .command.sh: line 7: /usr/local/bin/fastqc: Input/output error
+
+Work dir:
+  /home/ec2-user/data/nextflow/work_504/03/5cdcc3e62cb2ccf7102942e3f4a2d8
+
+Container:
+  /tmp/nextflow/singularity_cache/depot.galaxyproject.org-singularity-fastqc-0.11.9--0.img
+
+Tip: you can try to figure out what's wrong by changing to the process work dir and showing the script file named `.command.sh`
+
+ -- Check '.nextflow.log' file for details
+Execution cancelled -- Finishing pending tasks before exit
+-[0;35m[nf-core/atacseq][0;31m Pipeline completed with errors[0m-

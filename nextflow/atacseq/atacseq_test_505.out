@@ -1,0 +1,127 @@
+==========================================
+Starting ATAC-seq pipeline (TEST)
+Work directory: /home/ec2-user/data/nextflow/work_505
+Cache directory: /home/ec2-user/data/nextflow/singularity_cache
+TMPDIR: /home/ec2-user/data/nextflow/tmp
+SLURM Job ID: 505
+==========================================
+N E X T F L O W  ~  version 25.04.6
+Launching `https://github.com/nf-core/atacseq` [sad_picasso] DSL2 - revision: 1a1dbe52ff [2.1.2]
+
+
+-[2m----------------------------------------------------[0m-
+                                        [0;32m,--.[0;30m/[0;32m,-.[0m
+[0;34m        ___     __   __   __   ___     [0;32m/,-._.--~'[0m
+[0;34m  |\ | |__  __ /  ` /  \ |__) |__         [0;33m}  {[0m
+[0;34m  | \| |       \__, \__/ |  \ |___     [0;32m\`-._,-`-,[0m
+                                        [0;32m`._,._,'[0m
+[0;35m  nf-core/atacseq v2.1.2-g1a1dbe5[0m
+-[2m----------------------------------------------------[0m-
+[1mCore Nextflow options[0m
+  [0;34mrevision                  : [0;32m2.1.2[0m
+  [0;34mrunName                   : [0;32msad_picasso[0m
+  [0;34mcontainerEngine           : [0;32msingularity[0m
+  [0;34mlaunchDir                 : [0;32m/home/ec2-user/prod_apps/nextflow/atacseq[0m
+  [0;34mworkDir                   : [0;32m/home/ec2-user/data/nextflow/work_505[0m
+  [0;34mprojectDir                : [0;32m/home/ec2-user/.nextflow/assets/nf-core/atacseq[0m
+  [0;34muserName                  : [0;32mec2-user[0m
+  [0;34mprofile                   : [0;32mtest,singularity[0m
+  [0;34mconfigFiles               : [0;32m[0m
+
+[1mInput/output options[0m
+  [0;34minput                     : [0;32mhttps://raw.githubusercontent.com/nf-core/test-datasets/atacseq/samplesheet/v2.0/samplesheet_test.csv[0m
+  [0;34mread_length               : [0;32m50[0m
+  [0;34moutdir                    : [0;32mresults[0m
+
+[1mReference genome options[0m
+  [0;34mfasta                     : [0;32mhttps://raw.githubusercontent.com/nf-core/test-datasets/atacseq/reference/genome.fa[0m
+  [0;34mgtf                       : [0;32mhttps://raw.githubusercontent.com/nf-core/test-datasets/atacseq/reference/genes.gtf[0m
+  [0;34mmito_name                 : [0;32mMT[0m
+
+[1mInstitutional config options[0m
+  [0;34mconfig_profile_name       : [0;32mTest profile[0m
+  [0;34mconfig_profile_description: [0;32mMinimal test dataset to check pipeline function[0m
+
+[1mMax job request options[0m
+  [0;34mmax_cpus                  : [0;32m8[0m
+  [0;34mmax_memory                : [0;32m32.GB[0m
+  [0;34mmax_time                  : [0;32m6.h[0m
+
+[1mGeneric options[0m
+  [0;34mfingerprint_bins          : [0;32m100[0m
+
+!! Only displaying parameters that differ from the pipeline defaults !!
+-[2m----------------------------------------------------[0m-
+If you use nf-core/atacseq for your analysis please cite:
+
+* The pipeline
+  https://doi.org/10.5281/zenodo.2634132
+
+* The nf-core framework
+  https://doi.org/10.1038/s41587-020-0439-x
+
+* Software dependencies
+  https://github.com/nf-core/atacseq/blob/master/CITATIONS.md
+
+WARN: =============================================================================
+  --macs_gsize parameter has not been provided.
+  It will be auto-calculated by 'khmer unique-kmers.py' using the '--read_length' parameter.
+  Explicitly provide '--macs_gsize macs2_genome_size' to change this behaviour.
+===================================================================================
+[fd/3da139] Submitted process > NFCORE_ATACSEQ:ATACSEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)
+[03/00f4ee] Submitted process > NFCORE_ATACSEQ:ATACSEQ:PREPARE_GENOME:CUSTOM_GETCHROMSIZES (genome.fa)
+[b0/0f0800] Submitted process > NFCORE_ATACSEQ:ATACSEQ:PREPARE_GENOME:KHMER_UNIQUEKMERS (genome.fa)
+[4a/3028a1] Submitted process > NFCORE_ATACSEQ:ATACSEQ:PREPARE_GENOME:BWA_INDEX (genome.fa)
+[d6/f41297] Submitted process > NFCORE_ATACSEQ:ATACSEQ:PREPARE_GENOME:GTF2BED (genes.gtf)
+[be/3ed6c3] Submitted process > NFCORE_ATACSEQ:ATACSEQ:PREPARE_GENOME:GET_AUTOSOMES (genome.fa.fai)
+[00/b06690] Submitted process > NFCORE_ATACSEQ:ATACSEQ:PREPARE_GENOME:GENOME_BLACKLIST_REGIONS (genome.fa.sizes)
+[c3/8ed2ad] Submitted process > NFCORE_ATACSEQ:ATACSEQ:PREPARE_GENOME:TSS_EXTRACT
+Pulling Singularity image https://depot.galaxyproject.org/singularity/trim-galore:0.6.7--hdfd78af_0 [cache /home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-trim-galore-0.6.7--hdfd78af_0.img]
+Pulling Singularity image https://depot.galaxyproject.org/singularity/fastqc:0.11.9--0 [cache /home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-fastqc-0.11.9--0.img]
+[d4/3ef47b] Submitted process > NFCORE_ATACSEQ:ATACSEQ:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:FASTQC (OSMOTIC_STRESS_T100_SE_REP1_T1)
+[7a/28c5a6] Submitted process > NFCORE_ATACSEQ:ATACSEQ:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:FASTQC (OSMOTIC_STRESS_T100_SE_REP2_T1)
+ERROR ~ Error executing process > 'NFCORE_ATACSEQ:ATACSEQ:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:FASTQC (OSMOTIC_STRESS_T100_SE_REP1_T1)'
+
+Caused by:
+  Process `NFCORE_ATACSEQ:ATACSEQ:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:FASTQC (OSMOTIC_STRESS_T100_SE_REP1_T1)` terminated with an error exit status (1)
+
+
+Command executed:
+
+  printf "%s %s\n" SRR1822153_1.fastq.gz OSMOTIC_STRESS_T100_SE_REP1_T1.gz | while read old_name new_name; do
+      [ -f "${new_name}" ] || ln -s $old_name $new_name
+  done
+  
+  fastqc \
+      --quiet \
+      --threads 6 \
+      OSMOTIC_STRESS_T100_SE_REP1_T1.gz
+  
+  cat <<-END_VERSIONS > versions.yml
+  "NFCORE_ATACSEQ:ATACSEQ:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:FASTQC":
+      fastqc: $( fastqc --version | sed -e "s/FastQC v//g" )
+  END_VERSIONS
+
+Command exit status:
+  1
+
+Command output:
+  (empty)
+
+Command error:
+  INFO:    Environment variable SINGULARITYENV_TMPDIR is set, but APPTAINERENV_TMPDIR is preferred
+  INFO:    Environment variable SINGULARITYENV_NXF_TASK_WORKDIR is set, but APPTAINERENV_NXF_TASK_WORKDIR is preferred
+  INFO:    Environment variable SINGULARITYENV_NXF_DEBUG is set, but APPTAINERENV_NXF_DEBUG is preferred
+  .command.sh: line 7: /usr/local/bin/fastqc: Input/output error
+
+Work dir:
+  /home/ec2-user/data/nextflow/work_505/d4/3ef47b769f0bb0c22c419b8043ec95
+
+Container:
+  /home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-fastqc-0.11.9--0.img
+
+Tip: you can replicate the issue by changing to the process work dir and entering the command `bash .command.run`
+
+ -- Check '.nextflow.log' file for details
+Execution cancelled -- Finishing pending tasks before exit
+-[0;35m[nf-core/atacseq][0;31m Pipeline completed with errors[0m-

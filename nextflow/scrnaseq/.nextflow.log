@@ -1,0 +1,528 @@
+Sep-02 16:23:44.863 [main] DEBUG nextflow.cli.Launcher - $> nextflow run nf-core/crisprseq -r 2.3.0 --input 'https://raw.githubusercontent.com/nf-core/test-datasets/crisprseq/testdata-edition/samplesheet_test.csv' --analysis targeted --outdir results -w /home/ec2-user/data/nextflow/work_500 -c success.config -profile test,singularity -ansi-log false --max_cpus 8 --max_memory 32.GB -resume
+Sep-02 16:23:44.981 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 25.04.6
+Sep-02 16:23:44.999 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/ec2-user/.nextflow/plugins; core-plugins: nf-amazon@2.15.0,nf-azure@1.16.0,nf-cloudcache@0.4.3,nf-codecommit@0.2.3,nf-console@1.2.1,nf-google@1.21.1,nf-k8s@1.0.0,nf-tower@1.11.4,nf-wave@1.12.1
+Sep-02 16:23:45.118 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Sep-02 16:23:45.119 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Sep-02 16:23:45.121 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Sep-02 16:23:45.136 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Sep-02 16:23:45.146 [main] DEBUG nextflow.scm.ProviderConfig - Using SCM config path: /home/ec2-user/.nextflow/scm
+Sep-02 16:23:46.083 [main] DEBUG nextflow.scm.AssetManager - Git config: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/.git/config; branch: null; remote: origin; url: https://github.com/nf-core/crisprseq.git
+Sep-02 16:23:46.108 [main] DEBUG nextflow.scm.RepositoryFactory - Found Git repository result: [RepositoryFactory]
+Sep-02 16:23:46.116 [main] DEBUG nextflow.scm.AssetManager - Git config: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/.git/config; branch: null; remote: origin; url: https://github.com/nf-core/crisprseq.git
+Sep-02 16:23:47.547 [main] DEBUG nextflow.config.ConfigBuilder - Found config base: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/nextflow.config
+Sep-02 16:23:47.548 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /camber/home/tools/apps/nextflow/25.04.6/nextflow.config
+Sep-02 16:23:47.550 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /home/ec2-user/prod_apps/nextflow/scrnaseq/success.config
+Sep-02 16:23:47.552 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/nextflow.config
+Sep-02 16:23:47.552 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /camber/home/tools/apps/nextflow/25.04.6/nextflow.config
+Sep-02 16:23:47.553 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/ec2-user/prod_apps/nextflow/scrnaseq/success.config
+Sep-02 16:23:47.562 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/ec2-user/.nextflow/secrets/store.json
+Sep-02 16:23:47.566 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@1142d377] - activable => nextflow.secret.LocalSecretsProvider@1142d377
+Sep-02 16:23:47.580 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `test,singularity`
+Sep-02 16:23:48.636 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `test,singularity`
+Sep-02 16:23:48.689 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `test,singularity`
+Sep-02 16:23:48.711 [main] DEBUG nextflow.config.ConfigBuilder - Available config profiles: [bih, cfc_dev, uzl_omics, ifb_core, embl_hd, denbi_qbic, alice, mjolnir_globe, uppmax, giga, incliva, ilifu, ki_luria, uge, icr_alma, rosalind_uge, test_screening_rra, lugh, mccleary, unibe_ibu, vai, czbiohub_aws, jax, roslin, tes, scw, unc_longleaf, tigem, tubingen_apg, apollo, ipop_up, vsc_calcua, pdc_kth, ceci_nic5, ccga_cau, humantechnopole, stjude, daisybio, eddie, medair, biowulf, apptainer, bi, bigpurple, adcra, cedars, pawsey_setonix, local, vsc_kul_uhasselt, test_screening_paired, pawsey_nimbus, ucl_myriad, utd_ganymede, charliecloud, fred_hutch, seattlechildrens, icr_davros, ceres, arm, munin, rosalind, hasta, cfc, uzh, shu_bmrc, ebi_codon_slurm, ebc, ccga_dx, crick, ku_sund_danhead, marvin, shifter, biohpc_gen, mana, mamba, york_viking, unc_lccc, wehi, awsbatch, wustl_htcf, test_targeted, arcc, ceci_dragon2, imperial, maestro, software_license, cannon, genotoul, nci_gadi, abims, eva_grace, janelia, nu_genomics, googlebatch, oist, sahmri, kaust, alliance_canada, test_screening_full, mpcdf, leicester, vsc_ugent, create, sage, cambridge, jex, podman, ebi_codon, cheaha, xanadu, nyu_hpc, test, marjorie, computerome, ucd_sonic, seg_globe, mssm, sanger, dkfz, bluebear, pasteur, einstein, ethz_euler, m3c, test_full, imb, ucl_cscluster, tuos_stanage, azurebatch, hki, seadragon, crukmi, csiro_petrichor, qmul_apocrita, wave, test_targeted_full, docker, engaging, gis, hypatia, psmn, eva, unity, cropdiversityhpc, nygc, fgcz, conda, crg, singularity, mpcdf_viper, test_screening, pe2, dirac, self_hosted_runner, tufts, uw_hyak_pedslabs, binac2, debug, test_umis, genouest, cbe, test_screening_count_table, unsw_katana, utd_juno, slurm, gitpod, phoenix, seawulf, uod_hpc, fub_curta, lovelace, uct_hpc, aws_tower, binac, fsu_draco]
+Sep-02 16:23:48.760 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 by global default
+Sep-02 16:23:48.760 [main] INFO  nextflow.cli.CmdRun - Launching `https://github.com/nf-core/crisprseq` [golden_bhaskara] DSL2 - revision: 0e9f915c4a [2.3.0]
+Sep-02 16:23:48.761 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins declared=[nf-schema@2.1.1]
+Sep-02 16:23:48.761 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Sep-02 16:23:48.762 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[nf-schema@2.1.1]
+Sep-02 16:23:48.763 [main] DEBUG nextflow.plugin.PluginUpdater - Installing plugin nf-schema version: 2.1.1
+Sep-02 16:23:48.780 [main] INFO  org.pf4j.AbstractPluginManager - Plugin 'nf-schema@2.1.1' resolved
+Sep-02 16:23:48.780 [main] INFO  org.pf4j.AbstractPluginManager - Start plugin 'nf-schema@2.1.1'
+Sep-02 16:23:48.788 [main] DEBUG nextflow.plugin.BasePlugin - Plugin started nf-schema@2.1.1
+Sep-02 16:23:48.831 [main] DEBUG nextflow.Session - Session UUID: bfa35376-cb4d-40b6-b528-c47eedb93d5e
+Sep-02 16:23:48.832 [main] DEBUG nextflow.Session - Run name: golden_bhaskara
+Sep-02 16:23:48.832 [main] DEBUG nextflow.Session - Executor pool size: 8
+Sep-02 16:23:48.838 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Sep-02 16:23:48.842 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=24; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Sep-02 16:23:48.914 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 25.04.6 build 5954
+  Created: 01-07-2025 11:27 UTC 
+  System: Linux 6.1.130-139.222.amzn2023.x86_64
+  Runtime: Groovy 4.0.26 on OpenJDK 64-Bit Server VM 23.0.2+7-FR
+  Encoding: UTF-8 (UTF-8)
+  Process: 13754@cpu-mem-queue-dy-r6x4-2 [10.2.7.220]
+  CPUs: 8 - Mem: 123.8 GB (121.2 GB) - Swap: 0 (0)
+Sep-02 16:23:48.950 [main] DEBUG nextflow.Session - Work-dir: /home/ec2-user/data/nextflow/work_500 [nfs]
+Sep-02 16:23:48.980 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Sep-02 16:23:48.990 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Sep-02 16:23:49.004 [main] DEBUG nextflow.Session - Observer factory (v2): LinObserverFactory
+Sep-02 16:23:49.034 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Sep-02 16:23:49.041 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 9; maxThreads: 1000
+Sep-02 16:23:49.133 [main] DEBUG nextflow.Session - Session start
+Sep-02 16:23:49.137 [main] DEBUG nextflow.trace.TraceFileObserver - Workflow started -- trace file: /home/ec2-user/prod_apps/nextflow/scrnaseq/results/pipeline_info/execution_trace_2025-09-02_16-23-48.txt
+Sep-02 16:23:49.324 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Sep-02 16:23:49.865 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [paramsSummaryLog:paramsSummaryLog]; plugin Id: nf-schema
+Sep-02 16:23:49.902 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [validateParameters:validateParameters]; plugin Id: nf-schema
+Sep-02 16:23:49.912 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [paramsSummaryMap:paramsSummaryMap]; plugin Id: nf-schema
+Sep-02 16:23:49.912 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [samplesheetToList:samplesheetToList]; plugin Id: nf-schema
+Sep-02 16:23:50.304 [main] WARN  nextflow.script.ScriptBinding - Access to undefined parameter `reference_fasta` -- Initialise it to a default value eg. `params.reference_fasta = some_value`
+Sep-02 16:23:53.253 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [paramsSummaryLog:paramsSummaryLog]; plugin Id: nf-schema
+Sep-02 16:23:53.254 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [validateParameters:validateParameters]; plugin Id: nf-schema
+Sep-02 16:23:53.256 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [paramsSummaryMap:paramsSummaryMap]; plugin Id: nf-schema
+Sep-02 16:23:53.256 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [samplesheetToList:samplesheetToList]; plugin Id: nf-schema
+Sep-02 16:23:53.391 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [paramsSummaryMap:paramsSummaryMap]; plugin Id: nf-schema
+Sep-02 16:23:55.395 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [paramsSummaryLog:paramsSummaryLog]; plugin Id: nf-schema
+Sep-02 16:23:55.396 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [validateParameters:validateParameters]; plugin Id: nf-schema
+Sep-02 16:23:55.397 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [paramsSummaryMap:paramsSummaryMap]; plugin Id: nf-schema
+Sep-02 16:23:55.398 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [samplesheetToList:samplesheetToList]; plugin Id: nf-schema
+Sep-02 16:23:55.563 [main] DEBUG nextflow.script.IncludeDef - Loading included plugin extensions with names: [paramsSummaryMap:paramsSummaryMap]; plugin Id: nf-schema
+Sep-02 16:23:55.816 [main] INFO  nextflow.Nextflow - 
+-[2m----------------------------------------------------[0m-
+                                        [0;32m,--.[0;30m/[0;32m,-.[0m
+[0;34m        ___     __   __   __   ___     [0;32m/,-._.--~'[0m
+[0;34m  |\ | |__  __ /  ` /  \ |__) |__         [0;33m}  {[0m
+[0;34m  | \| |       \__, \__/ |  \ |___     [0;32m\`-._,-`-,[0m
+                                        [0;32m`._,._,'[0m
+[0;35m  nf-core/crisprseq 2.3.0[0m
+-[2m----------------------------------------------------[0m-
+[1mInput/output options[0m
+  [0;34minput                     : [0;32mhttps://raw.githubusercontent.com/nf-core/test-datasets/crisprseq/testdata-edition/samplesheet_test.csv[0m
+  [0;34moutdir                    : [0;32mresults[0m
+  [0;34manalysis                  : [0;32mtargeted[0m
+
+[1mtargeted pipeline steps[0m
+  [0;34moverrepresented           : [0;32mtrue[0m
+
+[1mInstitutional config options[0m
+  [0;34mconfig_profile_name       : [0;32mTest profile[0m
+  [0;34mconfig_profile_description: [0;32mMinimal test dataset to check pipeline function[0m
+
+[1mCore Nextflow options[0m
+  [0;34mrevision                  : [0;32m2.3.0[0m
+  [0;34mrunName                   : [0;32mgolden_bhaskara[0m
+  [0;34mcontainerEngine           : [0;32msingularity[0m
+  [0;34mlaunchDir                 : [0;32m/home/ec2-user/prod_apps/nextflow/scrnaseq[0m
+  [0;34mworkDir                   : [0;32m/home/ec2-user/data/nextflow/work_500[0m
+  [0;34mprojectDir                : [0;32m/home/ec2-user/.nextflow/assets/nf-core/crisprseq[0m
+  [0;34muserName                  : [0;32mec2-user[0m
+  [0;34mprofile                   : [0;32mtest,singularity[0m
+  [0;34mconfigFiles               : [0;32m[0m
+
+!! Only displaying parameters that differ from the pipeline defaults !!
+-[2m----------------------------------------------------[0m-* The pipeline
+  https://doi.org/10.5281/zenodo.7598496
+
+* The nf-core framework
+    https://doi.org/10.1038/s41587-020-0439-x
+
+* Software dependencies
+    https://github.com/nf-core/crisprseq/blob/master/CITATIONS.md
+
+Sep-02 16:23:55.817 [main] DEBUG nextflow.validation.SchemaValidator - Starting parameters validation
+Sep-02 16:23:55.848 [main] WARN  nextflow.validation.SchemaValidator - The following invalid input values have been detected:
+
+* --max_cpus: 8
+* --max_memory: 32.GB
+
+
+Sep-02 16:23:56.016 [main] DEBUG nextflow.validation.SchemaEvaluator - Started validating /nf-core/test-datasets/crisprseq/testdata-edition/samplesheet_test.csv
+Sep-02 16:23:56.599 [main] DEBUG nextflow.validation.SchemaEvaluator - Validation of file 'https://raw.githubusercontent.com/nf-core/test-datasets/crisprseq/testdata-edition/samplesheet_test.csv' passed!
+Sep-02 16:23:56.643 [main] DEBUG n.v.FormatDirectoryPathEvaluator - Cloud blob storage paths are not supported by 'FormatDirectoryPathEvaluator': 's3://ngi-igenomes/igenomes/'
+Sep-02 16:23:56.644 [main] DEBUG n.v.FormatDirectoryPathEvaluator - Cloud blob storage paths are not supported by 'FormatDirectoryPathEvaluator': 's3://ngi-igenomes/igenomes/'
+Sep-02 16:23:56.644 [main] DEBUG nextflow.validation.SchemaValidator - Finishing parameters validation
+Sep-02 16:23:57.175 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ORIENT_REFERENCE
+Sep-02 16:23:57.177 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:ORIENT_REFERENCE` matches process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ORIENT_REFERENCE
+Sep-02 16:23:57.185 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-02 16:23:57.185 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-02 16:23:57.191 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Sep-02 16:23:57.196 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=8; memory=123.8 GB; capacity=8; pollInterval=100ms; dumpInterval=5m
+Sep-02 16:23:57.198 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
+Sep-02 16:23:57.248 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ORIENT_REFERENCE': maxForks=0; fair=false; array=0
+Sep-02 16:23:57.283 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CAT_FASTQ
+Sep-02 16:23:57.284 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:CAT_FASTQ` matches process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CAT_FASTQ
+Sep-02 16:23:57.291 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-02 16:23:57.291 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-02 16:23:57.291 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CAT_FASTQ': maxForks=0; fair=false; array=0
+Sep-02 16:23:57.300 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_low` matches labels `process_low` for process with name NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:PEAR
+Sep-02 16:23:57.300 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:PEAR` matches process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:PEAR
+Sep-02 16:23:57.303 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-02 16:23:57.303 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-02 16:23:57.303 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:PEAR': maxForks=0; fair=false; array=0
+Sep-02 16:23:57.321 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FASTQC
+Sep-02 16:23:57.322 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:FASTQC` matches process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FASTQC
+Sep-02 16:23:57.324 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-02 16:23:57.324 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-02 16:23:57.324 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FASTQC': maxForks=0; fair=false; array=0
+Sep-02 16:23:57.336 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FIND_ADAPTERS
+Sep-02 16:23:57.337 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:FIND_ADAPTERS` matches process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FIND_ADAPTERS
+Sep-02 16:23:57.339 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-02 16:23:57.339 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-02 16:23:57.339 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FIND_ADAPTERS': maxForks=0; fair=false; array=0
+Sep-02 16:23:57.348 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CUTADAPT
+Sep-02 16:23:57.349 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:CUTADAPT` matches process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CUTADAPT
+Sep-02 16:23:57.351 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-02 16:23:57.351 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-02 16:23:57.352 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CUTADAPT': maxForks=0; fair=false; array=0
+Sep-02 16:23:57.362 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SEQTK_SEQ_MASK
+Sep-02 16:23:57.363 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:SEQTK_SEQ_MASK` matches process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SEQTK_SEQ_MASK
+Sep-02 16:23:57.365 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-02 16:23:57.365 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-02 16:23:57.365 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SEQTK_SEQ_MASK': maxForks=0; fair=false; array=0
+Sep-02 16:23:57.379 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:PREPROCESSING_SUMMARY
+Sep-02 16:23:57.380 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:PREPROCESSING_SUMMARY` matches process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:PREPROCESSING_SUMMARY
+Sep-02 16:23:57.382 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-02 16:23:57.382 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-02 16:23:57.382 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:PREPROCESSING_SUMMARY': maxForks=0; fair=false; array=0
+Sep-02 16:23:57.388 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLUSTERING_SUMMARY
+Sep-02 16:23:57.389 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:CLUSTERING_SUMMARY` matches process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLUSTERING_SUMMARY
+Sep-02 16:23:57.391 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-02 16:23:57.391 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-02 16:23:57.391 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLUSTERING_SUMMARY': maxForks=0; fair=false; array=0
+Sep-02 16:23:57.401 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches labels `process_high` for process with name NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_ORIGINAL
+Sep-02 16:23:57.402 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:MINIMAP2_ALIGN_ORIGINAL` matches process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_ORIGINAL
+Sep-02 16:23:57.403 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-02 16:23:57.403 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-02 16:23:57.404 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_ORIGINAL': maxForks=0; fair=false; array=0
+Sep-02 16:23:57.412 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ALIGNMENT_SUMMARY
+Sep-02 16:23:57.412 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:ALIGNMENT_SUMMARY` matches process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ALIGNMENT_SUMMARY
+Sep-02 16:23:57.414 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-02 16:23:57.414 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-02 16:23:57.414 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ALIGNMENT_SUMMARY': maxForks=0; fair=false; array=0
+Sep-02 16:23:57.420 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_low` matches labels `process_low` for process with name NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SAMTOOLS_INDEX
+Sep-02 16:23:57.420 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:SAMTOOLS_INDEX` matches process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SAMTOOLS_INDEX
+Sep-02 16:23:57.422 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-02 16:23:57.422 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-02 16:23:57.422 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SAMTOOLS_INDEX': maxForks=0; fair=false; array=0
+Sep-02 16:23:57.429 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:TEMPLATE_REFERENCE
+Sep-02 16:23:57.429 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:TEMPLATE_REFERENCE` matches process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:TEMPLATE_REFERENCE
+Sep-02 16:23:57.431 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-02 16:23:57.431 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-02 16:23:57.431 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:TEMPLATE_REFERENCE': maxForks=0; fair=false; array=0
+Sep-02 16:23:57.437 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches labels `process_high` for process with name NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_TEMPLATE
+Sep-02 16:23:57.438 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:MINIMAP2_ALIGN_TEMPLATE` matches process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_TEMPLATE
+Sep-02 16:23:57.439 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-02 16:23:57.439 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-02 16:23:57.440 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_TEMPLATE': maxForks=0; fair=false; array=0
+Sep-02 16:23:57.458 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CIGAR_PARSER
+Sep-02 16:23:57.458 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:CIGAR_PARSER` matches process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CIGAR_PARSER
+Sep-02 16:23:57.460 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-02 16:23:57.460 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-02 16:23:57.461 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CIGAR_PARSER': maxForks=0; fair=false; array=0
+Sep-02 16:23:57.476 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLONALITY_CLASSIFIER
+Sep-02 16:23:57.479 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-02 16:23:57.479 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-02 16:23:57.480 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLONALITY_CLASSIFIER': maxForks=0; fair=false; array=0
+Sep-02 16:23:57.489 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CRISPRSEQ_PLOTTER
+Sep-02 16:23:57.489 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:CRISPRSEQ_PLOTTER` matches process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CRISPRSEQ_PLOTTER
+Sep-02 16:23:57.492 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-02 16:23:57.492 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-02 16:23:57.492 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CRISPRSEQ_PLOTTER': maxForks=0; fair=false; array=0
+Sep-02 16:23:57.557 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MULTIQC
+Sep-02 16:23:57.557 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:MULTIQC` matches process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MULTIQC
+Sep-02 16:23:57.559 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Sep-02 16:23:57.559 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Sep-02 16:23:57.559 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MULTIQC': maxForks=0; fair=false; array=0
+Sep-02 16:23:57.568 [main] DEBUG nextflow.Session - Config process names validation disabled as requested
+Sep-02 16:23:57.570 [main] DEBUG nextflow.Session - Igniting dataflow network (36)
+Sep-02 16:23:57.570 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ORIENT_REFERENCE
+Sep-02 16:23:57.571 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CAT_FASTQ
+Sep-02 16:23:57.571 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:PEAR
+Sep-02 16:23:57.571 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FASTQC
+Sep-02 16:23:57.571 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FIND_ADAPTERS
+Sep-02 16:23:57.571 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CUTADAPT
+Sep-02 16:23:57.571 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SEQTK_SEQ_MASK
+Sep-02 16:23:57.571 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:PREPROCESSING_SUMMARY
+Sep-02 16:23:57.571 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLUSTERING_SUMMARY
+Sep-02 16:23:57.571 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_ORIGINAL
+Sep-02 16:23:57.572 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ALIGNMENT_SUMMARY
+Sep-02 16:23:57.572 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SAMTOOLS_INDEX
+Sep-02 16:23:57.572 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:TEMPLATE_REFERENCE
+Sep-02 16:23:57.573 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_TEMPLATE
+Sep-02 16:23:57.573 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CIGAR_PARSER
+Sep-02 16:23:57.573 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLONALITY_CLASSIFIER
+Sep-02 16:23:57.573 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CRISPRSEQ_PLOTTER
+Sep-02 16:23:57.579 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MULTIQC
+Sep-02 16:23:57.580 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_065f9eb13e2ad2e0: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/mageck/mle/main.nf
+  Script_0ce72e734ad77725: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/subworkflows/nf-core/utils_nextflow_pipeline/main.nf
+  Script_af01e8b0e134bd1e: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/cigar_parser.nf
+  Script_ba8fdfcecea3fbf1: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/bagel2/pr.nf
+  Script_f289bdfe26d7f1cf: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/fastqc/main.nf
+  Script_ac40f8a72cd7271d: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/vsearch/sort/main.nf
+  Script_56f6879af23a54ef: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/bagel2/bf.nf
+  Script_215a636da7ab24a2: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/subworkflows/nf-core/utils_nfschema_plugin/main.nf
+  Script_311a575805eca000: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/bagel2/graph.nf
+  Script_6fb631359d49f43c: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/drugz.nf
+  Script_9c5f3cb53e8ba7d2: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/matricescreation.nf
+  Script_ab9b0ea85f0c2f69: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/mageck/graphrra.nf
+  Script_c5afa00b579c7366: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/medaka/main.nf
+  Script_49a076b00fdb2601: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/seqtk/seq/main.nf
+  Script_a50ad1081623eb29: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/subworkflows/local/utils_nfcore_crisprseq_pipeline/main.nf
+  Script_2f42f20277a5f01a: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/mageck/count/main.nf
+  Script_be32c6baac638cc0: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/hitselection.nf
+  Script_ee9f4511fc7efdae: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/find_adapters.nf
+  Script_4955288afd8ca61e: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/multiqc/main.nf
+  Script_4bd4be6fa20bcabd: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/crisprcleanr/normalize/main.nf
+  Script_9a70f137e23bfce6: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/mageck/flutemle.nf
+  Script_6fbcf8477f9d7d4c: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/subworkflows/nf-core/utils_nfcore_pipeline/main.nf
+  Script_bbe199b53b9470f6: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/workflows/crisprseq_screening.nf
+  Script_07dc9629fb0b74a6: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/samtools/index/main.nf
+  Script_973069c6b2f5a9ca: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/bagel2/fc.nf
+  Script_f4784eefec6501cd: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/orient_reference.nf
+  Script_af0b0c9c063edd50: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/racon/main.nf
+  Script_b96ed479e018148c: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/extract_umis.nf
+  Script_d8e65b113c3b6186: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/bwa/index/main.nf
+  Script_456a9cb2f2044bbb: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/workflows/crisprseq_targeted.nf
+  Script_943fc5eedde7d66e: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/venndiagram.nf
+  Script_2f0ee2568c3b2e68: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/alignment_summary.nf
+  Script_6580b6bb3fc861f0: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/crisprseq_plotter.nf
+  Script_24c71c5fd9bd2b5c: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/clonality_classifier.nf
+  Script_6b9506f083c48b86: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/bowtie2/build/main.nf
+  Script_79e52c08c2a5438a: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/vsearch/cluster/main.nf
+  Script_23ae7db56f8ccc73: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/pear/main.nf
+  Script_982a1f700f3562a3: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/main.nf
+  Script_0efe1bd11f3c1ecf: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/bwa/mem/main.nf
+  Script_15a6f18236447b08: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/cat/fastq/main.nf
+  Script_d3281d70fafefcca: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/template_reference.nf
+  Script_e4a7ddef4c4a998b: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/minimap2/index/main.nf
+  Script_af4dff8219377245: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/cutadapt/main.nf
+  Script_88dab8cab7d66716: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/clustering_summary.nf
+  Script_bed25b0b07b2d2bd: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/mageck/test/main.nf
+  Script_ab136150e5576851: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/minimap2/align/main.nf
+  Script_95594b48610bf40f: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/nf-core/bowtie2/align/main.nf
+  Script_e1cfe924f8f38887: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/modules/local/preprocessing_summary.nf
+Sep-02 16:23:57.580 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Sep-02 16:23:57.580 [main] DEBUG nextflow.Session - Session await
+Sep-02 16:23:57.599 [Actor Thread 10] DEBUG nextflow.file.FileCollector - Deleting file collector temp dir: /home/ec2-user/data/nextflow/tmp/nxf-10914489090387866281
+Sep-02 16:23:57.743 [FileTransfer-1] DEBUG nextflow.file.FilePorter - Copying foreign file https://raw.githubusercontent.com/nf-core/test-datasets/crisprseq/testdata-edition/chr6-61942198-61942498_R1.fastq.gz to work dir: /home/ec2-user/data/nextflow/work_500/stage-bfa35376-cb4d-40b6-b528-c47eedb93d5e/61/15c0b99b1a0102ee8015c7853a625f/chr6-61942198-61942498_R1.fastq.gz
+Sep-02 16:23:57.753 [Actor Thread 2] DEBUG nextflow.sort.BigSort - Sort completed -- entries: 1; slices: 1; internal sort time: 0.007 s; external sort time: 0.01 s; total time: 0.017 s
+Sep-02 16:23:57.753 [Actor Thread 8] DEBUG nextflow.sort.BigSort - Sort completed -- entries: 1; slices: 1; internal sort time: 0.006 s; external sort time: 0.011 s; total time: 0.017 s
+Sep-02 16:23:57.754 [Actor Thread 8] DEBUG nextflow.file.FileCollector - >> temp file exists? false
+Sep-02 16:23:57.754 [Actor Thread 2] DEBUG nextflow.file.FileCollector - >> temp file exists? false
+Sep-02 16:23:57.754 [Actor Thread 2] DEBUG nextflow.file.FileCollector - Missed collect-file cache -- cause: java.nio.file.NoSuchFileException: /home/ec2-user/data/nextflow/work_500/collect-file/4adedae20573857c3464211b19d4826c
+Sep-02 16:23:57.754 [Actor Thread 8] DEBUG nextflow.file.FileCollector - Missed collect-file cache -- cause: java.nio.file.NoSuchFileException: /home/ec2-user/data/nextflow/work_500/collect-file/02edb8bc20c8432a4a352fdf5e7db7c7
+Sep-02 16:23:57.757 [Actor Thread 1] DEBUG nextflow.sort.BigSort - Sort completed -- entries: 3; slices: 1; internal sort time: 0.017 s; external sort time: 0.001 s; total time: 0.018 s
+Sep-02 16:23:57.757 [Actor Thread 1] DEBUG nextflow.file.FileCollector - >> temp file exists? false
+Sep-02 16:23:57.757 [Actor Thread 1] DEBUG nextflow.file.FileCollector - Missed collect-file cache -- cause: java.nio.file.NoSuchFileException: /home/ec2-user/data/nextflow/work_500/collect-file/268d48b95a40a9837a9d3fcb594886c4
+Sep-02 16:23:57.761 [FileTransfer-2] DEBUG nextflow.file.FilePorter - Copying foreign file https://raw.githubusercontent.com/nf-core/test-datasets/crisprseq/testdata-edition/hCas9-AAVS1-a_R1.fastq.gz to work dir: /home/ec2-user/data/nextflow/work_500/stage-bfa35376-cb4d-40b6-b528-c47eedb93d5e/63/0906661ed7e742a5f8c9d421eb7517/hCas9-AAVS1-a_R1.fastq.gz
+Sep-02 16:23:57.761 [FileTransfer-3] DEBUG nextflow.file.FilePorter - Copying foreign file https://raw.githubusercontent.com/nf-core/test-datasets/crisprseq/testdata-edition/hCas9-AAVS1-a_R2.fastq.gz to work dir: /home/ec2-user/data/nextflow/work_500/stage-bfa35376-cb4d-40b6-b528-c47eedb93d5e/68/4d5b393f311c2fc77d9b19e22551f8/hCas9-AAVS1-a_R2.fastq.gz
+Sep-02 16:23:57.762 [FileTransfer-4] DEBUG nextflow.file.FilePorter - Copying foreign file https://raw.githubusercontent.com/nf-core/test-datasets/crisprseq/testdata-edition/hCas9-TRAC-a_R1.fastq.gz to work dir: /home/ec2-user/data/nextflow/work_500/stage-bfa35376-cb4d-40b6-b528-c47eedb93d5e/30/1af85102a6a59f69f3f65d4ae47f29/hCas9-TRAC-a_R1.fastq.gz
+Sep-02 16:23:57.762 [FileTransfer-5] DEBUG nextflow.file.FilePorter - Copying foreign file https://raw.githubusercontent.com/nf-core/test-datasets/crisprseq/testdata-edition/hCas9-TRAC-a_R2.fastq.gz to work dir: /home/ec2-user/data/nextflow/work_500/stage-bfa35376-cb4d-40b6-b528-c47eedb93d5e/87/599791be9911d90cf046a3428b8ffd/hCas9-TRAC-a_R2.fastq.gz
+Sep-02 16:23:57.770 [Actor Thread 2] DEBUG nextflow.file.FileCollector - Saved collect-files list to: /home/ec2-user/data/nextflow/work_500/collect-file/4adedae20573857c3464211b19d4826c
+Sep-02 16:23:57.773 [Actor Thread 8] DEBUG nextflow.file.FileCollector - Saved collect-files list to: /home/ec2-user/data/nextflow/work_500/collect-file/02edb8bc20c8432a4a352fdf5e7db7c7
+Sep-02 16:23:57.782 [Actor Thread 1] DEBUG nextflow.file.FileCollector - Saved collect-files list to: /home/ec2-user/data/nextflow/work_500/collect-file/268d48b95a40a9837a9d3fcb594886c4
+Sep-02 16:23:57.804 [Actor Thread 16] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=https://depot.galaxyproject.org/singularity/mulled-v2-63136bce0d642de81864be727b6b42a26026e33b:d3ce5caf7bcbf6cecedcf51b0135646831c01e77-0; path=/home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-mulled-v2-63136bce0d642de81864be727b6b42a26026e33b-d3ce5caf7bcbf6cecedcf51b0135646831c01e77-0.img
+Sep-02 16:23:57.809 [Actor Thread 8] DEBUG nextflow.file.FileCollector - Deleting file collector temp dir: /home/ec2-user/data/nextflow/tmp/nxf-5180060334253149568
+Sep-02 16:23:57.810 [Actor Thread 2] DEBUG nextflow.file.FileCollector - Deleting file collector temp dir: /home/ec2-user/data/nextflow/tmp/nxf-2840327977515591196
+Sep-02 16:23:57.811 [Actor Thread 1] DEBUG nextflow.file.FileCollector - Deleting file collector temp dir: /home/ec2-user/data/nextflow/tmp/nxf-9975897481271801436
+Sep-02 16:23:57.821 [Actor Thread 10] DEBUG nextflow.util.HashBuilder - Hash asset file sha-256: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/bin/revComp_reference.R
+Sep-02 16:23:57.834 [Actor Thread 2] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=https://depot.galaxyproject.org/singularity/fastqc:0.12.1--hdfd78af_0; path=/home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-fastqc-0.12.1--hdfd78af_0.img
+Sep-02 16:23:57.878 [Task submitter] WARN  nextflow.processor.TaskConfig - Directive `process.shell` cannot contain new-line characters - offending value: [bash
+
+set -e # Exit if a tool returns a non-zero status/exit code
+set -u # Treat unset variables and parameters as an error
+set -o pipefail # Returns the status of the last command to exit with a non-zero status or zero if all successfully execute
+set -C # No clobber - prevent output redirection from overwriting files.
+]
+Sep-02 16:23:57.923 [Actor Thread 5] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=https://depot.galaxyproject.org/singularity/pear:0.9.6--h67092d7_8; path=/home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-pear-0.9.6--h67092d7_8.img
+Sep-02 16:23:57.927 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:23:57.930 [Task submitter] INFO  nextflow.Session - [ee/fd0be9] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ORIENT_REFERENCE (hCas9-TRAC-a)
+Sep-02 16:23:57.947 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:23:57.947 [Task submitter] INFO  nextflow.Session - [6c/90f180] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ORIENT_REFERENCE (chr6)
+Sep-02 16:23:57.960 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:23:57.960 [Task submitter] INFO  nextflow.Session - [39/705c4b] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ORIENT_REFERENCE (hCas9-AAVS1-a)
+Sep-02 16:23:57.976 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:23:57.976 [Task submitter] INFO  nextflow.Session - [d9/0111fe] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FASTQC (chr6)
+Sep-02 16:24:02.464 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FASTQC (chr6); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/d9/0111fe3acf7b1b8d75d8d0c4704a07]
+Sep-02 16:24:02.464 [Task monitor] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'TaskFinalizer' minSize=10; maxSize=24; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Sep-02 16:24:02.483 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:02.483 [Task submitter] INFO  nextflow.Session - [54/15e2c2] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:PEAR (hCas9-TRAC-a)
+Sep-02 16:24:02.499 [Actor Thread 7] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=https://depot.galaxyproject.org/singularity/mulled-v2-072d35963d44d865c76d05a6b1e778257e030d55:0; path=/home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-mulled-v2-072d35963d44d865c76d05a6b1e778257e030d55-0.img
+Sep-02 16:24:02.502 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:02.503 [Task submitter] INFO  nextflow.Session - [1f/a7aa57] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:PEAR (hCas9-AAVS1-a)
+Sep-02 16:24:02.513 [TaskFinalizer-1] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'PublishDir' minSize=10; maxSize=24; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Sep-02 16:24:02.531 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:02.533 [Task submitter] INFO  nextflow.Session - [55/14b4c6] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FIND_ADAPTERS (chr6)
+Sep-02 16:24:06.404 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 7; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FIND_ADAPTERS (chr6); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/55/14b4c6ac89145c71c084183dd27724]
+Sep-02 16:24:06.655 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 4; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ORIENT_REFERENCE (chr6); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/6c/90f180dc5aeccbddc9343fef585a7b]
+Sep-02 16:24:06.670 [Actor Thread 9] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=https://depot.galaxyproject.org/singularity/mulled-v2-a1551cc3e69024a9d829751175a0fe30dd5035e8:666109dfd8ca00d6bbfab5188ff2735bfcc400d7-0; path=/home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-mulled-v2-a1551cc3e69024a9d829751175a0fe30dd5035e8-666109dfd8ca00d6bbfab5188ff2735bfcc400d7-0.img
+Sep-02 16:24:06.674 [Actor Thread 10] DEBUG nextflow.util.HashBuilder - Hash asset file sha-256: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/bin/template_reference.R
+Sep-02 16:24:06.692 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 6; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ORIENT_REFERENCE (hCas9-TRAC-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/ee/fd0be9190a345783b213ed81583fa7]
+Sep-02 16:24:06.740 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 5; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ORIENT_REFERENCE (hCas9-AAVS1-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/39/705c4bfd3d89a8fbe4d23346d61833]
+Sep-02 16:24:06.759 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:06.760 [Task submitter] INFO  nextflow.Session - [cf/f5cc05] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:TEMPLATE_REFERENCE (chr6)
+Sep-02 16:24:13.140 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:PEAR (hCas9-TRAC-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/54/15e2c22f68dbbc441b65039b8efc74]
+Sep-02 16:24:13.951 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 3; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:PEAR (hCas9-AAVS1-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/1f/a7aa5716b04d9183df6188f60f3306]
+Sep-02 16:24:13.964 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:13.964 [Task submitter] INFO  nextflow.Session - [d0/7d6531] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FASTQC (hCas9-TRAC-a)
+Sep-02 16:24:16.820 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 8; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:TEMPLATE_REFERENCE (chr6); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/cf/f5cc051e7bf576c617f2a070e9f819]
+Sep-02 16:24:16.830 [Actor Thread 9] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=https://depot.galaxyproject.org/singularity/mulled-v2-66534bcbb7031a148b13e2ad42583020b9cd25c4:3a70f8bc7e17b723591f6132418640cfdbc88246-0; path=/home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-mulled-v2-66534bcbb7031a148b13e2ad42583020b9cd25c4-3a70f8bc7e17b723591f6132418640cfdbc88246-0.img
+Sep-02 16:24:16.837 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:16.837 [Task submitter] INFO  nextflow.Session - [3c/c7e6f2] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FASTQC (hCas9-AAVS1-a)
+Sep-02 16:24:16.954 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 9; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FASTQC (hCas9-TRAC-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/d0/7d653178333c2fd341e425b9b0013d]
+Sep-02 16:24:16.969 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:16.969 [Task submitter] INFO  nextflow.Session - [b8/f731d5] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_TEMPLATE (chr6)
+Sep-02 16:24:17.403 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 11; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_TEMPLATE (chr6); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/b8/f731d5b9365d21373c1f29597e8fe6]
+Sep-02 16:24:17.417 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:17.418 [Task submitter] INFO  nextflow.Session - [4c/550b68] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FIND_ADAPTERS (hCas9-TRAC-a)
+Sep-02 16:24:17.481 [TaskFinalizer-10] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_TEMPLATE > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Sep-02 16:24:17.482 [TaskFinalizer-10] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_TEMPLATE > Skipping output binding because one or more optional files are missing: fileoutparam<2:1>
+Sep-02 16:24:19.613 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 12; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FIND_ADAPTERS (hCas9-TRAC-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/4c/550b689d442ca948ede47a5adf39a7]
+Sep-02 16:24:19.832 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 10; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FASTQC (hCas9-AAVS1-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/3c/c7e6f2845948e343ef5667a1e693f0]
+Sep-02 16:24:19.866 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:19.866 [Task submitter] INFO  nextflow.Session - [c1/b9e359] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FIND_ADAPTERS (hCas9-AAVS1-a)
+Sep-02 16:24:21.792 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 13; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:FIND_ADAPTERS (hCas9-AAVS1-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/c1/b9e359194939cc5809938f72754afa]
+Sep-02 16:24:21.802 [Actor Thread 6] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=https://depot.galaxyproject.org/singularity/cutadapt:4.6--py39hf95cd2a_1; path=/home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-cutadapt-4.6--py39hf95cd2a_1.img
+Sep-02 16:24:21.823 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:21.824 [Task submitter] INFO  nextflow.Session - [16/0b682e] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CUTADAPT (hCas9-TRAC-a)
+Sep-02 16:24:21.836 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:21.836 [Task submitter] INFO  nextflow.Session - [8c/945d2c] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CUTADAPT (hCas9-AAVS1-a)
+Sep-02 16:24:25.783 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 15; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CUTADAPT (hCas9-TRAC-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/16/0b682e1970d0ccf973c4e4d18f723b]
+Sep-02 16:24:25.797 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:25.797 [Task submitter] INFO  nextflow.Session - [5b/08c774] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CUTADAPT (chr6)
+Sep-02 16:24:27.396 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 14; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CUTADAPT (chr6); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/5b/08c774e95e8bb774c4c877d39180ec]
+Sep-02 16:24:27.984 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 16; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CUTADAPT (hCas9-AAVS1-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/8c/945d2cde64e0c99695997c8d33a42f]
+Sep-02 16:24:27.995 [Actor Thread 8] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=https://depot.galaxyproject.org/singularity/seqtk:1.4--he4a0461_1; path=/home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-seqtk-1.4--he4a0461_1.img
+Sep-02 16:24:28.015 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:28.015 [Task submitter] INFO  nextflow.Session - [01/4f76d3] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SEQTK_SEQ_MASK (hCas9-AAVS1-a)
+Sep-02 16:24:28.028 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:28.028 [Task submitter] INFO  nextflow.Session - [5d/9986ce] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SEQTK_SEQ_MASK (chr6)
+Sep-02 16:24:28.040 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:28.040 [Task submitter] INFO  nextflow.Session - [d1/061201] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SEQTK_SEQ_MASK (hCas9-TRAC-a)
+Sep-02 16:24:28.506 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 19; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SEQTK_SEQ_MASK (hCas9-AAVS1-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/01/4f76d34e81031c77d1dfc8dea2ec02]
+Sep-02 16:24:28.536 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:28.536 [Task submitter] INFO  nextflow.Session - [24/122646] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_ORIGINAL (hCas9-AAVS1-a)
+Sep-02 16:24:28.575 [Actor Thread 4] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=https://depot.galaxyproject.org/singularity/biopython:1.78; path=/home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-biopython-1.78.img
+Sep-02 16:24:28.616 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 17; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SEQTK_SEQ_MASK (hCas9-TRAC-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/d1/06120171045fd0a69ab3f73c3973ca]
+Sep-02 16:24:28.640 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:28.640 [Task submitter] INFO  nextflow.Session - [ac/14b4eb] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:PREPROCESSING_SUMMARY (hCas9-AAVS1-a)
+Sep-02 16:24:28.850 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 18; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SEQTK_SEQ_MASK (chr6); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/5d/9986ceda9a1f0511de54bb7c40e718]
+Sep-02 16:24:28.875 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:28.875 [Task submitter] INFO  nextflow.Session - [b6/8342e5] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:PREPROCESSING_SUMMARY (hCas9-TRAC-a)
+Sep-02 16:24:29.293 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 20; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_ORIGINAL (hCas9-AAVS1-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/24/122646fa4928bd014ac839fa25269c]
+Sep-02 16:24:29.299 [TaskFinalizer-10] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_ORIGINAL > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Sep-02 16:24:29.299 [TaskFinalizer-10] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_ORIGINAL > Skipping output binding because one or more optional files are missing: fileoutparam<2:1>
+Sep-02 16:24:29.306 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:29.306 [Task submitter] INFO  nextflow.Session - [94/4ac981] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_ORIGINAL (hCas9-TRAC-a)
+Sep-02 16:24:29.311 [Actor Thread 6] INFO  nextflow.container.SingularityCache - Pulling Singularity image https://depot.galaxyproject.org/singularity/samtools:1.19.2--h50ea8bc_0 [cache /home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-samtools-1.19.2--h50ea8bc_0.img]
+Sep-02 16:24:29.321 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:29.321 [Task submitter] INFO  nextflow.Session - [eb/3b766b] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:PREPROCESSING_SUMMARY (chr6)
+Sep-02 16:24:30.054 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 23; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_ORIGINAL (hCas9-TRAC-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/94/4ac98112162e0496fedaff057c4195]
+Sep-02 16:24:30.060 [TaskFinalizer-1] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_ORIGINAL > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Sep-02 16:24:30.060 [TaskFinalizer-1] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_ORIGINAL > Skipping output binding because one or more optional files are missing: fileoutparam<2:1>
+Sep-02 16:24:30.071 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:30.071 [Task submitter] INFO  nextflow.Session - [8e/7a4235] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_ORIGINAL (chr6)
+Sep-02 16:24:30.599 [Actor Thread 6] DEBUG nextflow.container.SingularityCache - Singularity pull complete image=https://depot.galaxyproject.org/singularity/samtools:1.19.2--h50ea8bc_0 path=/home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-samtools-1.19.2--h50ea8bc_0.img
+Sep-02 16:24:32.516 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 24; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_ORIGINAL (chr6); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/8e/7a42358360dcfb1188dc7c1697f9a3]
+Sep-02 16:24:32.523 [TaskFinalizer-2] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_ORIGINAL > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Sep-02 16:24:32.523 [TaskFinalizer-2] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MINIMAP2_ALIGN_ORIGINAL > Skipping output binding because one or more optional files are missing: fileoutparam<2:1>
+Sep-02 16:24:32.532 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:32.532 [Task submitter] INFO  nextflow.Session - [87/cc3852] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SAMTOOLS_INDEX (hCas9-TRAC-a)
+Sep-02 16:24:32.548 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:32.548 [Task submitter] INFO  nextflow.Session - [10/a170da] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SAMTOOLS_INDEX (hCas9-AAVS1-a)
+Sep-02 16:24:32.991 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 21; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:PREPROCESSING_SUMMARY (hCas9-AAVS1-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/ac/14b4ebe9ad1e1cf95725446b1d3b9d]
+Sep-02 16:24:33.009 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:33.010 [Task submitter] INFO  nextflow.Session - [31/da66c1] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SAMTOOLS_INDEX (chr6)
+Sep-02 16:24:33.057 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 27; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SAMTOOLS_INDEX (hCas9-TRAC-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/87/cc3852fbc03ead6fcfc9bd32fac9ce]
+Sep-02 16:24:33.063 [TaskFinalizer-4] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SAMTOOLS_INDEX > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Sep-02 16:24:33.063 [TaskFinalizer-4] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SAMTOOLS_INDEX > Skipping output binding because one or more optional files are missing: fileoutparam<2:1>
+Sep-02 16:24:33.066 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 26; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SAMTOOLS_INDEX (hCas9-AAVS1-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/10/a170da075fa0e1160df2b965869886]
+Sep-02 16:24:33.071 [TaskFinalizer-5] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SAMTOOLS_INDEX > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Sep-02 16:24:33.072 [TaskFinalizer-5] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SAMTOOLS_INDEX > Skipping output binding because one or more optional files are missing: fileoutparam<2:1>
+Sep-02 16:24:33.075 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:33.076 [Task submitter] INFO  nextflow.Session - [a8/1f11dc] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLUSTERING_SUMMARY (hCas9-AAVS1-a)
+Sep-02 16:24:33.496 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 28; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SAMTOOLS_INDEX (chr6); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/31/da66c1c294bc3139c6988de4ab7fd7]
+Sep-02 16:24:33.501 [TaskFinalizer-6] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SAMTOOLS_INDEX > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Sep-02 16:24:33.501 [TaskFinalizer-6] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:SAMTOOLS_INDEX > Skipping output binding because one or more optional files are missing: fileoutparam<2:1>
+Sep-02 16:24:33.523 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 22; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:PREPROCESSING_SUMMARY (hCas9-TRAC-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/b6/8342e5c7d37b52668fc90f0ce89026]
+Sep-02 16:24:33.549 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:33.550 [Task submitter] INFO  nextflow.Session - [76/7ee415] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLUSTERING_SUMMARY (hCas9-TRAC-a)
+Sep-02 16:24:36.155 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 29; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLUSTERING_SUMMARY (hCas9-AAVS1-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/a8/1f11dce90969ddf8021bfe961cea13]
+Sep-02 16:24:36.169 [Actor Thread 6] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=https://depot.galaxyproject.org/singularity/pysam:0.20.0--py310hff46b53_0; path=/home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-pysam-0.20.0--py310hff46b53_0.img
+Sep-02 16:24:36.187 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:36.188 [Task submitter] INFO  nextflow.Session - [30/923412] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ALIGNMENT_SUMMARY (hCas9-AAVS1-a)
+Sep-02 16:24:36.511 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 30; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLUSTERING_SUMMARY (hCas9-TRAC-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/76/7ee415e5de5ae7f7bc8e1fb14b571e]
+Sep-02 16:24:36.537 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:36.537 [Task submitter] INFO  nextflow.Session - [c3/29b3c0] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ALIGNMENT_SUMMARY (hCas9-TRAC-a)
+Sep-02 16:24:36.915 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 31; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ALIGNMENT_SUMMARY (hCas9-AAVS1-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/30/923412b21ec997d292241b10e45e6d]
+Sep-02 16:24:36.928 [Actor Thread 4] INFO  nextflow.container.SingularityCache - Pulling Singularity image https://depot.galaxyproject.org/singularity/mulled-v2-61c59287265e27f2c4589cfc90013ef6c2c6acf1:fb3e48060a8c0e5108b1b60a2ad7e090cfb9eee5-0 [cache /home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-mulled-v2-61c59287265e27f2c4589cfc90013ef6c2c6acf1-fb3e48060a8c0e5108b1b60a2ad7e090cfb9eee5-0.img]
+Sep-02 16:24:37.221 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 32; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ALIGNMENT_SUMMARY (hCas9-TRAC-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/c3/29b3c047a0b8ce26f7ba6b84497ee5]
+Sep-02 16:24:38.160 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 25; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:PREPROCESSING_SUMMARY (chr6); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/eb/3b766bed2135ed0b040c9d94b70375]
+Sep-02 16:24:38.184 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:38.184 [Task submitter] INFO  nextflow.Session - [e3/ed75da] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLUSTERING_SUMMARY (chr6)
+Sep-02 16:24:42.979 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 35; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLUSTERING_SUMMARY (chr6); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/e3/ed75da61f0fd4c49985e4162549c6d]
+Sep-02 16:24:43.003 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:43.003 [Task submitter] INFO  nextflow.Session - [52/cb51c3] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ALIGNMENT_SUMMARY (chr6)
+Sep-02 16:24:43.700 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 36; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:ALIGNMENT_SUMMARY (chr6); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/52/cb51c39ae1c135cfcd9c28f6b383be]
+Sep-02 16:24:58.861 [Actor Thread 4] DEBUG nextflow.container.SingularityCache - Singularity pull complete image=https://depot.galaxyproject.org/singularity/mulled-v2-61c59287265e27f2c4589cfc90013ef6c2c6acf1:fb3e48060a8c0e5108b1b60a2ad7e090cfb9eee5-0 path=/home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-mulled-v2-61c59287265e27f2c4589cfc90013ef6c2c6acf1-fb3e48060a8c0e5108b1b60a2ad7e090cfb9eee5-0.img
+Sep-02 16:24:58.867 [Actor Thread 9] DEBUG nextflow.util.HashBuilder - Hash asset file sha-256: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/bin/cigar_parser.R
+Sep-02 16:24:58.876 [Task submitter] WARN  nextflow.processor.TaskConfig - Directive `process.shell` cannot contain new-line characters - offending value: [bash
+
+set -e # Exit if a tool returns a non-zero status/exit code
+set -u # Treat unset variables and parameters as an error
+set -o pipefail # Returns the status of the last command to exit with a non-zero status or zero if all successfully execute
+set -C # No clobber - prevent output redirection from overwriting files.
+]
+Sep-02 16:24:58.890 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:58.890 [Task submitter] INFO  nextflow.Session - [1e/adc0d2] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CIGAR_PARSER (hCas9-TRAC-a)
+Sep-02 16:24:58.904 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:24:58.904 [Task submitter] INFO  nextflow.Session - [37/37b961] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CIGAR_PARSER (hCas9-AAVS1-a)
+Sep-02 16:25:27.449 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 33; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CIGAR_PARSER (hCas9-AAVS1-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/37/37b9612f8e645fcad90935d8dfc444]
+Sep-02 16:25:27.464 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:25:27.464 [Task submitter] INFO  nextflow.Session - [81/20eb88] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CIGAR_PARSER (chr6)
+Sep-02 16:25:27.468 [Actor Thread 9] INFO  nextflow.container.SingularityCache - Pulling Singularity image https://depot.galaxyproject.org/singularity/mulled-v2-6de07928379e6eface08a0019c4a1d6b5192e805:0d77388f37ddd923a087f7792e30e83ab54c918c-0 [cache /home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-mulled-v2-6de07928379e6eface08a0019c4a1d6b5192e805-0d77388f37ddd923a087f7792e30e83ab54c918c-0.img]
+Sep-02 16:25:27.480 [Actor Thread 6] INFO  nextflow.container.SingularityCache - Pulling Singularity image https://depot.galaxyproject.org/singularity/mulled-v2-9d836da785124bb367cbe6fbfc00dddd2107a4da:b033d6a4ea3a42a6f5121a82b262800f1219b382-0 [cache /home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-mulled-v2-9d836da785124bb367cbe6fbfc00dddd2107a4da-b033d6a4ea3a42a6f5121a82b262800f1219b382-0.img]
+Sep-02 16:25:31.306 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 34; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CIGAR_PARSER (hCas9-TRAC-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/1e/adc0d2ab7c1a377abffd27605e73e0]
+Sep-02 16:25:37.187 [Actor Thread 6] DEBUG nextflow.container.SingularityCache - Singularity pull complete image=https://depot.galaxyproject.org/singularity/mulled-v2-9d836da785124bb367cbe6fbfc00dddd2107a4da:b033d6a4ea3a42a6f5121a82b262800f1219b382-0 path=/home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-mulled-v2-9d836da785124bb367cbe6fbfc00dddd2107a4da-b033d6a4ea3a42a6f5121a82b262800f1219b382-0.img
+Sep-02 16:25:37.210 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:25:37.211 [Task submitter] INFO  nextflow.Session - [a8/e6563e] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLONALITY_CLASSIFIER (hCas9-TRAC-a)
+Sep-02 16:25:37.221 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:25:37.222 [Task submitter] INFO  nextflow.Session - [65/09e0a8] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLONALITY_CLASSIFIER (hCas9-AAVS1-a)
+Sep-02 16:25:40.828 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 39; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLONALITY_CLASSIFIER (hCas9-AAVS1-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/65/09e0a8aad58d584dce0973b72fa04f]
+Sep-02 16:25:40.864 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 41; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLONALITY_CLASSIFIER (hCas9-TRAC-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/a8/e6563efbe10332e2db4fc8cadafc4d]
+Sep-02 16:25:54.900 [Actor Thread 9] DEBUG nextflow.container.SingularityCache - Singularity pull complete image=https://depot.galaxyproject.org/singularity/mulled-v2-6de07928379e6eface08a0019c4a1d6b5192e805:0d77388f37ddd923a087f7792e30e83ab54c918c-0 path=/home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-mulled-v2-6de07928379e6eface08a0019c4a1d6b5192e805-0d77388f37ddd923a087f7792e30e83ab54c918c-0.img
+Sep-02 16:25:54.914 [Actor Thread 15] DEBUG nextflow.util.HashBuilder - Hash asset file sha-256: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/bin/plotter.R
+Sep-02 16:25:54.952 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:25:54.952 [Task submitter] INFO  nextflow.Session - [18/e5c6ed] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CRISPRSEQ_PLOTTER (hCas9-TRAC-a)
+Sep-02 16:26:14.194 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 40; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CRISPRSEQ_PLOTTER (hCas9-TRAC-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/18/e5c6ed2e24ebf4dc4b602d5283909f]
+Sep-02 16:26:14.195 [Task submitter] WARN  nextflow.processor.TaskConfig - Directive `process.shell` cannot contain new-line characters - offending value: [bash
+
+set -e # Exit if a tool returns a non-zero status/exit code
+set -u # Treat unset variables and parameters as an error
+set -o pipefail # Returns the status of the last command to exit with a non-zero status or zero if all successfully execute
+set -C # No clobber - prevent output redirection from overwriting files.
+]
+Sep-02 16:26:14.209 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:26:14.210 [Task submitter] INFO  nextflow.Session - [ff/7cda58] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CRISPRSEQ_PLOTTER (hCas9-AAVS1-a)
+Sep-02 16:26:14.225 [Actor Thread 15] DEBUG nextflow.sort.BigSort - Sort completed -- entries: 17; slices: 1; internal sort time: 0.01 s; external sort time: 0.003 s; total time: 0.013 s
+Sep-02 16:26:14.226 [Actor Thread 15] DEBUG nextflow.file.FileCollector - >> temp file exists? false
+Sep-02 16:26:14.226 [Actor Thread 15] DEBUG nextflow.file.FileCollector - Missed collect-file cache -- cause: java.nio.file.NoSuchFileException: /home/ec2-user/data/nextflow/work_500/collect-file/465c243eb4612e7b484eafd231375fbc
+Sep-02 16:26:14.240 [Actor Thread 15] DEBUG nextflow.file.FileCollector - Saved collect-files list to: /home/ec2-user/data/nextflow/work_500/collect-file/465c243eb4612e7b484eafd231375fbc
+Sep-02 16:26:14.270 [Actor Thread 15] DEBUG nextflow.file.FileCollector - Deleting file collector temp dir: /home/ec2-user/data/nextflow/tmp/nxf-17167615763197011856
+Sep-02 16:26:32.909 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 38; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CRISPRSEQ_PLOTTER (hCas9-AAVS1-a); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/ff/7cda58978732a726962b0ed4f22c5a]
+Sep-02 16:27:25.236 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 37; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CIGAR_PARSER (chr6); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/81/20eb88585559932395e9ec84f1d6f3]
+Sep-02 16:27:25.258 [Task submitter] WARN  nextflow.processor.TaskConfig - Directive `process.shell` cannot contain new-line characters - offending value: [bash
+
+set -e # Exit if a tool returns a non-zero status/exit code
+set -u # Treat unset variables and parameters as an error
+set -o pipefail # Returns the status of the last command to exit with a non-zero status or zero if all successfully execute
+set -C # No clobber - prevent output redirection from overwriting files.
+]
+Sep-02 16:27:25.263 [Actor Thread 9] INFO  nextflow.container.SingularityCache - Pulling Singularity image https://depot.galaxyproject.org/singularity/multiqc:1.25.1--pyhdfd78af_0 [cache /home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-multiqc-1.25.1--pyhdfd78af_0.img]
+Sep-02 16:27:25.272 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:27:25.272 [Task submitter] INFO  nextflow.Session - [70/85191e] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CRISPRSEQ_PLOTTER (chr6)
+Sep-02 16:27:25.286 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:27:25.286 [Task submitter] INFO  nextflow.Session - [d1/fd2a22] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLONALITY_CLASSIFIER (chr6)
+Sep-02 16:27:28.491 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 43; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CLONALITY_CLASSIFIER (chr6); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/d1/fd2a2278ae9ae318d18814aa0ba70c]
+Sep-02 16:27:46.255 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 42; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:CRISPRSEQ_PLOTTER (chr6); status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/70/85191ec4ac3d267b29615eae3fa1e3]
+Sep-02 16:27:49.511 [Actor Thread 9] DEBUG nextflow.container.SingularityCache - Singularity pull complete image=https://depot.galaxyproject.org/singularity/multiqc:1.25.1--pyhdfd78af_0 path=/home/ec2-user/data/nextflow/singularity_cache/depot.galaxyproject.org-singularity-multiqc-1.25.1--pyhdfd78af_0.img
+Sep-02 16:27:49.519 [Actor Thread 4] DEBUG nextflow.util.HashBuilder - Hash asset file sha-256: /home/ec2-user/.nextflow/assets/nf-core/crisprseq/assets/multiqc_config.yml
+Sep-02 16:27:49.541 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Sep-02 16:27:49.541 [Task submitter] INFO  nextflow.Session - [af/3f4d28] Submitted process > NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MULTIQC
+Sep-02 16:28:12.742 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 44; name: NFCORE_CRISPRSEQ:CRISPRSEQ_TARGETED:MULTIQC; status: COMPLETED; exit: 0; error: -; workDir: /home/ec2-user/data/nextflow/work_500/af/3f4d2815cb7eca43157c903099a8fb]
+Sep-02 16:28:12.770 [main] DEBUG nextflow.Session - Session await > all processes finished
+Sep-02 16:28:12.843 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: local) - terminating tasks monitor poll loop
+Sep-02 16:28:12.843 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Sep-02 16:28:12.846 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'TaskFinalizer' shutdown completed (hard=false)
+Sep-02 16:28:13.156 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'PublishDir' shutdown completed (hard=false)
+Sep-02 16:28:13.161 [main] INFO  nextflow.Nextflow - -[0;35m[nf-core/crisprseq][0;32m Pipeline completed successfully[0m-
+Sep-02 16:28:13.165 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=44; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=19m 56s; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=6; peakCpus=8; peakMemory=48 GB; ]
+Sep-02 16:28:13.165 [main] DEBUG nextflow.trace.TraceFileObserver - Workflow completed -- saving trace file
+Sep-02 16:28:13.169 [main] DEBUG nextflow.trace.ReportObserver - Workflow completed -- rendering execution report
+Sep-02 16:28:13.847 [main] DEBUG nextflow.trace.TimelineObserver - Workflow completed -- rendering execution timeline
+Sep-02 16:28:13.970 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+Sep-02 16:28:14.678 [main] INFO  org.pf4j.AbstractPluginManager - Stop plugin 'nf-schema@2.1.1'
+Sep-02 16:28:14.678 [main] DEBUG nextflow.plugin.BasePlugin - Plugin stopped nf-schema
+Sep-02 16:28:14.679 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'FileTransfer' shutdown completed (hard=false)
+Sep-02 16:28:14.680 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye
