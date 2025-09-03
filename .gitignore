@@ -1,0 +1,21 @@
+# Nextflow logs and computational files
+**/.nextflow
+**/.nextflow.log
+**/.nextflow.log.*
+**/work/
+**/results/
+*.out
+*.err
+*.log
+**/trace.txt
+**/timeline.html
+**/report.html
+**/dag.dot
+**/dag.html
+**/pipeline_info/
+
+# Nextflow specific directories and files
+nextflow/atacseq_extended/.nextflow*
+nextflow/atacseq/.nextflow*
+nextflow/scrnaseq/.nextflow*
+nextflow/crisprseq/.nextflow*
