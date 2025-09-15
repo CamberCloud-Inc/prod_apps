@@ -1,0 +1,80 @@
+{
+  "name": "nf-core-scrnaseq-docker-fix",
+  "description": "nf-core/scrnaseq is a bioinformatics analysis pipeline that can be used to analyse single-cell RNA sequencing data obtained from organisms with a reference genome and annotation. It takes a samplesheet and FASTQ files as input, performs quality control (QC), trimming and (pseudo-)alignment, and produces a gene expression matrix and extensive QC report.",
+  "content": "<h2 class=\"heading-node\"><strong>Introduction</strong></h2><p class=\"text-node\"><strong>nf-core/scrnaseq</strong> is a bioinformatics analysis pipeline that can be used to analyse single-cell RNA sequencing data obtained from organisms with a reference genome and annotation. It takes a samplesheet and FASTQ files as input, performs quality control (QC), trimming and (pseudo-)alignment, and produces a gene expression matrix and extensive QC report.</p><img src=\"https://raw.githubusercontent.com/nf-core/scrnaseq/master/docs/images/nf-core-scrnaseq_logo_light.png\" alt=\"nf-core/scrnaseq logo\" title=\"\" width=\"392\" height=\"256\"><p class=\"text-node\">The pipeline is built using <a class=\"link\" href=\"https://www.nextflow.io/\"><u>Nextflow</u></a>, a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker / Singularity containers making installation trivial and results highly reproducible.</p>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/scrnaseq/master/docs/images/nf-core-scrnaseq_logo_light.png",
+  "command": "nextflow run nf-core/scrnaseq --input ${input} --outdir ${output} -r ${revision} -c /etc/mpi/nextflow.camber.config -c ${overrideConfig}",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Selecting a preset will prefill the node configuration below. You can still edit the values.",
+      "options": [
+        {
+          "label": "Medium (16 GB, 8 cores)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Large (32 GB, 16 cores)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Input",
+      "name": "input",
+      "description": "Path to comma-separated file containing information about the samples in the experiment.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Stash File",
+      "label": "Output",
+      "name": "output",
+      "description": "The output directory where the results will be saved.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Input",
+      "label": "Revision",
+      "name": "revision",
+      "description": "Pipeline version to use",
+      "defaultValue": "4.0.0",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Stash File",
+      "label": "Override Config",
+      "name": "overrideConfig",
+      "description": "Optional Nextflow configuration file to override default resource settings",
+      "defaultValue": "",
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    }
+  ]
+}
