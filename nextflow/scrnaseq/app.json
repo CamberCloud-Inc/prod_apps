@@ -1,9 +1,10 @@
 {
-  "name": "nf-core-scrnaseq-docker-fix",
-  "description": "nf-core/scrnaseq is a bioinformatics analysis pipeline that can be used to analyse single-cell RNA sequencing data obtained from organisms with a reference genome and annotation. It takes a samplesheet and FASTQ files as input, performs quality control (QC), trimming and (pseudo-)alignment, and produces a gene expression matrix and extensive QC report.",
-  "content": "<h2 class=\"heading-node\"><strong>Introduction</strong></h2><p class=\"text-node\"><strong>nf-core/scrnaseq</strong> is a bioinformatics analysis pipeline that can be used to analyse single-cell RNA sequencing data obtained from organisms with a reference genome and annotation. It takes a samplesheet and FASTQ files as input, performs quality control (QC), trimming and (pseudo-)alignment, and produces a gene expression matrix and extensive QC report.</p><img src=\"https://raw.githubusercontent.com/nf-core/scrnaseq/master/docs/images/nf-core-scrnaseq_logo_light.png\" alt=\"nf-core/scrnaseq logo\" title=\"\" width=\"392\" height=\"256\"><p class=\"text-node\">The pipeline is built using <a class=\"link\" href=\"https://www.nextflow.io/\"><u>Nextflow</u></a>, a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker / Singularity containers making installation trivial and results highly reproducible.</p>",
+  "name": "scrnaseq-comprehensive",
+  "title": "Single-Cell RNA-seq: Gene Expression Analysis",
+  "description": "🧬 Comprehensive single-cell RNA sequencing analysis pipeline supporting multiple aligners (simpleaf, kallisto, STARsolo, cellranger) with flexible protocol configuration for 10x Genomics, DropSeq, and custom single-cell platforms.",
+  "content": "<h1 class=\"heading-node\">🧬 Single-Cell RNA-seq: Decoding Cellular Diversity</h1><p class=\"text-node\"><strong>What is Single-Cell RNA-seq?</strong></p><p class=\"text-node\">Single-cell RNA sequencing (scRNA-seq) revolutionizes our understanding of biology by measuring gene expression in individual cells rather than bulk tissue. This technique reveals cellular heterogeneity, developmental trajectories, and rare cell populations that would be hidden in traditional bulk RNA-seq analysis.</p><img src=\"https://raw.githubusercontent.com/nf-core/scrnaseq/master/docs/images/nf-core-scrnaseq_logo_light.png\" alt=\"nf-core/scrnaseq workflow\" title=\"Single-Cell RNA-seq Pipeline\" width=\"600\" height=\"400\"><h2 class=\"heading-node\">🎯 Choose Your Aligner</h2><p class=\"text-node\">This pipeline supports four major alignment approaches, each optimized for different experimental needs:</p><h3 class=\"heading-node\">📊 simpleaf (Alevin-fry) - Recommended</h3><ul><li><strong>🚀 Ultra-fast:</strong> Lightning-speed quantification with Alevin-fry</li><li><strong>🎯 Protocol flexibility:</strong> Define custom chemistries like <code>1{b[16]u[12]x:}2{r:}</code></li><li><strong>📋 Barcode control:</strong> Use trusted whitelists or derive from data</li><li><strong>✅ Best for:</strong> Most single-cell experiments, especially 10x data</li></ul><h3 class=\"heading-node\">🔬 kallisto|bustools</h3><ul><li><strong>⚡ Efficient:</strong> Pseudoalignment-based quantification</li><li><strong>🧬 Protocol support:</strong> Pre-defined protocols (10xv3, dropseq) or custom layouts</li><li><strong>🎨 Versatile:</strong> Excellent for comparative studies</li><li><strong>✅ Best for:</strong> Research requiring specific protocol customization</li></ul><h3 class=\"heading-node\">⭐ STARsolo</h3><ul><li><strong>🎯 10x optimized:</strong> Native support for 10x protocols (V1-V4)</li><li><strong>🧮 Comprehensive:</strong> Full alignment with detailed mapping statistics</li><li><strong>⚠️ Note:</strong> Limited support for non-10x custom protocols</li><li><strong>✅ Best for:</strong> 10x Genomics datasets requiring full alignment</li></ul><h3 class=\"heading-node\">🏢 cellranger/cellrangermulti/cellrangerarc</h3><ul><li><strong>🏭 Industry standard:</strong> 10x Genomics official pipeline</li><li><strong>🔧 Automated:</strong> Protocol detection and optimization</li><li><strong>📊 Multimodal:</strong> Supports feature barcoding and multi-omics</li><li><strong>✅ Best for:</strong> 10x data requiring official processing</li></ul><h2 class=\"heading-node\">🧪 Protocol Configuration Guide</h2><p class=\"text-node\"><strong>Understanding Cell Barcodes and Whitelists:</strong></p><ul><li><strong>🎯 Trusted Whitelists [WL✓]:</strong> Use known, validated barcode sets for reproducibility</li><li><strong>🔄 Data-derived [WL✗]:</strong> Let the algorithm discover barcodes from your data</li><li><strong>📊 Expected Cells:</strong> Guide cell calling with approximate cell count estimates</li></ul><h2 class=\"heading-node\">📋 Sample Sheet Configuration</h2><p class=\"text-node\">Your CSV samplesheet defines the experiment structure:</p><pre style=\"background-color: #f8f8f8; padding: 15px; border-radius: 5px; font-family: monospace;\">sample,fastq_1,fastq_2,expected_cells\ncontrol_rep1,control_1_R1.fastq.gz,control_1_R2.fastq.gz,5000\ncontrol_rep2,control_2_R1.fastq.gz,control_2_R2.fastq.gz,5000\ntreated_rep1,treated_1_R1.fastq.gz,treated_1_R2.fastq.gz,4500\ntreated_rep2,treated_2_R1.fastq.gz,treated_2_R2.fastq.gz,4500</pre><h2 class=\"heading-node\">📊 Your Results: Comprehensive Output</h2><h3 class=\"heading-node\">Gene Expression Data</h3><ul><li><strong>📊 Count Matrices:</strong> Gene × cell expression matrices in standard formats (H5, MTX)</li><li><strong>🏷️ Cell Metadata:</strong> Quality metrics, cell type assignments, and filtering statistics</li><li><strong>🧬 Feature Data:</strong> Gene annotations, mitochondrial content, and expression summaries</li></ul><h3 class=\"heading-node\">Quality Control</h3><ul><li><strong>📈 MultiQC Report:</strong> Comprehensive analysis summary with interactive plots</li><li><strong>🔍 Cell-level QC:</strong> UMI counts, gene detection, mitochondrial percentages</li><li><strong>📊 Sample Comparisons:</strong> Batch effects, sequencing depth, and technical metrics</li></ul><h3 class=\"heading-node\">Analysis-Ready Outputs</h3><ul><li><strong>🧮 Seurat Objects:</strong> Ready for downstream analysis in R</li><li><strong>🐍 AnnData Files:</strong> Compatible with scanpy and Python ecosystems</li><li><strong>📊 Visualization Files:</strong> UMAP/t-SNE coordinates and cluster assignments</li></ul><p class=\"text-node\"><strong>Perfect for Research in:</strong> Developmental biology • Cancer research • Immunology • Neuroscience • Plant biology • Stem cell research • Drug discovery • Tissue engineering</p><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/scrnaseq/4.0.0/\">nf-core/scrnaseq v4.0.0</a> • Containerized execution • Continuous integration tested</p>",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/scrnaseq/master/docs/images/nf-core-scrnaseq_logo_light.png",
-  "command": "nextflow run nf-core/scrnaseq --input ${input} --outdir ${output} -r ${revision} -c /etc/mpi/nextflow.camber.config -c ${overrideConfig}",
+  "command": "cd ${outputDir} && rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cp prod_apps/nextflow/scrnaseq/platform-constrained-config.config ./ && rm -rf prod_apps && PROTOCOL_FLAG=$([ \"${protocol}\" != \"auto\" ] && echo \"--protocol ${protocol}\" || echo \"\"); WHITELIST_FLAG=$([ \"${barcode_whitelist}\" != \"none\" ] && echo \"--barcode_whitelist ${barcode_whitelist}\" || echo \"\"); nextflow run nf-core/scrnaseq -r 4.0.0 --input ${input} --outdir results --aligner ${aligner} $PROTOCOL_FLAG $WHITELIST_FLAG -c /etc/mpi/nextflow.camber.config -c platform-constrained-config.config --max_memory ${max_memory} --max_cpus ${max_cpus}",
   "engineType": "NEXTFLOW",
   "jobConfig": [
     {
@@ -11,10 +12,10 @@
       "label": "System Size",
       "name": "system_size",
       "hidden": true,
-      "description": "Selecting a preset will prefill the node configuration below. You can still edit the values.",
+      "description": "Choose computing resources based on dataset size and complexity. Larger datasets and STARsolo alignment require more resources.",
       "options": [
         {
-          "label": "Medium (16 GB, 8 cores)",
+          "label": "Medium (32 CPUs, 180GB RAM) - Small experiments",
           "value": "medium",
           "mapValue": {
             "nodeSize": "MEDIUM",
@@ -23,10 +24,19 @@
           }
         },
         {
-          "label": "Large (32 GB, 16 cores)",
+          "label": "Large (64 CPUs, 360GB RAM) - Recommended",
           "value": "large",
           "mapValue": {
             "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLarge (96 CPUs, 540GB RAM) - Large cohorts",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
             "numNodes": 1,
             "withGpu": false
           }
@@ -38,43 +48,154 @@
   "spec": [
     {
       "type": "Stash File",
-      "label": "Input",
+      "label": "Sample Sheet",
       "name": "input",
-      "description": "Path to comma-separated file containing information about the samples in the experiment.",
-      "defaultValue": "",
+      "description": "CSV file with columns: sample, fastq_1, fastq_2, expected_cells. Defines your experimental design and sample information.",
+      "defaultValue": "https://raw.githubusercontent.com/nf-core/test-datasets/scrnaseq/samplesheet_2.0.0.csv",
       "hidden": false,
       "required": true,
-      "disabled": false
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": ["csv"]
+      }
     },
     {
       "type": "Stash File",
-      "label": "Output",
-      "name": "output",
-      "description": "The output directory where the results will be saved.",
-      "defaultValue": "",
+      "label": "Output Directory",
+      "name": "outputDir",
+      "description": "Directory where analysis results and intermediate files will be saved. Creates organized subdirectories for different output types.",
+      "defaultValue": "./",
       "hidden": false,
       "required": true,
-      "disabled": false
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Alignment Method",
+      "name": "aligner",
+      "description": "Choose alignment algorithm based on your experimental needs and protocol requirements.",
+      "defaultValue": "simpleaf",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "simpleaf (Alevin-fry) - Fast & Flexible [Recommended]",
+          "value": "simpleaf"
+        },
+        {
+          "label": "kallisto - Pseudoalignment with BUStools",
+          "value": "kallisto"
+        },
+        {
+          "label": "STARsolo - Full alignment (10x optimized)",
+          "value": "star"
+        },
+        {
+          "label": "cellranger - 10x Genomics official pipeline",
+          "value": "cellranger"
+        }
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Single-Cell Protocol",
+      "name": "protocol",
+      "description": "Specify your single-cell protocol. Use 'auto' for automatic detection with 10x data, or define custom chemistry strings.",
+      "defaultValue": "10XV3",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "10X v3 Chemistry (most common)",
+          "value": "10XV3"
+        },
+        {
+          "label": "10X v2 Chemistry",
+          "value": "10XV2"
+        },
+        {
+          "label": "10X v4 Chemistry",
+          "value": "10XV4"
+        },
+        {
+          "label": "10X v1 Chemistry",
+          "value": "10XV1"
+        },
+        {
+          "label": "Auto-detect (10x only)",
+          "value": "auto"
+        },
+        {
+          "label": "Custom (define in chemistry string)",
+          "value": "custom"
+        }
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Barcode Whitelist Strategy",
+      "name": "barcode_whitelist",
+      "description": "Choose barcode handling approach: use validated whitelists for reproducibility or derive barcodes from data.",
+      "defaultValue": "none",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Auto-derive from data (recommended for most cases)",
+          "value": "none"
+        },
+        {
+          "label": "Use 10x v3 whitelist",
+          "value": "10x_v3"
+        },
+        {
+          "label": "Use 10x v2 whitelist",
+          "value": "10x_v2"
+        },
+        {
+          "label": "Custom whitelist file",
+          "value": "custom"
+        }
+      ]
     },
     {
       "type": "Input",
-      "label": "Revision",
-      "name": "revision",
-      "description": "Pipeline version to use",
-      "defaultValue": "4.0.0",
-      "hidden": false,
-      "required": true,
-      "disabled": false
-    },
-    {
-      "type": "Stash File",
-      "label": "Override Config",
-      "name": "overrideConfig",
-      "description": "Optional Nextflow configuration file to override default resource settings",
-      "defaultValue": "",
+      "label": "Maximum Memory (GB)",
+      "name": "max_memory",
+      "description": "Maximum memory allocation per process. Adjust based on dataset size and selected compute resources.",
+      "defaultValue": "128.GB",
       "hidden": false,
       "required": false,
-      "disabled": false
+      "disabled": false,
+      "validation": {
+        "type": "string",
+        "pattern": "^[0-9]+\\.(GB|MB)$"
+      }
+    },
+    {
+      "type": "Input",
+      "label": "Maximum CPUs",
+      "name": "max_cpus",
+      "description": "Maximum CPU cores per process. Should not exceed your selected system size CPU allocation.",
+      "defaultValue": "16",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "validation": {
+        "type": "number",
+        "min": 1,
+        "max": 96
+      }
     }
   ]
 }
