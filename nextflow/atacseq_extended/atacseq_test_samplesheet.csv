@@ -1,0 +1,2 @@
+sample,fastq_1,fastq_2,replicate
+ATAC_TEST_SAMPLE_1,https://github.com/nf-core/test-datasets/raw/atacseq/testdata/SRR1822153_1.fastq.gz,https://github.com/nf-core/test-datasets/raw/atacseq/testdata/SRR1822153_2.fastq.gz,1

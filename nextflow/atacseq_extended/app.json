@@ -1,0 +1,207 @@
+{
+  "name": "atacseq-chromatin-accessibility",
+  "description": "🧬 ATAC-seq Analysis Platform: Discover which parts of your genome are 'open' and accessible for gene regulation. Perfect for biologists studying cell development, disease mechanisms, and how genes are turned on or off.",
+  "content": "<h1 class=\"heading-node\">🧬 ATAC-seq: Understanding Gene Accessibility</h1><p class=\"text-node\"><strong>What is ATAC-seq?</strong></p><p class=\"text-node\">ATAC-seq (Assay for Transposase-Accessible Chromatin using sequencing) is like taking a snapshot of which parts of your genome are currently 'open for business.' Think of DNA as a tightly packed library where some books are easy to access (open chromatin) while others are locked away (closed chromatin). ATAC-seq reveals which genomic regions are accessible and potentially active in gene regulation.</p><img src=\"https://raw.githubusercontent.com/nf-core/atacseq/2.1.2/docs/images/nf-core-atacseq_metro_map_grey.png\" alt=\"nf-core/atacseq workflow\" title=\"ATAC-seq Pipeline Workflow\" width=\"800\" height=\"500\"><h2 class=\"heading-node\">🔬 Why Study Chromatin Accessibility?</h2><p class=\"text-node\"><strong>Scientific Rationale:</strong> Gene expression isn't just about having the right genes - it's about whether cellular machinery can actually access those genes. Chromatin accessibility directly impacts:</p><ul><li><strong>📖 Gene Expression:</strong> Accessible regions are where genes can be turned on or off</li><li><strong>🧬 Cell Identity:</strong> Different cell types have unique accessibility patterns that define their function</li><li><strong>🔄 Development:</strong> As cells differentiate, their chromatin landscape changes dramatically</li><li><strong>🩺 Disease:</strong> Cancer and genetic disorders often involve disrupted chromatin accessibility</li></ul><h2 class=\"heading-node\">🎯 What Will You Discover?</h2><p class=\"text-node\">Your ATAC-seq analysis will reveal:</p><ul><li><strong>🗺️ Regulatory Landscapes:</strong> Maps of where transcription factors can bind to control genes</li><li><strong>⚡ Active Promoters:</strong> DNA regions that initiate gene expression</li><li><strong>🔗 Enhancer Elements:</strong> Sequences that boost gene activity from a distance</li><li><strong>📊 Cell-Type Signatures:</strong> Unique accessibility patterns that define different cell states</li><li><strong>🔍 Disease Mechanisms:</strong> Chromatin changes associated with pathological conditions</li></ul><h2 class=\"heading-node\">📋 Sample Sheet: Your Experiment Blueprint</h2><p class=\"text-node\"><strong>What is the Sample Sheet?</strong></p><p class=\"text-node\">The sample sheet (CSV file) is your experiment's roadmap. It tells the pipeline exactly which sequencing files belong to which samples and how they should be grouped. This is crucial for proper analysis and comparison.</p><p class=\"text-node\"><strong>Basic Example:</strong></p><pre style=\"background-color: #f8f8f8; padding: 10px; border-radius: 5px; font-family: monospace;\">sample,fastq_1,fastq_2,replicate\nCONTROL,control_rep1_R1.fastq.gz,control_rep1_R2.fastq.gz,1\nCONTROL,control_rep2_R1.fastq.gz,control_rep2_R2.fastq.gz,2\nTREATED,treated_rep1_R1.fastq.gz,treated_rep1_R2.fastq.gz,1\nTREATED,treated_rep2_R1.fastq.gz,treated_rep2_R2.fastq.gz,2</pre><p class=\"text-node\"><strong>Why Replicates Matter:</strong> Biological replicates are essential for statistical confidence. They help distinguish real biological differences from experimental noise, ensuring your discoveries are scientifically robust.</p><h2 class=\"heading-node\">⚙️ Analysis Parameters</h2><ul><li><strong>📁 Output Directory:</strong> Where your results will be saved. The pipeline creates organized folders with standard bioinformatics naming conventions, making it easy to find specific file types and share results with collaborators.</li><li><strong>📏 Read Length:</strong> The length of your sequencing reads affects peak calling sensitivity. Shorter reads (75bp) work fine for standard analysis, while longer reads (150bp) provide better mapping accuracy and are recommended for challenging genomes or novel discoveries.</li><li><strong>🎯 Peak Calling Mode:</strong> <strong>Narrow peaks</strong> identify precise binding sites and regulatory elements - perfect for ATAC-seq. <strong>Broad peaks</strong> detect larger chromatin domains but are typically used for histone modification studies, not ATAC-seq accessibility mapping.</li><li><strong>🧬 Mitochondrial Chromosome:</strong> Removes contaminating mitochondrial DNA reads that don't provide gene regulation information. High mitochondrial content (>10% of reads) often indicates sample degradation or poor nuclear isolation during library preparation.</li><li><strong>💾 Reference Files:</strong> Saving reference genome indices speeds up future analyses with the same organism. These processed files (BWA indices, chromosome sizes, blacklists) take significant time to generate but enable rapid re-analysis of new samples.</li><li><strong>✂️ Trimmed Reads:</strong> Keeps quality-controlled FASTQ files after adapter removal and quality filtering. Useful for troubleshooting failed runs, validating data quality, or repurposing cleaned data for alternative analyses.</li><li><strong>🗺️ Read Aligner:</strong> <strong>BWA-MEM</strong> handles ATAC-seq's characteristic short DNA fragments best and provides superior mapping accuracy. <strong>Bowtie2</strong> is faster but less accurate for short fragments. <strong>STAR</strong> and <strong>Chromap</strong> offer alternative approaches with different speed/accuracy tradeoffs.</li><li><strong>⏱️ Maximum Runtime:</strong> Controls computational timeout limits. Small experiments (1-4 samples) typically complete in 8-12 hours, medium studies (5-20 samples) need 18-24 hours, while large cohorts (20+ samples) may require 36-48 hours depending on sequencing depth.</li></ul><h2 class=\"heading-node\">📊 Your Results: Detailed Output Structure</h2><h3 class=\"heading-node\">Quality Control Reports</h3><ul><li><strong>📄 MultiQC Report:</strong> Comprehensive HTML summary with sample statistics, quality metrics, and comparative plots</li><li><strong>📊 FastQC Results:</strong> Per-sample sequencing quality assessment including base quality scores and adapter content</li><li><strong>📈 ATAQV Metrics:</strong> ATAC-seq-specific quality metrics including TSS enrichment, fragment size distribution, and mitochondrial contamination</li></ul><h3 class=\"heading-node\">Processed Data Files</h3><ul><li><strong>🧬 BAM Files:</strong> Aligned reads in <code>bam/</code> directory - use with genome browsers like IGV or UCSC</li><li><strong>🎯 Peak Files:</strong> BED format peak coordinates in <code>bwa/mergedLibrary/macs2/</code> with statistical significance scores</li><li><strong>📊 BigWig Tracks:</strong> Normalized coverage tracks in <code>bwa/mergedLibrary/bigwig/</code> for genome browser visualization</li><li><strong>📋 Count Matrices:</strong> Peak-by-sample count tables in <code>bwa/mergedLibrary/macs2/consensus/</code> for differential analysis</li></ul><h3 class=\"heading-node\">Analysis Results</h3><ul><li><strong>🔍 Peak Annotations:</strong> Gene associations and genomic feature classifications using HOMER</li><li><strong>📈 Differential Accessibility:</strong> Statistical comparisons between conditions with DESeq2 results</li><li><strong>🎨 PCA Plots:</strong> Sample clustering and batch effect visualization in <code>bwa/mergedLibrary/macs2/consensus/deseq2/</code></li><li><strong>📊 IGV Session:</strong> Pre-loaded genome browser configuration for immediate data exploration</li></ul><h3 class=\"heading-node\">Technical Information</h3><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\">Nextflow</a> workflow management • Powered by <a class=\"link\" href=\"https://nf-co.re/atacseq/2.1.2/\">nf-core/atacseq v2.1.2</a> • Containerized with Docker/Singularity • Continuous integration tested</p><p class=\"text-node\">Pipeline developed by the <a class=\"link\" href=\"https://nf-co.re/\">nf-core community</a> • Documentation available at <a class=\"link\" href=\"https://nf-co.re/atacseq/2.1.2/docs/usage/\">nf-co.re</a> • Licensed under MIT</p><p class=\"text-node\"><strong>Perfect for Research in:</strong> Stem cell biology • Cancer genomics • Developmental biology • Immunology • Neuroscience • Plant biology</p>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/atacseq/2.1.2/docs/images/nf-core-atacseq_metro_map_grey.png",
+  "command": "export NXF_CACHE_DIR=/camber_work/temp/.nextflow; export NXF_LOG_FILE=/home/camber/jobs/${JOB_ID}/outputs/nextflow.log; PEAK_FLAG=$([ \"${narrow_peak_flag}\" = \"--narrow_peak\" ] && echo \"--narrow_peak\" || echo \"\"); REF_FLAG=$([ \"${save_reference_flag}\" = \"--save_reference\" ] && echo \"--save_reference\" || echo \"\"); TRIM_FLAG=$([ \"${save_trimmed_flag}\" = \"--save_trimmed\" ] && echo \"--save_trimmed\" || echo \"\"); nextflow run nf-core/atacseq -r 2.1.2 --input ${samplesheet_location} --outdir ${outdir} --read_length ${read_length} $PEAK_FLAG --mito_name ${mito_name} $REF_FLAG $TRIM_FLAG --aligner ${aligner} --max_time ${max_time} -c /etc/mpi/nextflow.camber.config -ansi-log false -profile test,k8s",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Choose computing power based on your experiment size. More samples or deeper sequencing requires more computational resources.",
+      "options": [
+        {
+          "label": "Medium (32 CPUs, 180GB RAM) - Small datasets",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Large (64 CPUs, 360GB RAM) - Recommended",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "samplesheet_location", 
+      "description": "CSV file with sample info: columns sample, fastq_1, fastq_2, replicate",
+      "defaultValue": "https://raw.githubusercontent.com/nf-core/test-datasets/atacseq/samplesheet/v2.0/samplesheet_test.csv",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": ["csv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory for organized analysis results and output files",
+      "defaultValue": "./results",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    },
+    {
+      "type": "Input",
+      "label": "Read Length (bp)",
+      "name": "read_length",
+      "description": "Sequencing read length in base pairs (typically 75-150bp)",
+      "defaultValue": "150",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "validation": {
+        "type": "number",
+        "min": 50,
+        "max": 300
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Peak Calling Mode",
+      "name": "narrow_peak_flag",
+      "description": "Peak detection precision: narrow (recommended) vs broad peaks",
+      "defaultValue": "--narrow_peak",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Narrow peaks (Recommended for ATAC-seq)",
+          "value": "--narrow_peak"
+        },
+        {
+          "label": "Broad peaks",
+          "value": "broad_peaks"
+        }
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Mitochondrial Chromosome",
+      "name": "mito_name",
+      "description": "Mitochondrial chromosome name for filtering contaminating mitochondrial reads",
+      "defaultValue": "chrM",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "chrM (UCSC naming)",
+          "value": "chrM"
+        },
+        {
+          "label": "MT (Ensembl naming)",
+          "value": "MT"
+        },
+        {
+          "label": "chrMT (Alternative naming)",
+          "value": "chrMT"
+        }
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Save Reference Files",
+      "name": "save_reference_flag",
+      "description": "Save reference genome files for future analyses",
+      "defaultValue": "--save_reference",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Save reference files",
+          "value": "--save_reference"
+        },
+        {
+          "label": "Don't save reference files",
+          "value": "no_save_reference"
+        }
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Save Trimmed Reads",
+      "name": "save_trimmed_flag",
+      "description": "Save adapter-trimmed FASTQ files after quality filtering",
+      "defaultValue": "--save_trimmed",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Save trimmed reads",
+          "value": "--save_trimmed"
+        },
+        {
+          "label": "Don't save trimmed reads",
+          "value": "no_save_trimmed"
+        }
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Read Aligner",
+      "name": "aligner",
+      "description": "Algorithm for mapping reads: BWA-MEM recommended for ATAC-seq",
+      "defaultValue": "bwa",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "BWA-MEM (Recommended)",
+          "value": "bwa"
+        },
+        {
+          "label": "Bowtie2",
+          "value": "bowtie2"
+        },
+        {
+          "label": "STAR",
+          "value": "star"
+        },
+        {
+          "label": "Chromap",
+          "value": "chromap"
+        }
+      ]
+    },
+    {
+      "type": "Input",
+      "label": "Maximum Runtime",
+      "name": "max_time",
+      "description": "Maximum runtime per process (12h-48h based on dataset size)",
+      "defaultValue": "24.h",
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    }
+  ]
+}
