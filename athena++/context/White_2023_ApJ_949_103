@@ -1,0 +1,11650 @@
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+© 2023. The Author(s). Published by the American Astronomical Society.
+
+https://doi.org/10.3847/1538-4357/acc8cf
+
+An Extension of the Athena++ Code Framework for Radiation-magnetohydrodynamics
+in General Relativity Using a Finite-solid-angle Discretization
+
+Christopher J. White1,2, Patrick D. Mullen3,4, Yan-Fei Jiang (姜燕飞)1, Shane W. Davis5, James M. Stone6,
+Viktoriya Morozova7, and Lizhong Zhang (张力中)8
+1 Center for Computational Astrophysics, Flatiron Institute, New York, NY, USA; chwhite@ﬂatironinstitute.org
+2 Department of Astrophysical Sciences, Princeton University, Princeton, NJ, USA
+3 CCS-2, Los Alamos National Laboratory, Los Alamos, NM, USA
+4 Center for Theoretical Astrophysics, Los Alamos National Laboratory, Los Alamos, NM, USA
+5 Department of Astronomy, University of Virginia, Charlottesville, VA, USA
+6 School of Natural Sciences, Institute for Advanced Study, Princeton, NJ, USA
+7 Institute for Gravitation and the Cosmos, The Pennsylvania State University, University Park, PA, USA
+8 Department of Physics, University of California, Santa Barbara, CA, USA
+Received 2023 February 8; revised 2023 March 27; accepted 2023 March 28; published 2023 June 2
+
+Abstract
+We extend the general-relativistic magnetohydrodynamics (GRMHD) capabilities of Athena++ to incorporate
+radiation. The intensity ﬁeld in each ﬁnite-volume cell is discretized in angle, with explicit transport in both space
+and angle properly accounting for the effects of gravity on null geodesics, and with matter and radiation coupled in
+a locally implicit fashion. Here we describe the numerical procedure in detail, verifying its correctness with a suite
+of tests. Motivated in particular by black hole accretion in the high-accretion-rate,
+thin-disk regime, we
+demonstrate the application of the method to this problem. With excellent scaling on ﬂagship computing clusters,
+the port of the algorithm to the GPU-enabled AthenaK code now allows the simulation of many previously
+intractable radiation-GRMHD systems.
+Uniﬁed Astronomy Thesaurus concepts: Radiative magnetohydrodynamics (2009); Radiative transfer (1335);
+General relativity (641); Black holes (162); Computational methods (1965); Astronomy software (1855); Software
+documentation (1869)
+
+1. Introduction
+
+There are a number of astrophysical systems in which the
+effects of both general relativity (GR) and radiation in the form
+of photons or neutrinos signiﬁcantly modify the hydrody-
+namics (HD) or magnetohydrodynamics (MHD) of the ﬂuid
+that is present. Black holes accreting at sufﬁciently high rates,
+merging neutron stars, and the innermost regions of core-
+collapse supernovae all belong to this category. These systems
+are turbulent and susceptible to intrinsically multidimensional
+ﬂuid instabilities and phenomena (Abramowicz et al. 1988;
+Done et al. 2007; Nordhaus et al. 2010; Faber & Rasio 2012;
+Janka 2012; McKinney et al. 2014; Müller 2016; Baiotti &
+Rezzolla 2017; Metzger 2020), and so modeling and under-
+standing them calls for accurate simulations that solve the
+governing differential equations.
+
+Radiation in particular is difﬁcult to model well. In the
+continuum limit, collisional MHD ﬂuids are described by a
+small number (∼8) of dynamical values at every point in space;
+spatial discretization results in a ﬁnite count of real numbers to
+evolve in time. Radiation, however, is not collisional, and so
+even limiting the calculation to a single frequency,
+the
+dynamical quantity comprises a functional degree of freedom
+at every point in space.9 That is, the radiation ﬁeld consists of
+intensity that depends on 3D spatial location and 2D direction.
+
+9 In particular, continuum radiation is described by nonnegative functions on
+the sphere, which need not be smooth.
+
+Original content from this work may be used under the terms
+of the Creative Commons Attribution 4.0 licence. Any further
+distribution of this work must maintain attribution to the author(s) and the title
+of the work, journal citation and DOI.
+
+With frequencies considered,
+Boltzmann equation on a 6D domain.
+
+this amounts to solving the
+
+Radiation methods can be categorized based on how they
+reduce this complexity to a more tractable level.10 It
+is
+conceptually straightforward to divide the sphere into discrete
+solid angles just as ﬁnite-volume ﬂuid methods discretize
+space, evolving some average representation of the intensity
+within each solid angle and spatial cell. This approach, called
+the Boltzmann, discrete-ordinate (Krook 1955), or SN (Grant &
+Hunt 1968) method in various contexts, is the one we adopt
+here. It has a history dating back to Chandrasekhar (1950), and
+it
+solution
+(Madsen 1971).
+
+is conducive to converging to the correct
+
+Values on a sphere can instead be represented by spherical
+harmonics. These are evolved in the PN method, which has
+(2013).
+been applied to GR transport by Radice et al.
+Conceptually intermediate between SN and PN, ﬁnite-element
+discretizations of the sphere have been considered for special
+relativistic (SR) transport (Bhattacharyya & Radice 2022), with
+the GR case still under development.
+
+An alternative strategy, and one with a long historical
+precedent in astrophysics, is to describe the radiation ﬁeld at a
+point with a ﬁnite number of moments. As the evolution of the
+k-th moment depends only on moment k + 1, a closure relation
+that prescribes the n-th moment as a function of moments 0
+through n − 1 truncates the series. This applies to relativistic
+ﬂuids (Thorne 1981) as well as it does to Newtonian ﬂuids.
+Flux-limited diffusion sets n = 1 and allows spatial gradients in
+the zeroth moment, modiﬁed by a ﬂux limiter, to contribute to
+
+10 More mathematically, methods can be distinguished by how the radiation
+ﬁeld at a point is approximated with only a ﬁnite count of real numbers.
+
+1
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+the closure. Commonly, n is chosen to be 2, and the different
+assumed prescriptions lead to different ﬂavors of the M1
+method (Levermore 1984). The accuracy of this strategy hinges
+on the validity of the assumed closure. Unfortunately, it is quite
+possible for different parts of a physical system to have similar
+zeroth and ﬁrst moments but very different second moments,
+and for some problems no amount of computational power can
+overcome the fact that the span of radiation ﬁelds at a point
+representable with M1 may be insufﬁcient
+to capture this
+diversity. Some shortcomings of M1 closures in a realistic
+GRMHD accretion setting are
+shown in Asahina &
+Ohsuga (2022).
+
+the radiation ﬁeld,
+
+The aforementioned discrete-ordinate method is more con-
+ducive to converging to the correct solution with increased
+computational power, as the sphere can simply be divided into
+ﬁner solid angles. Another alternative is to use Monte Carlo
+launching appropriately
+sampling of
+distributed photon packets to propagate though space according
+to the geodesic equation (Fleck & Cummings 1971). This
+method converges to the correct solution with sufﬁciently many
+samples, though optically thick regions require careful treatment
+to avoid prohibitive costs. Moreover, parallelization and load
+balancing of large problems is difﬁcult in this case: domain
+decomposition only in space can lead to drastically different
+computational costs for different chunks of the domain based on
+how many packets are needed, while distributing only the
+packets may require prohibitively large amounts of memory for
+each process to store the ﬂuid state of the entire system.
+
+Despite the difﬁculties, recent years have seen much progress
+in unifying GR, radiation, and (M)HD in astrophysical codes.
+Within the core-collapse community,
+is common for
+relativistic dynamics, strong gravity, and neutrino transport to
+be combined in an M1 method that is simpliﬁed by leveraging
+the approximately spherical nature of the system or the expected
+approximate axisymmetry of the radiation ﬁeld at every point
+about the radial direction (Liebendörfer et al. 2004; O’Con-
+nor 2015). More multidimensional relativistic M1 schemes have
+been presented in Farris et al. (2008), Shibata et al. (2011),
+Zanotti et al. (2011), Roedig et al. (2012), Sądowski et al.
+(2013), McKinney et al. (2014), Fragile et al. (2014), Foucart
+et al. (2015), Kuroda et al. (2016), Takahashi et al. (2016),
+Rahman et al. (2019), Weih et al. (2020), Anninos & Fragile
+(2020), Radice et al. (2022), and Cheong et al. (2023).
+
+it
+
+Monte Carlo sampling has been employed in GRMHD by
+Ryan et al. (2015), Foucart et al. (2021), Roth et al. (2022), and
+Kawaguchi et al. (2023). An example of a hybrid scheme is that
+of Foucart (2018), where Monte Carlo techniques are used to
+sample the local radiation ﬁeld in order to provide more
+situationally appropriate closures for a moment method. More
+deterministically, a method-of-characteristics approach is used
+to close the moment equations in the MOCMC scheme of Ryan
+& Dolence (2020). Similarly, Boltzmann solvers have been
+used to inform moment closures, both in spherically symmetric
+codes (Müller et al. 2010; Roberts 2012) and in multi-
+dimensional contexts (Asahina et al. 2020).
+
+More scarce in the study of accretion disks are pure, deter-
+ministic Boltzmann solvers that treat the discretized intensity as
+a function of angle as fundamental. The codes developed by
+Nagakura et al. (2017) and Chan & Müller (2020) do this, but
+they are both designed for the core-collapse problem, focusing
+on the complexities of multispecies, multi–energy-group trans-
+port and coupling while neglecting magnetic ﬁelds.
+
+2
+
+White et al.
+
+Here we describe our implementation of GR radiation,
+solving the GR Boltzmann transport equation as given, for
+in Shibata et al. (2014) and especially Davis &
+example,
+Gammie (2020), coupled to a relativistic MHD ﬂuid within the
+Athena++ framework (Stone et al. 2020). The MHD
+capabilities of the code in SR and stationary-spacetime GR
+(White et al. 2016) have been used for a number of
+applications. At the same time, the Newtonian MHD sector
+of the framework has been applied to a number of radiative
+problems with a variety of methods; in particular, Jiang et al.
+(2014) develops the explicit Boltzmann transport whose
+relativistic generalization is our current focus. Coupling of
+ﬂat-spacetime SRMHD with radiation in Athena++ has been
+developed and employed by Zhang et al. (2021), and so we
+now turn to the GR case.
+
+The method described here allows a number of problems at
+the forefront of astrophysical modeling—in particular, black
+holes accreting near or beyond the Eddington rate—to be
+simulated in a manner that provides for convergence to the
+physical solution even with complex radiation ﬁelds. While our
+method supports multiple frequency groups in a straightfor-
+ward way, we will consider mostly gray transport here, leaving
+frequency-dependent tests and applications for a future work.
+At the same time, this generalization of Jiang et al. (2014) to
+account for gravitational bending of light naturally allows the
+coupling of radiation to Newtonian or SR ﬂuids in more 1D
+and 2D geometries than previously supported.
+
+Our numerical
+
+implementation is detailed in Section 2.
+Section 3 demonstrates the code passing a variety of tests of
+both transport and radiation–ﬂuid coupling in both ﬂat and
+curved spacetimes. We showcase a 3D simulation of black hole
+accretion in Section 4. Section 5 provides performance
+statistics for the code, especially using the new performance-
+portable AthenaK version of the framework (J. M. Stone et al.
+2023, in preparation). A summary of capability and future
+outlook is provided in Section 6.
+
+We will generally omit explicit factors of c and G, and we
+will employ metrics with the (−, + , + , + ) signature. In what
+follows, our symmetrization convention omits combinatorial
+factors. For example, we have
+
+ab
+(
+A
+ab
+[
+A
+
+) =
+] =
+
+ab
+
+A
+ab
+
+A
+
++
+
+-
+
+ba
+A ,
+ba
+A .
+
+1a(
+
+)
+
+1b(
+
+)
+
+2. Numerical Method
+
+The crux of our algorithm is the time evolution of the
+speciﬁc intensity of radiation, Iˆn, which is a function of three
+spatial dimensions and three momentum directions (one
+frequency or equivalently energy ˆn, a polar angle ˆz , and an
+azimuthal angle ˆy). From Davis & Gammie (2020) we can
+write
+
+
+a
+
++ ¶
+
+( ˆ ˆ ˆ )
+a
+n n I
+ˆ
+n
+b n
+ˆ
+ˆ ˆ )
+y
+( ˆ
+n n I
+b n
+
+( ˆ ˆ ˆ )
+ˆ
+n
+n n I
+b n
+
++
+
+ˆ
+s
+
+ˆ
+( ˆ ˆ ˆ ˆ )
+z
+sn n I
+b n
+
+-
+
+1
+¶
+
+ˆ
+z
+ˆ )
+I
+n n
+
+,
+
+ˆ
+y
+
+a
+ˆ
+
+=
+
+-
+
+( )
+2
+
++ ¶
+
+ˆ (ˆ
+ȷ
+n
+b n
+The ﬁrst term, being a covariant divergence, encodes both the
+0ˆ ˆ ˆb n as well as the
+time derivative of our conserved quantity n n I
+aˆ ˆ ˆb n. The second term
+spatial derivatives of the spatial ﬂuxes n n I
+yields gravitational redshifting, while the third and fourth terms
+account for light changing direction as it moves through space.
+Here, ȷˆn and ˆan are, respectively, the emission and absorption
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+Figure 1. Tasks and their dependencies for a single time-integration stage. A task cannot begin until all tasks pointing to it have successfully terminated. Our ﬁnite-
+volume formulation of radiation is conceptually similar to that of HD and magnetic ﬁeld evolution, and so the sets of tasks associated to these overarching parts of the
+code largely parallel one another.
+
+coefﬁcients coupling radiation to any ﬂuid present,
+the
+components of nˆ are position- and momentum-dependent
+geometrical factors explained below, and we use the shorthand
+
+ˆ
+s
+
+=
+
+ˆ
+z
+sin .
+
+( )
+3
+
+the form of
+
+After deﬁning the coordinates we use (Section 2.1) and
+deriving the discretized forms of the equations we evolve
+(Section 2.2), we will detail the principal components of our
+time-integration algorithm for radiation. As with ﬁnite-volume
+HD,
+the
+aforementioned conserved quantity and spatial ﬂuxes, as well
+as the ﬂuxes in frequency and angle, as the terms to which
+partial derivatives are applied. We can take the speciﬁc
+intensity to be the primitive variable. Paralleling the evolution
+of the ﬂuid and magnetic ﬁeld, each stage in a multistage time
+integrator performs the following tasks:
+
+the differential equation deﬁnes
+
+1. Calculate ﬂuxes: intensities are reconstructed (interpo-
+lated) from cell centers to faces in both space and angle
+(Section 2.3). Fluxes are then calculated by upwinding
+reconstructed values, while being aware of optical depths
+(Section 2.4).
+
+2. Communicate ﬂuxes: ﬂuxes are synchronized across
+coarse/ﬁne mesh-reﬁnement boundaries, with coarse
+values overwritten by any ﬁner values obtained at the
+same spatial coordinates.
+
+3. Apply ﬂux divergences: conserved values are updated via
+the appropriate divergences of the spatial and angular
+ﬂuxes.
+
+4. Apply source terms: conserved values are locally
+implicitly updated in accordance with the inhomogeneous
+terms in the equations stemming from matter–radiation
+coupling (Section 2.5).
+
+5. Communicate variables: conserved values from active
+zones are sent to their corresponding ghost zones. In the
+
+case of ﬁne-to-coarse communication across a reﬁnement
+boundary, the values are restricted before communication.
+6. Prolongate variables: ghost-zone values received in
+coarse-to-ﬁne communication are prolongated by the
+recipients.
+
+7. Calculate primitives: the primitive intensities are calcu-
+
+lated from their conserved counterparts.
+
+8. Apply boundary conditions: ghost zones external to the
+physical domain are populated based on the desired
+behavior at the boundaries.
+
+Figure 1 shows the tasks involved in a radiation-MHD
+calculation with mesh reﬁnement. The arrows
+indicate
+dependencies; a task cannot commence until all tasks pointing
+to it have completed.
+
+Further details regarding angular discretization are given in
+
+Section 2.6.
+
+2.1. Coordinates
+
+As we will make use of no fewer than four coordinate
+systems, we are careful to distinguish them with consistent
+notation throughout this work.
+
+Spacetime is parameterized by coordinates x α, indexed with
+α, β, etc. Unspeciﬁed spatial components will be indexed with
+a, b, etc. We will refer to tensors with components in this frame
+as being in the “coordinate frame.” We will only consider
+stationary (but certainly not necessarily static) spacetimes here,
+subject to
+
+¶
+
+=ab
+g
+
+( )
+4
+At times, we will refer to quantities in the “normal frame,”
+indicated by primes on the indices (e.g., xa¢).11 This is the
+to
+frame in which the time direction is made orthogonal
+
+0.
+
+0
+
+11 This frame is often indicated by tildes on the tensor itself (e.g., ui˜ ) in the
+GRMHD literature (e.g., Gammie et al. 2003).
+
+3
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+00
+
+surfaces of constant-coordinate time. In terms of the standard 3
++1 lapse, shift, and spatial metric
+-
+)
+g ,
+a0
+a
+2 0
+g ,
+g ,
+ab
+-
+
+a = -
+g
+(
+b =
+a
+
+b
+a=
+g =
+ab
+
+(
+5a
+(
+5b
+
+5c
+(
+5d
+(
+
+a
+0
+g g
+
+00
+g g
+
+a=
+
+1 2
+
+5e
+
+)
+)
+
+)
+)
+
+g
+
+ab
+
+ab
+
+(
+
+)
+
+)
+
+(
+
+,
+
+,
+
+b
+
+a
+
+0
+
+2
+
+the metric in this frame is given by
+
+g
+¢
+0 0
+
+¢
+
+= -
+
+1,
+
+g
+0
+
+¢
+
+a
+
+¢
+
+=
+
+0,
+
+g
+
+g
+
+¢
+0 0
+
+¢
+
+= -
+
+1,
+
+0
+
+¢
+
+a
+
+¢
+
+=
+
+0,
+
+g
+¢
+a b
+
+¢
+
+=
+
+g
+ab
+
+,
+
+¢
+a b
+
+¢
+
+g
+
+=
+
+g
+
+ab
+.
+
+(
+
+6a
+
+)
+
+(
+
+6b
+
+)
+
+(
+
+6c
+
+)
+
+Vectors can be transformed between the coordinate and normal
+frames via
+
+0
+A ,
+
+0
+A
+
+¢
+
+a
+A
+
+=
+
+a=¢
+a
+A
+
++
+
+b
+
+a 0
+A ,
+
+(
+
+7a
+
+)
+
+(
+
+7b
+
+)
+
+with the rules for higher-rank tensors naturally following from
+these.
+
+We will also rely heavily on an orthonormal frame, which
+we will call the “tetrad frame.” Indices in this frame will be
+decorated with circumﬂexes (e.g., x ˆa). The tetrad frame is
+related to the coordinate frame at any location via the set of 16
+spatially dependent components e ˆb
+ˆ
+a b
+e x ,
+ˆ
+b
+ˆ=a
+a b
+ˆ
+e x .
+b
+
+=a
+
+8b(
+
+8a(
+
+x
+
+x
+
+a
+
+)
+
+)
+
+Indices can be raised or lowered with the appropriate metric,
+whether Minkowski or the spacetime metric at hand
+
+ˆ
+a
+h=b
+e
+
+ˆ ˆ
+ag
+
+d
+g e .
+ˆ
+bd g
+
+The components form a valid tetrad only if
+
+a
+g e e
+ˆ
+ab g
+
+b
+ˆ
+d
+
+ˆ ˆh=
+gd
+
+,
+
+9( )
+
+10(
+
+)
+
+which ﬁxes 10° of freedom at each point in spacetime. We
+further require that the time-like direction in the tetrad frame be
+orthogonal to surfaces of constant-coordinate time x0, and that
+this be a future-pointing direction. Mathematically, this ﬁxes
+another 3° of freedom and forces
+a
+0
+g .
+
+11
+
+e
+
+(
+
+)
+
+a= -a
+ˆ
+0
+
+accuracy
+
+The remaining 3° of freedom can be leveraged to increase the
+numerical
+See
+Section 2.6 for more details regarding angular grids, including
+geodesic grids supported by the code. As with the coordinate
+frame, we will restrict attention to tetrads that are stationary
+
+problem-dependent ways.
+
+in
+
+a
+ˆ¶
+e
+0
+b
+
+=
+
+0.
+
+(
+
+12
+
+)
+
+The tetrad frame can be used to deﬁne spherical coordinates
+characterizing momentum at every point
+in spacetime.
+Following Davis & Gammie (2020), we deﬁne ˆz to be the
+x3ˆ+ -direction in the tangent
+polar angle measured from the
+space at the point in question, and let ˆy be the azimuthal angle
+x1ˆ+ -direction. Figure 2
+measured in the usual sense from the
+
+4
+
+Figure 2. Schematic illustrating the relationship between spatial coordinates x a
+and angular directions ˆz and ˆy. Space is divided into cells by surfaces of
+constant x a. Each cell has associated with it a grid of angles, separated by arcs
+of constant ˆz and ˆy. The relative orientations of the two grids are determined
+by the spatially dependent tetrad, which relates x3ˆ, as well as x1ˆ and x 2ˆ (not
+shown), to x1, x2, and x3.
+
+illustrates how these coordinates parameterize direction within
+every cell on a spatial grid. The frequency ˆn in this frame
+characterizes the magnitude of momentum. The angles ˆz and ˆy
+will be indexed by l and m, respectively. The naturally arising
+latitude–longitude grid is discussed further in Section 2.6,
+together with an alternative geodesic grid for radiation angles.
+Finally, we will use macrons (e.g., x ¯a) to denote components
+in a particular orthonormal rest frame of the ﬂuid. Given the
+ﬂuid’s velocity in the tetrad frame, we deﬁne this frame via
+
+with
+
+a
+¯
+A
+
+= L
+
+ˆ
+a b
+¯
+A ,
+ˆ
+b
+
+¯
+0
+L =
+ˆ
+0
+
+ˆ
+0
+u ,
+
+L = -
+
+¯
+0
+ˆ
+a
+
+L = -
+
+a
+¯
+ˆ
+0
+
+u ,
+ˆ
+a
+
+ˆ
+a
+u ,
+
+a
+¯
+L =
+ˆ
+b
+
+ˆ
+a
+u u
+
+1
+
++
+
++
+
+d
+
+a
+.
+b
+
+ˆ
+0
+
+ˆ
+b
+u
+
+13(
+
+)
+
+(
+
+14a
+
+)
+
+(
+
+14b
+
+)
+
+(
+
+14c
+
+)
+
+(
+
+14d
+
+)
+
+2.2. Governing Equations
+Let Iˆn be the tetrad-frame speciﬁc intensity, deﬁned in
+general as a function of x α, ˆn, ˆz , and ˆy. Let nˆ be the future-
+directed null vector aligned with momentum that has spatial
+length unity in the tetrad frame. That is, nˆ ˆa is a function of ˆz
+and ˆy with components
+
+ˆ =
+0ˆ
+n
+
+1,
+
+ˆ
+1ˆ
+n
+
+=
+
+ˆ
+z
+sin cos
+
+ˆ
+y
+
+,
+
+ˆ
+2ˆ
+n
+
+=
+
+ˆ
+y
+sin sin ,
+
+ˆ
+z
+
+(
+
+15a
+
+)
+
+(
+
+15b
+
+)
+
+(
+
+15c
+
+)
+
+ˆ
+3ˆ
+n
+
+=
+
+ˆ
+z
+)
+cos .
+15d
+Note that, while nˆ ˆa is only a function of direction coordinates ˆz
+and ˆy, nˆa also depends on position x a via the spatially
+tetrad (see Equation (8a)). The latter, spatially
+dependent
+varying components appear in most equations, such as the
+original Equation (2).
+
+(
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+Additionally, we deﬁne the symbols
+
+ˆ
+n
+
+ˆ
+= -n
+
+ˆ
+ˆ
+a b
+ˆ ˆ ˆ
+n
+n n
+
+ˆ
+=z
+
+ˆ
+n
+
+ˆ
+=y
+
+ˆ
+n
+
+[ˆ
+ˆ
+ˆ
+-
+a b
+0
+ˆ ˆ ˆ
+ˆ
+s n n n
+
+1
+
+ˆ
+ˆ
+-
+a b
+ˆ ˆ ˆ
+ˆ
+s n n n
+
+2
+
+,
+
+w
+
+ˆ
+0
+ˆ ˆ
+ab
+ˆ]w
+3
+ˆ ˆ
+ab
+ˆ ]w
+[ˆ
+2 1
+ˆ ˆ
+ab
+
+,
+
+,
+
+where
+
+ˆ
+g
+w =
+ˆ ˆ
+ab
+
+ˆ
+g
+e e
+
+
+d
+ˆ
+b
+
+
+
+
+e
+d a
+ˆ
+
+(
+
+16a
+
+)
+
+(
+
+16b
+
+)
+
+(
+
+16c
+
+)
+
+17(
+
+)
+
+rotation coefﬁcients. Given our stationary
+are the Ricci
+assumptions in Equations (4) and (12), these three symbols,
+as well as nˆa and nˆ ˆa, need only be computed once during a
+simulation. With these deﬁnitions, the differential equation of
+GR radiative transport from Davis & Gammie (2020) can be
+written as Equation (2).
+
+The covariant β in Equation (2) can be any spacetime index,
+and its choice will govern what quantity will be exactly
+conserved by the numerical scheme. For example, if {x α}
+describes axisymmetric coordinates, then setting β = f will
+conserve a form of angular momentum. For this work we
+choose to let β be the time coordinate, conserving the covariant
+radiation energy density exactly.
+
+We must also solve the equations of GRMHD, modiﬁed to
+account for four-momentum transfer between the ﬂuid and
+radiation
+
+a
+
+r
+u
+(
+)
+a
+a
+=a b
+
+T
+ba
+
+=
+
+0,
+
+G ,
+b
+
+(
+
+18a
+
+)
+
+(
+
+18b
+
+)
+
+)
+
+F
+
+0,
+
+
+(
+a
+
+=
+)
+18c
+where ρ is the ﬂuid rest-mass density, u is its four-velocity, T is
+the stress–energy tensor of the ﬂuid and electromagnetic ﬁeld,
+F is the electromagnetic ﬁeld tensor, and å is the Hodge dual
+operator. Formally, the coupling term is given by
+¥
+
+(
+
+ˆ (ˆ
+ȷ
+n
+a n
+
+-
+
+a
+ˆ
+
+ˆ
+ˆ )
+W
+n
+I d d ,
+ˆ
+n n
+
+(
+
+19
+
+)
+
+where d
+is the standard spherical area element in
+the tetrad frame. However, as described in Section 2.5, this
+term is not directly computed from this formula.
+
+Just as Equations (18) are averaged over a spacetime volume
+element to yield the ﬁnite-volume form of the equations solved
+by Athena++, so too is Equation (2) averaged over spacetime
+volume, frequency interval, and direction solid angle. We
+employ the notation
+
+G
+a
+
+ˆ
+W =
+
+= -
+
+∮
+ò
+ˆ
+ˆ
+z y
+ˆ
+s d d
+
+0
+
+D =
+t
+
+dx
+
+0
+
+,
+
+ò
+
+á ñ =
+·
+t
+
+D =
+V
+
+ò
+
+-
+
+1
+g dx dx dx
+
+2
+
+3
+,
+
+á ñ =
+·
+V
+
+1
+D
+t
+
+ò
+1
+D
+V
+
+·
+
+dt
+
+,
+
+·
+
+ò
+
+(
+
+20a
+
+)
+
+-
+
+1
+g dx dx dx
+
+2
+
+3
+,
+
+(
+
+20b
+
+)
+
+D =
+A
+a
+
+ò
+
+-
+
+b
+g dx dx
+
+c
+
+,
+
+á ñ =
+·
+A
+a
+
+1
+D
+A
+
+a
+
+·
+
+ò
+
+-
+
+b
+g dx dx
+
+c
+
+,
+
+D =
+n
+ˆ
+
+ò
+
+d
+
+n
+ˆ
+
+,
+
+á ñ =
+·
+ˆ
+n
+
+ˆ
+DW =
+
+ò
+
+ˆ
+ˆ
+ˆ
+z y
+s d d
+
+,
+
+á ñ =
+·
+ˆ
+W
+
+1
+D
+n
+ˆ
+1
+ˆ
+DW
+
+·
+
+d
+
+n
+ˆ
+
+,
+
+ò
+
+ˆ
+ˆ
+· ˆ
+z y
+s d d
+
+,
+
+ò
+
+(
+
+20c
+
+)
+
+(
+
+20d
+
+)
+
+(
+
+20e
+
+)
+
+5
+
+D =
+l
+ˆ
+l
+
+ˆ
+s d
+
+ˆ
+m
+l
+
+,
+
+ò
+
+á ñ =
+·
+l
+ˆ
+l
+
+1
+D
+l
+
+ˆ
+l
+
+· ˆ
+s d
+
+ˆ
+m
+l
+
+,
+
+ò
+
+White et al.
+
+(
+
+20f
+
+)
+
+where a, b, c ä {1, 2, 3} are always distinct, as are l, m ä {ζ,
+ˆl
+ˆ
+ψ}, with
+y=y
+. Then the integral form of the
+radiative transfer equation can be written as12
+
+ˆl
+ˆ
+z=z
+
+and
+
+1
+D
+t
+
+[ ˆ ˆ ˆ
+0
+á
+n n I
+n
+0
+
+ñ
+V
+
+ˆ ˆ
+W
+n
+
+]
+
+0
+x
++
+0
+x
+-
+
++
+
+å
+a
+
+1
+D
+V
+
+D á
+a
+
+ˆ ˆ ˆ
+a
+A n n I
+n
+0
+
+[
+
+ñ
+tA
+
+ˆ ˆ
+W
+n
+
+a
+
+a
+x
++
+a
+x
+-
+
+]
+
+1
+n
+D
+ˆ
+
+[ ˆ ˆ ˆ
+ˆ
+n
+á
+n n I
+n
+0
+
+ñ
+tV
+
+ˆ
+W
+
+ˆ
+n
+]
++
+ˆ
+n
+-
+
++
+
++
+
+1
+ˆ
+DW
+
+å
+ˆ
+l
+ˆ (ˆ
+ȷ
+n
+0
+n
+
+= á
+
+[
+
+l
+D á
+ˆ
+l
+
+ˆ
+ˆ ˆ ˆ
+l
+n n I
+n
+0
+
+ñ
+tV
+
+ˆ
+nl
+
+ˆ
+l
+
+ˆ
+l
+l
+]
++
+ˆ
+l
+l
+-
+
+-
+
+a
+ˆ
+
+ˆ )
+I
+n n
+
+ñ
+tV
+
+ˆ ˆ
+W
+n
+
+.
+
+(
+
+21
+
+)
+
+Specializing to the case of gray transport, we can consider
+ˆn< < ¥, in which case the
+frequency to have a single bin 0
+equation can be written as
+
+1
+D
+t
+
+[ ˆ ˆ ˆ
+0
+á
+n n I
+0
+
+ñ
+V
+
+ˆ
+W
+
+]
+
+0
+x
++
+0
+x
+-
+
++
+
+å
+a
+
++
+
+å
+ˆ
+l
+
+1
+ˆ
+DW
+
+[
+
+D á
+l
+ˆ
+l
+
+ˆ
+ˆ ˆ ˆ
+l
+n n I
+0
+
+ñ
+tV
+
+[
+
+1
+D
+V
+ˆ
+l
+l
+]
++
+ˆ
+l
+l
+-
+
+ˆ
+l
+
+l
+
+D á
+a
+
+ˆ ˆ ˆ
+a
+A n n I
+0
+
+ñ
+tA
+
+ˆ
+W
+
+a
+
+a
+x
++
+a
+x
+-
+
+]
+
+= á
+
+ˆ (ˆ
+n
+ȷ
+0
+
+-
+
+a
+ˆ
+
+E
+
+ˆ)
+I
+
+ñ
+tV
+
+.
+
+ˆ
+W
+
+(
+
+22
+
+)
+
+Here we have deﬁned the gray intensity, gray emissivity, and
+energy-mean absorptivity, respectively, as
+
+ˆ
+I
+
+=
+
+ȷ
+ˆ
+
+=
+
+¥
+
+¥
+
+ò
+
+0
+
+ò
+
+0
+
+ˆ
+n
+I d ,
+ˆ
+n
+
+ȷ
+ˆ
+n
+
+n
+d ,
+ˆ
+
+a
+ˆ
+
+E
+
+=
+
+¥
+
+1
+ˆ
+I
+
+ò
+
+0
+
+a
+ˆ
+
+ˆ
+I d
+n n
+
+n
+ˆ
+
+.
+
+(
+
+23a
+
+)
+
+(
+
+23b
+
+)
+
+(
+
+23c
+
+)
+
+The form of Equation (22) informs a ﬁnite-volume/ﬁnite-
+ˆ ˆ ˆ are
+0
+solid-angle method, in which the conserved values n n I
+0
+ˆ ˆ ˆ, but
+updated not only via area-averaged spatial ﬂuxes n n I
+i
+0
+ˆz
+ˆy
+ˆ ˆ
+ˆ ˆ ˆ
+also via angle-averaged angular ﬂuxes n n I0
+ˆ
+and n n I0
+. The
+Ricci rotation coefﬁcients hidden in nˆ ˆz and nˆ ˆy account for the
+bending of light as it propagates on a curved spacetime, or for
+the rotation of the tetrad directions as one moves through space
+even in ﬂat spacetime.
+
+In a ﬂat spacetime with d spatial dimensions and a (d − 1)-
+dimensional radiation angle space, one can always choose a
+g vanishes everywhere, even when working
+ˆw
+tetrad such that
+ˆ ˆ
+ab
+in curvilinear coordinates with nonvanishing connection
+coefﬁcients. Indeed, this has allowed the Newtonian prede-
+cessor of our algorithm to be used in 3D simulations in
+spherical coordinates with great success. However, given a
+symmetry of the spatial dimensions, there may be no such
+convenient tetrad that respects that symmetry. In particular, 2D
+axisymmetric simulations performed in cylindrical or spherical
+coordinates still require two angles to capture the radiation
+ﬁeld, which are axisymmetric about a spatial axis but not any
+momentum axis, and so angular transport terms cannot be
+avoided even in such Newtonian problems. When GR gravity
+is present, angular transport will always be nontrivial for any
+
+12 We omit the term
+) ˆ ˆ ˆ
+a b
+n n I
+n
+but vanishes given Equation (4).
+
+á ¶
+0(
+
+g
+ab
+
+ñ
+tV
+
+ˆ ˆ
+nW
+
+2
+
+that is added to the right-hand side
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+choice of coordinates and tetrad, even for 3D simulations with
+two angular coordinates.
+
+2.3. Reconstruction
+
+At
+
+the beginning of any stage in the time-integration
+algorithm, we have the primitive values Iˆ deﬁned everywhere.
+This includes ghost zones in space and angle. We must
+calculate slope-limited “left” and “right” values at each spatial
+interface (at a constant solid angle) and each angular interface
+(at a constant spatial location).
+
+(DC), piecewise linear
+
+Reconstruction in spatial directions is performed via the
+same 1D algorithms as for cell-centered HD variables, with
+each angular bin being treated separately. These routines
+(PLM; van
+include donor cell
+Leer 1974), and piecewise parabolic (PPM; Colella &
+Woodward 1984) methods. Treating each angular bin sepa-
+rately is only valid to the extent that the tetrad basis vectors do
+not rotate too rapidly as one moves across the spatial grid. For
+example, for spatial cells indexed by i, j, and k and angular bins
+indexed by l and m, ni,j,k,l,m should point in roughly the same
+direction as ni±1,j,k,l,m. This is similar to how, in HD on a
+spherical grid, the azimuthal cells must not be so large that the
+f-direction changes wildly from one cell
+to the next. In
+practice, reasonable tetrad choices will result in valid radiation
+reconstruction on any grid with sufﬁcient resolution for HD.
+
+(l,
+p
+
+1/2),
+
+at
+p
+3
+(
+
+, indexed by l ä {0,K,3}, and N
+
+Angular ﬂuxes are computed similarly within each spatial
+cell. The procedure is most easily illustrated with the PLM
+stencil on a latitude–longitude grid. For concreteness, consider
+a grid with N
+8
+,
+indexed by m ä {0,K,7}, with half-integers denoting inter-
+faces. Second-order reconstruction of the left and right values
+Iˆ
+m) = (1,
+of
+coordinates
+(ˆ
+ˆ )
+, would use angular cells with (l,
+=
+z y
+,
+m) = (1, 7), (1, 0), (1, 1), (1, 2), with coordinates understood
+p
+to be
+. The left and right
+values at l = 1/2 and m = 0 would require crossing the pole,
+using the four cells with (l, m) = (0, 4), (0, 0), (1, 0), (2, 0) and
+= -
+8
+.
+understood coordinates
+An alternative method appropriate for geodesic grids is
+discussed in Section 2.6.
+
+As Iˆ is essentially a scalar (it has no directional sense
+independent of the angular cell in which it is located), there is
+no sign change across the angular grid poles that must be
+considered as happens,
+for example, when reconstructing
+velocity vectors across the poles in HD on spherical grids.
+
+= -
+
+ˆ =y
+
+with
+
+ˆ =z
+
+ˆy
+
+8,
+
+8,
+
+8,
+
+8,
+
+8,
+
+8,
+
+8,
+
++
+
++
+
++
+
++
+
++
+
++
+
+p
+
+p
+
+p
+
+p
+
+p
+
+p
+
+p
+
+ˆz
+
+3
+
+4
+
+4
+
+8
+
+5
+
+3
+
+5
+
+)
+
+2.4. Fluxes
+In a vacuum, radiation ﬂuxes are simply given by the upwind
+primitives multiplied by the appropriate prefactors, where the
+upwind direction is determined by the normal direction of the
+angular cell in question. That is, we take
+
+á
+
+ˆ ˆ ˆ
+a
+n n I
+0
+
+ñ
+tA
+
+ˆ
+W
+
+a
+
+=
+
+a
+ˆ ˆ
+n n
+
+0
+
+ˆ
+I
+L
+ˆ
+I
+R
+
+,
+
+,
+
+⎧
+⎨⎩
+
+a
+
+ˆ
+n
+
+a
+
+ˆ
+n
+
+>
+
+0,
+
+<
+
+0,
+
+(
+
+24
+
+)
+
+interface. Angular ﬂuxes are just as simple in our notation
+
+White et al.
+
+ˆ
+l
+
+ˆ
+n
+
+,
+
+ˆ
+I
+L
+ˆ
+I
+R
+
+>
+
+0,
+
+)
+
+ˆ
+l
+
+0
+
+,
+
+ˆ
+l
+
+l
+
+(
+
+á
+
+ˆ
+n
+
+0.
+
+<
+
+=
+
+25
+
+ñ
+tV
+
+ˆ
+l
+ˆ ˆ
+n n
+
+ˆ
+ˆ ˆ ˆ
+l
+n n I
+0
+
+⎧
+⎨
+⎩
+In principle, a radiation-HD scheme could simply use
+Equations (24) and (25) for the radiation sector, with the HD
+sector using its own Riemann-solver ﬂuxes, which do not
+depend on the radiation. In practice, however, such operator
+splitting can lead to excessive diffusion when the speed of light
+greatly exceeds the effective diffusion of radiation through an
+optically thick medium.
+
+Radiation-HD codes employ various methods, similar in
+spirit but differing in detail,
+to overcome this issue. For
+example, Sądowski et al. (2013) use a Riemann solver to
+calculate radiation ﬂuxes, with the relevant signal speed
+estimates (nominally the eigenvalues of the linearized, homo-
+geneous equations for the radiation subsector) are reduced
+toward 0 in regions of large optical depth per cell. Similarly,
+Foucart et al. (2015) and Ryan & Dolence (2020) use the
+optical depth per cell to interpolate between a free-streaming
+ﬂux and an advective–diffusive ﬂux.
+
+Our own approach most closely resembles that of Jiang et al.
+(2014), generalized to a relativistic setting. For each interface,
+the primitive velocities ua¢ and ﬂuid-frame total absorption
+coefﬁcients
+E¯a are interpolated to the interface from the two
+adjacent cells. Given the time step Δt, this deﬁnes an effective
+optical depth for the interface of
+
+a
+¯
+
+D
+t
+ˆ
+0
+
+,
+
+t
+
+µ
+
+E
+u
+where a proportionality constant of approximately 1–10 can be
+chosen based on the problem at hand, and a value of 0 reduces
+to the free-streaming case. We next deﬁne the interpolating
+factor
+
+26
+
+(
+
+)
+
+f
+
+= -
+
+expm1
+
+(
+
+-
+
+t
+
+2
+
+)
+
+,
+
+(
+
+27
+
+)
+
+º
+
+( )
+exp x
+
+- is evaluated numerically with-
+where expm1 x
+( )
+1
+out loss of precision near x = 0. Using the velocities from the
+¯ = - a
+ˆ
+adjacent cells, we can calculate n
+u n
+(
+in those
+cells. The ﬂux is then calculated according to
+
+0
+L R
+
+a
+ˆ )
+
+L R
+
+á
+
+ˆ ˆ ˆ
+a
+n n I
+0
+
+ñ
+tA
+
+ˆ
+W
+
+a
+
+=
+
+a
+ˆ ˆ
+n n
+
+0
+
+ˆ (
+I
+1
+L
+ˆ (
+I
+R
+
+1
+
+⎧
+⎨
+⎩
+
+-
+
+-
+
+g
+L
+g
+R
+
++
+
+g
+
+)
+
+,
+
++
+
+g
+
+)
+
+,
+
+a
+
+ˆ
+n
+
+a
+
+ˆ
+n
+
+>
+
+0,
+
+<
+
+0,
+
+where we deﬁne
+
+g
+L R
+
+= -
+
+f
+
+1
+
++
+
+⎛
+⎜
+⎝
+
+1
+¯
+0ˆ
+n
+L R
+
+,
+
+⎞
+⎟
+⎠
+
+(
+
+28
+
+)
+
+(
+
+29
+
+)
+
+and g is the interpolation of gL/R to the interface.
+
+The discretization of space and momentum space naturally
+results in numerical diffusion. For example, beams of light will
+slowly spread beyond the region allowed by an exact solution
+to the geodesic equation (see Section 3.2). This can lead to a
+subtle numerical issue inside the ergosphere of a black hole,
+where negative-energy orbits exist.
+
+The covariant momentum of radiation can be written
+
+k
+
+ˆ ˆ
+n=a
+n .
+a
+
+(
+
+30
+
+)
+
+where ILˆ and IRˆ are, respectively, the reconstructed intensities
+at the lesser and greater coordinate x a sides of the constant-x a
+
+Along a null geodesic in a stationary spacetime, k0 is preserved.
+As ˆn is strictly positive, the sign of n0ˆ must be preserved as
+
+6
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+well. However, numerical diffusion can send some light from a
+cell and angular bin with one sign of n0ˆ
+to a cell and angular
+bin with the other sign. If this is the case, and if the sign of n0ˆ
+on the interface, whether spatial or angular, matches the sign
+downwind, then any ﬂux across the interface will increase Iˆ on
+both sides, leading to an exponential growth in Iˆ.
+
+This happens despite the conservation of energy; the energy
+at inﬁnity of the radiation ﬁeld does not change, since light is
+being added to both positive- and negative-energy orbits
+simultaneously. Increasing resolution can decrease the phase-
+space volume affected by this instability, but
+it will not
+decrease the number of cells on a particular grid where this will
+occur. To quell the instability, we introduce the critical value
+ˆ » . Every step, we zero Iˆ wherever n
+crit
+n
+. This
+0
+occurs in a relatively small fraction (less than 11%) of the
+phase-space volume between the horizon and the ergosphere.
+
+∣ ˆ ∣
+0
+
+ˆ<
+n
+
+crit
+0
+
+0.1
+
+2.5. Coupling
+We apply the effect of the right-hand side of Equation (22)
+(or, more simply, the gray version of Equation (2), given that
+source terms affect each cell in isolation) each stage in the time
+integrator, after both the HD and radiation quantities have been
+updated via ﬂux divergences. Here we consider emission and
+true absorption (no stimulated emission) that are isotropic in
+the ﬂuid frame. For concreteness, and to match the conditions
+of our initial applications, we specialize to photons (as opposed
+to neutrinos) interacting with a gamma-law gas (as opposed to
+one with a different equation of state). However, the procedure
+we outline is adaptable to these other cases.
+
+Given the stationary nature of the tetrad, Equation (12), we
+can take the coupling portion of the equation, operator-split
+from the spatial and angular transport, to be
+
+ˆ
+¶ =
+I
+0
+
+1
+0
+ˆ
+n
+
+ȷ
+(ˆ
+
+-
+
+a
+ˆ
+
+E
+
+ˆ)
+I
+
+.
+
+(
+
+31
+
+)
+
+Using the Lorentz-invariant forms of I, j, and α, as well as the
+fact that the ratio of frequencies seen in different frames is that
+¯
+¯
+= ), the
+of the time components of nˆ (e.g.,
+0
+0
+ˆ
+ˆ
+n n
+equation can be transformed to the ﬂuid frame
+
+n n =
+ˆ
+¯
+
+ˆ
+n
+
+ˆ
+0
+
+¯
+¶ =
+I
+0
+
+¯
+0
+
+0
+
+ˆ
+n
+ˆ
+n
+
+ȷ
+(¯
+
+-
+
+a
+¯
+
+E
+
+¯)
+I .
+
+(
+
+32
+
+)
+
+Here, we implicitly assume the ﬂuid velocity does not
+appreciably change over the course of the coupling, so that
+n0ˆ ¯ has no time derivative.
+
+Consider the decomposition of emissivity and absorptivity
+
+into absorption and scattering terms
+
+ȷ
+¯
+
+a
+= +
+ȷ
+¯
+a
+E
+
+s
+
+ȷ
+¯
+
+,
+s
+E
+
+(
+
+33a
+
+)
+
+E
+
+a
+¯
+
+a
+¯
+
+=
+
++
+33b
+)
+Assuming the ﬂuid remains in local thermodynamic equili-
+brium with temperature T, the gray form of Kirchhoff’s law
+tells us the absorption terms are related via
+
+a
+¯
+
+(
+
+.
+
+where
+
+a
+
+ȷ¯
+
+=
+
+1
+p
+4
+
+a
+¯
+
+a
+P
+
+a T
+rad
+
+4
+
+,
+
+a
+¯
+
+a
+P
+
+=
+
+¥
+
+p
+4
+a T
+rad
+
+4
+
+ò
+
+0
+
+a
+¯
+
+a
+n
+
+B d
+n
+
+n
+
+,
+
+(
+
+34
+
+)
+
+(
+
+35
+
+)
+
+7
+
+is the Planck-mean absorption coefﬁcient, Bν is the Planck
+function, and arad is the radiation constant. With scattering that
+is elastic
+
+White et al.
+
+∮ ȷ(¯
+
+s
+
+a-
+¯
+
+s
+E
+
+¯)
+I d
+
+¯
+W =
+
+0,
+
+and ﬂuid-frame isotropic, we have the relation
+
+s
+
+ȷ¯
+
+=
+
+1
+p
+4
+
+a
+¯
+
+s
+E
+
+¯
+E
+
+,
+
+where
+
+(
+
+36
+
+)
+
+(
+
+37
+
+)
+
+¯
+E
+
+=
+
+∮
+
+¯
+I d
+
+∮
+is the radiation energy density in the ﬂuid frame. Combining
+these results, the coupling equation can be written as
+
+¯
+¯
+ˆ
+ˆ ˆ ˆ
+0 0
+W
+I n n d ,
+
+¯
+W =
+
+38
+
+(
+
+)
+
+¯
+¶ =
+I
+0
+
+¯
+0
+
+0
+
+ˆ
+n
+ˆ
+n
+
+1
+p
+4
+
+⎛
+⎝
+
+a
+( ¯
+
+a
+P
+
+a T
+rad
+
+4
+
++
+
+a
+¯
+
+s
+E
+
+¯)
+E
+
+-
+
+a
+¯
+
+E
+
+¯
+I
+
+.
+
+⎞
+⎠
+
+(
+
+39
+
+)
+
+E
+
+a¯a ,
+P
+
+s¯a , and/or
+
+In principle, one could apply Equation (39) cell-by-cell and
+angle-by-angle as an explicit update. However, the coupling
+coefﬁcients
+E¯a might be large enough that their
+associated timescales (their reciprocals, in units where c = 1)
+are much shorter than the HD Δt. Accuracy and stability
+demand an implicit solution to the equation. Fortunately, a
+locally implicit solution sufﬁces in relativity, as the HD
+evolution is already limited by light-crossing times. Naively,
+the appearance of E¯ in Equation (39) would couple all angles in
+a cell together, resulting in an implicit system whose size scales
+with the number of angles used. However, as shown in Jiang
+(2021) for the Newtonian case, under the small-velocity-shift
+assumption already made, the solution can be obtained by
+transforming the intensities into the ﬂuid frame and solving a
+quartic equation for
+the post-coupling temperature. This
+method has been extended to SR by Zhang et al. (2021), and
+here we extend it to the fully GR case.
+
+Let − and + respectively indicate quantities before and after
+
+coupling. Implicit differencing of Equation (39) yields
+
+¯
+I
+-
+
+D
+t
+
+E
+
+¯
+I
++
+
+-
+
+0
+
+ˆ
+n
+
+-
+
+4
+
+p
+
+( ˆ
+n
+
+0
+
++
+¯
+0
+
+ˆ
+n
++
+
+0
+
+ˆ
+n
+¯
+0
+ˆ ¯
+a
+n
+D
+t
+¯
+0
+ˆ ¯
+a
+n
+
+a
+( ¯
+
+a
+P
+
+a T
+rad
+
+4
++
+
++
+
+a
+¯
+
+s
+E
+
+¯ )
+E
++
+
+=
+
+0.
+
+(
+
+40
+
+)
+
+D
+t
+
+)
+
+E
+
+Integrating over solid angle in the ﬂuid frame, we have the
+relation
+
+¯
+E
++
+
+4
+- -
+A
+a T
+1
+rad
++
+where we deﬁne the coefﬁcients
+
+a
+( ¯
+
+A
+2
+
+a
+P
+
++
+
+a
+¯
+
+s
+E
+
+¯ )
+E
++
+
+=
+
+0,
+
+(
+
+41
+
+)
+
+A
+1
+
+=
+
+∮
+
+0
+
+ˆ
+n
+¯a
+0
+ˆ ¯
+n
+
+0
+
+ˆ
+n
+
++
+
+D
+t
+E
+¯
+0
+
+¯
+¯
+W-
+I d ,
+
+(
+
+42a
+
+)
+
+=
+
+A
+2
+
+∮
+
+D
+t
+p
+4
+
+ˆ
+n
+¯
+0
+ˆ ¯
++
+a
+n
+and where we again assume the ﬂuid velocity changes
+negligibly over the time step in order to write
+
+42b
+
+D
+t
+
+¯
+W
+
+ˆ
+n
+
+d
+
+(
+
+E
+
+,
+
+0
+
+)
+
+¯
+E
++
+
+=
+
+∮
+
+¯
+I d
++
+
+¯
+W
+
+-
+
+.
+
+(
+
+43
+
+)
+
+At
+
+the same time,
+
+the ﬂuid frame is not
+to the extent
+accelerated, total energy conservation relates the change in the
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+ﬂuid internal energy to a change in the ﬂuid-frame radiation
+energy. More precisely, with the assumptions of a stationary
+tetrad and ﬂuid velocity, we can multiply Equation (31) by
+n n0ˆ ˆa and integrate over tetrad-frame solid angle to ﬁnd
+0
+= -a
+
+44
+)
+Here we use the radiation stress–energy tensor, whose
+components13 are
+
+G .
+a
+
+R
+
+¶
+
+(
+
+0
+
+precoupling velocity and at the radiation velocity
+
+ˆ ˆ
+a
+0
+gas
+
+T
+
+r= + +
+
+u
+
+(
+
+p u
+)
+
+ˆ
+0
+gas
+
+ˆ
+a
+u ,
+gas
+
+(
+
+51a
+
+)
+
+51b
+)
+In the tetrad frame, the coupling force, Equation (19), is simply
+
+r= + +
+
+p u
+)
+
+T
+
+u
+
+(
+
+(
+
+ˆ
+0
+rad
+
+ˆ
+a
+u .
+rad
+
+ˆ ˆ
+a
+0
+rad
+
+ˆ
+a
+
+G
+
+= -
+
+a
+( ¯
+
+a
+P
+
+a T
+rad
+
+4
+
++
+
+a
+¯
+
+s
+E
+
+¯)
+E u
+
+ˆ
+a
+
+-
+
+a
+¯
+
+E
+
+ˆ ˆ
+ab
+u R .
+
+ˆ
+b
+
+(
+
+53
+
+)
+
+ab
+
+R
+
+=
+
+∮ ˆ ˆ ˆ
+
+ˆ
+a b
+W
+I n n d .
+
+We use the fractions
+
+(
+
+45
+
+)
+
+Combined with the operator-split portion of Equation (18b)
+
+¶
+
+0
+
+0
+=a
+T
+
+G ,
+a
+
+(
+
+46
+
+)
+
+the stationary assumption allows us to write
+
+¯ ¯
+a
+0
+
+¯ ¯
+a
+0
+
+0
+
+)
+
+¶
+
+0.
+
+=
+
++
+T
+R
+(
+¯ ¯
+¯ ¯ = and T
+¯
+00
+00
+As we have R
+E
+, with ugas
+and umag the thermal and ﬂuid-frame electromagnetic energy
+densities, respectively, and knowing radiation does not couple
+directly to magnetic ﬁelds, this allows us to write
+
+r= +
+
+47
+
+mag
+
++
+
+gas
+
+u
+
+u
+
+(
+
+)
+
+r
+k
+B
+G -
+p(
+
+1
+
+)
+
+m
+
+m
+
+(
+
+T
++
+
+-
+
+T
+)
+-
+
+= -
+
+( ¯
+E
++
+
+-
+
+¯ )
+E
+-
+
+,
+
+(
+
+48
+
+)
+
+where we use the ideal gas equation of state and leverage the
+fact that this coupling cannot change density.14
+
+Combining Equations (41) and (48), we have a quartic
+
+equation for T+
+
+with
+
+B T
+4
+
+4
++
+
++
+
+B T
++
+1
+
++
+
+B
+
+0
+
+=
+
+0,
+
+a
+P
+
+a ,
+rad
+
+B
+4
+
+B
+1
+
+=
+
+m
+
+m
+
+p
+
+a=
+A
+¯
+2
+r
+k
+B
+G -
+(
+
+1
+
+)
+
+(
+
+1
+
+-
+
+A
+
+s
+a
+¯ )
+2 E
+
+,
+
+(
+
+49
+
+)
+
+(
+
+50a
+
+)
+
+(
+
+50b
+
+)
+
+0
+
+B
+
+B T
+-
+1
+
+= -
+A
+1
+
+- -
+(
+)
+1
+50c
+With T+ in hand, Equation (48) yields E¯+. The new ﬂuid-frame
+intensities can be found from Equation (40), after which they
+can be transformed to the tetrad frame.
+
+A
+
+(
+
+¯ ) ¯
+s
+a
+E
+.
+-
+2 E
+
+When the dynamics are dominated by radiation, which we
+take to be when E¯ exceeds the gas inertial density ρ + ugas, the
+assumption of the ﬂuid velocity not changing over the course of
+coupling no longer holds. In such cases we modify the above
+procedure by using a different ﬂuid velocity, taken to be the
+same before and after coupling, that approximates the velocity
+we expect the gas to have as a result of coupling.
+
+Given the radiation stress–energy components R ab, we
+
+deﬁne a “radiation three-velocity” via
+
+ˆ
+a
+v
+rad
+
+=
+
+ˆ ˆ
+a
+0
+
+ˆ ˆ
+00
+
+R
+
+R
+
+,
+
+(
+
+51
+
+)
+
+together with its associated four-velocity. This allows us to
+its
+calculate the momentum density of
+
+the gas both at
+
+13 This equation can be written in a variety of equivalent forms, with the four
+free indices agreeing in coordinate system and covariance/contravariance, and
+with the four macrons agreeing (e.g., all changed to bars or all eliminated).
+14 More accurately, the conserved density ρu0 is unchanged by coupling (see
+Equation (18b)). With the assumption of a small shift in velocity made twice
+already, this amounts to ρ being constant, which is needed for Equation (48)
+to hold.
+
+8
+
+a
+
+f
+
+=
+
+ˆ
+a
+D
+G t
+ˆ ˆ
+a
+0
+rad
+
+-
+
+ˆ
+a
+u T
+(
+
+,
+
+ˆ ˆ
+a
+0
+gas
+
+T
+
+)
+
+clamped between 0 and 1, to estimate
+a
+f u
+
+= -
+(
+1
+
++
+
+u
+
+u
+
+)
+
+f
+
+ˆ
+a
+
+a
+
+ˆ
+a
+gas
+
+ˆ
+a
+rad
+
+,
+
+(
+
+54
+
+)
+
+(
+
+55
+
+)
+
+for use in the implicit coupling procedure above.
+
+a.
+
+After I+ is found, the total four-momentum of the ﬂuid and
+radiation is conserved by subtracting the change in R0
+a
+from T 0
+
+In order to model neutrinos or non–gamma-law ﬂuids, the
+details of the coupling procedure would change. In particular,
+the implicit solution need not reduce to solving a quartic
+equation. Still, it would be reducible to ﬁnding the root of a
+small number of equations.
+
+2.6. Angular Grids
+Just as the use of spatial coordinates x a naturally leads to the
+discretization of space via surfaces of constant x a, our use of
+angular coordinates ˆz and ˆy inform a discretization of angular
+space (the sphere) via lines of constant latitude and longitude.
+Our preceding discussion is framed in this way, and the code
+supports this style of angular grid.
+
+1
+ˆ +y
+
+lines of latitude equally spaced in cos ˆz
+ˆ +z
+By choosing N
+from +1 to −1 and N
+lines of longitude equally spaced in
+ˆy from 0 to 2π, we obtain N
+= z y angular cells with
+ang
+equal solid angle, distributed roughly uniformly in the tetrad
+frame. The latitude–longitude grid scheme is conceptually
+simple, and it can ﬂexibly support many reasonable values of
+Nang for different problems. However, such grids are not
+=y
+particularly isotropic: for N
+triangles
+ˆ
+touching the pole have a short-to-long leg length ratio that
+scales as
+
+the spherical
+
+z for large Nˆz.
+
+N N
+ˆ
+
+N2
+
+Nˆ
+
+z,
+ˆ
+
+p
+
+1
+
+We therefore implement a geodesic grid scheme as an
+alternative to latitude–longitude grids. A number of such
+schemes exist in the literature; here we choose the nonrecursive
+grid of Wang & Lee (2011), constructed conceptually as
+follows:
+
+ˆ
+
+1. Set 12 points on the sphere to be the vertices of a regular
+
+icosahedron.
+
+Nlev
+
+2. Triangulate each of the 20 faces of the icosahedron into
+2 equilateral triangles for a level Nlev grid, Nlev > 0.
+
+3. Project the centers of all N20 lev
+
+2 triangles onto the sphere,
+and connect via a spherical geodesic edge any pair of
+points originating from triangles sharing a common edge.
+
+=
+
+discretization
+
+resulting
+2
+N10
+lev
+
+has
+of
+The
++ cells, 12 of which are pentagons with the
+N
+ang
+rest hexagons. This grid’s anisotropy remains bounded as the
+resolution increases, as shown by Wang & Lee (2011), and it
+has been successfully used for other astrophysical purposes
+
+sphere
+
+the
+
+2
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+the solution. The bookkeeping of the geodesic grid is more
+complicated as well, but it can still lend itself to efﬁcient
+memory packing and even vectorization by dividing it into ﬁve
+congruent, logically rectangular patches, as in Randall et al.
+(2002).
+
+Finally, for any type of grid with roughly equal solid angles,
+we can estimate the resolution needed to retain accuracy in the
+presence of strong Lorentz boosts. As a point is boosted by the
+three-velocity v in a given direction,
+its sphere of angles
+distorts. Solid angles at the back of the sphere (i.e., in the
+direction opposite to the boost) grow the most, changing by a
+factor approaching (1 + v)/(1 − v) in the most antialigned case.
+If a problem requires that no angular bin in the ﬂuid frame have
+maxDW , and if vmax is the largest ﬂuid
+a size greater than
+velocity relative to the tetrad frame that will arise, then the
+tetrad-frame angular grid should have
+
+N
+
+ang
+
+
+
+p
+4
+DW
+
+max
+
+·
+
+1
+1
+
++
+-
+
+v
+max
+v
+max
+
+.
+
+(
+
+56
+
+)
+
+3. Tests
+
+3.1. Colliding Beams
+
+One of the primary motivations for the development of this
+method is the ability to capture radiation ﬁelds that are peaked
+in multiple directions simultaneously. Moment methods such
+as M1 fundamentally cannot do this, as is readily apparent in a
+colliding beam test. Two beams crossing in a vacuum will
+merge into a single beam pointing in the average direction of
+the two when using M1. By discretizing in angle, our method
+trivially captures multimodal
+intensity distributions at each
+point.
+
+On a 96 × 60 spatial grid covering [0, 1.6] × [0, 1], we place
+beam sources at x = 2/15 and y = 1/2 ± 11/30, each with a
+radius of 1/10. At each location in the source, radiation is
+emitted in a beam at a central angle mπ/6 with respect to the
++x-axis, and the beams have a nonzero full spread of π/12.
+Radiation is emitted into each appropriate angle at a rate of dI/
+dt = 5. The sources are optically thin: radiation emitted in one
+source cell is augmented rather than replaced by radiation in
+source cells through which it subsequently passes.
+
+Figure 4 illustrates the beam test with our code, using two
+different angular resolutions. The results are shown at t = 5/2,
+sufﬁcient for the beams to leave the grid and for the problem to
+be in steady state. These beams are able to cross without
+affecting one another. Ray effects are more prominent at the
+lower resolution, where the full width of the beam is only twice
+the ˆy-width of our cells in angle. For comparison, the exact
+solution is shown in the third panel. While simple, we
+emphasize that
+is failed by M1 and commonly
+employed closure methods.
+
+this test
+
+3.2. Beams in Curvilinear Coordinates
+
+Any method that is to work with curved spacetimes should
+work in ﬂat
+spacetime parameterized by non-Cartesian
+coordinates, where the connection coefﬁcients Gbg
+a do not
+identically vanish. Even in Cartesian coordinates, the choice of
+tetrad might have nontrivial coordinate derivatives, leading to
+nonzero values for the Ricci rotation coefﬁcients deﬁned in
+Equation (17). Here we illustrate the same physical problem in
+different ﬂat-spacetime coordinate systems, each with different
+tetrads.
+
+9
+
+Figure 3. Examples of angular grids supported by the code. On the left are
+latitude–longitude grids with 3 × 4 angles (coarse, top) and 9 × 18 angles
+(ﬁne, bottom). To the right of each is the geodesic grid with exactly the same
+number of cells (grid levels 1 and 4). The north pole (centered on a pentagonal
+cell in the geodesic grids) is tilted 35° toward the camera in all cases.
+
+(e.g., Daszuta et al. 2021). Figure 3 illustrates coarse and ﬁne
+versions of both the latitude–longitude and geodesic grids.
+
+In HD, grids with boundaries not coinciding with constant-
+coordinate surfaces present
+issues when solving Riemann
+problems. Vector quantities in the left and right states must be
+rotated into coordinates aligned with the grid, and the resulting
+ﬂuxes will therefore also be aligned with the grid. However, the
+ﬂuxes of vector-conserved quantities are components of a rank-
+2 tensor, and 1D Riemann solvers do not provide enough
+components for this tensor to be simply rotated back into the
+coordinate frame in order to apply the ﬂux-divergence update.
+With radiation this is not a problem, as our conserved quantity
+is a scalar related to intensity. That is, there is no rotation to
+perform on the reconstructed intensities, Equation (25) holds if
+the direction vector nlˆ ˆ is understood to be the combination of
+nˆ ˆz and nˆ ˆy aligned with the grid, and the angular-ﬂux-
+divergence term in Equation (22) is naturally modiﬁed to
+sum over the (possibly more than four) edges of the cell.
+
+The spatial ﬂuxes of radiation, as in Equation (24), are not
+concerned with the discretization in angle. For the purposes of
+taking moments of the radiation ﬁeld or coupling to matter, it is
+sufﬁcient (i.e., second-order accurate) to know the angular
+grid’s cell centers and solid angles. Reconstruction on latitude–
+longitude grids uses the same algorithms as spatial reconstruc-
+tion. Geodesic grids can use DC reconstruction. For a higher-
+order technique, we use the minimum-angle plane reconstruc-
+tion (MAPR) method developed for triangular meshes by
+Christov & Popov (2008) and implemented on the same
+hexagonal grid as ours by Florinski et al. (2013).
+
+The geodesic grid sacriﬁces ﬁne-grained control of resolu-
+tion (supporting Nang ä {12, 42, 92, 162, K}), achieving
+instead a much more isotropic distribution of angles.
+In
+practice,
+this allows us to run simulations without being
+concerned that the grid might imprint numerical anisotropies on
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+Figure 5. Exact midplane energy density expected for the curvilinear beam test
+in Figure 6. As in Figure 4, cyan lines enclose the source region while green
+lines indicate the maximum extent of radiation expected, including in distance
+from the source.
+
+resulting energy densities in the z = 0 planes of the nine
+simulations are shown in Figure 6.
+
+In all cases, the beam travels at the speed of light in the
+correct direction with the correct spread, with no artifacts at the
+reﬁnement boundary. There are angular transport terms when
+the cylindrical and spherical tetrads are used. These result in
+some anisotropic numerical diffusion of the radiation, seen by
+the beam energy not being centered between the two extremal
+geodesics, but this is much less perceptible when using a color
+scale that is linear in energy. This diffusion has the property of
+removing ray effects, from which one can clearly see that only
+four angular bins in azimuth are populated in the cases with the
+Cartesian tetrad.
+
+In order to illustrate our method’s capability in coordinate
+systems with nondiagonal metrics, we consider snake coordi-
+nates as in White et al. (2016). That is, in terms of Minkowski
+(t, x, y, z), we have snake (t, w, y, z), with
+
+w
+
+= -
+x
+
+A
+
+sin
+
+(
+
+p
+k y
+
+)
+
+.
+
+The metric becomes15
+
+g
+ab
+
+=
+
+-
+1 0
+0
+1
+d
+0
+0
+0
+
+⎛
+⎜
+⎜
+⎝
+
+0
+d
++
+0
+
+1
+
+2
+
+d
+
+,
+
+0
+0
+0
+1
+
+⎞
+⎟
+⎟
+⎠
+
+d
+
+=
+
+Ak
+
+p
+
+cos
+
+(
+
+p
+k y
+
+)
+
+.
+
+with
+
+(
+
+57
+
+)
+
+(
+
+58
+
+)
+
+(
+
+59
+
+)
+
+In this test we set A = 0.1 and k = 2.
+
+We run this problem on a snake grid with 1282 cells covering
+[−0.5, 0.5] in w and [−0.05, 0.95] in y. Here we showcase a
+level-22 geodesic grid (Nang = 4842). The beam is centered at
+the origin with a proper diameter of 0.05. It points vertically in
+Minkowski coordinates with a full spread of 10°. The problem
+is run to a time of t = 3, at which point the leading edge of the
+beam has long since left the grid.
+
+15 The notation here differs slightly from White et al. (2016), and we correct a
+typographical error in that work.
+
+Figure 4. Solutions for the colliding beam test at t = 5/2 with two different
+resolutions, along with the exact solution. Both tests use 96 × 60 cells in space.
+Source regions are outlined in cyan. Green lines denote the maximum extent of
+radiation expected (i.e., the edge of the beam emitted from the corresponding
+edge of the source region). The beams easily cross without affecting one
+another at any resolution.
+
+Let the region within 1/8 of the point (x, y, z) = (3/2, −1/2,
+0) be an optically thin source initially surrounded by no
+radiation. Let every point in the source emit radiation at a rate
+of dI/dt = 10 into any angle within π/8 of the direction (+1,
++1, 0), and allow the simulation to run for a time of
+2 . The
+exact solution for this problem is shown in Figure 5.
+
+[
+1,
+
+4, 3
+
+f
+(
+spherical
+´ -
+[
+
+We perform this simulation with 643 uniformly spaced cells
+in Cartesian coordinates (x, y, z) ä [1, 3] × [ −1, 1]2, cylindrical
+Î
+p
+coordinates R
+,
+]
+]
+1, 1
+10
+4,
+]
+4
+´
+q f Î
+coordinates
+and
+]
+10
+)
+,
+p
+p
+[
+]
+4
+. We additionally add a single
+level of static mesh reﬁnement to a quarter of the domain
+(x < 2, y < 0; R
+,
+)
+)
+f < 0) encompassing the source, demonstrating the ability of
+radiation through mesh-reﬁnement
+our code to transport
+boundaries.
+
+p
+´ -
+[
+r,
+(
+
+, f < 0; or r
+
+´ -
+[
+[
+1,
+
+< +
+1
+(
+
+< +
+1
+(
+
+10
+
+10
+
+4,
+
+p
+
+p
+
+4
+
+2
+
+z
+
+]
+
+)
+
+,
+
+,
+
+In each coordinate system we use either a Cartesian tetrad
+with n3 (the north pole of the angular grid) in the z-direction
+and n1 (the 0-longitude point on the equator) in the x-direction,
+a cylindrical tetrad with n3 in the z-direction and n1 in the R-
+direction, or a spherical tetrad with n3 in the θ-direction and n1
+in the f-direction. In all cases we use 16 × 32 angles. The
+
+10
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+Figure 6. Midplane energy densities for the beam test in three coordinate systems and three choices of tetrad. All tests use 643 cells in space and 16 × 32 angles.
+Blocks of 162 cells are outlined by the grid. In all cases the numerics match the expected result shown in Figure 5, though beam effects and anisotropic numerical
+diffusion can be seen with the logarithmic color scale.
+
+Figure 7 shows the results of this test. In two cases we use a
+in
+snake-coordinate-aligned tetrad. As geodesics are trivial
+Minkowski but not snake coordinates, aligning the tetrad in this
+way necessitates nonzero angular ﬂuxes stemming from
+nonvanishing Ricci coefﬁcients. The left panels illustrate this
+case with DC reconstruction, which results in a substantial
+amount of numerical diffusion. In the middle, we use MAPR
+reconstruction (see Section 2.6), which reduces diffusion. On
+the right we show what happens when the tetrad is aligned with
+Minkowski directions rather than snake directions: angular
+ﬂuxes and numerical diffusion vanish, despite the beam not
+traveling along a coordinate direction (that
+is, despite the
+connection coefﬁcients not all vanishing). The upper panels
+show the results in the same coordinates in which the test is
+run;
+the lower panels transform the outputs to Minkowski
+coordinates.
+
+These tests demonstrate how numerical artifacts can vary
+with the choice of tetrad, just as they can vary with the choice
+of coordinates. Our method grants users signiﬁcant freedom in
+choosing tetrads appropriate for the problem at hand.
+
+3.3. Beams around Black Holes
+
+We proceed with beam tests in a fully GR setting, in the
+
+vicinity of a black hole.
+
+First, we consider a nonspinning black hole in Schwarzschild
+coordinates (t, r, θ, f). We construct a spatial grid on [2.1,
+6] × [123π/256, 133π/256] × [0, 2π] using 54 × 5 × 256
+logarithmically spaced in r and uniformly spaced in
+cells,
+angle. This grid focuses on the vicinity of the midplane, avoids
+the singularity at the horizon, and keeps the proper aspect ratios
+of the cells approximately unity. We employ a cylindrical
+
+11
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+Figure 7. Energy densities for the beam test in Minkowski spacetime with snake coordinates. The grid has 1282 cells and 4842 angles. Aligning the tetrad with snake
+coordinates results in numerical diffusion governed by the angular-reconstruction algorithm, while aligning the tetrad with Minkowski coordinates eliminates this
+effect. The lower panels show the solution transformed back into Minkowski coordinates, where the beam can be seen to always propagate in the correct direction.
+
+30
+
+3 3 p
+
+is shown in Figure 8.
+
+15 × 128 angles. The source region is deﬁned to be everywhere
+within a proper distance of 7/20 of (3, π/2, 0), with the beam
+pointing in the prograde azimuthal direction with a half-
+opening angle of 5°. Radiation is injected at a rate of
+ˆ
+= . The resulting conserved energy density at time
+dI dt
+=
+t
+The beam correctly moves along the photon sphere at r = 3,
+spreading as expected given the nonzero source size and
+opening angle. The duration of the simulation is chosen to
+correspond to half an orbit along the photon sphere, and indeed
+the middle of the beam travels 180° around the black hole.
+Note that the conserved energy Rt
+t- increases toward the inner
+boundary of the simulation. This results from using non–
+horizon-penetrating coordinates, in which radiation energy can
+only asymptotically approach the horizon but never pass
+through it, causing the energy to grow with decreasing radius in
+steady state.
+
+Figure 8. Equatorial beam test around a nonspinning black hole. Here we have
+54 × 5 × 256 cells (out to r = 6) and 15 × 128 angles. The beam correctly
+propagates halfway around the photon sphere. The gray region denotes
+locations outside the horizon but off the grid, while the black hole itself is
+delineated with the inner black disk. The increase in energy near the inner
+boundary is an expected feature of non–horizon-penetrating coordinates.
+
+tetrad, with n3ˆ ˆ and the north pole of the angular grid pointing in
+, and with n1ˆˆ pointing in
+=
+the direction of increasing z
+the direction of increasing R
+. For this test we use
+
+r cos q
+=
+
+r sin q
+
+Next, we launch a beam at an angle to the grid, still along the
+photon sphere. For this test, we use 64 × 128 cells in angular
+coordinates, covering [π/4, 3π/4] × [−π/2, +π/2]. In the
+radial direction, we have ﬁve cells logarithmically spaced from
+approximately 2.896–3.108, again resulting in equal aspect
+ratios. We use a spherical tetrad (n3ˆ ˆ in the θ-direction, n1ˆˆ in the
+f-direction) with 16 × 32 angles. The source and beam centers
+are set such that after one-eighth of an orbit the beam will cross
+the midplane at a 30° angle. The source has a proper radius of
+1/4, and the beam has a half-opening angle of 15°. Here we use
+
+12
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+Figure 9. Inclined beam test around a nonspinning black hole. Color indicates
+the conserved energy density of the r = 3 slice, shown via a Mollweide
+projection. We use 5 × 64 × 128 cells and 16 × 32 angles. The beam correctly
+propagates a quarter orbit around the photon sphere, making an angle of 30°
+with the spatial grid as it crosses the midplane.
+
+= . The result at t
+
+ˆ
+dI dt
+8
+shown in Figure 9.
+
+=
+
+3 3
+
+2p
+
+(a quarter orbit) is
+
+This beam also propagates in the correct direction at the
+correct speed. We note that the beam does not align with the
+θ- or f-directions, nor does it align with the ˆz - or ˆy-directions
+in angular space.
+
+For a third test of beams in GR, we consider a black hole
+with dimensionless spin a = 1/2, described in spherical Kerr–
+Schild coordinates (t, r, θ, f). With the introduction of spin, the
+prograde and retrograde photon orbits separate to radii
+
+r
+
+
+= +
+2
+
+2 cos
+
+2
+3
+
+⎛
+⎝
+
+-
+
+cos
+
+1(
+
+
+
+a
+
+)
+
+.
+
+⎞
+⎠
+
+(
+
+60
+
+)
+
+Figure 10. Prograde and retrograde equatorial beam tests around a spinning
+black hole with a = 1/2. The grid employs 62 × 5 × 256 cells (from inside the
+horizon out to r = 6) and 15 × 128 angles. The midplane conserved energy
+density shows the beams propagating the correct distances of half an orbit and
+approximately one-third of an orbit. The region inside the horizon is masked in
+black.
+
+ˆ
+
+=
+
+70
+
+60
+
+and dI dt
+
+We place a source (proper diameter of 7/20) at both radii, each
+with an azimuthal beam pointed in the appropriate direction
+(half-opening angle of 5°), as shown in Figure 10. Radiation is
+injected at the prograde and retrograde sources at rates of
+ˆ
+dI dt
+
+= , respectively.
+For this test, we use a 62 × 5 × 256 grid in space, covering
+approximately [1.831, 6] × [1.508, 1.634] × [0, 2π], with
+logarithmic spacing in radius. This grid again makes the
+f
+,
+proper aspect
+calculated at the midplane and at the geometric mean of r+ and
+r−. As Kerr–Schild coordinates are horizon penetrating, we
+place a single cell inside the horizon. We use a spherical tetrad
+with 15 × 128 angles. At time t
+, the prograde
+beam should propagate halfway around the black hole, while
+complete
+beam should
+the
+fraction
+the
+3 2
+- »
+a
+1 2
+)
+(
+of its orbit. Indeed, this is
+-
+exactly what we see.
+
+retrograde
+3 2
++
+r
+a
+)(
++
+
+ratios unity: g
+rr
+
+3 2
+++
+r
+(
+
+D =
+q
+
+D =
+r
+
+p=
+
+r
+) (
+
+g
+ff
+
+1 3
+
+g
+qq
+
+D
+
+a
+
+)
+
+into a vacuum. The wall maintains a ﬁxed,
+
+3.4. Hohlraums
+Following Ryan & Dolence (2020), we consider an inﬁnite
+wall and the 1D problem of the propagation of radiation off the
+wall
+isotropic
+radiation ﬁeld with energy density 1. After a time t and at a
+distance x < t from the wall, the radiation ﬁeld should have
+intensity 1/4π for all angles with n x > x/t. Thus we have the
+analytic solution for the moments
+
+R
+
+tt
+exact
+
+=
+
+1
+2
+
+⎛
+⎝
+
+1
+
+-
+
+x
+t
+
+,
+
+⎞
+⎠
+
+(
+
+61a
+
+)
+
+13
+
+Figure 11. Solutions for the 1D, plane-parallel hohlraum test with 128 cells in
+x using latitude–longitude grids. Eddington factors are only shown where they
+are well deﬁned in the exact solution. With enough angles, we accurately
+capture the radiation ﬁeld.
+
+R
+
+tx
+exact
+
+=
+
+1
+
+-
+
+1
+4
+
+⎜
+
+⎛
+⎝
+
+2
+
+x
+2
+t
+
+,
+
+⎟
+
+⎞
+⎠
+
+R
+
+⎞
+⎠
+with all moments vanishing for x > t.
+
+xx
+exact
+
+⎛
+⎝
+
+=
+
+-
+
+1
+
+⎟
+
+⎜
+
+,
+
+1
+6
+
+3
+
+x
+3
+t
+
+(
+
+61b
+
+)
+
+(
+
+61c
+
+)
+
+We use 128 cells in x, and consider latitude–longitude grids
+with Nˆz ranging from 2 to 32. We keep N
+z. Figure 11
+ˆ
+shows the energy density and Eddington factor at t = 3/4 for
+
+=y
+ˆ
+
+N2
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+Figure 13. Convergence of the 1D, plane-parallel hohlraum test with angular
+tests we use 128 cells in x. Half-order convergence
+resolution. For all
+(
+) is expected for a test with a discontinuous radiation ﬁeld.
+ ~ -
+1 2
+Nang
+Eventually, the errors due to the ﬁxed spatial grid in this test dominate and
+convergence stops.
+
+wall, the energy density seen from the left wall is
+
+R
+
+tt
+exact,
+
+x
+
+1
+= -
+2
+
+(
+
+p
+
+)
+
+x
+
+-
+h
+p
+t
+2
+
+-
+
+1
+p
+2
+
+-
+
+sin
+
+1
+
+⎛
+⎜
+⎝
+
+x
+
+sin
+
+h
+
+2
+
+x
+
++
+
+2
+
+y
+
+,
+
+⎞
+⎟
+⎠
+
+(
+
+63
+
+)
+
+where we deﬁne the ﬁrst-quadrant angle η via
+
+cos
+
+h =
+
+min
+
+⎛
+⎜
+⎝
+
+y
+
+2
+
+t
+
+-
+
+2
+
+x
+
+⎞
+, 1 .
+⎟
+⎠
+
+(
+
+64
+
+)
+
+y
+
+N2
+
+=y
+ˆ
+
+Interchanging x and y yields the energy density R
+bottom wall. The total energy density is the sum of the two.
+
+tt
+exact, from the
+
+We run this problem on a 642 spatial grid. Again we use
+latitude–longitude grids with Nˆz varying from 2 to 32 and with
+N
+z, as well as geodesic grids with Nang ranging from 12
+ˆ
+to 2252. The results on three different grids are shown in
+Figure 14. The radiation passes through itself throughout the
+grid, avoiding artifacts characteristic of simple closure schemes
+(see Ryan & Dolence 2020 for a comparison between
+methods). This method also shows less noise compared to
+MOCMC using Nsamp = Nang samples. The highest resolution
+shown is nearly indistinguishable from the exact solution, with
+only a slight smoothing of the sharp kinks seen in the exact
+contour
+levels, as is expected given the coarse spatial
+resolution.
+
+Figure 15 shows the convergence of our energy density to
+
+the exact solution with angular resolution. Here we deﬁne
+
+1
+
+ ò ò
+=
+
+0
+
+0
+
+1
+
+tt
+
+∣
+
+R
+
+-
+
+R
+
+tt
+exact
+
+∣
+
+dx dy.
+
+(
+
+65
+
+)
+
+As with the 1D hohlraum, we are essentially measuring the
+integral of a discontinuous function on the sphere using a ﬁnite
+number of angular bins. Thus we only expect half-order
+convergence, which we exceed at low resolutions and match at
+intermediate resolutions. Eventually, the error reaches the noise
+ﬂoor imposed by the spatial resolution.
+
+3.5. Radiating Disk
+
+As an example of a hohlraum-like test in a curved spacetime,
+we consider the problem of a thin disk around a spinning black
+hole (mass M, a = 15/16), radiating into a vacuum. Following
+
+Figure 12. Solutions for the 1D, plane-parallel hohlraum test with 128 cells in
+x using geodesic grids. The resolutions here are comparable to those in
+Figure 11.
+
+three different angular resolutions; Figure 12 shows the results
+obtained with three geodesic grids with comparable resolutions.
+While 8–12 angles fail to capture nuances in the radiation ﬁeld,
+higher resolutions rapidly approach the analytic solution.
+
+We calculate an error according to
+
+
+
+=
+
+1
+3
+
+
+(
+
+2
+tt
+
++
+
+
+
+2
+tx
+
++
+
+
+
+2
+xx
+
+1 2
+)
+
+,
+
+1
+
+
+ab
+
+ò=
+
+0
+
+ab
+
+∣
+
+R
+
+-
+
+R
+
+ab
+exact
+
+∣
+
+dx.
+
+(
+
+62a
+
+)
+
+(
+
+62b
+
+)
+
+1 2
+
+to see
+
+ ~ -
+Nang
+
+The results are shown in Figure 13 for ﬁve latitude–
+longitude grids and for all geodesic grids up to Nlev = 15
+(Nang = 2252). We expect
+, given the
+discontinuous nature of the radiation ﬁeld in angle at all
+times and locations, together with the fact that each of our
+angular bins in this problem is essentially “on” or “off.” We
+see even faster convergence at
+low angular resolutions.
+Eventually, the errors in the geodesic grid reach a noise
+ﬂoor, which is expected given the ﬁnite spatial resolution.
+(Ryan &
+For
+Dolence 2020) achieves convergence with samples as
+ ~ -
+1
+Nsamp
+by using the sample points to perform high-order
+quadrature on the sphere. As Nsamp ranges from 16 to 512,
+the amplitude of the MOCMC errors is comparable to what
+we ﬁnd with the latitude–longitude grid over the same range
+of Nang.
+
+the MOCMC method
+
+comparison,
+
+Ryan & Dolence (2020) also consider a 2D version of the
+hohlraum test, where radiation from a left and a bottom wall
+two walls employ
+propagates into a vacuum. The other
+reﬂecting boundary conditions; equivalently,
+the radiating
+walls extend far enough for their ends to not be in causal
+contact with the solution of interest.
+
+This problem also has a closed-form solution. After time t
+and at a distance x < t from the left wall and y from the bottom
+
+14
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+Figure 14. Solutions for the 2D hohlraum test with 642 cells in space. The left
+panels show the results using low- and very-high-resolution geodesic grids,
+while the upper right panel shows a medium-resolution result on a latitude–
+longitude grid. Radiation is emitted isotropically from the left and bottom walls.
+Contours mark every 0.1 units in energy density. We recover the correct
+behavior with minimal noise in the upper right panel using a reasonable number
+of angles.
+
+Figure 15. Convergence of the 2D hohlraum test with angular resolution. For
+tests we use 642 cells in space. As in the 1D case, convergence is
+all
+asymptotically half order in the total number of angles, as expected.
+
+Ryan & Dolence (2020), we run a 2D simulation (r and θ) in
+which the midplane is treated as an internal boundary, with the
+radiation intensity there given by the Novikov–Thorne
+solution. That is, we calculate the physical temperature via
+
+T
+
+= ´
+(
+4
+
+7
+)
+10 K
+
+-
+
+´
+
+r
+
+3 8
+
+-
+A
+
+M
+M
+
+
+
+⎜
+
+-
+
+a
+
+1 4
+
+⎛
+3
+⎝
+1 2 1 2 1 4
+B E
+
+,
+
+A
+
+= +
+1
+
+2
+
+a
+2
+r
+
++
+
+2
+
+a
+2
+3
+r
+
+,
+
+1 4
+
+-
+⎞
+⎠
+
+⎟
+
+(
+
+66a
+
+)
+
+(
+
+66b
+
+)
+
+15
+
+Figure 16. Normal-frame energy density at t = 5 in the radiating disk problem,
+with radiation sourced in the midplane in the region 6  r  10. Contours are
+placed every 0.25 units in energy density. The spatial resolution is ﬁxed to
+128 × 129, extending from inside the horizon to r = 20 and from pole to pole.
+With angular resolution increasing as indicated, the ray effects (narrow streams
+ﬂowing into the black hole) diminish.
+
+B
+
+= +
+1
+
+2
+
+3
+
+a
+r
+
+⎜
+
+⎛
+⎝
+
+1 2
+⎞
+⎠
+
+⎟
+
+,
+
+E
+
+= +
+1
+
+2
+
+a
+4
+2
+r
+
+-
+
+2
+
+a
+4
+3
+r
+
++
+
+4
+
+a
+3
+4
+r
+
+,
+
+and then we demand
+
+ˆ
+I
+
+=
+
+1
+p
+4
+
+a T
+rad
+
+4
+
+(
+
+66c
+
+)
+
+(
+
+66d
+
+)
+
+(
+
+67
+
+)
+
+,in code units. Note that this means the radiation is isotropic in
+the tetrad frame (and thus the normal frame), not in some frame
+corotating with the disk.
+
+The disk occupies the single midplane cell (out of 129 in θ),
+and is truncated at r = 6 and r = 10. We use spherical Kerr–
+Schild coordinates, with 128 cells logarithmically spaced from
+just inside the horizon (a single cell) to r = 20. We choose
+α = 0.05 and M = 3 Me to parameterize the disk, and initialize
+the simulation with a vacuum everywhere at t = 0.
+
+Figure 16 shows the normal-frame (and tetrad-frame)
+time t = 5, which is directly
+radiation energy density at
+comparable to the results from MOCMC and other methods
+in Ryan & Dolence (2020). The ﬁnite number of angles
+introduces some ray effects (the radiation streaming into the
+black hole should not be limited to discrete latitudes), which
+are exacerbated here by the choice of a tetrad aligned with the
+coordinates (n2ˆ and n3ˆ
+in the r- and θ-
+directions everywhere). This effect is diminished as the angular
+resolution is increased, with the high-resolution result closely
+
+respectively point
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+Figure 17. Evolution of the temperature and energy in the static equilibration
+test taking time steps of different sizes. The code values (colored) trace the
+exact solutions (dotted, black) as they evolve in time. The dashed line in the
+upper panel indicates the equilibrium temperature that should be approached.
+Time is measured in absorption coupling times.
+
+agreeing with the semianalytic solution shown in Ryan &
+Dolence (2020).
+
+3.6. Equilibration
+Shifting attention from radiative transport to matter–radia-
+tion coupling, we perform an equilibration test to ensure that a
+ﬂuid at rest will come to thermal equilibrium with an isotropic
+radiation ﬁeld. Consider a static ﬂuid with Γ = 5/3, ρ = 1, and
+initial value pgas,0 = 2,
+together with a coordinate-frame
+isotropic radiation ﬁeld with initial energy density urad,0 = 1.
+We employ units in which kB/μmp and arad are unity, meaning
+the initial temperatures are Tgas,0 = 2 and Trad,0 = 1. We set the
+s¯a to zero, but employ a non-
+scattering absorptivity
+a¯a = .
+0.1
+zero
+
+This scenario has no spatial dependence, though we run it on
+a Cartesian grid of 43 cells to ensure this is reﬂected in the
+code. Larger cells allow larger HD time steps, and we adjust the
+grid in order to have 100, 10, or 1 time step per coupling time
+( ¯ )a - . We use 5 × 16 angles with a Cartesian tetrad. The
+resulting temperatures and internal energies are plotted in
+Figure 17. The temperatures approach the equilibrium value
+Tequil given by
+
+1
+
+a
+
+Figure 18. Evolution of the energy and momentum densities in the moving
+equilibration test taking time steps of different sizes. The code values (colored)
+trace the exact solutions (dotted, black) as they evolve in time. Time is
+measured in ﬂuid-frame absorption coupling times.
+
+The coupling is stable and approaches the correct equilibrium
+even with low time resolution, though the accuracy of the solu-
+tion is reduced in such cases. We note that our implicit algorithm
+guarantees that out-of-equilibrium temperatures approach one
+another but do not overshoot as a result of coupling.
+
+We repeat this test, changing only the initial velocity of the
+ﬂuid, now taken to be u1 = 1. The initial radiation ﬁeld is still
+isotropic in the coordinate frame. The matter and radiation
+should now come to thermal and momentum equilibrium.
+While the nonstatic version of the problem includes advection,
+there are no spatial gradients, and so we are still essentially
+testing coupling without transport. That is, we are reducing
+Equations (2) and (18) to
+
+d
+dt
+
+(
+
+0
+r =
+)
+
+u
+
+0,
+
+(
+
+70a
+
+)
+
+d
+dt
+
+0 0
+wu u
+
+(
+
+-
+
+p
+gas
+
+)
+
+=
+
+a
+a
+¯ (
+
+0 00
+
+u R
+
+-
+
+1 01
+u R
+
+-
+
+4 0
+T u ,
+)
+
+(
+
+70b
+
+)
+
+d
+dt
+
+(
+
+0 1
+wu u
+)
+
+a=
+
+a
+¯ (
+
+0 01
+
+u R
+
+-
+
+1 11
+u R
+
+-
+
+4 1
+T u ,
+)
+
+(
+
+70c
+
+)
+
+d
+I
+dt n
+
+a=
+¯
+
+a
+
+4(
+
+T
+4
+
+p
+
+0
+
+(
+
+u
+
+-
+
+1 1
+-
+u n
+)
+n
+
+3
+
+-
+
+0
+
+(
+
+u
+
+-
+
+1 1
+u n I
+)
+n
+n
+
+)
+
+,
+
+(
+
+70d
+
+)
+
+T
+equil
+G -
+
+r
+
+1
+
++
+
+T
+
+4
+equil
+
+=
+
+u
+
+gas,0
+
++
+
+u
+
+rad,0
+
+,
+
+(
+
+68
+
+)
+
+subject to the deﬁnitions
+
+and the total energy is conserved. Moreover, the time evolution
+follows the exact result given by
+
+du
+
+gas
+dt
+
+=
+
+a
+a
+¯ (
+
+u
+
+gas,0
+
++
+
+u
+
+rad,0
+
+-
+
+u
+
+gas
+
+-
+
+(
+
+G -
+
+⎜
+
+⎛
+⎝
+
+gas
+
+u1
+)
+r
+
+4
+
+⎟
+
+⎞
+⎠
+
+.
+
+⎞
+⎟
+⎠
+
+(
+
+69
+
+)
+
+16
+
+T
+
+=
+
+p
+gas
+r
+
+,
+
+w
+
+r= +
+
+G
+G -
+
+1
+
+p
+gas
+
+,
+
+0
+
+u
+
+= +
+1
+(
+
+1 1 1 2
+u u
+)
+
+,
+
+ab
+
+R
+
+å=
+n
+
+I n n
+n n
+
+a b
+n
+
+DW
+n
+
+,
+
+(
+
+71a
+
+)
+
+(
+
+71b
+
+)
+
+(
+
+71c
+
+)
+
+(
+
+71d
+
+)
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+Figure 19. Initial and ﬁnal radiation energy densities in the static diffusion
+problem. If the spatial resolution is too low, numerical diffusion overwhelms
+the physical diffusion set by scattering. The calculated solution approaches the
+exact one as resolution increases. Angular resolution is held constant with
+1 × 4 bins.
+
+Figure 20. Initial and ﬁnal ﬂuid-frame radiation energy densities in the
+advected diffusion problem. The advection speed of the pulse is correctly
+captured even at low resolutions. High resolutions are needed in order to
+achieve the correct diffusion rate. Angular resolution is held constant with
+1 × 4 bins.
+
+n
+
+0
+n
+
+=
+
+1.
+
+(
+
+71e
+
+)
+
+matches the coordinate frame here)
+
+Figure 18 shows the coordinate-frame ﬂuid energy and x-
+momentum densities, as well as the ﬂuid-frame radiation
+energy and x-momentum densities, resulting from this test. The
+code values agree with the solution to the coupled ordinary
+differential equation of Equation (70). Time steps longer than
+approximately the coupling time suffer from an expected loss
+of accuracy but do not lead to catastrophic failures in the
+evolution.
+
+3.7. Diffusion
+
+In the limit of large scattering absorptivity
+
+and
+aa = , radiation should diffuse through
+vanishing absorption
+a background medium. If the medium is taken to be at rest and
+to affect but be unaffected by the radiation, the zeroth and ﬁrst
+moments of the gray version of Equation (2) reduce in this case
+to
+
+0
+
+1
+
+E
+
+s a
+E
+
+¶ -
+E
+
+t
+
+1
+a
+
+s
+E
+
+3
+
+¶
+
+2
+x
+
+E
+
+a
+
+s
+ ¥
+E
+⟶
+
+0,
+
+x
+
+¶
+t
+
+F
+
+=
+
+0,
+
+(
+
+72a
+
+)
+
+(
+
+72b
+
+)
+
+x
+
+= -
+
+s
+)a
+where we assume F
+3
+(
+together with the
+E
+Eddington approximation for the second moments. Given an
+initial Gaussian proﬁle with width σ, amplitude Epeak, and
+offset Eoff, the standard solution to the asymptotic equation is
+
+¶-
+1
+x
+
+E
+
+E
+
+=
+
+E
+
+peak
+
+A
+
+exp
+
+-
+
+⎜
+
+⎛
+⎝
+
+2 2
+A x
+2
+s
+2
+
+⎟
+
+⎞
+⎠
+
++
+
+E
+
+,
+
+off
+
+(
+
+73a
+
+)
+
+A
+
+=
+
+1
+
++
+
+⎜
+
+⎛
+⎝
+
+t
+2
+s
+a s
+E
+
+2
+
+3
+
+1 2
+
+.
+
+-
+⎞
+⎠
+
+⎟
+
+(
+
+73b
+
+)
+
+We initialize a 1D problem according to Equations (73) at
+t = 0, ﬁxing σ = 0.1, Epeak = 1, Eoff = 0, and
+. In
+order
+to initialize the intensities, we use the following
+prescription from Minerbo (1978) in the ﬂuid frame (which
+
+s
+a =
+E
+
+10
+
+4
+
+I
+
+=
+
+1
+p
+4
+1
+p
+9
+
+⎧
+
+⎨
+⎩
+
+(
+
+E
+
++
+
+3
+
+^
+n F
+a
+
+a
+
+)
+
+,
+
+2
+(
+
+-
+
+·
+
+3
+f
+
+fE
+f
+)
+-
+1
+(
+
++
+f
+)
+
+a
+
+^
+n F
+a
+2
+
+,
+
+f
+
+f
+
+
+
+>
+
+1
+3
+1
+3
+
+,
+
+,
+
+f
+
+=
+
+1
+¯
+E
+
+(
+
+F F
+a
+¯
+
+a 1 2
+¯
+)
+
+.
+
+(
+
+74a
+
+)
+
+(
+
+74b
+
+)
+
+throughout
+
+The Eddington factor for this intensity ﬁeld is exactly 1/3 for
+f  1/3. The ﬂuid state is held constant
+the
+calculation. Using Nζ = 1 and Nψ = 4 angles and a variable
+number Ncell of spatial cells to cover x ä [−1, 1], the radiation
+time t = 50 is shown in Figure 19. As
+energy density at
+the pulse’s diffusion approaches the
+resolution increases,
+sa .
+expectation given E
+
+We can repeat this problem in a frame in which the ﬂuid is
+moving with velocity v x = 0.02. The solution for all spacetime
+is given by Equations (73), with coordinate-frame E, t, and x
+replaced by ﬂuid-frame E¯, t¯, and x¯, respectively. That is, the
+initial radiation ﬁeld is no longer isotropic in the coordinate
+frame, and the initial conditions at t = 0 correspond to those at
+= - . The ﬂuid-frame energy density at t = 50
+¯
+the surface t
+is shown in Figure 20, where the initial pulse is shifted to the
+left by unity, and the simulation covers x ä [−2, 1]. The pulse
+always advects at the appropriate speed, and again increased
+resolution results in a closer match to the exact solution.
+
+We can quantify convergence via the L1 norm of the
+difference between the calculated and exact ﬂuid-frame
+radiation energy densities
+
+v xx
+¯
+
+ ò=
+
+x
+
+x
+
+max
+
+min
+
+∣ ¯
+E
+
+calc
+
+-
+
+¯
+E
+
+exact
+
+∣
+
+dx.
+
+(
+
+75
+
+)
+
+Figure 21 shows the errors as functions of the number of cells
+per unit length in x. The static and advected cases track each
+other closely, with convergence that is second order in spatial
+resolution for all but the lowest resolutions. This agrees with
+our use of PLM reconstruction and a second-order
+time
+integrator for this problem.
+
+17
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+Figure 21. Convergence of the static and advected diffusion problems with
+spatial resolution. In all cases we use 1 × 4 angles. The solutions converge at
+approximately second order.
+
+3.8. Shocks
+
+A set of
+
+four standing,
+
+radiative shock solutions, ﬁrst
+described by Farris et al. (2008), have become standard tests for
+relativistic HD codes. They consist of (1) a nonrelativistic
+shock, (2) a mildly relativistic shock, (3) a highly relativistic
+wave, and (4) a mildly relativistic wave, the last of which has
+radiation pressure dominating gas pressure. In principle, a code
+initialized with such an exact, stationary solution should hold
+that state, at least for several signal-crossing times. However,
+(2008) assume the
+the solutions found by Farris et al.
+Eddington approximation in the ﬂuid frame, which is not
+exactly true when full transport is considered.16
+
+Instead, we initialize the left and right halves of a 1D domain
+[−20, 20] to the asymptotic states given by Farris et al. (2008;
+see their Table 1, where ρ, pgas, and E¯ implicitly deﬁne arad via
+thermal equilibrium, and where the ﬂuid-frame ﬂux is under-
+stood to vanish). The shock tubes are evolved, holding the
+boundary conditions at the asymptotic states, until they ﬁnd the
+stationary solutions, which in all cases qualitatively match
+those given in the literature assuming the Eddington approx-
+imation. We choose the same run times (40, 400, 80, and 150,
+respectively) and spatial resolution (800 cells) as in Ryan &
+Dolence (2020). For the angular grid, we use 5 × 10 bins for
+the ﬁrst two shocks, which is more than enough for those
+problems, and 30 × 60 bins for the latter two, whose large
+relative velocities require ﬁnely sampled angles.
+
+Following Ohsuga & Takahashi (2016), we further check the
+self-consistency of the numerical solutions by ensuring the
+radiation moments obey the appropriate time-independent
+equations. Given the HD state (ρ, pgas, and u x) and ﬂuid-frame
+moments E¯ and F x¯ found numerically across the domain, the
+zeroth and ﬁrst moments of
+steady-state, Minkowski,
+Equation (2) tell us
+
+d
+dx
+
+tx
+
+R
+
+= -
+
+G
+
+t
+
+= -
+
+a
+k r
+¯
+
+( ¯
+Eu
+
+t
+
+-
+
+4
+a T u
+
+rad
+
+t
+
++
+
+x x
+¯
+F u ,
+)
+
+(
+
+76a
+
+)
+
+16 See Tolstov et al. (2015) for a generalization to other closures, especially
+M1. Still, such solutions will not exactly match those obtained by full transport.
+
+18
+
+Figure 22. Nonrelativistic, gas-dominated, radiative shock, run with 800 cells
+and 5 × 10 angles.
+
+d
+dx
+
+xx
+
+R
+
+= -
+
+G
+
+x
+
+= -
+
+a
+k r
+¯
+
+( ¯
+Eu
+
+x
+
+-
+
+4
+a T u
+
+rad
+
+x
+
++
+
+x t
+¯
+F u ,
+)
+
+(
+
+76b
+
+)
+
+where T = pgas/ρ and where
+a¯k is the absorption opacity
+(scattering is set to vanish). We can integrate the coordinate-
+frame moments R tx and R xx from the boundaries to x = 0,
+comparing the resulting proﬁles with their numerical counter-
+parts. Note the Eddington approximation does not enter into
+this process. Figures 22 through 25 show the results of the four
+shock tests. The integrated moments agree with the moments of
+the radiation ﬁeld directly found by the code.
+
+3.9. Linear Waves
+As extremely stringent, quantitative tests of ﬂuid dynamics
+codes, linear waves are essential to demonstrating that a code
+converges with resolution to the correct solution, and that
+convergence proceeds at the expected rate. Here we run a
+number of radiation-modiﬁed HD and MHD relativistic linear
+waves.
+
+In all cases, we use a 1D static background state with
+radiation in thermal and momentum equilibrium with the ﬂuid.
+We perturb each of the Nprim primitive quantities qn deﬁning
+this state, relative to their background values qn,0, according to
+
+q
+n
+
+=
+
+q
+n
+
+,0
+
++
+
+Rd
+·
+
+(
+
+e
+n
+
+exp
+
+(
+
+- +
+w
+t
+
+i
+
+ikx
+
+))
+
+,
+
+(
+
+77
+
+)
+
+where δ = 10−4, k = 2π, t is initially 0, and ω and {en} are the
+complex eigenvalue and eigenvector, respectively, corresp-
+onding to the desired wave (normalized such that
+= ).
+1
+the numerically computed state {Qn} is
+At a later time t,
+compared with the linear prediction given by Equation (77).
+
+2
+e
+∣å
+∣
+n
+n
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+Figure 23. Mildly relativistic, gas-dominated, radiative shock, run with 800
+cells and 5 × 10 angles.
+
+Figure 24. Highly relativistic, gas-dominated, radiative wave, run with 800
+cells and 30 × 60 angles.
+
+The error is calculated according to
+
+
+
+=
+
+1
+
+N
+
+prim
+
+¢
+
+⎛
+⎜
+⎝
+
+2
+n
+
+å
+n
+
+1 2
+⎞
+⎟
+⎠
+
+,
+
+
+n
+
+=
+
+1
+
+1
+òd
+
+0
+
+∣
+
+Q
+
+n
+
+-
+
+q dx
+∣
+n
+
+,
+
+(
+
+78a
+
+)
+
+(
+
+78b
+
+)
+
+where the sum is taken over all Nprim ¢ quantities for which
+en ≠ 0. We restrict our attention to waves with no vector
+components (background or perturbed) in one of the transverse
+directions (z).
+
+The calculation of eigenvectors is detailed in Appendix A,
+which provides solutions in terms of the MHD primitives and
+the ﬂuid-frame radiation moments E¯ and F a¯. Intensities are
+computed from these moments according to Equations (74).
+
+0
+
+p
+
+=
+
+1 2
+
+ˆy
+
+longitude
+
+We use only four solid angles for these tests, divided by lines
+. We ﬁx the direction
+p p
+, 3
+2
+0,
+2,
+of
+ˆ ˆ =  -
+ˆˆ =  -
+0ˆ ˆ = , n
+1
+2
+components to be n
+3
+3
+, and
+1
+3ˆ ˆ = , meaning nˆ is not strictly null. In this way, however, a
+n
+radiation ﬁeld in 2D with equal intensity in all directions will
+be exactly Eddington: R α β will be proportional to diag (1, 1/3,
+1/3, 0) rather than diag (1, 1/2, 1/2, 0). As an Eddington
+approximation is assumed in the derivation of the linear
+solutions, this is critical for ensuring the code is solving the
+same problem as the analytics.
+
+, n
+
+1 2
+
+Our grid, however, has four intensity values in each cell,
+coupled via three moments to the ﬂuid (as there are no z-
+direction components). There is ambiguity in the intensity ﬁeld
+in that one could add a given amount of Iˆ in the directions of
+ˆy
+while subtracting the same amount
+from the other two directions without changing R00ˆ ˆ, R01ˆ ˆ, or
+R02ˆ ˆ. Similarly, for ﬁxed ﬂuid-frame moments R00¯ ¯, R01¯ ¯, and R02¯ ¯,
+there is a family of representable radiation ﬁelds with these
+
+p=
+5
+
+p=
+
+and
+
+ˆy
+
+4
+
+4
+
+moments, with the procedure of Section 2.5 subtly choosing
+12¯ ¯ = at the
+one solution. For the linear waves we enforce R
+0
+end of each matter–radiation coupling step, without modifying
+R00¯ ¯, R01¯ ¯, or R02¯ ¯, again ensuring we are making the same
+assumptions in the code as in the analytics.
+
+(prad/pgas = 1/10),
+
+For the HD wave, we ﬁx the ﬂuid adiabatic index to be
+Γgas = 5/3, and we consider the three cases of a gas-dominated
+state
+a
+state
+(prad/pgas = 10),
+state
+(prad/pgas = 1). All of our waves are run with constant
+10
+and
+absorption
+s¯a = .
+10
+the total
+adiabatic index of the gas and radiation in thermal equilibrium
+would correspond to the classical result
+
+a¯a =
+inﬁnite optical depth,
+
+radiation-dominated
+gas-radiation-equality
+
+In the limit of
+
+absorptivities
+
+scattering
+
+and
+
+and
+
+a
+
+G =
+
+32
+
+(
+
+24
+
+(
+
+p
+rad
+p
+rad
+
+p
+gas
+p
+gas
+
+2
+
+)
+
+2
+
+)
+
++
+
+40
+
+(
+
++
+
+27
+
+(
+
+p
+rad
+p
+rad
+
+p
+gas
+p
+gas
+
+)
+
+)
+
++
+
++
+
+5
+
+3
+
+,
+
+with associated sound speed
+
+2
+c
+s
+
+=
+
+G
+
+(
+
+p
+gas
+u
+
++
+
+)
+
+p
+rad
+p
+gas
+
++
+
+rad
+
+r
+
++
+
+u
+
+gas
+
++
+
+.
+
++
+
+p
+rad
+
+(
+
+79
+
+)
+
+(
+
+80
+
+)
+
+We choose to ﬁx cs = 1/2, which, together with the arbitrary
+normalization of ρ = 1, ﬁxes the background state. The actual
+linear wavespeeds are slightly different from 1/2 given our
+ﬁnite absorptivities. The exact background states and perturba-
+tions are cataloged in Appendix B.
+Each wave is run for a time of
+
+, which will
+result in the initial linear perturbation amplitude decreasing by
+a factor of 2. The initial and ﬁnal perturbations in density and
+longitudinal ﬂuid-frame radiation momentum, both according
+to linear theory and according to the code, are shown in
+Figure 26 for the case of prad = pgas with Ncell = 128 cells
+
+log 2( )
+
+)I w
+(
+
+-
+
+19
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+Figure 26. Linear wave solutions for the HD sound wave with prad = pgas at a
+resolution of Ncell = 128.
+
+Figure 25. Mildly relativistic, radiation-dominated, radiative wave, run with
+800 cells and 5 × 10 angles.
+
+across the domain. The numerical solution closely matches the
+linear theory for all variables.
+
+The errors for the three HD cases are shown in Figure 27. In
+least ﬁrst-order convergence with
+all cases, we attain at
+sufﬁcient resolution. Faster convergence reﬂects conditions
+where coupling errors (which are ﬁrst order in time and second
+order in space) are dominated by advection errors (which are
+second order in time and space). At very low resolutions, the
+radiation-dominated case has order-unity errors, which is
+expected given the small number of angular bins we are using
+to represent the radiation ﬁeld.
+
+We also test a set of radiation-modiﬁed MHD waves. Here
+we consider the same three values of prad/pgas, keeping ρ = 1
+and Γgas = 5/3 while
+constraint
+adding the
+pmag/pgas = 1. The optically thick limit of the longitudinal
+Alfvén speed is given by
+
+additional
+
+2
+c
+a
+
+=
+
+x
+B B
+w
+
+rad
+
+x
+
+,
+
++
+
+w
+
+mag
+
+w
+
+gas
+
++
+
+w
+
+gas
+
+r= +
+
+u
+
+gas
+
++
+
+p ,
+gas
+
+w
+
+rad
+
+=
+
+u
+
+rad
+
++
+
+p ,
+rad
+
+w
+
+mag
+
+=
+
+x
+B B
+
+x
+
++
+
+y
+y
+B B .
+
+(
+
+81a
+
+)
+
+(
+
+81b
+
+)
+
+(
+
+81c
+
+)
+
+(
+
+81d
+
+)
+
+By choosing a ﬁeld inclination of 45° (B x = B y, B x > 0) and an
+Alvén speed of ca = 1/8, we ﬁx the background state, which
+conveniently separates all seven waves. The background states,
+as well as their linear eigenfunctions, are given in Appendix B.
+Figure 28 summarizes the MHD results. We consider the
+right-going fast magnetosonic waves in all three backgrounds,
+achieving ﬁrst-order convergence at high resolution as
+expected. We also show the results for a slow magnetosonic
+and an entropy wave in the prad = pgas state, which again
+
+20
+
+Figure 27. Convergence of the HD sound wave for three different values of
+prad/pgas. We expect second-order convergence only when coupling is
+insigniﬁcant compared to advection; otherwise convergence should be ﬁrst
+order.
+
+converge as expected. As magnetic ﬁelds do not directly couple
+to radiation, we forego the Alfvén waves.
+
+3.10. Schwarzschild Atmosphere
+In order to test radiation–ﬂuid coupling in a nontrivial
+spacetime, we turn to the isothermal Schwarzschild atmosphere
+(2015). We consider an
+test presented in Ryan et al.
+unmagnetized ﬂuid around a nonspinning black hole with
+mass M in Schwarzschild coordinates. Static, thermal-equili-
+brium boundary conditions are imposed at inner and outer
+spherical shells, corresponding to a ﬁxed temperature T∞ at
+inﬁnity. This deﬁnes a spherically symmetric,
+thermal-
+equilibrium, hydrostatic solution via ∇α(T α β + R α β) = 0.
+Equivalently, the total pressure and internal energy must obey
+
+dp
+tot
+dr
+
+= -
+
+r c
+(
+g
+
+2
+
+r
+
++
+
+r
+
++
+
+p
+tot
+
+)
+
+,
+
+u
+tot
+2 2
+a
+
+(
+
+82
+
+)
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+Figure 28. Convergence of the MHD waves. The top panel shows the fast
+magnetosonic wave for three different values of prad/pgas, and the bottom
+shows multiple waves for prad = pgas. The ﬁrst-order convergence at high
+resolution is expected.
+
+Figure 29. Solution for the 1D, spherically symmetric, isothermal, Schwarzs-
+child atmosphere test. Here we use 128 zones in radius and 64 × 128 angles for
+the radiation.
+
+a = -
+(
+1
+
+r r
+2 g
+where
+gravitational radius.
+
+1 2
+)
+
+is the lapse and rg = GM/c2 is the
+
+For a ﬂuid with constant adiabatic index Γ, the exact solution
+to Equation (82) can be obtained in a straightforward
+manner by considering the corresponding equation for
+d(αΓ/(Γ−1)ptot)/dα, yielding
+
+p
+tot
+
+=
+
+A
+4
+a
+
++
+
+⎛
+B p
+⎜
+⎝
+
+tot,0
+
+-
+
+A
+4
+a
+0
+
+,
+
+⎞
+⎟
+⎠
+
+A
+
+=
+
+1
+3
+
+a T
+rad
+
+4
+¥
+
+,
+
+(
+
+83a
+
+)
+
+(
+
+83b
+
+)
+
+B
+
+=
+
+exp
+
+m
+
+m
+
+p
+
+k T
+B
+
+¥
+
+2
+
+c
+
+⎜
+
+⎛
+⎝
+
+(
+
+a
+
+0
+
+-
+
+a
+
+)
+
+a
+0
+a
+
+⎞
+⎠
+
+⎟
+
+⎞
+⎠
+
+⎛
+⎝
+
+G G-
+(
+
+1
+
+)
+
+.
+
+(
+
+83c
+
+)
+
+Here a 0 subscript indicates the quantity is evaluated at the
+inner boundary. The remaining quantities can be found by
+noting the local temperature obeys
+
+)
+
+.
+
+T
+
+84(
+
+T
+= ¥
+a
+Following Ryan & Dolence (2020), we ﬁx M = Me, the
+scale height parameter H/r0 = 1.6 (which sets T∞), prad,0/pgas,0
+= 43.5 (which sets ρ0), and the optical depth parameter τ = 5
+(which sets the opacity, though the solution is independent of
+this value). A 1D simulation is initialized to the exact solution
+for r ä [3.5, 20] with 128 logarithmically spaced cells and run
+times tg = rg/c. Figure 29 shows the
+for 500 gravitational
+resulting state, including the relative errors in the gas and
+radiation temperatures, using 64 × 128 angles for the radiation.
+
+We further deﬁne the error in the solution to be
+
+
+
+=
+
+1
+2
+
+
+(
+
+2
+gas
+
++
+
+
+
+2
+rad
+
+1 2
+)
+
+,
+
+(
+
+85a
+
+)
+
+21
+
+Figure 30. Convergence of
+isothermal,
+Schwarzschild atmosphere test. Here we use 128 zones in radius and vary
+the angular resolution. Errors are evaluated based on the gas and radiation
+temperatures deviating from the exact solution.
+
+the 1D, spherically symmetric,
+
+
+x
+
+=
+
+1
+3
+r T
+g
+
+¥
+
+r
+1
+
+0
+
+ò
+
+r
+
+∣
+
+T
+x
+
+-
+
+T
+exact
+
+∣
+
+2
+r dr
+
+.
+
+(
+
+85b
+
+)
+
+Figure 30 shows the run of this error with angular resolution,
+using grids with 2 × 4 to 64 × 128 angles. We ﬁnd
+convergence that is ﬁrst order in each of Nˆz and N ˆy.
+
+4. Black Hole Accretion Example
+
+As a demonstration of the applicability of our algorithm to
+the physical systems we intend to study with it, we run a
+standard black hole accretion problem modiﬁed to include
+radiation. Here we use bars to denote quantities in code units,
+which are deﬁned by the length scale rg, the velocity scale c,
+the density scale [ρ], and the
+the timescale tg = rg/c,
+temperature scale μmpc2/kB (so T
+¯
+
+¯r=
+p
+¯
+
+).
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+r
+¯
+
+gas
+
+In the ubiquitous HD equilibrium solution of Fishbone &
+Moncrief (1976), a torus around a spinning black hole is
+speciﬁed with two numbers, for example the radial coordinates
+of the inner edge of the torus, redge
+, and the pressure maximum,
+¯
+the ﬂuid velocity and speciﬁc enthalpy
+rpeak
+. From these,
+¯
+¯
++
+= +
+h
+u
+p
+are determined everywhere in space.
+1
+¯
+¯
+gas
+Given an arbitrary normalization
+the pressure
+maximum, a gas with a ﬁxed adiabatic index Γ, and an
+assumption of constant entropy (p
+G ), the
+r
+¯
+¯
+gas
+peak
+density and pressure are determined everywhere.
+
+p
+¯
+gas,peak
+
+Here, we take the ﬂuid to have the same velocity and speciﬁc
+enthalpy, but the latter is understood to be appropriate for an
+optically thick gas coupled to radiation
+
+r=
+¯
+
+=G
+
+peak
+
+at
+
+r
+¯
+
+r
+¯
+
+r
+¯
+
+¯
+h
+
+= +
+1
+
+= +
+1
+
+u
+¯
+gas
+r
+¯
+
+G
+G -
+
++
+
+p
+¯
+gas
+r
+¯
+
++
+
+u
+¯
+rad
+r
+¯
+
++
+
+p
+¯
+rad
+r
+¯
+
+¯
+T
+
++
+
+1
+
+a
+4
+¯
+rad
+r
+3
+¯
+
+¯
+T
+
+4
+.
+
+(
+
+86
+
+)
+
+peak
+
+this equation can be solved for
+
+= ,
+¯r
+1
+the
+Setting
+¯
+temperature Tpeak
+at the pressure maximum. For simplicity,
+we assume only the gamma-law gas has a spatially constant
+entropy
+
+¯ ¯
+1
+r
+T
+
+=-G
+
+-G
+¯
+r
+T
+.
+¯
+peak peak
+
+1
+
+(
+
+87
+
+)
+
+41
+
+20
+
+and r
+
+¯ =
+peak
+
+For this demonstration, we initialize a small
+
+torus with
+¯ =
+r
+around a black hole with dimension-
+edge
+less spin a = 15/16. The density scale is chosen such that
+ρpeak = 5 × 10−5 g cm−3
+the pressure maximum. The
+material’s opacity is given by standard formulas for pure,
+ionized hydrogen
+
+at
+
+a
+
+k
+
+= ´
+8
+
+10
+
+22
+
+3.5
+
+r
+T
+⎜ ⎟⎛
+⎞
+⎛
+g K
+⎝
+⎠
+⎝
+
+-
+⎞
+⎠
+
+1
+2
+cm g ,
+
+-
+
+(
+
+88a
+
+)
+
+s
+k =
+
+1
+2
+0.4 cm g .
+
+-
+
+(
+
+88b
+
+)
+
+)
+
+-
+
+r
+( ¯
+
+the
+
+vector
+
+The molecular weight is appropriately set to μ = 0.5, and the
+adiabatic index is taken to be Γ = 13/9. The only remaining
+scale in the problem is rg, set by taking the black hole to have a
+mass of 10 Me.
+
+We add a standard weak poloidal magnetic ﬁeld to the initial
+from
+potential
+conditions,
+µ
+A
+max
+. The normalization is chosen such that
+f
+the ratio of the largest value of pmag to the largest value of pgas
+is 10−2. The result is that the average value of pmag/pgas,
+weighted by mass in regions with
+
+, is 4.64 × 10−2.
+
+set
+0.2, 0
+
+Here we use a Cartesian Kerr–Schild (x, y, z) grid with 2563
+cells at root level covering the interval [−1024, +1024] in each
+direction. We add seven levels of static mesh reﬁnement. The
+ﬁrst doubles the resolution in all dimensions inside [−512,
++512]3; the next does so again inside [−256, +256]3; and so
+on. The highest level attains a resolution of 16 cells per rg
+throughout [−8, +8]3. The radiation ﬁeld is discretized with an
+Nang = 92 geodesic grid.
+
+Figure 31 shows slices through the simulation at time 104 tg.
+Much of the disk has cooled below 108 K. Radiation pressure
+dominates over gas pressure by factors of 10–104 everywhere,
+while the magnetic pressure is comparable to the gas pressure,
+with large ﬂuctuations, throughout most of the domain. In one
+
+¯r >
+
+0.2
+
+panel we show the optical depth per gravitational length
+
+t
+
+=
+
+a
+
+(
+
+k
+
++
+
+s
+k r
+)
+
+r ,
+g
+
+(
+
+89
+
+)
+
+illustrating that the bulk of the disk is optically thick, while the
+jet is optically thin.
+
+5. Performance
+For small numbers of angles (less than approximately eight),
+the per-cell cost of our GR radiation scheme is comparable to
+the per-cell cost of GRMHD without radiation, both in terms of
+computation and memory usage. The cost of radiation scales
+linearly with the number of angles; the only potential quadratic
+dependence comes from implicit coupling, though this is elided
+via the method discussed in Section 2.5.
+
+Quantitatively, we measure the cost on a modern
+CPU node consisting of 64 Ice Lake (Intel Xeon Platinum
+8362) cores. Here we run a 3D linear wave with both
+magnetic ﬁelds and radiation using Athena++. In one test,
+we use a latitude–longitude grid with 4 × 4 angles, and with
+a domain decomposed into 64 blocks of 643 cells each. In
+another test, we employ 8 × 16 angles and 64 blocks of 323
+cells each. These tests are distributed across an entire node
+via MPI, and the contributions of key tasks are measured.
+Figure 32 shows the relative costs, categorized as non-
+radiative MHD, calculation of radiation ﬂuxes, updating
+radiation with ﬂux divergences (in both space and angle),
+coupling radiation to matter, ﬁnding radiation primitives
+(e.g.,
+from conserved quantities, and all other
+communication).
+
+Scientiﬁc production runs investigating black hole accretion
+will likely use an intermediate number of angles between the 16
+and 128 shown in Figure 32. Relative to GRMHD simulations,
+radiation-GRMHD can be expensive, but not overwhelmingly
+so, with our algorithm. For these two tests in particular,
+Athena++ achieves a performance of 7.4 × 106 and 1.4 × 106
+cell updates per second per node.
+
+However, the accretion ﬂows that require radiation to be
+simulated are generally those in which the ﬂuid can cool
+enough to form a thin disk. Capturing 3D turbulent processes in
+such systems may require extreme resolutions and thus
+exascale computers, which generally employ GPUs. We
+therefore implement our algorithm in the newly developed
+AthenaK code (J. M. Stone et al. 2023, in preparation), which
+employs Kokkos (Edwards et al. 2014) in order to run on both
+CPUs and GPUs.
+
+tasks
+
+We measure scaling of the algorithm as implemented in
+AthenaK on two GPU machines. Crusher at Oak Ridge
+National Laboratory consists of AMD MI250X accelerators,
+with each node containing four accelerators and each
+accelerator containing two GPUs. Polaris at Argonne National
+Laboratory consists of four NVIDIA A100 GPUs per node. In
+each case we run the problem in Minkowski coordinates
+(exercising the full machinery of GR). Figure 33 shows the
+scaling of a GRMHD problem with no radiation, together with
+that of a GR radiation-HD problem using either 42 or 92 angles
+reﬂecting typical angular
+(geodesic grid level 2 or 3),
+resolutions we expect to use in practice. In these tests, the
+domain is decomposed into blocks of 1283, 1283, and 643 cells,
+respectively.
+
+On a single node on Crusher, we achieve absolute
+performances of 54.4, 13.8, and 5.89 million cell updates per
+
+22
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+Figure 31. Slices (x = 0) through a 3D simulation of black hole accretion initialized from a standard magnetized torus augmented with radiation. Snapshots are taken
+at time t = 104 tg. The simulation domain extends inside the horizon, though here the black hole interior is masked. The gray line denotes the ergosphere.
+
+second per GPU for the three tests. On Polaris, we ﬁnd 113,
+27.6, and 12.6 million cell updates per second per GPU.
+
+The code shows excellent weak scaling out as far as tested
+with over 2000 GPUs. Relative to a single node, both radiation
+cases show a per-node performance of greater than 90% on 128
+Crusher nodes, with nonradiative GRMHD over 98% efﬁcient,
+indicating further performance tuning on this particular machine
+can likely improve scaling. On Polaris, the per-node perfor-
+mance on 512 nodes is at least 97% that of one node in all cases.
+With 42 angles, the code runs at approximately 25% the speed
+of a nonradiative calculation; this factor is 11% with 92 angles.
+The radiation-GRMHD example given in Section 4 was run
+to a time of 104 tg on 152 A100 GPUs on Polaris in 26.7 hr,
+corresponding to 4.37 million cell updates (including 402
+million radiation angle updates) per
+second per GPU.
+Performance can be improved at the expense of wall time by
+using fewer GPUs, as each GPU here only evolved three blocks
+of 643 cells, and as such was not always kept maximally busy
+performing computations.
+
+6. Summary
+We have implemented a ﬁnite-solid-angle method for
+radiation in the Athena++ framework, as well as the newly
+developed, GPU-capable AthenaK code. This allows radia-
+tion to be added to ﬁnite-volume GRMHD simulations, with
+the intensity ﬁeld in each cell discretized in angle. The
+radiation, ﬂuid, and electromagnetic ﬁelds are all evolved on
+arbitrary stationary spacetimes, and they couple to one another
+as is physically appropriate. Section 2 details the numerical
+algorithms we develop for this evolution and coupling. Along
+the way, this formalism allows ﬂat-spacetime simulations in
+which non-Cartesian spatial dimensions have been suppressed
+(e.g., 2D axisymmetric simulations).
+
+The complexity of the differential equations being solved,
+Equations (2) and (18), demands care be taken to write a robust
+and accurate code. We perform a large suite of tests (Section 3),
+exercising all terms in the equations and all components of the
+method in multiple ways, to ensure that our implementation is
+calculating the correct solutions.
+
+23
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+Figure 32. Relative costs associated with radiation using Athena++ on a
+CPU node (Intel Ice Lake). We partition the costs into key tasks from Figure 1,
+with all ﬂuid and magnetic ﬁeld tasks bundled into “MHD” and all
+nonenumerated tasks treated as miscellaneous.
+
+We look forward to using this code on a variety of
+astrophysical problems, especially black hole accretion near
+the Eddington rate. As shown in Section 4, the code is ready to
+simulate such systems. In contrast to earlier studies using M1
+methods, our radiation ﬁelds are not restricted to be axisym-
+metric and monomodal in angle at every point. This can be
+important, especially if radiation pressure dominates over gas
+pressure in the optically thin–thick transition region near the
+disk surface. Unlike Monte Carlo methods, our procedure is
+naturally efﬁcient at all optical depths, with a computational
+cost that remains ﬁxed as the system evolves.
+
+Radiation-GRMHD is never computationally cheap, and our
+method is no exception, especially if we choose to use many
+angles. Still, we have demonstrated the feasibility of running
+such problems on large machines, where our code has nearly
+perfect weak scaling (Section 5). Crusher and Polaris are
+forerunners to Frontier and Aurora in the next generation of
+exascale machines, and we anticipate being able to address a
+large number of previously intractable questions with resources
+such as these. For example, we can now begin to study the
+ways in which radiation affects the creation of coronae, the
+launching of jets, the transport of mass and angular momentum
+in different magnetic regimes, and the torques in misaligned
+systems.
+
+Our method naturally allows for discretization of radiation
+in energy (frequency) space separate from other dimensions.
+In fact, we only need to restore the gravitational redshift term
+in Equation (21) but not Equation (22) to add
+present
+frequency dependence. The only complication is that
+in
+many astrophysical systems, scattering processes can be
+nonlocal
+in energy, necessitating complicated implicit
+coupling in radiation momentum space, as for example
+treated in ﬂat spacetime in Jiang (2022). Computational costs
+
+Figure 33. Weak scaling of radiation using AthenaK on the GPU machines
+Crusher (with eight GPUs on four accelerators on each node) and Polaris (with
+four GPUs per node). Data is shown for GR radiation-HD using either a level 2
+or level 3 geodesic grid, and for GRMHD without radiation for comparison.
+Measured values are cell updates per second per GPU, normalized to the
+single-node values on the left end of each curve. We see nearly perfect scaling
+on Polaris out to 2048 GPUs.
+
+will necessarily scale with the number of energy bins. The
+extension of our GR, ﬁnite-solid-angle method to frequency
+dependence will be explored in a future work, together with
+appropriate tests of that functionality.
+
+We are grateful
+
+to K. Felker and P. Grete for providing
+scaling data, and to O. Blaes, J. C. Dolence, J. M. Miller,
+B. R. Ryan, and G. N. Wong for useful discussions and
+suggestions.
+
+(TACC),
+
+This work made use of
+
+The authors acknowledge support from NASA TCAN grant
+80NSSC21K0496, and S.W.D. acknowledges support from
+NASA ATP grant 80NSSC18K1018.
+the
+
+following computing
+resources: the Extreme Science and Engineering Discovery
+(XSEDE) cluster Stampede2 at
+Environment
+the Texas
+Advanced Computing Center
+through allocation
+AST200005; the Oak Ridge Leadership Computing Facility
+cluster Crusher at
+the Oak Ridge National Laboratory,
+supported by the Ofﬁce of Science of the U. S. Department of
+Energy; the Argonne Leadership Computing Facility cluster
+Polaris at Argonne National Laboratory, supported by the
+Ofﬁce of Science of the U. S. Department of Energy;
+the
+clusters Rusty and Popeye, supported by the Scientiﬁc
+Computing Core at the Flatiron Institute, a division of the
+Simons Foundation; and the Princeton Research Computing
+cluster Stellar, managed and supported by the Princeton
+Institute for Computational Science and Engineering (PICSciE)
+and the Ofﬁce of Information Technology’s High Performance
+Computing Center and Visualization Laboratory at Princeton
+University.
+
+This work has been assigned a document release No. LA-
+
+UR-23-21167.
+
+24
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+Appendix A
+Linear Wave Analysis
+Consider a ﬂuid with a constant adiabatic index Γ = Γgas,
+energy-mean absorption
+a¯a , and
+P
+F¯a . Let the set
+
+longitudinal magnetic ﬁeld B1,
+coefﬁcient
+ﬂux-mean absorption-plus-scattering coefﬁcient
+of primitives
+
+a¯a , Planck-mean absorption coefﬁcient
+
+E
+
+
+
+r=
+{
+
+,
+
+p
+gas
+
+,
+
+3
+1
+u u u B B E F F F
+,
+
+,
+
+,
+
+,
+
+,
+
+,
+
+,
+
+2
+
+3
+
+2
+
+¯
+
+¯
+1
+,
+
+¯
+2
+
+¯
+3
+}
+
+,
+
+(
+
+A1
+
+)
+
+be indexed by m, n ä {1,K,11}. For convenience, we deﬁne
+the derived quantities
+
+0
+
+u
+
+= +
+1
+(
+0
+
+=
+
+b
+
+a
+
+u u
+a
+a
+u B ,
+a
+
+1 2
+)
+
+,
+
+a
+
+b
+
+p
+mag
+
+(
+
+=
+
+1
+0
+u
+1
+= -
+2
+
+(
+
+B
+
+a
+
++
+
+0
+b u
+
+a
+
+)
+
+,
+
+0 0
+b b
+
++
+
+b b
+a
+
+a
+
+)
+
+,
+
+w
+
+r= +
+
+G
+G -
+
+T
+
+=
+
+p
+gas
+
++
+
+2
+
+p
+mag
+
+,
+
+1
+p
+gas
+r
+
+,
+
+(
+
+A2a
+
+)
+
+(
+
+A2b
+
+)
+
+(
+
+A2c
+
+)
+
+(
+
+A2d
+
+)
+
+(
+
+A2e
+
+)
+
+(
+
+A2f
+
+)
+
+where the spatial indices can be raised or lowered at will, and
+the last equation implies a factor of kB/μmp absorbed into the
+radiation constant arad.
+
+The 1D equations of SR radiation-MHD can be written as
+
+¶
+¶
+
+m
+
+
+
+
+=
+
+n
+
+¶
+
+0
+
+(
+
+r
+u
+
+0
+
+)
+
++ ¶
+(
+1
+
+1
+r
+u
+)
+
+=
+
+0,
+
+¶
+
+0
+
+0
+wu u
+
+(
+
+a
+
+-
+
+p
+gas
+
+d
+
+0
+
+a
+
+-
+
+p
+mag
+
+d
+
+0
+
+a
+
+-
+
+0
+b b
+
+a
+
+)
+
++¶
+(
+1
+
+1
+wu u
+
+a
+
++
+
+p
+gas
+
+a
+
+1
+d
+
++
+
+p
+mag
+
+a
+
+1
+d
+
+-
+
+1
+b b
+
+a
+
+)
+
+= L
+
+¯
+a b
+G ,
+¯
+b
+
+2
+
+¶
+
+0
+
+B
+
+]
+)
+
+=
+
+0,
+
+3
+
+¶
+B
+0
+ˆ ¯
+a gd
+¯
+R
+¯
+d
+
+)
+
+¶ L L
+(
+
+0
+
+0
+ˆ
+g
+
++ ¶
+(
+1
++ ¶
+(
+1
+
+[
+2 1
+b u
+[
+3 1
+b u
+
++ ¶ L L
+(
+1
+
+1
+ˆ
+g
+
+]
+=
+)
+ˆ ¯
+a gd
+R
+¯
+d
+
+)
+
+0,
+
+= -L
+
+¯
+a b
+¯
+G .
+¯
+b
+
+Here the Lorentz boost is
+
+0
+u ,
+a
+u ,
+
+u ,
+b
+
+0
+¯L =
+0
+a
+¯L =
+0
+0
+¯L =
+b
+a
+u u
+b
++
+u
+
+1
+
++
+
+d
+
+a
+b
+
+,
+
+0
+
+a
+L =
+¯
+b
+
+and the coupling force is
+
+(
+
+A3a
+
+)
+
+(
+
+A3b
+
+)
+
+(
+
+A3c
+
+)
+
+(
+
+A3d
+
+)
+
+(
+
+A3e
+
+)
+
+(
+
+A4a
+
+)
+
+(
+
+A4b
+
+)
+
+(
+
+A4c
+
+)
+
+(
+
+A4d
+
+)
+
+(
+
+A5a
+
+)
+
+¯
+0
+
+G
+
+=
+
+a
+¯
+
+¯
+E
+
+-
+
+a
+E
+a
+¯
+
+a
+¯
+
+a
+4
+a T ,
+rad
+P
+a
+¯
+F .
+
+a=
+A5b
+)
+F¯
+We assume the Eddington closure in the ﬂuid frame, so the
+radiation stress–energy tensor has components
+
+G
+
+(
+
+¯
+E,
+
+R
+
+¯ ¯
+a
+0
+
+,
+
+R
+
+¯ ¯ =
+00
+¯ ¯
+a
+0
+
+R
+
+¯ ¯
+ab
+
+R
+
+=
+
+,
+
+a
+¯=
+F
+1
+3
+
+ab
+.
+
+¯
+E
+
+d
+
+(
+
+A6a
+
+)
+
+(
+
+A6b
+
+)
+
+(
+
+A6c
+
+)
+
+Let  specify a stationary and homogeneous state. In order
+for Equations (A3) to hold, it is then necessary and sufﬁcient
+
+25
+
+that G ¯a vanish. If none of the absorptivities vanish, this is
+equivalent to requiring
+
+4
+a T ,
+rad
+
+¯
+E
+
+=
+
+F
+
+a
+a
+¯
+P
+a
+a
+¯
+E
+a
+¯ =
+
+0,
+
+and we will assume these relations always hold.
+Equations (A3) are in ﬂux-conservative form
++ ¶
+
+1
+
+m
+.
+
+=
+
+
+
+¶
+
+
+
+m
+
+m
+
+0
+
+(
+
+A7a
+
+)
+
+(
+
+A7b
+
+)
+
+(
+
+A8
+
+)
+
+Linearizing with respect to perturbed primitives, with perturba-
+tions of the form
+
+n
+
+d
+
+
+
+=
+
+R
+
+(
+
+d
+
+
+
+for unknown constants
+eigenvalue problem
+
+exp
+
+n
+0
+n
+0d
+
+(
+
+- +
+w
+t
+
+i
+
+ikx
+
+))
+
+,
+
+(
+
+A9
+
+)
+
+, we arrive at
+
+the generalized
+
+m
+
+m
+
+k
+
+
+¶
+
+¶
+
+¶
+¶
+for complex eigenvalues ω and eigenvectors
+
+
+
+
+
+
+
+¶
+¶
+
+⎛
+⎝
+
+⎞
+⎠
+
++
+
+=
+
+
+
+w
+
+n
+0
+
+d
+
+d
+
+i
+
+n
+
+n
+
+n
+
+
+
+m
+
+n
+}d
+{
+.
+0
+
+n
+0
+
+,
+
+(
+
+A10
+
+)
+
+The matrices of derivatives in Equation (A10) are given by
+
+0
+
+u
+
+0 0
+u u
+
+0
+
+2
+
+2
+
+¶
+¶
+
+
+
+
+0
+u u
+
+a
+
+G
+G -
+
+1
+
+0
+u u
+
+a
+
+0
+0
+
+0
+
+0
+0
+
+0
+
+a
+
+0
+
+a
+
+0
+
+⎛
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎝
+
+r
+u
+
+b
+
+0
+
+0
+
+2
+
++
+
+2
+
++
+
+2
+
++
+
+2
+
+1
+0
+u
+¶
+
+b
+¶
+
+¶
+
+¶
+
+0
+b
+0
+b
+
+b
+
+a
+
+2
+
+6
+
+¶
+
+¶
+
++
+a
+¶
+
+¶
+
+1
+0
+
+6
+
+2
+
+2
+
+7
+
+¶
+
+¶
+
++
+a
+¶
+
+¶
+
+0
+1
+
+7
+
+¯
+Eu
+
+b
+
+8
+3
+
+a
+
++
+
+8
+
+b
+
++
+
+2
+
+¶
+
+¶
+
+
+0
+
+a
+
+0
+
+0
+
+a
+
+0
+
+0
+
+0
+
+a
+
+0
+
+2
+
+0
+b
+
+0
+b
+
+0
+
+a
+b
+
+0
+b
+0
+b
+
+,
+
+⎞
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎠
+A11a
+
+8
+
+)
+
+0
+0
+¶
+
+¶
+
+4
+3
+
+8
+
+8
+
+2
+
+0
+u u
+
+b
+
+0
+u u
+
+a
+
+¶
+
+¶
+
+
+a
+
++
+
+8
+
+b
+
++
+
+(
+
+2
+
+2
+
+¶
+¶
+
+
+
+
+=
+
+G
+G -
+
+¶
+
+b
+
+
+¶
+
+2
+
++
+
+2
+
+=
+
+2
+
++
+
+⎛
+r
+⎝
+
+G
+G -
+
+p
+gas
+
+1
+
+1
+
+⎞
+⎠
+
+0 0
+u u
+
+-
+
+1,
+
+(
+
+A11b
+
+)
+
+u
+
+b
+
+-
+
+1
+0 0
+u u
+
+(
+
+0
+b B
+b
+
+-
+
+2
+
+p
+mag
+
+u
+
+)
+
+,
+
+b
+
+2
+
+
+¶
+¶
+
+¶
+
+¶
+
+
+6
+
+2
+
+7
+
+=
+
+2
+
+2
+
+B
+
+-
+
+=
+
+3
+
+2
+
+B
+
+-
+
+1
+0
+u
+
+1
+0
+u
+
+2
+
+b
+
+,
+
+b
+
+3
+
+,
+
+a
+
++
+
+2
+
+b
+
++
+
+2
+
+¶
+
+¶
+
+
+=
+
+1
+0
+u
+
+((
+
+0 0
+wu u
+
+-
+
+0 0
+b b
+
+)
+
+d
+
+a
+b
+
++
+
+(
+
+w
+
+-
+
+4
+
+p
+mag
+
+)
+
+a
+u u
+
+b
+
++
+
+a
+b b
+b
+
+-
+
+a
+B B
+b
+
+-
+
+1
+0
+u
+
+a
+b B
+b
+
+,
+
+⎞
+⎠
+
+a
+
++
+
+6
+
+
+¶
+¶
+
++
+a
+
+¶
+¶
+
+
+7
+
+2
+
+2
+
+=
+
+a
+[
+u b
+
+2
+
+]
+
++
+
+=
+
+a
+[
+u b
+
+3
+
+]
+
++
+
+1
+0
+u
+
+1
+0
+u
+
+a
+u B
+
+(
+
+2
+
+-
+
+b
+
+0
+
+d
+
+a
+2
+
+)
+
+,
+
+a
+u B
+
+(
+
+3
+
+-
+
+b
+
+0
+
+d
+
+a
+3
+
+)
+
+,
+
+8
+
+8
+
+¶
+
+¶
+
+8
+
+a
+
++
+
+=
+
+b
+
++
+
+2
+
+4
+3
+
+⎛
+⎝
+
+=
+
+¯
+E
+
+4
+3
+
+¶
+
+¶
+
+
+0 0
+u u
+
+-
+
+1
+3
+
+,
+
+1
+0
+u
+
+a
+u u
+
+b
+
++
+
+u
+
+0
+
+d
+
+a
+b
+
+,
+
+⎞
+⎠
+
+(
+
+A11c
+
+)
+
+(
+
+A11d
+
+)
+
+(
+
+A11e
+
+)
+
+(
+
+A11f
+
+)
+
+(
+
+A11g
+
+)
+
+(
+
+A11h
+
+)
+
+(
+
+A11i
+
+)
+
+(
+
+A11j
+
+)
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+a
+
++
+
+8
+
+b
+
++
+
+8
+
+¶
+
+¶
+
+
+=
+
+1
+1
+
++
++
+
+0
+
+u
+2
+0
+u
+
+a
+u u
+
+b
+
++
+
+u
+
+0
+
+d
+
+a
+b
+
+;
+
+(
+
+A11k
+
+)
+
+a
+
++
+
+8
+
+b
+
++
+
+8
+
+¶
+¶
+
+
+
+
+=
+
+u
+
+(
+1
+d
+
+)
+
+a
+b
+
++
+
+2
++
+
+1
+
+0
+
+u
+
+a
+1
+u u u
+
+;
+
+b
+
+White et al.
+
+(
+
+A12n
+
+)
+
+0
+
+a
+¯
+
+a
+E
+
+¯
+Eu
+
+0
+
+a
+¯
+
+a
+E
+
+¯
+Eu
+
+a
+
+-
+
+-
+
+4
+p
+gas
+4
+p
+gas
+
+0
+0
+
+4
+r
+
+4
+r
+
+a
+¯
+
+a
+E
+
+¯
+Eu
+
+0
+
+a
+¯
+
+a
+E
+
+¯
+Eu
+
+a
+
+4
+p
+gas
+4
+p
+gas
+
+4
+r
+
+4
+r
+
+⎛
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+-
+⎜
+⎜
+⎜
+-
+⎜
+⎝
+
+0
+
+a
+¯
+
+a
+E
+
+¯
+Eu
+
+0
+
+0
+
+b
+
+0
+
+b
+
+0
+
+0
+
+0
+
+0
+
+0
+
+0
+
+b
+
+a
+¯
+
+a 0
+u
+E
+
+a
+¯
+
+F
+
+u
+
+a
+¯
+
+a
+E
+
+¯
+Eu
+
+a
+
+0
+
+a
+b
+
+a
+
+0
+
+a
+
+0
+
+a
+¯
+
+a
+E
+
+a
+
+u
+
+¶
+¶
+
+
+
+
+a
+
++
+
+b
+
++
+
+0
+0
+
+a
+¯
+
+a
+E
+
+¯
+Eu
+
+0
+
+0
+0
+
+b
+
+b
+
+0
+
+b
+
+0
+0
+
+0
+
+0
+0
+
+0
+
+0
+0
+
+0
+0
+
+b
+
+b
+
+-
+
+a
+¯
+
+a 0
+u
+E
+
+-
+
+a
+¯
+
+F
+
+a
+¯
+
+a
+E
+
+¯
+Eu
+
+a
+
+0
+
+a
+b
+
+a
+
+0
+
+a
+
+0
+
+-
+
+a
+¯
+
+a
+E
+
+a
+
+u
+
+¶
+¶
+
+
+
+
+b
+
+8
+
+2
+
+,
+
+⎞
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎠
+A13a
+
+b
+
+8
+
+8
+
+u
+
+a
+
++
+
+b
+
++
+
+(
+
+)
+
+a
+
++
+
+2
+
+b
+
++
+
+8
+
+¶
+¶
+
+
+
+
+=
+
+a d
+¯
+F
+
+a
+b
+
++
+
+a
+
++
+
+8
+
+b
+
++
+
+8
+
+¶
+¶
+
+
+
+
+= -
+
+a
+u u
+
+,
+
+b
+
+a
+¯
+F
++
+u
+
+0
+
+1
+
+a
+
++
+
+2
+
+b
+
++
+
+8
+
+.
+
+¶
+¶
+
+
+
+
+(
+
+A13b
+
+)
+
+(
+
+A13c
+
+)
+
+Appendix B
+Linear Wave Numerics
+
+,
+
+a
+P
+
+a
+E
+
+10
+
+10
+
+(so
+
+s¯a =
+
+a¯a =
+
+¯a a = ), and
+¯
+
+In all of our linear waves, we choose Γgas = 5/3,
+
+10
+F¯a = ). With a
+(so
+wavelength of unity, this means we always have a total optical
+depth of 20 per wavelength. All z-components (u z, B z, F z¯)
+vanish, in both the background and the perturbation, and we
+take the background magnetic ﬁeld to obey B x = B y. Our
+backgrounds always have vanishing u x, u y, F x¯, and F y¯. We
+normalize everything to ρ = 1. Table 1 gives the remaining
+details for the background states used in Section 3.9.
+
+20
+
+4
+
+(
+
+a
+
+rad
+
+=
+
+p
+gas
+
+The last column is the code value of the radiation constant
+arad. This is ﬁxed by requiring that the intensity ﬁeld in the
+¯
+code with E
+will be in thermal equilibrium
+with the gas. That is, for the code unit of density [ρ] (e.g., in
+g cm−3),
+will physically be in
+equilibrium with gas with density ρ[ρ] and pressure pgas[ρ]c2.
+Given the physical value of arad,0 ≈ 7.6 × 10−15 erg cm−3 K−4,
+arad, [ρ], and the molecular weight μ are related via
+
+the energy density E
+
+¯ [ ]r
+
+c2
+
+)r
+
+a
+
+rad
+
+=
+
+a
+
+c
+rad,0
+
+6
+
+m
+
+m
+
+p
+
+k
+
+B
+
+⎜
+
+⎛
+⎝
+
+4
+
+⎟
+
+⎞
+⎠
+
+1
+r
+[ ]
+
+.
+
+(
+
+B1
+
+)
+
+Table 2 gives the eigenvalues and eigenvectors for the three
+HD linear waves shown in Section 3.9. For these sound waves
+y
+¯ = . Table 3 does
+there are no transverse perturbations: u F,
+0
+the same for the ﬁve MHD linear waves studied. In all cases,
+the phase of the wave is shifted such that
+
+I dr = .
+)
+0
+0
+
+y
+0
+
+0
+
+(
+
+m
+
+n
+
+¶
+
+¶
+
+
+=
+
+⎛
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎝
+
+1
+
+u
+
+0 1
+u u
+
+1
+u u
+
+a
+
+0
+
+0
+
+0
+
+0
+
+G
+G -
+¶
+
+¶
+
+1
+a
+
+
+
+0 1
+u u
+
++
+
+2
+
+2
+
+0
+
+0
+
+0
+
+a
+
+0
+
+a
+
+0
+
++
+
++
+
++
+
+6
+
+b
+
+a
+
+1
+rd
+b
+2
+¶
+
+b
+¶
+
+¶
+
+¶
+
+¶
+
+b
+¶
+
+¶
+
+b
+¶
+
+¶
+
+b
+¶
+
+4
+3
+
+¯ (
+Eu
+
+8
+
+7
+
++
+
++
+
++
+
+2
+
+2
+
+2
+
+2
+
+2
+
+2
+
+¶
+
+
+
+a
+
+¶
+¶
+
+¶
+
+1
+0
+u
+
+u
+
+0
+
+0
+
+2
+
+6
+
++
+
+2
+
+6
+
+
+
+a
+
+¶
+¶
+
+¶
+
+
+
+¶
+
+2
+
+7
+
++
+
+2
+
+7
+
+0
+
+0
+
+1
+
+0
+
+1
+0
+u
+
+1
+
+u
+
+0
+
+a
+
+0
+
+1
+d
+
+)
+
+a
+b
+
+a
+
+0
+
+0
+
+0
+
+a
+
+0
+
+0
+
+0
+
+0
+
+b
+
+0
+
+b
+
+0
+
+a
+b
+
+0
+
+b
+
+0
+
+b
+
+4
+3
+¶
+
+¶
+
+0 1
+u u
+
+a
+
++
+
+8
+
+8
+
+
+
+¶
+
+b
+¶
+
+¶
+
+¶
+
+
+b
+
+a
+
+8
+
++
+
++
+
++
+
+,
+
+⎞
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎠
+A12a
+
+8
+
+8
+
+8
+
+and
+
+m
+
+¶
+¶
+
+
+
+
+=
+
+n
+
+)
+
+(
+
+
+¶
+b
+
+¶
+
+2
+
++
+
+2
+
+=
+
+1
+0
+u
+
+((
+
+0 0
+wu u
+
+-
+
+0 0
+b b
+
+)
+
+1
+d
+b
+
++
+
+(
+
+w
+
+-
+
+4
+
+p
+mag
+
+)
+
+1
+u u
+
+b
+
++
+
+1
+b b
+b
+
+-
+
+1
+B B
+b
+
+-
+
+1
+0
+u
+
+1
+b B
+b
+
+,
+
+⎞
+⎠
+
+2
+
+6
+
+2
+
+7
+
+¶
+¶
+
+
+
+
+¶
+¶
+
+
+
+
+=
+
+[
+1 2
+u b
+
+]
+
++
+
+=
+
+[
+1 3
+u b
+
+]
+
++
+
+1
+0
+u
+
+1
+0
+u
+
+1 2
+u B
+
+,
+
+1 3
+u B
+
+,
+
+a
+
++
+
+2
+
+=
+
+2
+
+¶
+
+
+¶
+
+
+
+G
+G -
+
+1
+
+1
+u u
+
+a
+
++
+
+a
+
+1
+d
+
+,
+
+(
+
+A12b
+
+)
+
+(
+
+A12c
+
+)
+
+(
+
+A12d
+
+)
+
+(
+
+A12e
+
+)
+
+a
+
++
+
+2
+
+b
+
++
+
+2
+
+¶
+¶
+
+
+
+
+=
+
+1
+0 0
+u u
++
+2
+
+0 0
+wu u u
+
+1
+(
+d
+
+(
+
+)
+
+a
+b
+
++
+
+(
+
+2
+
+1
+u u
+
+a
+
++
+
+a
+
+1
+d
+
+)(
+
+0
+b B
+b
+
+-
+
+2
+
+p
+mag
+
+u
+
+)
+
+b
+
+1
+u b b
+b
+
+a
+
+-
+
+0 0
+u b b
+
+1
+(
+d
+
+)
+
+a
+b
+
+-
+
+0
+
+1
+(
+u u b B
+b
+
+a
+
+)
+
+)
+
+,
+
+(
+
+A12f
+
+)
+
+¶
+
+¶
+
+
+¶
+
+
+¶
+
+a
+
++
+
+2
+
+6
+
+
+
+a
+
++
+
+2
+
+7
+
+
+
+=
+
+=
+
+1
+0
+u
+
+1
+0
+u
+
+2
+
+(
+
+b
+
+(
+
+2
+
+1
+u u
+
+a
+
++
+
+a
+
+1
+d
+
+)
+
+-
+
+2
+
+(
+1
+u u b
+
+a
+
+)
+
+-
+
+1 2
+d
+b
+
+a
+
+)
+
+, A12g
+
+(
+
+)
+
+(
+
+b
+
+3
+
+(
+
+2
+
+1
+u u
+
+a
+
++
+
+a
+
+1
+d
+
+)
+
+-
+
+(
+1
+3
+u u b
+
+a
+
+)
+
+-
+
+1 3
+d
+b
+
+a
+
+)
+
+, A12h
+
+(
+
+)
+
+¶
+
+b
+¶
+
+
+6
+
++
+
+2
+
+¶
+
+b
+¶
+
+
+7
+
++
+
+2
+
+¶
+
+b
+¶
+
+
+8
+
++
+
+2
+
+=
+
+=
+
+=
+
+1
+0
+u
+
+1
+0
+u
+
+]
+2 1
+[
+d
+B
+b
+
++
+
+]
+3 1
+[
+d
+B
+b
+
++
+
+1
+0 0
+u u
+
+1
+0 0
+u u
+
+[
+1 2
+b u
+
+]
+
+,
+
+[
+3 1
+b u
+
+]
+
+,
+
+¯
+E
+
+4
+3
+
+1
+0
+u
+
+⎛
+⎝
+
+1
+u u
+
+b
+
++
+
+u
+
+0 1
+d
+b
+
+,
+
+⎞
+⎠
+
+¶
+
+b
+¶
+
+
+8
+
++
+
+8
+
+=
+
+1
+1
+
++
++
+
+0
+
+u
+2
+0
+u
+
+1
+u u
+
+b
+
++
+
+u
+
+0 1
+d
+b
+
+,
+
+¶
+
+a
+
+
+¶
+
+
++
+
+8
+
+8
+
+=
+
+1
+3
+
+a
+
+1
+d
+
++
+
+1
+u u
+
+a
+
+,
+
+4
+3
+
+(
+
+A12i
+
+)
+
+(
+
+A12j
+
+)
+
+(
+
+A12k
+
+)
+
+(
+
+A12l
+
+)
+
+(
+
+)
+A12m
+
+26
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+Table 1
+Linear Wave Background States
+
+Name
+
+H1
+H2
+H3
+M1
+M2
+M3
+
+prad/pgas
+1/10
+1
+10
+1/10
+1
+10
+
+pgas
+2.4976873265494906e-1
+2.0377358490566033e-1
+5.9376908979841170e-2
+1.6920473773265650e-2
+1.8018018018018018e-2
+5.1282051282051280e-2
+
+B x
+
+0
+0
+0
+1.3007872144692095e-1
+1.3423121104280486e-1
+2.2645540682891915e-1
+
+E¯
+7.4930619796484720e-2
+6.1132075471698100e-1
+1.7813072693952350e+0
+5.0761421319796960e-3
+5.4054054054054060e-2
+1.5384615384615383e+0
+
+arad
+1.9253382731290976e+1
+3.5455008763907960e+2
+1.4330736087381077e+5
+6.1927521300000000e+4
+5.1286162500000000e+5
+2.2244625000000000e+5
+
+Quantity
+
+H1: Right-going Sound
+
+H2: Right-going Sound
+
+H3: Right-going Sound
+
+Table 2
+Eigenvalues and Eigenvectors for HD Waves
+
+)
+
+I d
+(
+
+)R w
+(
+)I w
+(
+R dr
+(
+R d
+(
+
+)
+0
+pgas,0
+pgas,0
+)
+u x
+R d
+(
+)
+0
+u x
+I d
+(
+)
+0
+¯ )
+R d
+E0
+(
+¯ )
+I d
+E0
+(
+F x
+)¯R d
+(
+0
+F x
+)¯
+I d
+(
+0
+
++3.1488157526582419e+0
+-2.6190006385783764e-2
++8.3877889167048036e-1
++3.2084488925731225e-1
+
+-9.9134535607497271e-3
+
++4.2035369927276639e-1
+-3.4962560317947367e-3
++1.2904189937790878e-1
++1.5203926879090203e-3
++1.3260665610964825e-3
+-6.7017329068802586e-3
+
++3.1429599763199891e+0
+-2.2828249606164981e-2
++6.8142732199614686e-1
++1.9049344866210005e-1
+
+-4.5406457397056052e-3
+
++3.4086195060291402e-1
+-2.4757813488656411e-3
++6.1763823482839753e-1
+-3.5173782805648812e-2
++2.5195284461771925e-4
+-2.1004450221349644e-2
+
++3.1422980744343483e+0
+-2.0401828576401649e-2
++3.7649572188184188e-1
++2.9897966267824361e-2
+
+-4.3310633257571322e-4
+
++1.8829013057282032e-1
+-1.2225011362941717e-3
++9.0495607014077450e-1
+-4.8502044824468550e-2
+-3.0510547862186877e-4
+-2.4580425755539041e-2
+
+27
+
+Quantity
+
+M1: Right-going Fast
+
+M2: Entropy
+
+M2: Right-going Slow
+
+M2: Right-going Fast
+
+M3: Right-going Fast
+
+Table 3
+Eigenvalues and Eigenvectors for MHD Waves
+
+)
+
+)R w
+(
+)I w
+(
+δρ0
+R d
+(
+
+I d
+(
+
+pgas,0
+pgas,0
+)
+u x
+R d
+(
+)
+0
+u x
+I d
+(
+)
+0
+u y
+R d
+(
+)
+0
+u y
+I d
+(
+)
+0
+B y
+R d
+(
+)
+0
+B y
+I d
+(
+)
+0
+¯ )
+R d
+E0
+(
+¯ )
+I d
+E0
+(
+F x
+)¯R d
+(
+0
+F x
+)¯
+I d
+(
+0
+F y
+)¯R d
+(
+0
+F y
+)¯
+I d
+(
+0
+
+2
+8
+
++1.4030907769530285e+0
+-2.3261803772811441e-2
++9.5533821762932847e-1
++2.4545590135418679e-2
+
+-1.7212846538958446e-3
+
++2.1333546226860403e-1
+-3.5368828179817360e-3
+-9.4540134499253400e-2
+-3.1336310080776267e-3
++1.7929397695717086e-1
++2.7376133858246950e-3
++9.7030693142753782e-3
+-1.5553274585766021e-3
+-9.4902938599335495e-5
+-9.2256600777633675e-4
++3.8836674694259790e-6
+-4.4693666195008915e-5
+
+0
+-2.2389397045278464e-1
++9.9745867367582863e-1
++1.3833062172065714e-2
+
++6.3852389015453093e-1
+-6.4155513213079954e-2
++9.3698871700076369e-1
++2.0454458269493797e-2
+
++1.5949141818449315e+0
+-8.0455282835428230e-2
++9.5003889374992712e-1
++2.3093435201993501e-2
+
++3.1544115249869811e+0
+-1.8555581698888605e-2
++4.2116116065164089e-1
++2.8884767730924427e-2
+
+0
+
+-3.5293728455285493e-3
+
+-1.9397668089885904e-3
+
+-4.0832850598264241e-4
+
+0
+-3.5543274930418547e-2
+0
+-3.2950611052758337e-2
++9.7664604496020095e-3
+0
+-4.9128596680383302e-2
+0
+0
++5.1739785366057365e-3
+0
+-2.6886365431057796e-5
+
++9.5220760069989752e-2
+-9.5672798230796927e-3
++2.2570187473805797e-1
+-1.0824232344232039e-1
+-1.8358914684765970e-1
++1.1188967996089302e-1
++4.2597245178004423e-2
+-4.1582610315888224e-2
+-4.1837076267764771e-3
+-4.3915401620257541e-3
++2.8603718033243122e-4
++5.0506463526206967e-4
+
++2.4115642478578933e-1
+-1.2165111191924344e-2
+-7.3220148652734046e-2
+-6.1181702675864730e-3
++1.6598302737695866e-1
++5.1753405380474959e-3
++7.1308949711257980e-2
+-2.1953236496559857e-2
+-1.6679522286032048e-3
+-6.2430775123552551e-3
++4.7659405424480282e-5
+-4.2049304677408794e-4
+
++2.1143982774443940e-1
+-1.2437784249231532e-3
+-1.0692349015159086e-2
++1.0200405321943583e-3
++1.0019976240705387e-1
+-4.3172409871501671e-4
++8.7423772851515402e-1
+-4.5633199309910999e-2
+-3.1252339580678350e-4
+-2.3216160870051111e-2
++1.9086396938480885e-4
+-3.4304273514267473e-3
+
+T
+h
+e
+A
+s
+t
+r
+o
+p
+h
+y
+s
+i
+c
+a
+l
+
+J
+o
+u
+r
+n
+a
+l
+,
+
+9
+4
+9
+:
+1
+0
+3
+
+(
+2
+9
+p
+p
+)
+
+,
+
+2
+0
+2
+3
+
+J
+u
+n
+e
+
+1
+
+W
+h
+i
+t
+e
+
+e
+t
+
+a
+l
+.
+
+The Astrophysical Journal, 949:103 (29pp), 2023 June 1
+
+White et al.
+
+Abramowicz, M., Czerny, B., Lasota, J., & Szuszkiewicz, E. 1988, ApJ,
+
+MNRAS, 441, 3177
+
+References
+
+Madsen, N. 1971, SJNA, 8, 266
+McKinney, J. C., Tchekhovskoy, A., Sadowski, A., & Narayan, R. 2014,
+
+332, 646
+
+Anninos, P., & Fragile, P. C. 2020, ApJ, 900, 71
+Asahina, Y., & Ohsuga, K. 2022, ApJ, 929, 93
+Asahina, Y., Takahashi, H. R., & Ohsuga, K. 2020, ApJ, 901, 96
+Baiotti, L., & Rezzolla, L. 2017, RPPh, 80, 096901
+Bhattacharyya, M. K., & Radice, D. 2022, arXiv:2212.01409
+Chan, C., & Müller, B. 2020, MNRAS, 496, 2000
+Chandrasekhar, S. 1950, Radiative Transfer (New York: Dover Publications Inc.)
+Cheong, P. C.-K., Ng, H. H.-Y., Lam, A. T.-L., & Li, T. G. F. 2023,
+
+arXiv:2303.03261
+
+Christov, I., & Popov, B. 2008, JCoPh, 227, 5736
+Colella, P., & Woodward, P. R. 1984, JCoPh, 54, 174
+Daszuta, B., Zappa, F., Cook, W., et al. 2021, ApJS, 257, 25
+Davis, S. W., & Gammie, C. F. 2020, ApJ, 888, 94
+Done, C., Gierliński, M., & Kubota, A. 2007, A&ARv, 15, 1
+Edwards, H. C., Trott, C. R., & Sunderland, D. 2014, JPDC, 74, 3202
+Faber, J. A., & Rasio, F. A. 2012, LRR, 15, 8
+Farris, B. D., Li, T. K., Liu, Y. T., & Shapiro, S. L. 2008, PhRvD, 78, 024023
+Fishbone, L. G., & Moncrief, V. 1976, ApJ, 207, 962
+Fleck, J., Jr., & Cummings, J. 1971, JCoPh, 8, 313
+Florinski, V., Guo, X., Balsara, D., & Meyer, C. 2013, ApJS, 205, 19
+Foucart, F. 2018, MNRAS, 475, 4186
+Foucart, F., Duez, M. D., Hébert, F., et al. 2021, ApJ, 920, 82
+Foucart, F., O’Connor, E., Roberts, L., et al. 2015, PhRvD, 91, 124021
+Fragile, P. C., Olejar, A., & Anninos, P. 2014, ApJ, 796, 22
+Gammie, C. F., McKinney, J. C., & Tóth, G. 2003, ApJ, 589, 444
+Grant, I., & Hunt, G. 1968, MNRAS, 141, 27
+Janka, H.-T. 2012, ARNPS, 62, 407
+Jiang, Y.-F. 2021, ApJS, 253, 49
+Jiang, Y.-F. 2022, ApJS, 263, 4
+Jiang, Y.-F., Stone, J. M., & Davis, S. W. 2014, ApJS, 213, 7
+Kawaguchi, K., Fujibayashi, S., & Shibata, M. 2023, PhRvD, 107, 023026
+Krook, M. 1955, ApJ, 122, 488
+Kuroda, T., Takiwaki, T., & Kotake, K. 2016, ApJS, 222, 20
+Levermore, C. 1984, JQSRT, 31, 149
+Liebendörfer, M., Bronson Messer, O., Mezzacappa, A., et al. 2004, ApJS,
+
+150, 263
+
+Metzger, B. D. 2020, LRR, 23, 1
+Minerbo, G. N. 1978, JQSRT, 20, 541
+Müller, B. 2016, PASA, 33, e048
+Müller, B., Janka, H.-T., & Dimmelmeier, H. 2010, ApJS, 189, 104
+Nagakura, H., Iwakami, W., Furusawa, S., et al. 2017, ApJS, 229, 42
+Nordhaus, J., Burrows, A., Almgren, A., & Bell, J. 2010, ApJ, 720, 694
+O’Connor, E. 2015, ApJS, 219, 24
+Ohsuga, K., & Takahashi, H. R. 2016, ApJ, 818, 162
+Radice, D., Abdikamalov, E., Rezzolla, L., & Ott, C. D. 2013, JCoPh, 242,
+
+648
+
+Radice, D., Bernuzzi, S., Perego, A., & Haas, R. 2022, MNRAS, 512, 1499
+Rahman, N., Just, O., & Janka, H. 2019, MNRAS, 490, 3545
+Randall, D. A., Ringler, T. D., Heikes, R. P., Jones, P., & Baumgardner, J.
+
+2002, CSE, 4, 32
+
+Roberts, L. 2012, ApJ, 755, 126
+Roedig, C., Zanotti, O., & Alic, D. 2012, MNRAS, 426, 1613
+Roth, N., Anninos, P., Robinson, P. B., et al. 2022, ApJ, 933, 226
+Ryan, B., Dolence, J., & Gammie, C. 2015, ApJ, 807, 31
+Ryan, B. R., & Dolence, J. C. 2020, ApJ, 891, 118
+Shibata, M., Kiuchi, K., ichiro Sekiguchi, Y., & Suwa, Y. 2011, PThPh,
+
+125, 1255
+
+Shibata, M., Nagakura, H., Sekiguchi, Y., & Yamada, S. 2014, PhRvD, 89,
+
+084073
+
+Sądowski, A., Narayan, R., Tchekhovskoy, A., & Zhu, Y. 2013, MNRAS,
+
+429, 3533
+
+Stone, J. M., Tomida, K., White, C. J., & Felker, K. G. 2020, ApJS, 249, 4
+Takahashi, H. R., Ohsuga, K., Kawashima, T., & Sekiguchi, Y. 2016, ApJ,
+
+826, 23
+
+Thorne, K. S. 1981, MNRAS, 194, 439
+Tolstov, A., Blinnikov, S., Nagataki, S., & Nomoto, K. 2015, ApJ, 811, 47
+van Leer, B. 1974, JCoPh, 14, 361
+Wang, N., & Lee, J.-L. 2011, SJSC, 33, 2536
+Weih, L. R., Olivares, H., & Rezzolla, L. 2020, MNRAS, 495, 2285
+White, C. J., Stone, J. M., & Gammie, C. F. 2016, ApJS, 225, 22
+Zanotti, O., Roedig, C., Rezzolla, L., & Del Zanna, L. 2011, MNRAS,
+
+417, 2899
+
+Zhang, L., Blaes, O., & Jiang, Y.-F. 2021, MNRAS, 508, 617
+
+29
+
+

@@ -1,0 +1,6905 @@
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+© 2023. The Author(s). Published by the American Astronomical Society.
+
+https://doi.org/10.3847/1538-4365/acc2c0
+
+The Athena++ Adaptive Mesh Reﬁnement Framework: Multigrid Solvers for
+Self-gravity
+
+Kengo Tomida1
+
+and James M. Stone2
+
+1 Astronomical Institute, Tohoku University, Sendai, Miyagi, 980-8578, Japan; tomida@astr.tohoku.ac.jp
+2 School of Natural Sciences, Institute for Advanced Study, Princeton, NJ 08544, USA
+Received 2023 January 17; revised 2023 February 27; accepted 2023 March 7; published 2023 April 27
+
+Abstract
+We describe the implementation of multigrid solvers in the Athena++ adaptive mesh reﬁnement (AMR)
+framework and their application to the solution of the Poisson equation for self-gravity. The new solvers are built
+on top of the AMR hierarchy and TaskList framework of Athena++ for efﬁcient parallelization. We adopt a
+conservative formulation for the Laplacian operator that avoids artiﬁcial accelerations at level boundaries. Periodic,
+ﬁxed, and zero-gradient boundary conditions are implemented, as well as open boundary conditions based on a
+multipole expansion. Hybrid parallelization using both Message Passing Interface and OpenMP is adopted, and we
+present results of tests demonstrating the accuracy and scaling of the methods. On a uniform grid, we show that
+multigrid signiﬁcantly outperforms methods based on fast Fourier transforms, and requires only a small fraction of
+the computing time required by the (highly optimized) magnetohydrodynamic solver in Athena++. As a
+demonstration of the capabilities of the methods, we present the results of a test calculation of magnetized
+protostellar collapse on an adaptive mesh.
+Uniﬁed Astronomy Thesaurus concepts: Astronomical simulations (1857); Hydrodynamical simulations (767);
+Magnetohydrodynamical simulations (1966); Gravitation (661); Star formation (1569)
+
+1. Introduction
+Modeling the (magneto)hydrodynamics (MHD) of astro-
+physical systems often requires inclusion of self-gravity, which
+necessitates solution of the Poisson equation along with the
+MHD conservation laws. Since it is elliptic, numerical solution
+of the Poisson equation requires quite different methods from
+the explicit time integration techniques typically used for the
+(hyperbolic) equations of motion. In addition, when diffusive
+processes such as viscosity, heat conduction, ohmic resistivity,
+and radiation transport in the optically thick regime (or with the
+ﬂux-limited diffusion approximation) are included in the
+dynamics, implicit time integration methods are often needed
+in order to avoid overly restrictive constraints on the time step.
+Like the solution of the Poisson equation, implicit integrators
+require matrix inversions that involve global communication.
+Therefore, it is of great interest to develop efﬁcient solvers for
+such nonlocal physical processes that are scalable to a large
+number of parallel processes characteristic of modern high-
+performance computing systems.
+
+There are a variety of widely adopted algorithms for the
+the Poisson equation. For uniformly spaced
+solution of
+Cartesian grids, a discretization in Fourier space combined
+with the fast Fourier transform (FFT) is commonly used as it is
+robust and efﬁcient (e.g., Hockney & Eastwood 1988; Press
+et al. 2007). However, it is not compatible with nonuniform
+mesh spacing and curvilinear coordinates, is most efﬁcient only
+with periodic boundary conditions, and is not suitable for use
+with adaptive mesh reﬁnement (AMR). When AMR is used,
+sparse matrix solvers like the conjugate gradient method and its
+variants (e.g., Hockney & Eastwood 1988; Hackbusch 1994;
+
+Original content from this work may be used under the terms
+of the Creative Commons Attribution 4.0 licence. Any further
+distribution of this work must maintain attribution to the author(s) and the title
+of the work, journal citation and DOI.
+
+trivial
+
+they are not
+
+Saad 2003) can be adopted, but
+to
+implement on complicated grid structures as the matrix is
+irregular, and they may require robust preconditioners for
+efﬁciency. Another popular algorithm is the Tree method
+(Barnes & Hut 1986; Wünsch et al. 2018), which is often used
+in particle-based simulations. While the Tree method is suitable
+for isolated (open) boundary conditions, it is not trivial to
+combine with other boundary conditions.
+
+In this paper, we describe the implementation of grid-based
+solvers for the Poisson equation of self-gravity in the Athena++
+code (Stone et al. 2020) that are based on the multigrid method
+(Fedorenko 1962; Trottenberg et al. 2001). In particular, we
+focus on the so-called geometric multigrid methods, which use
+multiple grids with different spatial resolutions. This method
+applies a classical iterative solver such as the Gauss–Seidel (GS)
+method to damp the error at different scales coherently. By
+construction, multigrid is compatible with both AMR and a wide
+variety of different boundary conditions. Moreover, as long as
+communication costs are negligible, its computational complex-
+ity scales as O(N), where N is the total number of degrees of
+freedom. This is better than FFT and Tree algorithms, which
+both scale as O N
+). In this paper, we show that this
+difference is signiﬁcant at large N; multigrid is signiﬁcantly more
+efﬁcient than, for example, FFT methods, in this regime. We
+the fast
+note that for the Poisson equation of self-gravity,
+multipole method (Greengard & Rokhlin 1987) is also an
+efﬁcient algorithm with O(N).
+
+Nlog
+
+(
+
+The rest of the paper is organized as follows. In Section 2,
+we discuss the basics of multigrid methods. We describe our
+implementation of them in Section 3, and present test results in
+Section 4. In Section 5 we discuss and summarize our results.
+While the multigrid algorithms are compatible with general
+coordinate systems, we focus on uniformly spaced Cartesian
+coordinates in this paper.
+
+1
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Tomida & Stone
+
+2. Multigrid Solvers
+
+In this section, we present the basics of multigrid Poisson
+solvers. First, we describe the basic equations and their
+discretization in Section 2.1. Next, we discuss classical iterative
+solvers as a foundation of
+in
+Section 2.2. Then we explain elements of
+the multigrid
+algorithms including the restriction and prolongation operators
+(Section 2.3.1), smoothing operator and coarsest-level solver
+(Section 2.3.2), cycling algorithms (Sections 2.3.3–2.3.5),
+boundary conditions (Section 2.3.6), and convergence criteria
+(Section 2.3.7).
+
+the multigrid algorithms
+
+2.1. Basic Equations and Discretization
+
+We discuss the solution of the Poisson equation for self-
+
+gravity
+
+,
+
+2f
+ =
+g
+
+p r
+G4
+f
+,
+
+respectively.
+operator
+
+1
+( )
+= -
+( )
+2
+where f is the gravitational potential, g is the gravitational
+acceleration, G is the gravitational constant, and ρ is the mass
+the
+density,
+Laplacian
+. As
+Athena++ uses a cell-centered discretization for the hydro-
+dynamic quantities, we use the same discretization for f and ρ.
+in what follows the same uniform cell
+spacing h is adopted in all three directions (the extension to
+both nonuniform or curvilinear coordinates is straightforward).
+In this case, the discrete form of Equation (1) can be written
+
+In 3D Cartesian coordinates,
+¶
+¶
+x
+
+For simplicity,
+
+becomes
+
+2
+ =
+
+¶
+¶
+y
+
+¶
+¶
+z
+
++
+
++
+
+2
+
+2
+
+2
+
+2
+
+2
+
+2
+
++
+
+f
+i
+
+f
+i
+
++
+j k
+1, ,
++
+f
+
+-
+j k
+1, ,
++
+f
+
++
+
+f
+
++
+
+f
+
++
+i j
+,
+-
+
+k
+1,
+f
+6
+
+i j
+,
+=
+
+-
+k
+1,
+p r
+G
+4
+
+i j k
+, ,
+
+2
+
+h
+
+,
+
+( )
+3
+
+i j k
+, ,
+
++
+
+1
+
+i j k
+, ,
+
+-
+
+1
+
+i j k
+, ,
+
+where i, j, and k are the cell indices in the x-, y-, and z-
+directions. Since Athena++ uses octree-block-based AMR
+design, computations within each MeshBlock (domain
+decomposition unit in Athena++; see Section 3.1) can be
+processed in locally uniform grids, and complexities due to
+AMR appear only in communications at level boundaries and
+reﬁnement/dereﬁnement
+in
+Section 3.3.
+
+procedures,
+
+discussed
+
+as
+
+It is useful to introduce some notation. We use the potential
+and source term vectors fh and fh ≡ 4πGρ in which the values
+of all of the cells discretized with the resolution of h are stored
+as a 1D vector. We deﬁne the Laplacian operator discretized
+with h, Lh. Then Equation(3) reads
+f
+.
+h
+
+4
+( )
+We deﬁne the discretized error vector and true error vector as
+
+f =
+h
+
+L
+
+h
+
+)
+
+d f
+(
+h
+h
+)
+
+ f
+(
+h
+h
+
+º
+
+º
+
+-*
+f
+h
+-*
+
+f
+
+f
+h
+f
+h
+
+,
+
+,
+
+( )
+5
+
+( )
+6
+
+and the defect vector as
+
+h
+
+,
+
+)
+
+(
+
+d
+h
+
+f
+h
+
+f
+h
+
+º -
+f
+h
+
+L
+7
+( )
+hf* denotes the fully converged discretized solution, and
+where
+f* is the true solution of the original Poisson equation with
+inﬁnite resolution. The converged solution satisﬁes d
+0
+h
+the
+and
+discretized solution minimizes the true error òh only to the
+
+hf =*(
+)
+it should be noted that
+
+d f =*(
+h
+h
+
+. However,
+
+0
+
+)
+
+order of the truncation error, which is proportional to h2 in the
+case of a second-order accurate scheme.
+
+The error and defect vectors satisfy the defect equation:
+
+L
+
+d =
+h h
+
+d
+h
+
+.
+
+( )
+8
+
+The Laplacian operator Lh is a sparse matrix and its inversion
+1- is not easy to ﬁnd. Instead, we calculate an approximation
+Lh
+1-ˆ
+Lh
+and then converge on the
+solution iteratively. We denote the approximate solution after
+the nth iteration as
+
+to obtain the correction hdˆ
+
+0f represents the initial guess.
+
+nf , while h
+
+h
+
+2.2. Classical Iterative Solvers
+
+iterative solvers
+
+To be thorough, in this section we review basic concepts of
+classical
+the Jacobi, GS, and
+such as
+successive over-relaxation (SOR) methods. These methods
+are not very practical by themselves, but they are important as
+the foundation of multigrid methods. There are various
+derivations of these methods (e.g., Hackbusch 1994), but
+here we present one physically motivated method (Press et al.
+2007).
+
+The Poisson equation can be reformulated as a time-
+
+dependent diffusion-like problem using the pseudo-time τ:
+
+f
+¶
+t
+¶
+
+2
+=  -
+
+f
+
+G4
+
+p r
+.
+
+9
+( )
+
+This is a linear diffusion equation with an additional source
+term. Because solutions to the Poisson equation are unique, we
+can start from any “initial condition” and relax to the steady-
+state solution of Equation (9) where f
+¶
+becomes zero, and the
+¶
+t
+result will then be a solution of the Poisson equation.
+
+In order to solve this diffusion-like equation numerically, the
+simplest approach is to apply the standard forward time
+centered space discretization (e.g., Roache 1972; Press et al.
+2007) and use the largest possible time step limited by the
+condition, Δτ = h2/2D,
+Courant–Friedrichs–Levy
+(CFL)
+where D is the number of
+the spatial dimensions. The
+discretized equation in 3D is
+
+f
+
++
+n
+1
+i j k
+, ,
+
+=
+
+1
+6
+
+(
+
+f
+
+n
+-
+i
+
+j k
+1, ,
+
++
+
+f
+
+n
++
+i
+
+j k
+1, ,
+
++
+
+f
+
+n
+i j
+,
+
+-
+
+1,
+
+k
+
++
+
+f
+
+n
+i j
+,
+
++
+
+1,
+
+k
+
++
+
+f
+
+n
+i j k
+, ,
+
+-
+
+1
+
++
+
+f
+
+n
+i j k
+, ,
+
+)
+1
+
++
+
+-
+
+4
+
+p r
+G
+
+i j k
+, ,
+
+2
+
+h
+6
+
+,
+
+(
+
+10
+
+)
+
+where n is the index of the pseudo-time or the iteration step. By
+repeating this procedure until f reaches a steady state, we can
+obtain the numerical solution. This is the Jacobi method.
+
+timescales, but
+
+The timescale for the Jacobi methods to reach steady state is
+the diffusion time, T ∼ L2/D, where L is the size of the system.
+This estimate tells us that short-wavelength structures will
+diffuse on the shortest
+long-wavelength
+structures take longer to diffuse away. The number of iterations
+required for the whole system to reach steady state can be
+where Nx = L/h is the number
+estimated as Niter ∼ T/Δτ Nx
+2µ
+3(
+of the cells in each dimension. As each iteration costs O Nx
+) in
+5
+three dimensions, the total computation complexity is O Nx
+).
+(
+Compared to the explicit (magneto)hydrodynamic part, which
+3(
+is O Nx
+
+), this is very expensive.
+
+Since we are interested only in the steady-state solution of
+this problem, we are not strictly bound by the CFL condition,
+and we can accelerate convergence by changing the iteration
+
+2
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Tomida & Stone
+
+process. In the traditional (lexicographic) GS method, we
+replace Equation (10) with
+
+This method is convergent for 0 < ω < 2. The optimal choice
+of ω depends on the problem, but
+
+f
+
++
+n
+1
+i j k
+, ,
+
+=
+
+1
+6
+
+(
+
+f
+
++
+n
+-
+i
+
+1
+j k
+1, ,
+
++
+
+f
+
+n
++
+i
+
+j k
+1, ,
+
++
+
+f
+
+n
+i j
+,
+
++
+1
+-
+1,
+
+k
+
++
+
+f
+
+n
+i j
+,
+
++
+
+1,
+
+k
+
++
+
+f
+
++
+n
+1
+-
+i j k
+, ,
+
+1
+
++
+
+f
+
+n
+i j k
+, ,
+
+)
+1
+
++
+
+-
+
+4
+
+p r
+G
+
+i j k
+, ,
+
+2
+
+h
+6
+
+.
+
+(
+
+11
+
+)
+
+Here, f n+1 is used on the right-hand side for already updated
+cells. There are advantages and disadvantages in this method.
+The number of iterations required for convergence is only
+the Jacobi method (Hockney & Eastwood 1988;
+half of
+Hackbusch 1994; Press et al. 2007), and it does not require
+temporary memory storage for f n+1 as we can directly update
+the value on the same memory. However, as it is obvious from
+the equation, this introduces anisotropy in the iteration process,
+and the dependency (i.e., we cannot update fi,j,k until fi−1,j,k,
+fi,j−1,k, fi,j,k−1 are all updated) prevents vectorization and
+parallelization of the code.
+
+A variant of this is the red-black Gauss–Seidel (RBGS)
+in which a checkerboard pattern is used in the
+method,
+(i.e.,
+iteration. Here we label
+i + j + k = even) with red, and the odd-numbered cells with
+black. We ﬁrst update the red cells using the neighboring black
+cells yet to be updated, then the black cells using the red cells
+that are already updated.
+
+the even-numbered cells
+
+f
+
++
+n
+1
+i j k
+, ,
+
+=
+
+1
+6
+
+(
+
+f
+
+n
+-
+i
+
+j k
+1, ,
+
++
+
+f
+
+n
++
+i
+
+j k
+1, ,
+
++
+
+f
+
+n
+i j
+,
+
+-
+
+1,
+
+k
+
++
+
+f
+
+n
+i j
+,
+
++
+
+1,
+
+k
+
++
+
+f
+
+n
+i j k
+, ,
+
+-
+
+1
+
++
+
+f
+
+n
+i j k
+, ,
+
+)
+1
+
++
+
+-
+
+4
+
+p r
+G
+
+i j k
+, ,
+
+2
+
+h
+6
+
+(
+
+red
+
+)
+
+(
+
+12
+
+)
+
+f
+
++
+n
+1
+i j k
+, ,
+
+=
+
+1
+6
+
+(
+
+f
+
++
+n
+-
+i
+
+1
+j k
+1, ,
+
++
+
+f
+
++
+n
++
+i
+
+1
+j k
+1, ,
+
++
+
+f
+
+n
+i j
+,
+
++
+1
+-
+1,
+
+k
+
++
+
+f
+
+n
+i j
+,
+
++
+1
++
+1,
+
+k
+
++
+
+f
+
++
+n
+1
+-
+i j k
+, ,
+
+1
+
++
+
+f
+
++
+n
+1
++
+i j k
+, ,
+
+)
+1
+
+-
+
+4
+
+p r
+G
+
+i j k
+, ,
+
+2
+
+h
+6
+
+(
+
+black
+
+)
+
+(
+
+13
+
+)
+
+This method reduces anisotropy, although red and black cells
+this method is suitable for
+are not fully equivalent. Also,
+parallelization as all of the red or black cells can be updated at
+the same time without dependencies. However, it should be
+noted that this method is still incompatible with vectorization
+as it requires nonunit stride access to the memory. Both GS
+5
+variants still cost O Nx
+
+We can even accelerate convergence further by SOR. In this
+method, we extrapolate each iteration by the over-relaxation
+parameter ω. It can be combined with any of the classical
+the iteration
+solvers above, but
+procedure is as follows:
+
+in the case of the RBGS,
+
+).
+
+(
+
+f
+
++
+n
+1
+i j k
+, ,
+
+=
+
+f
+
+n
+i j k
+, ,
+
++
+
+w
+
+1
+6
+
+⎡
+⎣
+
+(
+
+f
+
+n
+-
+i
+
+1, ,
+
+j k
+
++
+
+f
+
+n
++
+i
+
+1, ,
+
+j k
+
++
+
+f
+
+n
+i j
+,
+
+-
+
+1,
+
+k
+
++
+
+f
+
+n
+i j
+,
+
++
+
+1,
+
+k
+
++
+
+f
+
+n
+i j k
+, ,
+
+-
+
+1
+
++
+
+f
+
+n
+i j k
+, ,
+
++
+
+1
+
+-
+
+6
+
+f
+
+n
+i j k
+, ,
+
+)
+
+-
+
+4
+
+p r
+G
+
+i j k
+, ,
+
+2
+
+h
+6
+
+⎤
+⎦⎥
+
+,
+
+(
+
+red
+
+)
+
+(
+
+14
+
+)
+
+f
+
++
+n
+1
+i j k
+, ,
+
+=
+
+f
+
+n
+i j k
+, ,
+
++
+
+w
+
+1
+6
+
+⎡
+⎣
+
+(
+
+f
+
++
+n
+-
+i
+
+1
+1, ,
+
+j k
+
++
+
+f
+
++
+n
++
+i
+
+1
+1, ,
+
+j k
+
++
+
+f
+
++
+n
+1
+-
+i j
+1,
+,
+
+k
+
++
+
+f
+
++
+n
+1
++
+i j
+1,
+,
+
+k
+
++
+
+f
+
++
+n
+1
+-
+i j k
+, ,
+
+1
+
++
+
+f
+
++
+n
+1
++
+i j k
+, ,
+
+1
+
+-
+
+6
+
+f
+
+n
+i j k
+, ,
+
+)
+
+-
+
+4
+
+p r
+G
+
+i j k
+, ,
+
+2
+
+h
+6
+
+⎤
+⎦⎥
+
+  black .
+)
+(
+
+(
+
+15
+
+)
+
+3
+
+w
+
+=
+
+2
+p
+
+,
+
+N
+x
+
+1
+
++
+
+(
+
+16
+
+)
+
+is known to give signiﬁcant acceleration for the Poisson
+equation for self-gravity if the domain is cubic. This reduces
+the number of iterations to O(Nx), and therefore the total cost is
+) (Hockney & Eastwood 1988; Hackbusch 1994; Press
+4
+O Nx
+(
+et al. 2007).
+
+It
+
+is known that SOR may not converge monotonically
+depending on the over-relaxation parameter ω and initial guess.
+To overcome this difﬁculty and improve the convergence
+the Chebyshev acceleration can be used. In this
+behavior,
+method, we use ω = 1 in the ﬁrst
+iteration, and gradually
+increase it to the optimal value following a certain sequence.
+For further details, we refer the readers to literature such as
+Hockney & Eastwood (1988) and Press et al. (2007), as we do
+not use this method in our multigrid solvers.
+
+2.3. Basics of Multigrid
+
+iterative solver on coarse grids,
+
+The concept of multigrid methods is simple. By applying a
+classical
+long-wavelength
+modes damp faster, as they behave as short-wavelength modes
+at the reduced resolution. Thus, we can use larger pseudo–time
+steps on coarser grids and accelerate convergence to the steady-
+state solution of the diffusion-like equation. The multigrid
+methods combine multiple layers of coarser grids consistently
+and damp both short- and long-wavelength modes coherently.
+In this section, we largely follow the discussion in Trottenberg
+et al. (2001).
+
+There are two different strategies in the multigrid methods.
+One is the multigrid iteration (MGI) method, in which we apply
+the multigrid method on the ﬁnest level repeatedly to improve
+the solution starting from a given initial guess. The other is the
+full multigrid (FMG) method, which starts from the coarsest
+grid, and constructs the ﬁner solutions by applying the
+multigrid method using the coarser solution as the initial
+guess. We describe the MGI in Section 2.3.3 and the FMG in
+Section 2.3.4.
+
+In what follows, we adopt the conventional terminology used
+with multigrid methods. Applying a classical iterative solver on
+is called “smoothing.” “Restriction” means
+a certain level
+producing coarser grid data by averaging ﬁner grid data, and
+“prolongation” means producing ﬁner grid data by interpolat-
+ing coarser grid data. These are basic elements of the multigrid
+methods, and various combinations are possible. Here, we
+discuss our implementation in Athena++.
+
+Hereafter, we also use notations that l is the level in the
+multigrid hierarchy (l = 0 is the coarsest level where the grid
+cannot be restricted anymore), and hl is the resolution on the
+level l that satisﬁes hl−1 = 2hl, Ll the Laplacian operator on
+level l, respectively.
+
+2.3.1. Restriction and Prolongation Operators
+First, we deﬁne the restriction and prolongation operators to
+transfer data between different levels. As the potential and
+source term are discretized at cell centers, we use the volume-
+weighted average for restriction and the trilinear interpolation
+for prolongation.
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Tomida & Stone
+
+Figure 1. Two-dimensional representations of the interpolation stencils. The coarse grids are shown with solid lines, while the ﬁne grids are shown with dotted lines.
+The ﬁne and coarse cell indices are marked with small and capital letters, respectively. (a) Restriction: the ﬁlled circle is calculated using the volume-weighted average
+of open squares. (b) Prolongation: the open square is calculated using trilinear (bilinear in two dimensions) interpolation using ﬁlled circles. (c) FMG prolongation: the
+open square is calculated using tricubic (bicubic in two dimensions) interpolation using ﬁlled circles and triangles. The sizes of the symbols qualitatively correspond to
+the weighting coefﬁcients, while circles are positive and triangles are negative.
+
+The restriction operator from level l to l − 1 is deﬁned as
+
+2.3.2. Smoothing Operator and Coarsest-level Solver
+
+-
+
+1
+
+l
+I
+l
+
+u
+
+)
+l I J K
+,
+
+,
+
+u
+
++ + +
+l i a j b k c
+,
+
+,
+
+,
+
+D
+
+V
+
++ + +
+l i a j b k c
+,
+
+,
+
+,
+
+u
+
+l
+
+-
+
+(
+
+=
+I J K
+,
+1, ,
+1
+1
+1
+å å å
+= = =
+a
+b
+0
+0
+
+0
+
+=
+
+c
+1
+1
+1
+å å å
+= = =
+a
+b
+0
+0
+
+0
+
+c
+
+,
+
+(
+
+17
+
+)
+
+D
+
+V
+
++ + +
+l i a j b k c
+,
+
+,
+
+,
+
+where u is either the potential f, the defect d, or the source term
+f, ΔVl,i+a,j+b,k+c is the cell volume, and I, J, and K are the cell
+indices on the coarse level corresponding to the ﬁner cells with
+i, j, and k and its adjacent cells.
+
+The trilinear prolongation operator from level l − 1 to l is
+
+deﬁned as
+
+u
+
+l i j k
+, , ,
+
+=
+
+1
+
+-
+
+=
+1
+
+l
+u
+I
+(
+l
+-
+l
++
++
++
+1
+1
+å å å
+=-
+=-
+=-
+a
+
+b
+
+c
+
+1
+
+1
+
+)
+i j k
+1 , ,
+
+w w w u
+a i b j c k h
+,
+
+,
+
+,
+
+,
+-
+l 1
+
++ +
+I a J b K c
+,
+
++
+
+,
+
+,
+
+(
+
+18
+
+)
+
+1
+
+3
+4
+
+, 0
+
+where u is either the potential f or the correction δ. wn,m takes
+1
+for n = −1, 0, and 1 if m is even (i.e., the ﬁner cell is
+,
+4
+located on the “lower” side in the coarser cell in each direction;
+for n = −1, 0, and 1 if m is odd (the
+see Figure 1), and 0,
+ﬁner cell
+is on the “upper” side). These interpolation
+coefﬁcients are derived assuming equally spaced cubic cells
+in 3D Cartesian coordinates.
+
+,3
+4
+
+1
+4
+
+1
+
+For the FMG explained later in Section 2.3.4, Trottenberg
+et al. (2001) recommended using a higher-order prolongation
+l
+¢ - to prolongate the potential, and we adopt the
+operator I l
+third-order tricubic interpolation for this purpose. It is obtained
+- for n = −1, 0,
+3
+30
+using Equation (18) but with w
+,
+n m,
+32
+32
+= -
+3
+for n = −1, 0, and 1
+and 1 and even m, and w
+32
+and odd m.
+
+=
+30
+32
+
+The interpolation stencils and weighting coefﬁcients of the
+restriction and prolongation operators in two dimensions are
+graphically shown in Figure 1.
+
+,
+5
+32
+
+5
+32
+,
+
+n m,
+
+,
+
+4
+
+In the multigrid algorithms, we apply a smoothing operator
+SMOOTH(u, L, f) to reduce the error on each level. This
+operator receives the potential or defect vector,
+the linear
+operator and the source term vector as the input arguments, and
+returns the smoothed potential or defect vector.
+In our
+implementation, we adopt the RBGS smoother with the over-
+relaxation factor of ω = 1.15 as Equations (14) and (15). This
+value of ω is chosen to damp high-frequency errors faster, and
+is different from the optimal value for the SOR solver in
+Equation (16) (Yavneh 1996; Trottenberg et al. 2001).
+
+On the coarsest level, we apply the coarsest-level solver
+COARSEST(u, L, f). The input arguments are the same as
+SMOOTH(), and it returns the solution on the coarsest level. If
+the grid can be reduced to 1 × 1 × 1 cell on the coarsest level
+l = 0, it is trivial to calculate the exact solution because the
+discretized Poisson Equation (3) is reduced to
+
+u
+
+0,1,1,1
+
+=
+
+1
+6
++
+
+(
+
+u
+
+0,0,1,1
+
++
+
+u
+
+0,1,0,1
+
++
+
+u
+
+0,1,1,0
+
++
+
+u
+
+0,1,1,2
+
+u
+
+0,1,2,1
+
++
+
+u
+
+0,2,1,1
+
+-
+
+2
+h f
+0
+
+0,1,1,1
+
+)
+
+,
+
+(
+
+19
+
+)
+
+and all u on the right-hand side are given from boundary
+conditions. On the other hand, if the coarsest
+level is not
+reduced to a single cell but contains N0,x × N0,y × N0,z cells, we
+apply the RBGS smoother N
+) times
+0,max
+instead, which is sufﬁcient to obtain a good solution on the
+coarsest level.
+
+max
+
+N
+(
+0,
+
+N
+0,
+
+N
+0,
+
+º
+
+,
+
+,
+
+x
+
+y
+
+z
+
+2.3.3. Multigrid Iteration
+We ﬁrst describe the multigrid iteration scheme. There are
+various cycling procedures such as V-, W-, and F-cycles, and
+here we implement the simplest V-cycle in Athena++. Using
+pseudocode notation, one cycle of this scheme is described as
+follows.
+
+Algorithm 1: V-cycle multigrid iteration
+)
+n
+f
+(
+l
+nf
+= - ¯
+L
+l
+l
+-
+n
+1
+d
+.
+l
+
+f(
+fL
+l
+,
+,
+procedure MULTIGRID
+l
+l
+n
+=¯
+M
+f
+SMOOTH
+1. Presmooth:
+l
+n
+2. Compute defect: d
+f
+l
+l
+l
+n
+=-
+3. Restrict defect: d
+I
+l
+l
+1
+
+
+
+
+
+n
+l
+
+,
+
+L,
+.
+
+,
+
+l
+
+f
+l
+
+).
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Tomida & Stone
+
+Figure 2. Schematic graphs of the multigrid algorithms with four levels. (a) The multigrid iteration method with the V(1,1) cycles. (b) The FMG with the V(1,1)
+cycles. The legends are as follows: ﬁlled circles ((cid:129)): smoothing operations. Filled squares (-): obtaining the coarsest-grid solution. Downward solid segments:
+restriction. Upward solid segments: prolongation. Downward dotted line: restriction operation at the beginning of the full multigrid algorithm. Upward double-solid
+segments: FMG prolongation.
+
+reasonably good solution once we reach the ﬁnest level. The
+pseudocode of this algorithm is as follows:
+
+Algorithm 2: Full multigrid
+procedure FMG(Lh, fh)
+
+(Continued)
+
+4. Calculate coarse-grid correction:
+if l = 1 then
+
+4.1 Solve the coarsest level:
+n
+d =ˆ
+d
+COARSEST
+0
+
+L0,
+(
+
+,
+
+0
+
+n
+0
+
+).
+
+else
+
+
+
+
+
+
+
+
+
+
+
+
+4.2 Apply MULTIGRID recursively:
+,
+1
+
+n
+d
+-
+l
+
+0,
+(
+
+,
+1
+
+L
+
+-
+
+l
+
+l
+
+-
+
+).
+1
+
+
+
+
+
+MULTIGRID
+
+n
+ˆ
+d =
+-
+l
+1
+end if
+ˆ
+d
+5. Prolongate correction:
+l
+n
+¢ =
+6. Apply correction:
+l
++
+n
+1f
+7. Postsmooth:
+l
+return l
+end procedure
+
+n 1f + .
+
+f
+=
+
+.
+1
+
+n
+
+l
+= -
+I
+l
+n
++¯
+f
+l
+SMOOTH
+
+n
+ˆ
+d
+-
+l
+1
+n
+ˆ .
+d
+l
+N
+f
+(
+
+¢
+
+n
+l
+
+L,
+
+,
+
+l
+
+f
+l
+
+).
+
+Repeat f
+l
+
+1. Restrict source to coarser levels:
+l
+I
+l
+
+=-
+1
+2. Solve the coarsest level:
+L0,
+COARSEST
+(
+
+f
+l
+
+-
+
+1
+
+,
+
+f
+
+n
+0
+
+).
+
+0
+
+n
+f =
+0
+for l  ﬁnest
+
+for all of the levels.
+
+3. Prolongate solution:
+4. Apply Multigrid:
+
+f
+
+n
+l
+
+= ¢ -
+I
+
+l
+l
+
+1
+
+f
+
+n
+- .
+l
+1
+
+MULTIGRID
+
+=
+
+n
+f
+l
+end for
+end procedure
+
+f
+(
+
+n
+l
+
+,
+
+L
+
+,
+
+l
+
+f
+l
+
+,
+
+l
+
+).
+
+l 1- and Il
+l
+Il
+Here,
+1- are the restriction and prolongation
+operators deﬁned in Section 2.3.1, SMOOTH() and COAR-
+SEST()
+the smoothing operator and coarsest-level solver
+deﬁned in Section 2.3.2, respectively. We apply the smoothing
+operator M times
+for
+postsmoothing on each level, which is called the V(M,N)
+cycle. While Athena++ supports M, N = 0, 1, and 2, we
+typically use the V(1,1) cycle.
+
+for presmoothing and N times
+
+The algorithm applies MULTIGRID() recursively until
+it
+reaches the coarsest level. Note that MULTIGRID() on the
+coarser levels operates not on the potential itself but on the
+defect. This is because the self-gravity Poisson equation is
+linear and therefore the defect equation Equation (8) can be
+the Poisson equation Equation (4). This
+used instead of
+algorithm is called the multigrid correction scheme.
+Starting from an initial guess, we repeat
+
+this iteration
+procedure until a certain convergence threshold is satisﬁed, as
+discussed in Section 2.3.7. The schematic picture of the V-cycle
+multigrid iteration is shown in Figure 2(a).
+
+MULTIGRID() used here is the same as in Algorithm 1. The
+prolongation of
+the FMG
+prolongation) requires a higher-order prolongation operator
+l
+¢ - , which is explained in 2.3.1. The schematic picture of the
+I l
+FMG with the V(1,1) cycles is shown in Figure 2(b).
+
+the solution in the FMG (or
+
+1
+
+Instead,
+
+It is remarkable that the FMG does not require any initial
+guess, compared to the multigrid iteration.
+this
+algorithm fully utilizes the geometric structure to construct
+the initial guess for the ﬁner levels. While we may apply
+MULTIGRID() more than once per
+level, practically one
+application per level is sufﬁcient to achieve the true error of the
+order of the truncation error compared to an analytic solution
+after the full multigrid algorithm. However, the defect and the
+discretized error
+remain considerably large because the
+numerical solution still contains error and noises, and we need
+to apply additional V-cycle iterations to obtain a fully
+converged solution. We discuss
+in
+Section 4.
+
+the error behaviors
+
+2.3.4. Full Multigrid
+The FMG (Brandt 1977) is a more sophisticated algorithm to
+solve the system. In this method, we start from the coarsest
+level where the solution can be easily calculated. The coarse-
+grid solution is prolongated to the ﬁner level, and is used as an
+initial condition for the multigrid iteration to improve the ﬁne-
+grid solution. By repeating this procedure, we can obtain a
+
+2.3.5. Full Approximation Scheme
+
+In the multigrid correction scheme presented above,
+the
+defect equation is solved when the multigrid algorithm is
+applied on the coarser levels. This is efﬁcient because we need
+to restrict only the defect, and not the potential. This is possible
+because the Poisson equation and the defect equation are linear
+and have the same shape as in Equations (4) and (7). However,
+for nonlinear problems, this is not satisﬁed. Also, when we
+
+5
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Tomida & Stone
+
+apply the multigrid methods on the AMR hierarchy, this is not
+applicable because the defect is deﬁned for a certain resolution,
+and mathematical operations between the defects deﬁned on
+different AMR levels are ill-deﬁned.
+
+When mesh reﬁnement is in use (and for future extension to
+nonlinear physical processes), we use the full approximation
+scheme or full approximation storage (FAS; Brandt 1977). In
+FAS, we restrict the potential itself in addition to the defect,
+and solve the original Equation (4) on every multigrid level.
+This is achieved using the following algorithm:
+
+,
+
+l
+
+M
+
+Algorithm 3: Full Approximation Scheme Iteration
+n
+f(
+fL
+procedure FAS
+)
+,
+,
+l
+l
+l
+n
+=¯
+f
+SMOOTH
+1. Presmooth:
+l
+n
+2. Compute defect: d
+f
+l
+l
+l
+n
+=-
+3. Restrict defect: d
+I
+l
+l
+1
+n
+¯
+=-
+f
+4. Restrict potential:
+l
+1
+n
+=
+5. Compute source term: f
+-
+l
+6. Calculate coarse-grid solution:
+if l = 1
+
+n
+f
+(
+l
+nf
+= - ¯
+L
+l
+l
+-
+n
+1
+d
+.
+l
+n
+¯
+-
+l
+1
+f
+I
+l
+l
+n
+d
+-
+l
+
+L,
+.
+
++
+
+).
+
+L
+
+f
+l
+
+-
+
+,
+
+.
+
+1
+
+1
+
+l
+
+l
+
+n
+¯
+1f
+.
+1
+-
+l
+
+6.1 Solve the coarsest level:
+
+n
+ˆ
+y
+0
+
+=
+
+COARSEST
+
+n
+( ¯
+f
+-
+l
+
+L,
+1
+
+,
+
+0
+
+f
+
+n
+0
+
+).
+
+else
+
+6.2 Apply FAS recursively:
+FAS
+,
+1
+
+n
+( ¯
+f
+-
+l
+
+ˆ
+y
+l
+
+n
+-
+
+=
+
+,
+1
+
+L
+
+-
+
+1
+
+l
+
+n
+f
+-
+l
+
+,
+
+l
+
+-
+
+).
+1
+
+1
+
+end if
+7. Compute coarse-grid correction:
+n
+ˆ
+y
+-
+l
+
+ˆ
+d
+l
+
+n
+-
+
+1
+
+=
+
+-
+
+n
+¯
+f
+1
+-
+l
+n
+ˆ
+d
+8.Prolongate correction:
+l
+n
+f
+¢ =
+9. Apply correction:
+l
++
+n
+1f
+=
+10. Postsmooth:
+l
+n 1f + .
+return l
+end procedure
+
+.
+1
+n
+ˆ
+l
+d
+= -
+I
+.
+-
+l
+l
+1
+1
+n
+ˆ .
+n
++¯
+d
+f
+l
+l
+N
+f
+SMOOTH
+(
+
+¢
+
+n
+l
+
+L,
+
+,
+
+l
+
+f
+l
+
+).
+
+This scheme is equivalent to the multigrid correction scheme
+for a linear system on uniform grid. Compared to the multigrid
+correction scheme, this scheme requires additional computa-
+tions for restriction of the potential, calculation of the RHS, and
+calculation of coarse-grid correction. However, the restriction
+is relatively less expensive, and the other additional computa-
+tions are needed only on coarser levels that have far fewer cells.
+Therefore, the additional cost from FAS is moderate. The FAS
+version of the FMG is obtained by replacing MULTIGRID()
+with FAS() in Algorithm 2.
+
+2.3.6. Boundary Conditions
+
+Boundary conditions are required for
+
+the smoothing
+operations and prolongation operations on every level of the
+multigrid hierarchy. The multigrid methods are compatible
+with various boundary conditions, and we have implemented
+periodic, zero-gradient, zero-ﬁxed boundary conditions as well
+as isolated boundary conditions using a multipole expansion in
+Athena++. An interface to enroll user-deﬁned boundary
+conditions is also provided. The implementation of
+the
+multipole expansion is described in Appendix A.
+
+the multigrid correction method, speciﬁed physical
+boundary conditions are applied on the ﬁnest level, and zero-
+ﬁxed boundary conditions are used for the defect equation on
+the coarser levels unless periodic boundary conditions are
+speciﬁed. When FAS is in use, we need to apply physical
+boundary conditions at every level consistently.
+
+In Athena++, the boundary conditions are set in the ghost
+cells (whereas the other cells that are updated by the solvers are
+
+For
+
+called “active cells”). For periodic and zero-gradient boundary
+conditions, the boundary values are set at cell centers of the
+isolated or ﬁxed) boundary
+ghost cells. When other (e.g.,
+conditions are speciﬁed, we set the ghost cell values so that the
+value on the surface of the computing domain match the
+speciﬁed boundary values. This is because the cell-center
+positions of the ghost cells shift between levels.
+
+Because the potential appears only within the Laplacian
+operator in the Poisson Equation (1), the zero-point of the
+potential is arbitrary. If at least one of the boundary conditions
+contains a ﬁxed value, it sets the zero-point. For the multipole
+expansion, it is natural to set it to zero at inﬁnity. If all of the
+boundary conditions do not set any ﬁxed value (e.g., all of the
+boundaries are periodic or zero-gradient), a Poisson solver
+cannot ﬁnd the zero-point by itself. In this case, we use the
+deviations from the averages of the source function and the
+potential, δf = f −〈f〉 and δf = f −〈f〉 where 〈u〉 is the volume
+average of u. The Poisson equation retains the same shape as
+∇2δf = δf, but now we set the potential zero-point to zero so
+that the average of the potential is 〈δf〉 = 0.
+
+2.3.7. Convergence Criterion
+In Athena++, two iteration modes are available. In the FMG
+mode, the FMG is used ﬁrst, and then V-cycle iterations are
+applied to improve the solution. In the MGI mode, one has to
+provide an initial guess, and V-cycle iterations are applied
+repeatedly. In practical hydrodynamic simulations, one can use
+the potential from the previous time step as the initial guess, but
+usually it is not as good as the numerical solution after one
+sweep of the FMG. In general, we recommend the FMG mode
+because it requires no initial guess and performs better in most
+cases, as shown in Section 4.
+
+In both modes, the V-cycle iteration is repeated until a certain
+convergence threshold is met or until convergence saturates
+and the error reduction stalls. As the discretized error (5) and
+true error (6) are unknown beforehand, we use the defect (7) as
+the convergence threshold. Speciﬁcally, we use the volume-
+averaged rms of the defect:
+
+n
+
+d
+
+=
+
+d
+∣
+
+n
+i j k
+, ,
+
+2
+∣
+
+D
+
+V
+i j k
+, ,
+
+å
+i j k
+, ,
+
+D
+
+V
+i j k
+, ,
+
+å
+i j k
+, ,
+
+,
+
++
+
+d
+
+n
+i j k
+, ,
+
+=
+
+4
+
+p r
+G
+
+i j k
+, ,
+
+-
+
+(
+
+f
+
++
+
+f
+
+n
+i j
+,
+
++
+
+1,
+
+k
+
++
+
+f
+
+n
+-
+i
+n
+i j k
+, ,
+
++
+
+f
+
+j k
+1, ,
+
+j k
+1, ,
+
++
+
+f
+
+-
+
+1
+
+-
+
+6
+
++
+
+1
+
+n
++
+i
+n
+i j k
+, ,
+
+f
+
+n
+-
+i j
+,
+n
+f
+i j k
+, ,
+
+k
+1,
+)
+
+(
+
+20
+
+)
+
+2
+
+h
+
+,
+
+(
+
+21
+
+)
+
+where ΔVi,j,k is the volume of each cell, and the summation is
+over all of the cells in the computing domain. Here, the defect
+is calculated on the ﬁnest (unrestricted) level. Once this value
+gets smaller than a user-speciﬁed threshold, the code stops. A
+user has to carefully specify a reasonably small threshold value
+for this, or set it to zero to repeat the iteration until convergence
+saturates. Alternatively, one can use a ﬁxed number of
+iterations if it is possible to determine the number of iterations
+needed to achieve the demanded accuracy. Because the
+demanded accuracy and corresponding defect threshold depend
+on problems, there is no threshold value that can be used
+universally. We recommend that users try a few different
+parameters to determine the convergence threshold before
+starting a production run.
+
+6
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Tomida & Stone
+
+3. Numerical Implementation
+In this section, we ﬁrst review relevant features of the Athena++
+code brieﬂy (Section 3.1). Then we present our implementations of
+the multigrid solvers on uniform grids (Section 3.2) and with AMR
+(Section 3.3). Lastly, we discuss the cost of the multigrid solvers in
+Section 3.4.
+
+3.1. Brief Review of Athena++
+Athena++ (Stone et al. 2020) is a public AMR framework
+supporting various physical processes and features for astro-
+physical applications,
+including nonuniform mesh spacing,
+Cartesian and curvilinear coordinates, static and AMR, MHD,
+special and general relativity (White et al. 2016), chemical
+reactions, general equations of state (Coleman 2020), particles
+(C.-C. Yang et al. 2023, in preparation), shearing box and
+orbital advection (T. Ono et al. 2023, in preparation), nonideal
+MHD effects and other diffusion processes, as well as other
+physics. Beyond the public version, various extensions such as
+cosmic-ray transport (Armillotta et al. 2021), time-dependent
+(Jiang 2021), postprocessing general
+radiation transport
+relativistic radiation transport (White 2022), and full general
+relativity (Daszuta et al. 2021) are being actively developed in
+the community as well. For self-gravity, there is already an
+implementation based on FFTs for uniform grids (developed by
+C.-G. Kim). The code is publicly available on GitHub, and
+documentation and a tutorial are available on the website.3
+
+Athena++ is parallelized using the standard domain
+decomposition technique using Message Passing Interface
+(MPI) and OpenMP. The computing domain is split into units
+called MeshBlocks, each of the same logical size (i.e.,
+containing the same number of cells). In Athena++, MPI
+processes and OpenMP threads are almost equivalent; each
+process or thread owns one or more MeshBlocks. Each
+MeshBlock has additional ghost cells at each boundaries for
+communication between MeshBlocks and also for physical
+boundary conditions. The ghost cell data are transferred via
+MPI messages or memory copy depending on whether they are
+on the same MPI process or not.
+
+Athena++ adopts an octree-block-based AMR design. In
+this design, a MeshBlock is not only the domain decom-
+position unit for parallelization but also the unit for mesh
+reﬁnement. When a MeshBlock is reﬁned, it is split into eight
+ﬁner MeshBlocks in three dimensions. Neighboring Mesh-
+Blocks are also reﬁned so that only MeshBlocks on the
+same level or one level different contact each other. This design
+is computationally efﬁcient, because all of the MeshBlocks
+are logically uniform grids of the same shape, and highly
+optimized codes for uniform grids can be applied. The design
+also works well for parallelization because only a few simple
+patterns for communication between MeshBlocks need to be
+considered. We use the Z-ordering to assign globally unique
+IDs to MeshBlocks, and distribute them as evenly as possible
+for parallelization.
+
+One of unique designs of Athena++ is dynamical schedul-
+ing using a TaskList. The simulation program is split into
+small Tasks with associated dependencies, which are then
+assembled into a TaskList. Normally Tasks are processed
+sequentially from the beginning of a TaskList, but when the
+code has to wait for communication associated with a particular
+
+3 https://www.athena-astro.app/
+
+7
+
+Task to arrive, it automatically processes the next Tasks in
+the TaskList that do not depend on the communication. This
+enables overlapping of computation and communication
+automatically. In addition, as this design separates logic within
+each physics module and relation between modules,
+it
+improves ﬂexibility and modularity of the design.
+
+Athena++ uses uniform time-stepping even when AMR is
+in use. This means that all MeshBlocks on all levels share the
+same time step. While this method does not minimize the
+number of operations, it often is the most efﬁcient because it
+does not require complicated scheduling and load-balancing
+logic nor synchronization between AMR levels, and paralle-
+lization is straightforward. Moreover, nonlocal physics such as
+self-gravity and radiation transport with an implicit
+time
+integrator are captured more accurately since the solution at
+every level is at the same time, and temporal interpolation is
+not necessary. Thus, the uniform time-stepping as adopted in
+Athena++ is advantageous for applications involving nonlocal
+physics. For complete details of Athena++, we refer readers to
+the method paper (Stone et al. 2020). In particular, the design
+of the AMR framework is discussed in Section 2.1, and the
+TaskList implementation is in Section 2.5.
+
+3.2. Uniform Grid
+
+We ﬁrst describe our
+
+the multigrid
+methods on uniform grids in this section. Our implementation
+does not depend on any external library (except for MPI), and
+the code is written in C++11.
+
+implementation of
+
+3.2.1. Multigrid Hierarchy and Data Structure
+
+We decompose the computational domain using the same
+MeshBlocks as in the main (hydrodynamics or MHD) part.
+Because we apply the restriction and prolongation operators on
+each MeshBlock, each MeshBlock has to be logically
+cubic, and the number of active cells in each direction must be
+a power of two, i.e., (nx, ny, nz) = (2n, 2n, 2n). This is more
+restrictive than the AMR of Athena++. However, there is no
+limitation in the number of MeshBlocks in each direction.
+We deﬁne the coarsest level where the grid cannot be restricted
+anymore as level 0. Let (Nl,x, Nl,y, Nl,z) correspond to the
+numbers of cells in each direction on level l. If the number of
+then (Nl,x, Nl,y,
+cells on level 0 is
+Nl,z) = (2lN0,x, 2lN0,y, 2lN0,z). There is a certain level m where
+the number of the cells matches the number of the Mesh-
+Blocks (Nm,x, Nm,y, Nm,z) = (NMB,x, NMB,y, NMB,z). In total
+there are L = m + n levels, and the total number of cells in each
+direction is (Nx, Ny, Nz) = (2nNMB,x, 2nNMB,y, 2nNMB,z) =
+(2m+nN0,x, 2m+nN0,y, 2m+nN0,z), where NMB is the number of
+MeshBlocks in each direction.
+
+(N0,x, N0,y, N0,z),
+
+The potential, source function, and defect on levels from m
+to m + n are stored as multidimensional arrays in Multigrid
+class in each MeshBlock. On the other hand, those data on
+levels from 0 to m are stored in a separate Multigrid class,
+which we call RootGrids. In addition to the active cells,
+ghost cells are allocated on each side of the Multigrids for
+communication with neighboring Multigrids. For self-
+gravity, we need only one layer of the ghost cells, NG = 1.
+When FAS is in use, additional storage is allocated for the
+restricted potential on coarser levels. The data on level m are
+stored both in RootGrids and Multigrid for communica-
+tion and synchronization between these objects. Note that each
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Multigrid object contains only 1 × 1 × 1 cell on level m.
+Hereafter, we refer levels 0 to m as RootGrid levels and
+m + 1 to m + n as MeshBlock levels.
+
+3.2.2. V-cycle Algorithm on Uniform Grid
+
+In the V-cycle algorithm, we start the iteration procedure
+from the ﬁnest level, whose data are stored in Multigrids.
+To start up the algorithm, the source function f is calculated
+using the mass density loaded from the MeshBlocks, and the
+initial guess f0 is loaded into the potential data.
+
+As in Algorithm 1, each iteration starts with presmoothing
+using the RBGS smoother. We then calculate the defect d,
+restrict it, and transfer it to the coarser level. This procedure is
+it reaches level m, where each
+repeated recursively until
+MeshBlock is restricted to 1 × 1 × 1 cell and cannot be
+restricted any further. At this point, the data on level m are
+collected from all of the Multigrids and transferred to the
+array on level m in RootGrids. Then, the recursion continues
+to the RootGrid levels until it reaches the coarsest level 0.
+The coarsest level solution is easily obtained using the coarsest-
+level solver described in Section 2.3.2 because there are only a
+few degrees of freedom.
+
+level m where
+
+Then, the correction on the coarse level is prolongated into
+the ﬁner level. After adding the correction, we apply the RBGS
+smoother for postsmoothing. This procedure is repeated until it
+reaches
+the data are transferred from
+RootGrids to Multigrids, then continues to the ﬁnest
+level m + n. This completes one iteration of the V-cycle
+algorithm.
+After
+
+average defect of
+the
+Equation (20)
+is computed and compared with a given
+convergence threshold. Once the convergence criterion dis-
+cussed in Section 2.3.7 is satisﬁed, the algorithm is completed
+and returns the potential as the result. The potential is then used
+in the hydrodynamics or MHD part to calculate the gravita-
+tional acceleration.
+
+each V-cycle
+
+iteration,
+
+The logic remains almost the same even with FAS enabled.
+In this case, the potential is also restricted along with the defect,
+and additional computations of
+the RHS and coarse-grid
+correction are performed accordingly.
+
+3.2.3. Time Integration of Hydrodynamic Source Terms
+
+The time integration of the hydrodynamics or MHD part is
+done in the main integrator of Athena++, which is either the
+second-order van Leer, second-order Runge–Kutta, or third-
+order Runge–Kutta. The integration procedure is processed
+using TaskList, but the multigrid solver is implemented
+using a separate TaskList from the main integrator. In every
+substep, we load the density given from the time integrator to
+the multigrid module,
+run the multigrid solver, pass the
+potential back to the hydrodynamics/MHD module, and run
+the main integrator. This is not
+the most cost-effective
+implementation as it requires a multigrid solve for each substep
+of the integrator, but it is simple and compatible with any time
+integrator.
+
+The momentum and energy source terms by the gravitational
+force are calculated using the cell-centered source term scheme
+(Mullen et al. 2021). For example, the momentum source term
+
+in the x-direction is
+
+Tomida & Stone
+
+g
+x i
+,
+
+-
+
+j k
+1 2, ,
+
+= -
+
+g
+x i
+,
+
++
+
+j k
+1 2, ,
+
+= -
+
+f
+
+i j k
+, ,
+
+-
+
+f
+i
+
+-
+
+j k
+1, ,
+
+f
+i
+
++
+
+j k
+1, ,
+
+h
+-
+
+h
+
+f
+
+i j k
+, ,
+
+,
+
+,
+
+g
+x i j k
+, , ,
+
+=
+
+g
+x i
+,
+
+-
+
+j k
+1 2, ,
+
++
+
+g
+x i
+,
+
++
+
+j k
+1 2, ,
+
+2
+
+,
+
+(
+
+r
+g
+
+)
+x i j k
+, , ,
+
+=
+
+r
+g
+i j k x i j k
+, , ,
+, ,
+
+,
+
+and the energy source term is
+
+)
+i j k
+, ,
+
+(
+
+r
+
+=
+
+[(
+
+v g
+·
+1
+2
+1
+2
+1
+2
+
+[(
+
+[(
+
++
+
++
+
+r
+v
+
+)
+x i
+,
+
+-
+
+1 2, ,
+
+g
+j k x i
+,
+
+-
+
+j k
+1 2, ,
+
++
+
+(
+
+r
+v
+
+)
+x i
+,
+
++
+
+1 2, ,
+
+g
+j k x i
+,
+
++
+
+j k
+1 2, ,
+
+]
+
+r
+v
+
+)
+
+y i j
+, ,
+
+-
+
+1 2,
+
+g
+k y i j
+, ,
+
+-
+
+1 2,
+
+k
+
++
+
+(
+
+r
+v
+
+)
+
+y i j
+, ,
+
++
+
+1 2,
+
+g
+k y i j
+, ,
+
++
+
+1 2,
+
+k
+
+]
+
+r
+v
+
+)
+z i j k
+, , ,
+
+-
+
+1 2
+
+g
+z i j k
+, , ,
+
+-
+
+1 2
+
++
+
+(
+
+r
+v
+
+)
+z i j k
+, , ,
+
++
+
+1 2
+
+g
+z i j k
+, , ,
+
++
+
+1 2
+
+]
+
+,
+
+(
+
+22
+
+)
+
+where (ρv)x,i+1/2,j,k, etc. is the mass ﬂux at the cell interface
+returned from a Riemann solver. This implementation is curl-
+free, contrary to the implementation using the gravitational ﬂux
+(e.g., Jiang et al. 2013).4 On the other hand,
+time
+integration, we simply use one of the standard integrators in
+Athena++ and we do not use the conservative scheme for the
+energy term proposed in Mullen et al. (2021). Therefore, our
+scheme does not exactly conserve the energy, only to the
+accuracy of
+It should be noted that both
+momentum and energy are not conserved exactly to the
+in the
+round-off error because there is nonzero residual
+potential obtained with the multigrid solver in general.
+
+the scheme.
+
+for
+
+it
+
+Technically,
+
+is possible to combine the self-gravity
+TaskList and hydrodynamics/MHD TaskList and max-
+imize communication-computation overlapping. The reason
+why we implement the self-gravity as a separate TaskList
+from the main integrator is partly for simplicity, but also for
+future extension to heterogeneous parallelization,
+in which
+some nodes process self-gravity while other nodes work on
+other physical processes. Because the multigrid solver is less
+scalable than the MHD solver as shown later in Section 4, such
+an advanced parallelization technique could be useful in the
+future to improve the overall parallelization efﬁciency.
+
+3.2.4. FMG Algorithm on Uniform Grid
+
+The implementation of FMG is straightforward on top of the
+V-cycle algorithm. First, the source function is restricted from
+the ﬁnest levels to the coarsest levels and stored on each level.
+Then, we start the algorithm from the coarsest level. On the
+coarsest level, the solution is obtained either analytically or by
+using a few sweeps of the iterative solver. Then, this solution is
+prolongated using the third-order tricubic interpolation to the
+ﬁner level. Using the prolongated solution as the initial guess,
+the V-cycle algorithm is applied to improve the solution on this
+level. We repeat this procedure until it reaches the ﬁnest level,
+as shown in Figure 2(b). Once the solution on the ﬁnest level is
+
+4 A curl-free implementation based on the gravitational ﬂux is proposed in
+Mullen et al. (2021).
+
+8
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Tomida & Stone
+
+obtained, we apply the V-cycle repeatedly to improve its
+accuracy until the convergence criterion is satisﬁed.
+
+3.2.5. Parallelization
+
+In order to run large-scale simulations on modern super-
+computers, parallelization is of crucial importance. Because
+trivial once the V-cycle is
+parallelization of FMG is
+parallelized, we describe the parallelization of the V-cycle
+algorithm here.
+
+in Athena++,
+
+As in the hydrodynamic/MHD part
+
+the
+multigrid solver is parallelized using both MPI and OpenMP.
+When parallelization is enabled, each MPI process (or OpenMP
+thread in case OpenMP or hybrid parallelization is in use) owns
+one or more MeshBlocks and associated Multigrids. The
+data on the MeshBlock levels are stored in Multigrids
+and distributed to each process. Parallelization in the Mesh-
+Block levels is similar to the hydrodynamic/MHD part. The
+data on the boundaries are transferred to and from neighboring
+Multigrids through the ghost cells before the smoothing
+and prolongation operations. For the RBGS smoother,
+the
+boundaries are communicated before each sweep of red and
+black. Using TaskList, computations and communications
+are automatically overlapped.
+
+Once the algorithm reaches the transition level m where each
+Multigrid is reduced to a single cell, the data on this level
+are collected and transferred to RootGrids on every MPI
+rank using MPI_Allgather5. Then, every rank performs the
+multigrid algorithm on the RootGrid levels. Once it comes
+back to level m,
+then the data are transferred to each
+Multigrid. Then, again each MPI process or OpenMP
+thread calculates the assigned Multigrids.
+
+3.3. Mesh Reﬁnement
+
+We do not discuss generation, destruction, or load-balancing
+of MeshBlocks here because these processes are unchanged
+by the addition of multigrid, and are controlled by the AMR
+framework of Athena++. For details, see the method paper
+(Stone et al. 2020).
+
+There are, however, two major changes to the multigrid
+algorithm itself with mesh reﬁnement. One is manipulation of
+the reﬁned Multigrids on coarse levels, and the other is
+boundary communication between neighboring Multigrids
+on different levels.
+
+3.3.1. V-Cycle Algorithm on AMR Hierarchy
+
+An example of
+
+the multigrid operations on an AMR
+hierarchy is shown in Figure 3. Compared to the uniform grid,
+there are additional levels where reﬁned MeshBlocks are
+inserted as shown in panels (c) and (d). We refer to these levels
+as Octet levels. Because of the octree AMR design of Athena
+++, a MeshBlock is always reﬁned into a set of 2 × 2 × 2
+ﬁner MeshBlocks in three dimensions (2 × 2 in two dimen-
+sions). We call this set Octet in Athena++, and we perform
+the smoothing, restriction, and prolongation operations on each
+Octet. Similar
+source
+function, and defect data are allocated in each Octet object,
+
+to Multigrids,
+
+the potential,
+
+5 Logically, this implementation is the same as collecting the data into one
+MPI rank with MPI_Gather, processing the RootGrids, then distributing the
+data back to Multigrids with MPI_Scatter. However, we chose our
+implementation considering that one MPI_Allgather requires less synchroniza-
+tion than the combination of MPI_Gather and MPI_Scatter.
+
+9
+
+which contains 2 × 2 × 2 cells and ghost cells on each side for
+boundary communications. The relations between the ﬁner and
+coarser MeshBlocks/Octets as well as the connections
+between neighboring MeshBlocks/Octets are calculated
+using the MeshBlockTree facility in Athena++.
+
+When AMR is enabled, FAS is used as discussed in
+Section 2.3.5. The algorithm on the MeshBlock levels is not
+very different from the uniform grid case. Starting from the
+ﬁnest level, it goes up the multigrid levels toward the coarser
+levels (Figures 3(f)–(e)). The level boundaries are described in
+the next section.
+
+When it reaches the level where each MeshBlock is
+reduced to a single cell (Figure 3(d)), the data on Multi-
+grids that are not reﬁned are directly transferred to the
+RootGrids, while the data on Multigrids generated by
+reﬁnement are transferred to the corresponding cells in
+Octets. Then we apply smoothing on the Octets on the
+ﬁnest level and restrict them to the coarser levels (Figures 3(d)–
+(b)). For this smoothing operation, the boundaries contacting
+other Octets on the same level are actively updated, while
+the boundaries facing the coarser level are given as ﬁxed
+boundary values prolongated from the coarser level. Once all of
+the Octet levels are removed by repeating this procedure, the
+data are transferred to the corresponding cells
+in the
+RootGrids. Then,
+the algorithm continues toward the
+coarsest level as in the uniform grid case (Figures 3(b)–(a)).
+
+level,
+
+Once it reaches the coarsest
+
+the solution on the
+coarsest level is calculated in the same way as in the uniform
+grid case. Then the algorithm goes back to the ﬁner levels by
+prolongation (Figures 3(a)–(b)). When it reaches the ﬁrst
+Octet level, the Octets on the ﬁrst level are generated by
+prolonging the corresponding cells on the RootGrids, and
+then the smoothing operator is applied on the newly generated
+Octets (Figure 3(c)). This procedure is repeated toward the
+ﬁner Octet levels (Figures 3(c)–(d)). When it comes back to
+the MeshBlock level, the data are transferred to Multi-
+grids, and then they are prolongated and smoothed
+recursively until they reach the ﬁnest level (Figures 3(e)–(f)).
+This completes one V-cycle iteration on an AMR hierarchy.
+
+We note that in some implementations of self-gravity solvers
+described in the literature (e.g., Kravtsov et al. 1997; Guillet &
+Teyssier 2011; Bryan et al. 2014; Ramsey et al. 2018), each
+reﬁned level is solved separately using the coarser level data as
+boundary conditions. However, such a level-by-level or block-
+by-block approach is not self-consistent as the coarse level
+solutions do not incorporate small-scale structure on the ﬁner
+levels, which then implies the ﬁner-level solutions are not
+accurate because the boundary conditions obtained from the
+coarser
+the iteration
+algorithm on AMR meshes used here solves the Poisson
+equation across all of the reﬁnement levels consistently. We
+present a rough comparison between these approaches in
+Appendix B.
+
+levels are not correct.
+
+In contrast,
+
+Since FMG is built on top of the V-cycle algorithm, its
+implementation is straightforward once the V-cycle with mesh
+reﬁnement
+is implemented. Parallelization of the multigrid
+algorithm with mesh reﬁnement
+is similar to the uniform
+grid case.
+
+Our iteration algorithm on AMR is slightly different from
+what is proposed in Trottenberg et al. (2001). In the ﬁrst part of
+the V-cycle algorithm, we restrict all of the Multigrids until
+they are reduced to a single cell and then remove them. In
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Tomida & Stone
+
+Figure 3. An example of a multigrid level hierarchy with mesh reﬁnement in two dimensions. Thick tiles represent Multigrids (associated with MeshBlocks)
+and Octets, while thin tiles are cells within each Multigrid. (a) Level 0 consisting of 4 × 3 cells. (b) Level 1 with 8 × 6 cells. (c) Level 2 with the ﬁrst level of
+Octets. (d) Level 3 with the second reﬁnement level of Octets. (e) Level 4 where each Multigrid is reﬁned to 2 × 2 cells. (f) Level 5 with Multigrids
+consisting of 4 × 4 cells.
+
+contrast, with the method of Trottenberg et al. (2001), locally
+reﬁned Multigrids are removed ﬁrst. We chose this design
+because our implementation can maintain load balance better,
+since the number of Multigrids remains the same until it
+reaches the Octet levels.
+
+3.3.2. Level Boundaries
+
+On the MeshBlock and Octet levels, Multigrids and
+Octets on different levels contact each other. In this section,
+we refer to MeshBlocks and Octets as Blocks, as the
+boundary operations are the same. It is of crucial importance
+for the AMR multigrid solver to consistently connect such level
+boundaries. In Athena++, this is done by properly computing
+the ghost cell values at level boundaries. For this purpose, we
+adopt a method similar to those proposed in Feng et al. (2018).
+level boundaries. One adopts a
+We use two types of
+conservative formulation and is used for
+the boundary
+communications before smoothing operations and force calc-
+ulation, while the other is a simpler “normal” level boundary
+used before the prolongation operations. While the hydro-
+dynamic/MHD part of Athena++ requires two or more layers
+of the ghost cells (depending on the spatial order of the
+reconstruction methods),
+the second-order multigrid solver
+implemented here uses only one ghost cell layer even with
+AMR, because the discretized Laplacian operator (3) spans a
+seven-point stencil in three dimensions.
+
+In order
+
+Conservative Formulation.
+
+the Laplacian
+operator to be accurate at level boundaries, the gravitational
+acceleration at cell interfaces at level boundaries must be the
+same for both the ﬁne and coarse grids. For example, on the left
+surface in the x-direction, the following condition must be
+
+for
+
+satisﬁed:
+
+f
+
+I J K
+,
+,
+s
+
+-
+
+f
+
+I
+s
+
+-
+
+1,
+
+J K
+,
+
+h
+2
+1
+1
+å å
+= =
+b
+a
+0
+0
+
+1
+4
+
+=
+
+f
+
+i
+s
+
+,
+
++ +
+j a k b
+,
+
+-
+
+f
+
+i
+s
+
+h
+
+- + +
+
+j a k b
+,
+
+1,
+
+,
+
+(
+
+23
+
+)
+
+where Is and is are the x-indexes of the ﬁrst cells on the coarser
+and ﬁner levels, J, K and j, k are the y- and z-indexes of the
+corresponding cells on the coarser and ﬁner levels, and h is the
+resolution on the ﬁner level. Note that this operation as well as
+the following computations should be replaced with area-
+weighted average or appropriately weighted interpolations if
+the grid spacing is not uniform and isotropic. Note that the
+constraint expressed by Equation (23) enforces the truncation
+error in the calculation of the gradient to be divergence-free,
+which is equivalent to preventing an artiﬁcial or “fake” mass at
+the boundary. Note that the AMR algorithms used to integrate
+the MHD equations also require ﬂux-corrections at ﬁne/coarse
+boundaries in order to conserve quantities such as mass and
+momentum; however, with multigrid it is possible to adopt the
+appropriate difference formulae that satisfy conservation by
+their construction without any additional correction steps.
+
+As an example, let us consider a conﬁguration illustrated in
+Figure 4(a) and explain the level boundaries contacting in the
+x-direction at i = is −1/2 and I = Is −1/2, but generalization to
+other conﬁguration is straightforward. Here after
+the cell
+indices on the coarser and ﬁner levels are represented using the
+capital and lowercase letters, and without any speciﬁc
+description, a coarse cell at I, J, K corresponds to ﬁner cells
+with indices i, j, k and adjacent cells.
+
+10
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Tomida & Stone
+
+Figure 4. Two-dimensional illustration of the ghost cell interpolation methods using (a) the mass-conservation formula and (b) normal interpolation. Thick lines
+indicate the boundaries between Blocks. The Block on the top-left corner is on the coarser level, while the other Blocks are on the ﬁner level. Thin solid lines
+indicate active cells, while thin dotted lines indicate ghost cells. Open/ﬁlled circles are active/ghost cells on the coarse level, while open/ﬁlled squares are active/
+ghost cells on the ﬁner level. Open triangles are active cells on the ﬁner level used only for calculating restricted potential. (a) The ghost cell values are calculated so
+that the area-averaged gradients across the level boundaries match using the mass-conservation formula. (b) The ghost cell values are calculated using the trilinear
+prolongation and volume-weighted restriction operators. See the text for details.
+
+First, we restrict the potential in the ﬁrst active cells on the
+ﬁner level facing the coarser neighbor (open squares) using the
+area-weighted average,
+
+f
+
+i J K
+,
+,
+s
+
+=
+
+1
+4
+
+1
+1
+å å
+= =
+b
+a
+0
+0
+
+f
+
+i
+s
+
+,
+
++ +
+j a k b
+,
+
+,
+
+and send them to the coarser neighbor (black plus symbols). At
+the same time, we send the potential in the ﬁrst active cells on
+the coarser level to the ﬁner neighbor. The ﬁrst active cells
+from the neighbors contacting on edges and corners are also
+sent to the ﬁner neighbor as we need them later to calculate the
+transverse gradients. If these edge or corner neighbors are on
+the same level as the ﬁner neighbor, we send restricted values
+as well (e.g.,
+the ﬁlled circle at Is −1, Js −1 obtained by
+restricting the adjacent open squares and triangles).
+
+Once the communications are completed, on the process that
+owns the ﬁner Block, we calculate the transverse gradients on
+the coarser level:
+
+D
+
+y I
+,
+s
+
+-
+
+1,
+
+J K
+,
+
+=
+
+D
+
+z I
+,
+s
+
+-
+
+1,
+
+J K
+,
+
+=
+
+f
+
+f
+
+I
+s
+
+- +
+J
+1,
+
+1,
+
+K
+
+I
+s
+
+-
+
+1,
+
+J K
+,
+
++
+
+1
+
+-
+
+f
+
+f
+
+h
+2
+-
+
+2
+
+h
+
+I
+s
+
+- -
+J
+1,
+
+1,
+
+K
+
+I
+s
+
+-
+
+1,
+
+J K
+,
+
+-
+
+1
+
+,
+
+.
+
+(
+
+24
+
+)
+
+Using these gradients, we interpolate the potential to the points
+aligned to the cell centers of the ﬁner level (black crosses):
+
+f
+
+I
+s
+
+-
+
+j k
+1, ,
+
+=
+
+f
+
+I
+s
+
+-
+
+1,
+
+J K
+,
+
+f
+
+f
+
+I
+s
+
+- +
+j
+1,
+
+1,
+
+k
+
+=
+
+f
+
+I
+s
+
+-
+
+1,
+
+J K
+,
+
+I
+s
+
+-
+
+j k
+1, ,
+
++
+
+1
+
+=
+
+f
+
+I
+s
+
+-
+
+1,
+
+J K
+,
+
+f
+
+I
+s
+
+- + +
+
+1,
+
+1,
+
+k
+
+j
+
+=
+
+f
+
+1
+
+I
+s
+
+-
+
+1,
+
+J K
+,
+
+-
+
++
+
+-
+
++
+
+h
+2
+h
+2
+h
+2
+h
+2
+
+D
+
+y I
+,
+s
+
+-
+
+1,
+
+J K
+,
+
+-
+
+D
+
+y I
+,
+s
+
+-
+
+1,
+
+J K
+,
+
+-
+
+D
+
+y I
+,
+s
+
+-
+
+1,
+
+J K
+,
+
++
+
+D
+
+y I
+,
+s
+
+-
+
+1,
+
+J K
+,
+
++
+
+h
+2
+h
+2
+h
+2
+h
+2
+
+D
+
+z I
+,
+s
+
+-
+
+1,
+
+J K
+,
+
+D
+
+z I
+,
+s
+
+-
+
+1,
+
+J K
+,
+
+D
+
+z I
+,
+s
+
+-
+
+1,
+
+J K
+,
+
+D
+
+z I
+,
+s
+
+-
+
+1,
+
+J K
+,
+
+,
+
+,
+
+,
+
+.
+
+(
+
+25
+
+)
+
+11
+
+Note that the average potential of these four points is equal to
+the coarse potential
+. Then, by interpolation between
+these points (black crosses) and the ﬁrst active cells (white
+squares), we calculate the ghost cell values on the ﬁner Block
+(ﬁlled squares)
+
+f -
+I
+s
+
+J K1,
+,
+
+f
+
+i
+s
+
+- + +
+
+j a k b
+,
+
+1,
+
+=
+
+1
+3
+
+f
+
+i
+s
+
+,
+
++ +
+j a k b
+,
+
++
+
+2
+3
+
+f
+
+I
+s
+
+- + +
+
+j a k b
+,
+
+1,
+
+,
+
+(
+
+26
+
+)
+
+where a and b are 0 or 1. At the same time, on the process that
+owns the coarser Block, we calculate the ghost values at the
+cell centers (ﬁlled circles) by extrapolating the gradient
+between the active cell centers (open circles) and the points
+received from the ﬁner Block (black plus symbols):
+
+f
+
+I J K
+,
+,
+s
+
+=
+
+4
+3
+
+f
+
+i J K
+,
+,
+s
+
+-
+
+1
+3
+
+f
+
+I
+s
+
+-
+
+1,
+
+J K
+,
+
+.
+
+(
+
+27
+
+)
+
+The gradients used in the interpolation on the ﬁner
+level
+(Equation (26)) are calculated between the black crosses and
+open squares. On the other hand,
+the gradients used in the
+extrapolation on the coarser level (Equation (27)) are calculated
+between the open circles and black plus symbols. Across each cell
+interface, the average of the gradients on the ﬁner level matches
+the gradient on the coarser level. Therefore, these ghost values
+satisfy the mass-conservation condition (Equation (23)).
+In
+addition, this scheme requires minimum communications, only
+one set of the communications, which are mutually independent.
+When a coarser cell is facing more than one ﬁner Blocks,
+prolongated ghost cells contacting the ﬁner neighbors have
+multiple values for each ﬁner neighbor. Such cells are called
+double (or triple if,
+is on the corner facing three ﬁner
+neighbors) ghost cells (the orange square in Figure 4). They do
+not cause any problems for the smoothing operations and force
+calculations, but we need a different method for boundary
+conditions for the prolongation operation, as the prolongation
+requires a consistent and unique value even in double ghost
+cells.
+
+it
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Tomida & Stone
+
+Although we use the same RBGS smoother even with AMR,
+it should be noted that the red-and-black pattern cannot be
+satisﬁed at level boundaries because one coarse cell faces four
+ﬁner cells, which include two red and two black cells. We
+simply update all of the ghost cells at the level boundaries after
+each smoothing operation.
+
+Feng et al. (2018) used a different method in order to
+calculate the ghost cell values of the ﬁner Block (ﬁlled
+squares). In their ! stencil (see Figure 4 in Feng et al. 2018),
+extrapolation of the transverse gradients of the ﬁrst active cells
+(open squares) in the ﬁner Block is used instead of the
+interpolation in Equation (24).
+scheme
+(Equations (24)–(26)) corresponds to the Π stencil in their
+paper. We ﬁnd some cases where the Π stencil behaves better,
+because the extrapolated transverse gradients used in the !
+stencil can be considerably different from actual ones.
+
+In contrast, our
+
+Normal
+
+Interpolation. For
+
+the prolongation operations
+including the higher-order interpolation in the FMG algorithm,
+we adopt a different boundary condition. This is because we
+need to ﬁll the ghost cells not only from the face neighbors but
+also the edge and corner neighbors, as the prolongation requires
+a larger stencil (3 × 3 × 3 cells) than the Laplacian operator
+(Figure 1). For this purpose, we simply calculate the ghost cells
+at
+the level boundaries using the same restriction and
+prolongation operations in the multigrid algorithm itself
+because the boundary conditions for the prolongation do not
+require the conservative formulation described above.
+
+The interpolation procedure is illustrated in Figure 4(b). For the
+ghost cells on the coarser Blocks, the active cells facing the level
+boundaries (open squares) on the ﬁner level are restricted using
+Equation (17), then sent to the ghost cells in the coarser Blocks
+(ﬁlled circles). At the same time, the active cells on the coarser
+Blocks facing the ﬁner level (open circles) are sent to the ﬁner
+Blocks. If some of the neighbors needed for the prolongation are
+on the ﬁner level, those data are also restricted (ﬁlled circles).
+These data on the coarser level are prolongated using the trilinear
+prolongation operator (Equation (18), blue arrows) into the ghost
+cells in the ﬁner Blocks (ﬁlled squares). Again, these boundary
+communications are designed so that one set of the mutually
+independent communications is required. Note that we use the
+trilinear prolongation even for the boundary conditions for the
+FMG prolongation because the trilinear prolongation does not need
+additional ghost cells, and also because we still can maintain the
+overall second-order accuracy with it.
+
+3.4. Cost of Multigrid
+
+2
+
+3
+⎡
+1x
+⎣
+
+1
++ +
+8
+
+( ) 
++
+
+The majority of the computing cost of the multigrid methods
+restriction and prolongation
+come from the smoothing,
+operations, which are proportional to the total number of the
+cells. As the coarser level contains one-eighth the cells of the
+ﬁner level, the total number of the operations of one V-cycle is
+1
+proportional to N
+. Therefore, the
+8
+computational complexity of our multigrid algorithms per
+3(
+sweep is O Nx
+). As the multigrid methods reduce the errors at
+all of the wavelengths coherently, the number of iterations
+required to achieve a given accuracy does not depend on the
+number of the cells. Thus, the total computational cost of the
+) or O(Ntot). This is the
+3(
+multigird algorithms is also O Nx
+advantage of the multigrid algorithms compared to FFT, which
+is O N
+), and to classical iterative solvers such as
+4
+SOR, which is O Nx
+(
+
+Nlog
+
+3
+N
+x
+
+⎤
+⎦
+
+~
+
+8
+7
+
+).
+
+tot
+
+tot
+
+(
+
+In order to perform very large simulations,
+
+the parallel
+scalability of the algorithm is of great importance and interest.
+In particular, we here focus on weak scaling, where we increase
+the size of the simulation proportional to the number of parallel
+processes and keep the load per each process constant. As the
+computational complexity of
+the multigrid algorithms is
+O(Ntot), the multigrid methods are expected to achieve good
+parallel scaling as long as the overhead of communications is
+not signiﬁcant and cost of the RootGrids and Octet levels
+is subdominant, as these parts are not fully parallelized in our
+implementation. The computational cost of the RootGrid and
+Octet levels should be relatively small because the degrees of
+freedom are only as large as the number of Multigrids.
+However, for massively parallel simulations particularly with
+AMR, the RootGrids can have a signiﬁcant computational
+load, and it may degrade the parallel performance if only one
+CPU core is used there. An additional layer of parallelization
+may be needed to improve the parallel performance in such
+cases, but we leave it for future work.
+the cost of
+
+the RootGrids is
+the MeshBlocks, or
+proportional
+), while the cost of the Mesh-
+O N
+(
+Blocks levels is O(n3) where n is the number of the cells per
+MeshBlock in each direction. Therefore, it is favorable for
+parallel performance to use larger MeshBlocks on uniform
+grids. Roughly speaking, it is difﬁcult to achieve good parallel
+performance if NMB is larger than n. For AMR,
+the best
+MeshBlock conﬁguration depends on problems, and the size
+of MeshBlocks should be carefully selected so that an
+optimal balance between the performance and grid ﬂexibility is
+achieved. We demonstrate the parallel performance of our
+multigrid solver in Section 4.
+
+to the number of
+N
+
+On uniform grids,
+
+MB, MB, MB,
+
+O N
+(
+
+3
+MB
+
+~
+
+N
+
+)
+
+x
+
+y
+
+z
+
+4. Test Results
+
+In order to demonstrate the accuracy and performance of our
+multigrid solver, we show the results of some test problems.
+First we demonstrate accuracy and performance of the gravity
+solvers on uniform grids (Section 4.1) and with AMR
+(Section 4.2). We also discuss the Jeans wave test in which
+hydrodynamics and self-gravity are coupled (Section 4.3).
+Lastly, we show collapse of a magnetized molecular cloud in
+Section 4.4 as a practical example of self-gravitational MHD
+simulations with AMR. All of the performance tests are carried
+the Center of
+out on the Cray XC50 Supercomputer at
+Computational Astrophysics, National Astronomical Observa-
+tory of Japan. Each node is equipped with two Intel Xeon
+Skylake 6148 processors (2.4 GHz, 40 cores per node) and
+connected with the Aries interconnect. We compile the code
+using Intel C++ Compiler 2018 and Cray MPI version 7.7.0,
+and we report results with ﬂat MPI parallelization.
+
+4.1. Uniform Grid: Sinusoidal Waves
+We ﬁrst demonstrate the behavior of the code using a simple
+static problem. Here we solve the gravitational potential for a
+sinusoidal density distribution in a periodic box. The
+computational domain size is Lx × Ly × Lz, and all of the
+boundary conditions are periodic. The density is set up
+overlaying sinusoidal waves in the three dimensions,
+
+r
+
+(
+
+x y z
+,
+,
+
+)
+
+= +
+r
+0
+
+A
+
+sin
+
+p
+x
+2
+L
+
+x
+
+⎜
+
+⎛
+⎝
+
+⎟
+
+⎞
+⎠
+
+sin
+
+p
+y
+2
+L
+
+y
+
+⎛
+⎜
+⎝
+
+⎞
+⎟
+⎠
+
+sin
+
+p
+z
+2
+L
+
+z
+
+⎜
+
+⎛
+⎝
+
+,
+
+⎟
+
+⎞
+⎠
+
+(
+
+28
+
+)
+
+12
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Tomida & Stone
+
+Figure 5. The convergence behavior for the sinusoidal wave test on uniform grids. (a)–(c) The volume-weighted rms of the errors and defect vs. the number of
+iterations. The blue lines and orange lines show the results of the FMG and MGI algorithms with various resolutions. The zeroth iteration points for MGI correspond
+to the initial guess, while the ﬁrst iteration points for FMG are the results after the ﬁrst FMG sweep. The black dotted line shows the convergence factor of 0.125. (d)
+The error compared to the analytic solution vs. the resolution. The black dashed–dotted line shows second-order convergence.
+
+where ρ0 is the background density, and A is the amplitude.
+This problem has an analytic solution:
+
+f
+
+(
+
+x y z
+,
+,
+
+)
+
+= -
+
+(
+
+2
+
+p
+
+L
+
+x
+
+2
+
+)
+
++
+
+(
+
+p
+4
+p
+2
+
+GA
+L
+)
+
+y
+
+2
+
++
+
+(
+
+2
+
+p
+
+L
+
+z
+
+2
+
+)
+
+´
+
+sin
+
+p
+x
+2
+L
+
+x
+
+⎜
+
+⎛
+⎝
+
+⎟
+
+⎞
+⎠
+
+sin
+
+p
+y
+2
+L
+
+y
+
+⎛
+⎜
+⎝
+
+⎞
+⎟
+⎠
+
+sin
+
+p
+z
+2
+L
+
+z
+
+⎜
+
+⎛
+⎝
+
+⎟
+
+⎞
+⎠
+
++
+
+f
+
+,
+
+0
+
+(
+
+29
+
+)
+
+to f0 = 0 as
+where we set
+the zero-point of the potential
+discussed in Section 2.3.6. In this test, we set A = 1 and ρ0 = 2
+and take the unit of G = 1.
+
+4.1.1. Convergence
+
+In order to see the convergence behavior of the FMG and
+MGI algorithms, we perform this test with a ﬁxed box size of
+Lx = Ly = Lz = 1 changing the resolution from h = 1/16 to
+h = 1/1024. For MGI, we use f(x, y, z) = 0 as the initial guess,
+which is naïve but not very poor in this case. We measure three
+quantities as functions of the number of the iterations: the error
+compared to the pointwise analytic solution ò (Equation (6)),
+the error compared to the fully converged discretized solution δ
+(Equation (5)), and the defect d (Equation (7)). It should be
+noted that the errors and the defect have different dimensions.
+We use the solution after 20 iterations as the fully converged
+discretized solution. The results are shown in Figure 5.
+
+13
+
+solutions converge not
+
+As shown in panel (a), all of the algorithms quickly reach
+the analytic solution. This is because the
+saturation against
+numerical
+to the analytic solution
+corresponding to inﬁnite resolution but to the exact discretized
+solution for the ﬁnite resolution, as shown in panel (b) (see also
+Moon et al. 2019). In all of the algorithms, each V-cycle iteration
+reduces the error (b) and defect (c) by the convergence factor
+(CF) ∼ 0.125, which is consistent with that obtained in the literature
+(e.g., Yavneh 1996). Depending on the resolution and algorithms,
+10–15 iterations are needed to reach fully converged solutions.
+
+When the numerical solutions reach convergence, both FMG
+and MGI achieve second-order accuracy, as shown in panel (d).
+Niter is the number of the additional V-cycle iterations after the
+ﬁrst FMG sweep. It is remarkable that the ﬁrst FMG sweep
+without additional V-cycle iterations can achieve an error as
+small as the truncation error (in this particular problem, the
+error after the ﬁrst FMG sweep is smaller than the error of the
+converged solution). However, because the solution after the
+ﬁrst FMG sweep still contains high-frequency noises originat-
+ing from the RBGS iteration pattern, it is recommended to
+apply a few V-cycle iterations, which can damp the high-
+frequency noises quickly. On the other hand, it is not necessary
+to repeat
+the defect reaches saturation. In
+practice, a few additional V-cycles should be enough to achieve
+sufﬁciently small potential error, e.g., δ ∼ 10−6.
+
+iterations until
+
+The cost of one FMG sweep is comparable to two V-cycle
+iterations because the operations on the ﬁnest level dominate
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Tomida & Stone
+
+transfers many small messages, and therefore it is sensitive to
+the network latency and bandwidth. The numbers reported here
+are the averages of the 10 best results out of 100 runs. We tend
+to get poor performance when the supercomputer is crowded,
+and it is up to ∼30% slower in the worst cases. FMG with 10
+V-cycles costs about 5–6 times more than one sweep of FMG
+because one sweep of FMG costs about two V-cycle iterations,
+as discussed in the previous section.
+
+Figure 6. Weak scaling test of the multigrid solvers on uniform grids with
+different MeshBlock sizes (higher is better). The orange solid lines depict one
+sweep of FMG. The blue dashed lines show FMG with 10 V-cycle iterations.
+Red dotted line: MHD with MeshBlocks of 643. The gray dashed–dotted line
+shows FFT with MeshBlocks of 643. The vertical dotted line corresponds to
+one full node containing 40 cores. Note that FMG signiﬁcantly outperforms
+FFTs, and is only a small fraction of the compute time for MHD.
+
+the cost (Figure 2). Unless the initial guess is very close to the
+true solution, MGI costs more than FMG to reach the same
+error level. As shown in Figure 5, FMG is more effective in
+higher resolutions. In practice, we can use the potential from
+the last
+time step as the initial guess in hydrodynamic
+simulations. However, we ﬁnd that it is usually insufﬁcient,
+and FMG almost always outperforms MGI.
+
+4.1.2. Performance
+
+To demonstrate the parallel performance of our implementations,
+we perform weak-scaling tests using the same problem. We show
+the results of FMG with Niter = 0 and Niter = 10, and compare the
+results with the performance of Athena++ʼs MHD solver and
+gravity solver using FFT. Here we ﬁx the size of each MeshBlock
+and increase the domain size as we increase the number of parallel
+processes. As we measure the scaling using whole nodes with 40
+cores, the computational domain is not always a cube but generally
+a cuboid, which is not necessarily an optimal conﬁguration for the
+multigrid solvers because the coarsest level cannot always be
+reduced to a single cell. It is also not optimal for FFT because it
+works best if the number of cells is a power of two. Nevertheless,
+this conﬁguration is close to practical use cases.
+
+The results of the weak scaling test are shown in Figure 6.
+Because the performance of the multigrid solver is mainly
+limited by the memory bandwidth, it is inevitable that the
+performance declines as the number of processes increases
+within one node. Beyond one node,
+the runs with larger
+MeshBlocks scale better, and scalabilities between 2 nodes and
+200 nodes are 89.6%, 73.2%, and 45.7% with MeshBlocks of
+1283, 643, and 323 cells for FMG one sweep and 92.9%,
+78.8%, and 56.3% for FMG with 10 V-cycles, respectively. We
+also run a test with eight MeshBlocks of 323 cells, where the
+total computation size is the same as the 643 case, while the
+performance is similar to the 323 case. We ﬁnd that
+the
+performance of the multigrid solver ﬂuctuates considerably
+depending on conditions of the network such as the distance
+between allocated nodes on the network and loads by other
+applications sharing the network. This is because the solver
+
+It is interesting to compare the performance of the multigrid
+solver to the FFT solver. As shown in the Figure, the FFT
+solver is not very scalable, and the performance degrades with
+larger simulation sizes. This is not because there is a problem in
+the implementation of the FFT solver in Athena++, but it is
+actually a natural consequence because FFT’s cost
+is
+intrinsically O N
+). Therefore, the multigrid solver out-
+performs the FFT solver in practical use cases, particularly for
+massively parallel simulations.
+
+Nlog
+
+(
+
+Compared to the MHD solver using the same MeshBlocks of
+643, one FMG sweep costs only about 15%, while FMG with 10
+V-cycles costs about 70% of the MHD solver. Considering that we
+need to call the gravity solver twice per time step with the second-
+order time integrator, these results indicate that the cost of the
+gravity solver on uniform grids is considerably smaller if only one
+FMG sweep is used, and it is comparable to MHD even with 10 V-
+cycles. In practical use cases, we need to apply the V-cycle
+iterations only a few times; therefore, the self-gravity should cost
+only a fraction of the MHD solver. The parallel scalability of our
+gravity solver is not perfect because the self-gravity intrinsically
+requires extensive global communications, but
+these results
+demonstrate that our solver is highly efﬁcient and enables large-
+scale self-gravitational hydrodynamic simulations.
+
+4.2. Mesh Reﬁnement: Binary Potential
+
+Next, we demonstrate the accuracy and performance of our
+multigrid solvers with AMR. As a nontrivial but simple static
+problem, we solve the potential of an unequal-mass binary system.
+the primary star with a mass of M1 = 2 at (x1, y1,
+We put
+z1) = (6/1024, 0, 0) and the secondary with a mass of M2 = 1 at
+(x2, y2, z2) = (−12/1024, 0, 0). Each star is modeled as a uniform
+sphere with the radius of R = 6/1024. In order to make the density
+distribution near the surface smooth, we split each cell into 103
+subcells and calculate the cell density by taking the average over
+the subcells. The isolated boundary conditions using the multipole
+expansion up to hexadecapoles are applied on all of the boundaries.
+The analytic solution of this problem is given as follows:
+
+f
+
+(
+
+x y z
+,
+
+,
+
+)
+
+= +
+f
+1
+
+,
+
+(
+
+D
+
+r
+1
+
+
+
+R
+
+)
+
+2
+
+[
+
+R
+3
+
+- D
+(
+
+r
+1
+
+2
+) ] (
+
+D <
+r
+1
+
+R
+
+)
+
+f
+
+2
+GM
+1
+D
+r
+1
+GM
+1
+3
+R
+2
+
+GM
+2
+D
+r
+2
+GM
+2
+3
+R
+2
+
+(
+
+D
+
+r
+
+2
+
+
+
+R
+
+)
+
+2
+
+[
+
+3
+
+R
+
+- D
+(
+
+r
+
+2
+
+2
+) ] (
+
+D <
+r
+2
+
+R
+
+)
+
+f
+
+1
+
+=
+
+f
+
+2
+
+=
+
+-
+
+-
+
+-
+
+-
+
+⎧
+⎪
+
+⎨
+⎪
+⎩
+
+⎧
+⎪
+
+⎨
+⎪
+⎩
+
+D =
+r
+1
+
+(
+
+x
+
+-
+
+2
+
+x
+1
+
+)
+
++ -
+y
+(
+
+2
+
+y
+1
+
+)
+
++ -
+z
+(
+
+2
+
+z
+1
+
+)
+
+,
+
+D =
+r
+2
+
+(
+
+x
+
+-
+
+x
+
+2
+
+2
+
+)
+
++ -
+y
+(
+
+2
+
+y
+2
+
+)
+
++ -
+z
+(
+
+z
+
+2
+
+2
+
+)
+
+.
+
+The size of the computing domain is [−0.5, 0.5] × [ −0.5,
+0.5] × [ −0.5, 0.5], and we place reﬁned grids with 2l times
+
+14
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+higher resolution at [−0.5l, 0.5l] × [ −0.5l, 0.5l] × [ −0.5l, 0.5l]
+up to l = 4 self-similarly.
+
+4.2.1. Convergence
+
+We perform a similar resolution study as in Section 4.1.1.
+We change the resolution of the root grid from h = 1/64 to
+h = 1/1024. The maximum resolution on the ﬁnest level is 16
+times higher than that of the root grid. For lower resolutions,
+the binary system is completely unresolved on the root grid.
+Again we use f(x, y, z) = 0 as the initial guess for MGI, which
+is very poor in this case. We use the solution after 40 iterations
+as the fully converged discretized solution. The results are
+shown in Figure 7. In this test, because the potential in this
+problem drastically varies in space, we measure the potential
+the
+error normalized by the analytic solution instead of
+potential itself as in the previous test:
+
+d
+
+normalized
+
+=
+
+
+
+normalized
+
+=
+
+n
+
+f
+
+-*
+f
+h
+*
+f
+h
+
+n
+
+f
+
+f
+
+-*
+*
+f
+
+,
+
+,
+
+(
+
+30
+
+)
+
+(
+
+31
+
+)
+
+where fn is the numerical solution after the nth V-cycle
+hf* is the fully converged discretized solution, and f*
+iteration,
+is the analytic solution, respectively. The rms of the errors
+plotted in Figure 7 can be considered as the typical fractional
+error. On the other hand, we plot the defect itself, and it is not
+normalized.
+
+Overall, the solvers behave similarly as in the uniform grid
+case, and they achieve second-order accuracy as shown in
+panel (d). However, the details of the convergence behavior are
+different. While FMG quickly reaches saturation against the
+analytic solution after only a few iterations, MGI
+takes
+considerably more iterations, as the initial guess is not good
+(a)). The error compared to the fully converged
+(panel
+discretized solution (b) and the defect (c) exhibit the detailed
+behaviors of the algorithms. Initially, FMG converges quickly
+with CF ∼ 0.2, but later it slows down to CF ∼ 0.5. MGI shows
+a similar trend, but its initial convergence is slower than FMG.
+This is because the ﬁrst sweep of FMG gives a good initial
+guess globally compared to the naïve guess used in MGI. These
+results clearly demonstrate the superiority of FMG over MGI.
+To understand the convergence behavior, we show the
+distributions of the errors and defect of FMG in Figure 8. The
+checkerboard pattern seen in the defect originates from the
+RBGS smoothing operation. The error compared to the analytic
+solution ò quickly converges, and it is small enough even after
+the ﬁrst FMG sweep (panels (e1)–(e4)). During the initial fast
+converging phase, the error to the fully converged solution δ
+and defect d are reduced globally (panels (d1)–(d2) and (f1)–
+(f2)). In the later phase,
+the level
+boundaries cause the slower convergence (panels (d3) and
+(f3)), but eventually the errors and defect are sufﬁciently
+reduced and approach the fully converged solution (panels (d3)
+and (f3)). As seen in panels (b), (c), and (e), the potential error
+against the analytic solution declines quickly even with a few
+iterations. Therefore, again, a few additional V-cycles should be
+enough to achieve sufﬁciently small error in practice.
+
+the persisting errors at
+
+15
+
+Tomida & Stone
+
+4.2.2. Performance
+
+We measure the parallel performance of our multigrid solver
+using the same problem. We measure strong scaling where the
+computational load of the whole simulation is ﬁxed and weak
+scaling where the computational load per process is ﬁxed.
+
+In order to simulate typical use cases with AMR, we apply
+V-cycle iterations three times after the ﬁrst FMG sweep. To see
+the performance with different MeshBlock sizes, we run the
+test calculations with 163 and 323 cells per MeshBlock. In
+this test, we use only 36 cores per node so that the number of
+the Multigrids can be evenly divisible. In the strong scaling
+test, we set up the root grid of 2563 with 163 MeshBlocks
+and 5123 with 323 MeshBlocks, and four AMR levels are
+added self-similarly. This produces 18,432 MeshBlocks in
+total. We measure the performance from 36 processes (512
+MeshBlocks per process) to 2304 processes (eight Mesh-
+Blocks per process). In the weak scaling test, we use the same
+grid conﬁguration but reduce the resolution so that each
+process always owns eight MeshBlocks. The results as well
+as comparison with the performance of the MHD solver using
+the same static grid conﬁguration are shown in Figure 9.
+
+In this test, the parallel performance degrades with a large
+number of processes, particularly with small MeshBlock size.
+With 2304 processes, the multigrid solver is about 2–6 times
+slower and less scalable compared to the MHD part for the
+same MeshBlock size. These ratios are not very good, but are
+actually comparable to the gravity solver of other AMR codes
+(e.g., Wünsch et al. 2018). This is mainly because our solver on
+the RootGrid and Octet levels is not parallelized, and their
+costs become signiﬁcant. It is of crucial importance to choose
+appropriate grid conﬁgurations for good performance with
+AMR. In practice, it is reasonable to try MeshBlocks of 163
+cells ﬁrst (see also discussions in Stone et al. 2020).
+
+4.3. Dynamical Test: Jeans Wave
+
+As one of the simplest examples of hydrodynamic problems
+with self-gravity, here we consider that the Jeans wave test is a
+periodic box with Lx = 1, Ly = 0.5, and Lz = 0.5. The initial
+density distribution is uniform with a sinusoidal perturbation:
+
+,
+
+(
+
+)
+
+(
+
+r
+
+x
+( )
+
+k x
+·
+
+r= +
+0
+
+(
+= p
+2
+L
+
+A sin
+)
+32
+where k is the wavenumber vector, and A = 10−6 is the
+) so that
+p
+2
+amplitude of the perturbation. We use k
+L
+the perturbation is periodic in all of
+the directions. The
+corresponding wavelength of the perturbation is λ = 1/3. We
+use the adiabatic equation of state with the adiabatic index
+Γ = 5/3, and the initial sound speed is c
+. We set the
+s
+initial density and pressure to ρ0 = 1 and p0 = 1, and the
+perturbation is isothermal. The dispersion relation of the system
+is
+
+G
+p
+0
+r
+
+p
+2
+L
+
+=
+
+,
+
+,
+
+0
+
+y
+
+x
+
+z
+
+2
+
+w
+
+=
+
+2 2
+c k
+s
+
+-
+
+G4
+
+p r
+
+.
+0
+
+(
+
+33
+
+)
+
+l
+
+Jeans
+
+Jeans wavelength
+
+This perturbation is unstable when its wavelength exceeds the
+2
+º p
+c
+s
+r
+G
+constant G using the ratio between the wavelength of the
+perturbation and the Jeans wavelength nJeans
+as an input
+parameter. For a stable initial condition (nJeans < 1), the initial
+to zero, while we give a corresponding
+momentum is set
+
+the gravitational
+
+. We set
+
+º l
+l
+
+Jeans
+
+0
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Tomida & Stone
+
+Figure 7. Same as Figure 5 but for the convergence behavior for the binary potential test with AMR. The errors in panels (a) and (b) are normalized as in
+Equations (31) and (30).
+
+momentum perturbation parallel to the wavenumber vector
+
+r
+
+=( )
+v x
+
+∣
+
+w
+k
+∣
+k k
+
+r
+
+0
+
+A cos
+
+(
+
+k x
+·
+
+)
+
+,
+
+(
+
+34
+
+)
+
+for an unstable case. For the hydrodynamic part, we use the
+second-order piecewise linear method for spatial reconstruction
+and the second-order van Leer time integrator with the Harten–
+Lax–van Leer–contact approximate Riemann solver.
+
+In Figure 10, we demonstrate the convergence of the stable
+case with nJeans = 0.5 changing the resolution. Here we
+compare fully converged solutions and just one sweep of
+FMG using the rms of the L1 errors of all of the conservative
+hydrodynamic variables, (ρ, ρvx, ρvy, ρvz, E) where E is the
+total energy density. Both methods achieve roughly second-
+order accuracy. As expected, use of the fully converged
+solutions improves the accuracy. While the error with Niter = 0
+is precisely second order, the error with the fully converged
+solution slightly deviates from the second-order convergence.
+This indicates that the error is dominated by the gravitational
+potential with Niter = 0, but using the fully converged solution,
+it is dominated by the hydrodynamic part, which is not fully
+second-order accurate because of the slope limiter.
+
+Next, we compare the behaviors of the accuracy of the self-
+gravity solver using both stable and unstable solutions in
+Figure 11. In the stable case, FMG with Niter = 0 and fully
+converged solutions both reach qualitatively the same solutions
+(panel (a)). However,
+in
+qualitatively different solutions. While the wave grows in the
+
+in the unstable cases,
+
+they result
+
+16
+
+amplitude as it maintains symmetry when fully converged
+solutions are used (panel (b)), it collapses into fragmentations
+with Niter = 0 (panel (c)). In the latter case, the gravitational
+instability grows faster and the symmetry breaks earlier due to
+the noises arising from the remaining errors in the gravitational
+potential. This test shows that it is important to control the error
+of the gravity solver when the system is sensitive to noises.
+
+4.4. Example Application: Collapse of a Magnetized Cloud
+
+Lastly, as a demonstration of the use of self-gravity in an
+MHD simulation with AMR, we present collapse of a
+magnetized cloud, which is a model of star formation in an
+isolated molecular cloud core.
+
+As an initial condition, we adopt a critical Bonnor–Ebert
+sphere (Ebert 1955; Bonnor 1956) with temperature T = 10 K
+and make it unstable by multiplying the density by an
+enhancement factor f = 1.2. We also add 10% m = 2 sinusoidal
+perturbation in the density. The total mass of the cloud is set to
+M = 1Me, and the initial cloud radius and the density at the
+cloud are R = 8400 au and ρ0 = 1.13 ×
+center of
+10−18 g cm−3, respectively. We introduce solid-body rotation
+and a uniform magnetic ﬁeld both aligned to the z-axis. The
+angular velocity is ω = 5.55 × 10−14 s−1, corresponding to
+ωtff = 0.1 where t
+=
+is the initial
+freefall time at the center of the cloud, and the magnetic ﬁeld is
+Bz = 27.4 μG, corresponding to the normalized mass-to-ﬂux
+where M
+is the
+ratio of
+
+4
+10 yr
+
+p
+3
+r
+G
+32
+
+5.71
+
+m º
+
+the
+
+=
+
+=
+
+´
+
+3
+
+M
+
+ff
+
+(
+
+0
+
+F
+)
+crit
+
+0.53
+3
+
+p ( )
+
+5 1 2
+G
+
+=F
+F
+)
+crit
+
+(
+
+M
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Tomida & Stone
+
+Figure 8. The results of the binary potential test with the root grid resolution of h = 1/64. (a) The density and MeshBlock distribution. (b) The analytic solution. (c)
+The result obtained with just one sweep of FMG. (d) The defect. (e) The error compared to the analytic solution. (f) The error compared to the fully converged
+discretized solution. The ranges of the color bars is adjusted to clearly show the distributions, and the maximum values of the errors and defect are shown in the panels.
+
+critical mass-to-ﬂux ratio for a spherical cloud (Mouschovias &
+Spitzer 1976).
+
+The simulation domain is [−10,400 au: 10,400 au]3, and the
+root grid is resolved with 1283 cells. We use AMR with
+
+MeshBlocks consisting of 163 cells to resolve the local Jeans
+length at least with 32 cells. The boundary conditions are set to
+model a cloud conﬁned by the ambient gas pressure. The
+velocity outside the initial cloud radius is ﬁxed to zero. For
+
+17
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Tomida & Stone
+
+Figure 9. The strong and weak scaling tests on AMR with FMG and Niter = 3
+(higher is better). Blue dashed lines: the strong scaling of the multigrid solver.
+Orange solid lines show the weak scaling of the multigrid solver. Red dotted
+lines depict the weak scaling of the MHD solver for comparison. The strong
+scaling runs with 36 cores and 323 MeshBlocks are not shown because they
+exceed the memory limit per node.
+
+Figure 10. The error compared to the analytic solution of the stable Jeans wave
+test. The blue dashed line shows the result using fully converged solutions for
+self-gravity, while the orange solid line shows the result using one sweep of
+FMG for self-gravity. The black dashed–dotted line shows the second-order
+convergence.
+
+self-gravity, isolated boundary conditions computed from a
+multipole expansion up to hexadecapoles are used, ignoring the
+mass outside the initial cloud radius to suppress the higher-
+order multipole components from the gas near the edges of the
+computing domain.
+
+For MHD, we use the second-order van Leer time integrator
+and second-order piecewise linear method for spatial recon-
+struction with the HLLD approximate Riemann solver. We
+adopt FMG with Niter = 10 for the self-gravity. To model the
+thermal evolution in a collapsing cloud, we adopt
+the
+barotropic relation:
+
+)
+
+1
+
+P
+
++
+
+=
+
+G-
+(
+
+2
+r
+c
+s
+
+1 2
+⎡
+⎤
+1
+⎢
+⎥
+⎣
+⎦
+−1 is the sound speed at T = 10 K,
+where cs = 0.19 km s
+ρcrit = 10−13 g cm−3 is the critical density, and Γ = 5/3 is the
+
+r
+r
+crit
+
+2
+⎞
+⎟
+⎠
+
+⎛
+⎜
+⎝
+
+35
+
+(
+
+,
+
+)
+
+Figure 11. The results of the Jeans wave test at t = 1.5. (a) A stable case with
+nJeans = 0.5 using FMG with Niter = 0. (b) An unstable case with nJeans = 1.1
+using fully converged gravitational potential. (c) An unstable case with
+nJeans = 1.1 using FMG with Niter = 0. Note that the plotted quantities and
+ranges of the color bars are different, but in all of the panels, red indicates a
+density increase and blue denotes density decrease compared to the initial
+condition. The stripe pattern in panel (a) is not due to the numerical error in the
+gravity solver but to the loss of signiﬁcance by subtraction between close
+values, because the density perturbation is much smaller compared to the
+background density.
+
+adiabatic index, respectively. With this formula, the gas is
+isothermal in the low-density region ρ  ρcrit due to efﬁcient
+radiation cooling, and it becomes adiabatic in the high-density
+region where radiation cooling is inefﬁcient. These conﬁgura-
+tions are similar
+to those used in many previous MHD
+simulations of protostellar collapse (e.g., Machida et al. 2004;
+Hennebelle & Fromang 2008; Tomida et al. 2015, 2017) as
+well as in the method papers of the RAMSES (Fromang et al.
+2006) and AREPO (Pakmor et al. 2011) codes.
+
+Figure 12 displays the results at t = 1.96 × 105 yr when the
+central density and temperature reach ρc = 10−8 g cm−3 and
+Tc = 1000 K. At
+this point, nine levels of reﬁnement are
+generated, and the corresponding ﬁnest resolution is 0.326 au.
+A so-called ﬁrst hydrostatic core (“ﬁrst core” for short) is
+formed at the center of the cloud as the gas becomes adiabatic
+and the gas pressure and gravity balance. The ﬁrst core is
+almost spherically symmetric as a result of highly efﬁcient
+angular momentum transport by the magnetic ﬁeld. The
+ﬂattened disk-like density distribution around the ﬁrst core is
+a so-called pseudo-disk, which is not supported by rotation but
+is radially infalling. Slow bipolar outﬂows with a wide opening
+angle and v ∼ 1 km s−1 are launched from the pseudo-disk by
+
+18
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Tomida & Stone
+
+Figure 12. Results of an MHD protostellar collapse simulation with ρc = 10−8 g cm−3. (a) Poloidal density slice with velocity vectors on large scales. (b) Equatorial
+density slice with velocity vectors on scales of the pseudo-disk. (c) Poloidal density slice with velocity vectors on scales of the ﬁrst core. (d) Plasma beta with magnetic
+ﬁeld direction vectors on large scales. (e) Radial velocity on large scales. (f) Rotational velocity on large scales. Note the length of velocity vectors in panels (a)–(c)
+corresponds to different speeds.
+
+the magneto-centrifugal mechanism (Blandford & Payne 1982).
+The pseudo-disk is highly disturbed in the vicinity of the ﬁrst
+core due to the magnetic interchange instability (Spruit et al.
+1995; Lam et al. 2019) because the magnetic ﬁeld is strongly
+concentrated as a result of the gravitational collapse. These
+results are consistent with the results of the previous ideal
+MHD simulations (e.g., Tomida et al. 2015). This calculation
+required about 4900 core-hours, or 30.7 hr using 160 cores on
+the Cray XC50 supercomputer. The gravity solver takes about
+85%–90% of the computing time, which varies with the AMR
+grid structure. It demonstrates that our code is highly capable
+and is applicable to practical astrophysical problems.
+
+5. Summary and Discussion
+
+In this paper, we have described our implementation of self-
+gravity solvers based on geometric multigrid algorithms. The
+solvers are built on top of the Athena++ framework and
+parallelized using its dynamic execution model using a
+TaskList. We have implemented both the MGI as well as
+the FMG scheme with V(1,1) cycles, and have used a variety of
+test problems to demonstrate the accuracy and performance of
+each. In general, we ﬁnd that FMG is superior to MGI as it
+converges faster and does not need any initial guess.
+
+Our test problems show that
+
+the multigrid solvers can
+quickly reach saturation to an analytic solution and achieve
+
+19
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Tomida & Stone
+
+second-order accuracy. In particular, just one sweep of FMG
+with no additional V-cycle iterations gives a remarkably good
+solution compared to the analytic solution. However, the defect
+and error compared to a fully converged discretized solution
+are still large, including small-scale noise arising from the
+RBGS iteration pattern as well as AMR level boundaries. In
+practice it is not necessary to iterate until the solution is fully
+converged; however, some additional V-cycle iterations are
+recommended to suppress the error and noise. We ﬁnd that
+FMG with 3–10 additional V-cycle iterations should be
+sufﬁcient in most cases, but this is problem dependent, and
+therefore it is important to monitor and control error carefully.
+While the performance of our multigrid solver is very good
+on uniform grids, with AMR the scaling depends strongly on
+the grid decomposition. In particular, the parallel performance
+quickly degrades when many small MeshBlocks are used
+because the cost of the nonparallelized portion of the algorithm
+becomes nonnegligible. Therefore, it is important to conﬁgure
+the AMR grid to balance ﬂexibility and performance. In order
+to improve parallel performance with AMR, an additional layer
+of parallelization for the RootGrid and Octet levels may be
+needed. Alternatively, heterogeneous parallelization in which a
+small
+the compute processes are assigned to
+multigrid while the rest update the hydrodynamics may
+improve the overall performance and scalabilty. Such enhance-
+ments will be explored in the future.
+
+fraction of
+
+There are many implementations of self-gravity solvers on
+AMR in literature. Some of them adopt
+the level-by-level
+approach (e.g., Kravtsov et al. 1997; Guillet & Teyssier 2011;
+Bryan et al. 2014; Ramsey et al. 2018). One of the motivations
+of this approach is use of the individual time-stepping with
+AMR. While it is straightforward to combine the level-by-level
+approach and individual time-stepping, we should note that the
+gravity propagates instantaneously, and we need globally
+consistent solutions, even with proper temporal interpolation.
+This is why we adopt the combination of the uniform time-
+stepping and our globally consistent multigrid solver. Another
+difference among these implementations is the design of AMR;
+Kravtsov et al. (1997; ART) and Guillet & Teyssier (2011;
+RAMSES) are cell-based AMR, Bryan et al. (2014) is patch-
+based, and Ziegler (2005; NIRVANA), Matsumoto (2007;
+SFUMATO), Ricker (2008; FLASH)6, Teunissen & Keppens
+(2019; AMRVAC), as well as Athena++ adopt octree-block-
+based AMR. It is straightforward to implement the multigrid
+algorithms on the octree-block-based AMR because relations
+between blocks are limited, while it is more complicated to
+combine with the other AMR designs. Among them, our
+implementation is similar to that
+in the SFUMATO code
+(Matsumoto 2007), which obtains globally consistent solutions
+using the FMG on the octree-block-based AMR with uniform
+time-stepping. A notable difference is that Matsumoto (2007)
+applied ﬂux-correction at level boundaries in order to satisfy
+Gauss’s theorem, while we use the mass-conservation formula
+(Feng et al. 2018) in the discretization, which does not require
+any additional computation nor communication. In addition,
+our scheme is efﬁciently parallelized using the task-based
+dynamic execution model of Athena++.
+
+6 Although it is referred to as “multigrid” in Ricker (2008), it is different from
+what is presented in this paper. In this scheme, they solve the Poisson equation
+in each block using a direct solver such as FFT, and apply corrections between
+blocks on different levels repeatedly until a globally consistent solution is
+obtained.
+
+Multigrid algorithms are applicable to many physical
+processes in astrophysics and not limited to self-gravity. For
+example, radiation or cosmic-ray transport with a moment-
+based method such as ﬂux-limited diffusion (Levermore &
+Pomraning 1981; Turner & Stone 2001) or
+the variable
+Eddington tensor method (Stone et al. 1992; Jiang et al. 2012)
+using an implicit time integrator is of particular interest, and we
+are planning to develop such extensions. The Poisson equation
+for the pressure in incompressible hydrodynamics is another
+possible application. Similarly, multigrid can be applied to the
+Hodge-Helmholtz decomposition to extract compressive and
+solenoidal components from a vector ﬁeld (e.g., Miniati 2014;
+Vallés-Pérez et al. 2021). We are also planning to implement
+the particle-mesh gravity solver with AMR combining the
+multigrid gravity solver and the particle module of Athena++.
+While our current
+implementation only supports Cartesian
+coordinates, extension to cylindrical, spherical polar, and other
+coordinate systems is possible. Finally, we have recently
+developed a performance-portable version of the Athena++
+AMR framework that runs on a variety of heterogeneous
+computing architectures including GPUs (J. M. Stone et al.
+2023, in preparation), and we plan to implement the multigrid
+solvers described here into this new version of the code as well.
+The code is publicly distributed through the Athena++
+
+GitHub repository7 under the BSD open-source license.
+
+We thank Eve Ostriker, Chris White, Patrick Mullen, Chang-
+Goo Kim, Sanghyuk Moon, Kazunari Iwasaki, and Tomoaki
+fruitful discussions.We
+Matsumoto for
+also thank the
+anonymous referee for the helpful comments that improved
+the quality of the manuscript. K.T. is grateful for the hospitality
+of
+the Institute for Advanced Study and Department of
+Astrophysical Sciences at Princeton University, where most
+of this paper was written. This work is supported by the Japan
+Society for the Promotion of Science (JSPS) KAKENHI grant
+Nos. JP16H05998, JP16K13786, JP17KK0091, JP18H05440,
+JP21H04487, and JP22KK0043. Numerical computations were
+in part carried out on Cray XC50 at Center for Computational
+Astrophysics, National Astronomical Observatory of Japan.
+This work was supported by Ministry of Education, Culture,
+Sports, Science, and Technology (MEXT) as “Program for
+Promoting Researches on the Supercomputer Fugaku” (Toward
+a uniﬁed view of the universe: from large-scale structures to
+computational
+planets;
+resources of supercomputer Fugaku provided by the RIKEN
+Center for Computational Science (Project IDs: hp200124,
+hp210164, hp220173). J.S. acknowledges support from NASA
+grant 80NSSC21K0496, and from the Eric and Wendy Schmidt
+Fund for Strategic Innovation. We used VisIt (Childs et al.
+2012) to produce Figures 8, 11, 12, and 13.
+
+JPMXP1020200109)
+
+used
+
+Software: Athena++ (Athena++ development team 2021).
+
+and
+
+Appendix A
+Multipole Expansion Boundary Condition
+
+Here, we describe how to calculate isolated boundary
+conditions using the multipole expansion. The gravitational
+potential far away from the center of mass can be well
+approximated with the multipole expansion truncated at a ﬁnite
+order of the expansion, as the potential produced by higher-
+order multipoles declines sharply at a large distance from the
+
+7 https://github.com/PrincetonUniversity/athena
+
+20
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+center of mass. In Athena++, we implement the multipole
+expansion up to hexadecapoles.
+
+The gravitational potential at a point r = (x, y, z) outside the
+
+mass distribution is expanded as:
+
+f
+
+r
+( )
+
+=
+
+G
+
+max
+
+l
+l
+å å
+= =-
+m
+l
+0
+
+l
+
+⎛
+⎝
+
+Q
+l
+r
+
+l m
+,
++
+1
+
+⎞
+⎠
+
+p
+4
++
+l
+
+2
+
+1
+
+Y
+l m
+,
+
+r
+( )
+
+,
+
+(
+
+A1
+
+)
+
+is
+
+where lmax
+r
+x
+The multipole moments Ql,m are deﬁned as
+
+the expansion,
++ + , and Yl,m is the real spherical harmonics.
+
+the maximum order of
+2
+z
+
+=
+
+y
+
+2
+
+2
+
+Q
+
+l m
+,
+
+=
+
+(
+
+r
+
+¢ D
+)
+
+V
+
+å r
+V
+
+p
+4
++
+l
+
+2
+
+1
+
+l
+
+(
+
+r
+
+¢
+)
+
+Y
+l m
+,
+
+(
+
+r
+
+¢
+)
+
+,
+
+(
+
+A2
+
+)
+
+where the summation is taken over the whole computing
+domain, and ΔV is the volume of the cell at position r¢.
+
+We list the real spherical harmonics in Cartesian up to l = 4:
+
+Y
+0,0
+
+=
+
+Y
+-
+1, 1
+
+=
+
+Y
+-
+2, 2
+
+=
+
+Y
+2,1
+
+=
+
+Y
+-
+3, 3
+
+=
+
+Y
+-
+3, 2
+
+=
+
+Y
+3,0
+
+=
+
+Y
+3,1
+
+=
+
+Y
+3,3
+
+=
+
+Y
+-
+4, 4
+
+=
+
+Y
+-
+4, 2
+
+=
+
+Y
+-
+4, 1
+
+=
+
+Y
+4,0
+
+=
+
+Y
+4,1
+
+=
+
+Y
+4,2
+
+=
+
+Y
+4,3
+
+=
+
+Y
+4,4
+
+=
+
+y
+
+,
+
+,
+
+,
+
+(
+
+z
+
+x
+
+1
+p
+4
+y
+3
+p
+r
+4
+xy
+15
+2
+p
+r
+4
+xz
+15
+2
+p
+r
+4
+35
+p
+32
+105
+p
+4
+7
+p
+16
+21
+p
+32
+35
+p
+32
+315
+p
+4
+45
+p
+16
+45
+p
+32
+9
+256
+45
+p
+32
+45
+p
+16
+315
+p
+32
+315
+p
+4
+
+xz
+
+p
+
+x
+
+x
+
+(
+
+2
+
+x x
+(
+
+y
+3
+
+xyz
+3
+r
+z
+5
+(
+
+z
+5
+
+2
+
+2
+
+-
+3
+r
+-
+3
+
+2
+
+r
+-
+3
+r
+2
+-
+xy x
+(
+4
+r
+2
+2
+z
+7
+r
+2
+
+xy
+
+(
+
+yz
+
+(
+
+z
+7
+
+r
+-
+
+4
+
+z
+35
+
+2
+
+z
+7
+
+(
+
+2
+
+-
+
+-
+4
+
+r
+y
+
+2
+
+xz x
+(
+
+2
+
+-
+4
+r
+-
+
+2
+
+x
+
+(
+
+Y
+1,1
+
+=
+
+3
+p
+4
+
+x
+r
+
+,
+
+Y
+2,0
+
+=
+
+5
+p
+16
+
+2
+
+z
+3
+
+2
+
+r
+
+,
+
+-
+2
+r
+
+,
+
+yz
+2
+r
+-
+2
+r
+2
+
+2
+
+y
+
+,
+
+,
+
+z
+r
+15
+p
+4
+2
+x
+
+3
+p
+4
+
+15
+p
+4
+2
+)
+
+,
+
+Y
+1,0
+
+=
+
+,
+
+Y
+-
+2, 1
+
+=
+
+Y
+2,2
+
+=
+
+2
+
+(
+
+x
+3
+
+r
+
+y
+
+-
+3
+
+,
+
+Y
+-
+3, 1
+
+=
+
+21
+p
+32
+
+y
+
+(
+
+z
+5
+
+2
+
+r
+
+r
+
+2
+
+)
+
+,
+
+-
+3
+
+r
+3
+
+2
+
+)
+
+,
+
+r
+
+2
+
+)
+
+,
+
+Y
+3,2
+
+=
+
+105
+p
+4
+
+z x
+(
+
+y
+
+2
+
+)
+
+,
+
+2
+
+-
+3
+r
+2
+
+2
+
+)
+
+,
+
+y
+
+2
+
+)
+
+,
+
+Y
+-
+4, 3
+
+=
+
+yz
+
+(
+
+315
+p
+32
+
+-
+
+y
+
+2
+
+)
+
+,
+
+2
+
+x
+3
+r
+
+4
+
+r
+
+2
+
+)
+
+,
+
+r
+3
+
+2
+
+)
+
+,
+
+-
+4
+
+-
+4
+
++
+
+4
+
+r
+3
+
+,
+
+2 2
+z r
+30
+4
+r
+r
+3
+
+)
+
+2
+
+,
+
+2
+
+-
+
+r
+
+2
+
+)
+
+,
+
+z
+7
+)(
+4
+r
+2
+y
+3
+
+2
+
+)
+
+,
+
+2
+
+y
+3
+
+-
+)
+4
+r
+8
+
+2
+
+y
+
+(
+
+x
+3
+
+2
+
+-
+
+y
+
+2
+
+)
+
+.
+
+For the Poisson equation for self-gravity, all of the dipole
+moments Q1,m are zero if the origin of the multipole expansion
+is the center of mass. In our experience, the best practice is
+usually to use the center of mass as the origin of the multipole
+
+21
+
+Tomida & Stone
+
+expansion, because the higher-order moments are also small
+when the center of mass is used as the origin. By default,
+Athena++ automatically calculates the center of mass at every
+time step. Alternatively, we provide an option for users to
+specify the origin, which is useful when the center of mass does
+not move.
+
+Note that the accuracy of the multipole expansion is limited
+the expansion. The multipole
+by the maximum order of
+expansion is reasonably accurate if the mass distribution is
+centrally condensed and far away from boundaries of the
+computational domain. However,
+the mass distribution
+extends close to boundaries, it is less accurate. We plan to
+implement a more general method for
+isolated boundary
+conditions such as the James algorithm (Moon et al. 2019).
+
+if
+
+Appendix B
+Comparison between Our Implementation and the Level-
+by-level Approach
+
+In this appendix, we present a rough comparison between
+our self-gravity solver and the level-by-level approach used in
+other simulation codes (e.g., Kravtsov et al. 1997; Guillet &
+Teyssier 2011; Bryan et al. 2014; Ramsey et al. 2018). In the
+latter method, a solution on each level is calculated separately
+using solutions on coarser levels as boundary conditions for
+ﬁner levels. This method is also referred to as one-way
+coupling.
+In contrast, our solver calculates the potential
+consistently across all AMR levels.
+
+In order
+
+to demonstrate the difference between these
+approaches qualitatively, we present a very simple experiment
+implementing the level-by-level approach for
+instead of
+ourselves and comparing results side-by-side. Using the binary
+test problem presented in Section 4.2 with the root
+level
+resolution of h = 1/64, we compare fully converged solutions
+obtained using AMR and using the root level only. The latter
+corresponds to the coarsest level solution used in the level-by-
+level approach. Figure 13 shows distributions of normalized
+true error (Equation (31)). Here we compare the error on the
+root grid (the region outside the reﬁned MeshBlocks). With
+AMR, the error in this region is only about a few ×10−4 (panel
+(a)). On the other hand, as shown in panel (b), the error of the
+solution calculated with the root grid only is as large as 1%.
+
+In the level-by-level approach, this solution on the root level
+is interpolated to the ﬁner level and used as the boundary
+condition. Therefore, the solution on the ﬁner level should also
+contain an error of the same order, and the error propagates
+further to the ﬁner levels by repeating this procedure. As a
+result, it is expected that the solution obtained with the level-
+by-level approach is less accurate by more than one order of
+magnitude and contains a percent-level error. Of course, this is
+a rough estimate in this particular setup, and actual error
+depends on problems, including the grid conﬁguration and the
+number of AMR levels. In this particular problem, the binary is
+not well resolved on the root level in this setup. The error can
+be smaller if the density distribution is well resolved even on
+the coarser levels, but in principle the level-by-level approach
+should suffer from this kind of error. Wang & Yen (2020)
+proposed an improved scheme for the interpolation at level
+boundaries, but it does not fundamentally resolve this issue. It
+is worth noting that this error in the level-by-level approach is
+not random but systematic, and it may cause nonnegligible
+errors in long-term simulations. For example, if there is a
+binary system not well resolved on the coarser levels, there can
+
+The Astrophysical Journal Supplement Series, 266:7 (22pp), 2023 May
+
+Tomida & Stone
+
+Figure 13. Distribution of the normalized error against the analytic solution of the binary test problem (Equation (31)). (a) The fully converged solution on the AMR
+grid. (b) The fully converged solution obtained using only the root level. Black lines show the boundaries between MeshBlocks. The range of the color bar in panel
+(b) is 10 times larger than that in panel (a).
+
+be substantial error in the torque produced by the binary
+potential, which may affect the angular momentum evolution
+of the system. With the level-by-level approach, the AMR grid
+should be (more) carefully constructed in order to control the
+error. This result indicates that our implementation is more
+accurate and consistent compared to the level-by-level
+approach.
+
+ORCID iDs
+
+Kengo Tomida
+James M. Stone
+
+https://orcid.org/0000-0001-8105-8113
+https://orcid.org/0000-0001-5603-1832
+
+References
+
+Armillotta, L., Ostriker, E. C., & Jiang, Y.-F. 2021, ApJ, 922, 11
+Athena++ development team 2021, PrincetonUniversity/athena: Athena++
+
+v21.0, Zenodo, doi:10.5281/zenodo.4455880
+
+Barnes, J., & Hut, P. 1986, Natur, 324, 446
+Blandford, R. D., & Payne, D. G. 1982, MNRAS, 199, 883
+Bonnor, W. B. 1956, MNRAS, 116, 351
+Brandt, A. 1977, MaCom, 31, 333
+Bryan, G. L., Norman, M. L., O’Shea, B. W., et al. 2014, ApJS, 211, 19
+Childs, H., Brugger, E., Whitlock, B., et al. 2012, High Performance
+
+Visualization (London: Taylor & Francis), 358
+
+Coleman, M. S. B. 2020, ApJS, 248, 7
+Daszuta, B., Zappa, F., Cook, W., et al. 2021, ApJS, 257, 25
+Ebert, R. 1955, ZA, 36, 222
+Fedorenko, R. 1962, USSR Comput. Math. Math. Phys., 1, 1092
+Feng, W., Guo, Z., Lowengrub, J. S., & Wise, S. M. 2018, JCoPh, 352, 463
+Fromang, S., Hennebelle, P., & Teyssier, R. 2006, A&A, 457, 371
+Greengard, L., & Rokhlin, V. 1987, JCoPh, 73, 325
+Guillet, T., & Teyssier, R. 2011, JCoPh, 230, 4756
+Hackbusch, W. 1994, Iterative Solution of Large Sparse Systems of Equations
+
+(New York: Springer-Verlag)
+
+Hennebelle, P., & Fromang, S. 2008, A&A, 477, 9
+Hockney, R. W., & Eastwood, J. W. 1988, Computer Simulation Using
+
+Particles (Bristol: Hilger)
+Jiang, Y.-F. 2021, ApJS, 253, 49
+
+Jiang, Y.-F., Belyaev, M., Goodman, J., & Stone, J. M. 2013, NewA,
+
+19, 48
+
+Jiang, Y.-F., Stone, J. M., & Davis, S. W. 2012, ApJS, 199, 14
+Kravtsov, A. V., Klypin, A. A., & Khokhlov, A. M. 1997, ApJS, 111, 73
+Lam, K. H., Li, Z.-Y., Chen, C.-Y., Tomida, K., & Zhao, B. 2019, MNRAS,
+
+489, 5326
+
+Levermore, C. D., & Pomraning, G. C. 1981, ApJ, 248, 321
+Machida, M. N., Tomisaka, K., & Matsumoto, T. 2004, MNRAS, 348, L1
+Matsumoto, T. 2007, PASJ, 59, 905
+Miniati, F. 2014, ApJ, 782, 21
+Moon, S., Kim, W.-T., & Ostriker, E. C. 2019, ApJS, 241, 24
+Mouschovias, T. C., & Spitzer, L., Jr. 1976, ApJ, 210, 326
+Mullen, P. D., Hanawa, T., & Gammie, C. F. 2021, ApJS, 252, 30
+Pakmor, R., Bauer, A., & Springel, V. 2011, MNRAS, 418, 1392
+Press, W. H., Teukolsky, S. A., Vetterling, W. T., & Flannery, B. P. 2007,
+Numerical Recipes 3rd Edition: The Art of Scientiﬁc Computing
+(Cambridge: Cambridge Univ. Press)
+
+Ramsey, J. P., Haugbølle, T., & Nordlund, Å. 2018, JPhCS, 1031, 012021
+Ricker, P. M. 2008, ApJS, 176, 293
+Roache, P. 1972, Computational Fluid Dynamics (Albuquerque, NM: Hermosa
+
+Publishers)
+Saad, Y. 2003,
+
+Iterative Methods for Sparse Linear Systems (2nd ed.;
+
+Philadelphia, PA: Society for Industrial and Applied Mathematics)
+Spruit, H. C., Stehle, R., & Papaloizou, J. C. B. 1995, MNRAS, 275, 1223
+Stone, J. M., Mihalas, D., & Norman, M. L. 1992, ApJS, 80, 819
+Stone, J. M., Tomida, K., White, C. J., & Felker, K. G. 2020, ApJS, 249, 4
+Teunissen, J., & Keppens, R. 2019, CoPhC, 245, 106866
+Tomida, K., Machida, M. N., Hosokawa, T., Sakurai, Y., & Lin, C. H. 2017,
+
+ApJL, 835, L11
+
+Tomida, K., Okuzumi, S., & Machida, M. N. 2015, ApJ, 801, 117
+Trottenberg, U., Oosterlee, C., Schuller, A., & Brandt, A. 2001, Multigrid
+
+(London: Elsevier Academic)
+
+Turner, N. J., & Stone, J. M. 2001, ApJS, 135, 95
+Vallés-Pérez, D., Planelles, S., & Quilis, V. 2021, CoPhC, 263, 107892
+Wang, H.-H., & Yen, C.-C. 2020, ApJS, 247, 2
+White, C. J. 2022, ApJS, 262, 28
+White, C. J., Stone, J. M., & Gammie, C. F. 2016, ApJS, 225, 22
+Wünsch, R., Walch, S., Dinnbier, F., & Whitworth, A. 2018, MNRAS,
+
+475, 3393
+
+Yavneh, I. 1996, SJSC, 17, 180
+Ziegler, U. 2005, A&A, 435, 385
+
+22
+
+

@@ -1,0 +1,8468 @@
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+© 2021. The American Astronomical Society. All rights reserved.
+
+https://doi.org/10.3847/1538-4365/abe303
+
+An Implicit Finite Volume Scheme to Solve the Time-dependent Radiation Transport
+Equation Based on Discrete Ordinates
+
+Yan-Fei Jiang (姜燕飞)
+Center for Computational Astrophysics, Flatiron Institute, New York, NY 10010, USA; yjiang@ﬂatironinstitute.org
+Received 2020 December 28; revised 2021 February 2; accepted 2021 February 2; published 2021 April 1
+
+Abstract
+We describe a new algorithm to implicitly solve the time-dependent, frequency-integrated radiation transport (RT)
+equation, which is coupled to an explicit solver for equations of magnetohydrodynamics (MHD) using
+Athena++. The radiation ﬁeld is represented by speciﬁc intensities along discrete rays, which are evolved using
+a conservative ﬁnite volume approach for both Cartesian and curvilinear coordinate systems. All terms for spatial
+transport of photons and interactions between gas and radiation are calculated implicitly together. An efﬁcient
+Jacobi-like iteration scheme is used to solve the implicit equations. This removes any time-step constraint due to
+the speed of light in RT. We evolve the speciﬁc intensities in the lab frame to simplify the transport step. The lab
+frame speciﬁc intensities are transformed to the comoving frame via Lorentz transformation when the source term
+is calculated. Therefore, the scheme does not need any expansion in terms of v/c. The radiation energy and
+momentum source terms for the gas are calculated via direct quadrature in the angular space. The time step for the
+whole scheme is determined by the normal Courant–Friedrichs–Lewy condition in the MHD module. We provide a
+variety of test problems for this algorithm, including both optically thick and thin regimes, and for both gas and
+radiation pressure-dominated ﬂows to demonstrate its accuracy and efﬁciency.
+Uniﬁed Astronomy Thesaurus concepts: Computational methods (1965); Radiative transfer (1335)
+
+1. Introduction
+
+time,
+
+is a function of
+
+The thermal properties of
+
+the gas are determined by
+emission, absorption, and scattering of photons, as well as
+transport of the radiation ﬁeld through the gas. In certain
+conditions—for example, the ﬂow around compact objects and
+in massive stars—the intense radiation ﬁeld can be the
+dominant source of pressure force via the momentum exchange
+between photons and gas, which controls the dynamics of the
+system. Solving the radiation transport (RT) equation together
+with magnetohydrodynamic (MHD) simulations becomes a
+very important
+task in numerical simulations of various
+astrophysical systems (Teyssier 2015, and references therein).
+The RT equation is typically much more expensive to solve
+compared with the cost of MHD simulations. The speciﬁc
+intensity, which is the fundamental quantity to describe the
+radiation ﬁeld,
+location,
+propagating direction, and frequency. Even when adopting
+the gray approximation (frequency-independent), resolving the
+angular distribution of photons is still harder to do compared
+with MHD. In addition, photons travel with the speed of light
+in the optically thin regime, which is much faster than the ﬂow
+speed of many nonrelativistic systems, while in the very
+optically thick limit, the photon mean free path can be much
+smaller than any other length scale of interest. Capturing
+different limits of the RT equation self-consistently while still
+evolving the MHD equations efﬁciently can be challenging.
+For these reasons, different assumptions have been made to
+simplify the RT equation. One type of simpliﬁed approach is to
+take the moments of speciﬁc intensity and make certain
+assumptions to close the moment equations. Flux-limited
+diffusion (FLD) is a widely used method (e.g., Levermore &
+Pomraning 1981; Turner & Stone 2001; Krumholz et al. 2007;
+van der Holst et al. 2011) that assumes that the mean radiation
+energy density follows the diffusion equation with a modiﬁed
+diffusion coefﬁcient to limit the effective photon speed to be
+
+spatial
+
+smaller than the speed of light. This assumption is well known
+to have issues in the optically thin regime. But more important,
+in the regime with intermediate optical depth, when it is unclear
+whether diffusion approximation can be made or not,
+simulations adopting the FLD approximation can result
+in
+misleading conclusions (Krumholz & Thompson 2013) that
+will not be known until
+the results are compared with
+simulations with more accurate methods (Davis et al. 2014;
+Tsang & Milosavljević 2018; Smith et al. 2020). Another
+increasingly popular alternative is the M1 method (Dubroca &
+Feugeas 1999; Pons et al. 2000; González et al. 2007;
+Sa̧dowski et al. 2013; Skinner & Ostriker 2013; McKinney
+et al. 2014; Skinner et al. 2019), which evolves the zeroth and
+ﬁrst moments of speciﬁc intensity with an assumed closure
+relation based on local radiation energy density and ﬂux. It is
+often claimed that the M1 approach is accurate in both optically
+thin and optically thick regimes because it can handle the
+shadow cast by one beam of the radiation ﬁeld. This is
+deﬁnitely incorrect, as the assumed closure relation in M1 can
+easily fail in other cases. For example, it will merge multiple
+beams of photons into one, since the radiation ﬁeld is treated as
+another ﬂuid in this method.
+
+Other methods have been developed to solve the equation for
+speciﬁc intensities directly without assuming any closure
+relation. The Monte Carlo–based RT approach has been widely
+explored (Whitney 2011, and references therein) and is able to
+handle various radiative processes accurately. Some novel
+schemes have also been developed to reduce the noise and
+computational cost of this type of method in different regimes
+(Densmore et al. 2007; Steinacker et al. 2013; Roth &
+Kasen 2015; Foucart 2018; Tsang & Milosavljević 2018; Ryan
+& Dolence 2020; Smith et al. 2020). Another type of widely
+used method is based on discrete ordinates, or Sn, which solve
+the transport equation along discrete angles. In particular, the
+formal solution to the RT equation can be used as a closure to
+
+1
+
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+
+Jiang
+
+the radiation moment equation so that
+it can remove the
+limitations of FLD and M1. This variable Eddington tensor
+(VET) scheme has been used for a wide range of applications
+(Asahina et al. 2020; Davis et al. 2012; Gehmeyr &
+Mihalas 1994; Hayes & Norman 2003; Jiang et al. 2012; Stone
+et al. 1992). The key to this approach is that the full time-
+dependent evolution of radiation MHD is handled by the
+radiation moment equation, while the closure is given by the
+formal solution to the time-independent
+transport equation.
+Even though the RT equation is solved twice in different ways,
+it is often assumed that it will still be more efﬁcient compared
+with solving the full time-dependent RT equation directly. In
+this paper, we show that it is actually possible to efﬁciently
+solve the full time-dependent RT equation in a ﬁnite volume
+approach with the computational cost comparable to or even
+better than VET in some cases. The ﬁnite volume approach also
+makes it much easier to use in curvilinear coordinates, which
+can be complicated for the VET scheme.
+
+systems,
+
+frames. Even for nonrelativistic
+
+The transport term in the RT equation is easier to solve in the
+laboratory frame, while the interaction terms between radiation
+and gas are greatly simpliﬁed in the comoving frame of the
+ﬂuid. For nonrelativistic systems, where the ﬂow velocity v is
+much smaller than the speed of light c, the RT equation is
+typically simpliﬁed by transforming the source terms from the
+comoving frame to the laboratory frame only to certain orders
+of v/c (Mihalas & Klein 1982; Mihalas & Mihalas 1984).
+However, it has also been pointed out by Lowrie et al. (1999)
+that expansion only to the ﬁrst order of v/c is not enough.
+Some second-order v/c terms are needed to get the correct
+asymptotic limit in different regimes, particularly the dynamic
+diffusion regime (Krumholz et al. 2007). We want to point out
+that these expansions can be avoided completely if the speciﬁc
+intensities are solved directly. We can apply the Lorentz
+transformation to connect the radiation source terms between
+different
+this
+approach is simple and accurate for all regimes and does not
+cause too much additional computational cost or complexity.
+When the typical ﬂow speed in the system is close to the
+speed of light, for example, around compact objects, it is more
+efﬁcient
+the RT equation
+explicitly by limiting the time step based on the speed of light
+(Sa̧dowski et al. 2013; Jiang et al. 2014; McKinney et al. 2014;
+Anninos & Fragile 2020; Asahina et al. 2020). However, for a
+wide range of applications with nonrelativistic systems, it is
+necessary to solve the MHD equation explicitly while the RT
+equation is solved implicitly so that the time step is not limited
+by the speed of light. This is the approach adopted by most
+algorithms when the radiation moment equations are solved.
+When speciﬁc intensities are solved directly,
+the time-
+dependent term is typically neglected. There have been several
+attempts to solve the full
+time-dependent RT equations
+(Stone & Mihalas 1992;
+implicitly with mixed results
+Sumiyoshi & Yamada 2012). When the time step is much
+larger than the light-crossing time per cell, the challenge is to
+keep a good balance between the transport and source terms in
+all of the asymptotic regimes. This is because the RT equation
+is a simple advection equation in the optically thin regime, and
+it becomes a diffusion equation in the optically thick case.
+Advection will cause additional complexity. In this paper, we
+propose a fully implicit scheme that can get all of the regimes
+correctly.
+
+to solve the transport
+
+term of
+
+2
+
+This paper is organized as follows. In Section 2, we describe
+the equations to solve, particularly on how the Lorentz
+transformation is used for the velocity-dependent terms. The
+implicit discretization of the RT equation and detailed steps of
+the algorithm are described in Section 3. In Section 4, we show
+a set of test problems for our algorithm. Comparisons between
+our algorithm and some existing RT schemes, as well as future
+development, are discussed in Section 5.
+
+2. Equations
+
+The radiation MHD equations we solve are similar to what
+are used by Jiang et al. (2014). However, we do not expand the
+source terms in orders of v/c. We will describe the RT
+equations and how they are coupled to the MHD equations in
+the following subsections.
+
+2.1. Equations for RT
+We describe the radiation ﬁeld using frequency-integrated
+speciﬁc intensity I in the lab frame, which is a function of time
+t, spatial location (x, y, z), and angular direction as deﬁned by
+the unit vector n. The transport term is greatly simpliﬁed in the
+lab frame, while the source terms describing the interactions
+between radiation and gas are convenient in the comoving
+frame of the ﬂuid. Therefore, we also adopt this mixed frame
+approach (Lowrie et al. 1999; Jiang et al. 2012, 2014). The RT
+equation we solve is (Mihalas & Klein 1982; Mihalas &
+Mihalas 1984)
+
+¶
+I
+¶
+t
+
++
+
+c
+
+n
+
+·
+
+
+
+I
+
+=
+
+c
+
+(
+
+h
+
+-
+
+c
+
+I ,
+)
+
+1
+( )
+
+(
+
+where c is the speed of light. The emissivity η and opacity χ are
+formally deﬁned in the lab frame in the above equation. But the
+whole source term is calculated in the comoving frame via the
+approach below. Traditionally, in order to get the expression
+for the source term, expansion to the ﬁrst order of
+ v c is
+usually used (Mihalas & Klein 1982), with some additional
+second-order terms (Lowrie et al. 1999; Krumholz et al. 2007;
+Jiang et al. 2014). Here we apply the Lorentz transformation to
+the speciﬁc intensities to completely avoid the need for
+expansion in terms of v/c. Although this may not sound
+necessary for nonrelativistic systems, this approach does not
+cause additional computational cost, and it results in a much
+cleaner calculation of the source terms.
+
+The frequency-integrated speciﬁc intensities in the lab frame
+via the
+
+I(n) are related to the comoving frame values
+)¢nI0
+(
+Lorentz transformation as (Mihalas & Mihalas 1984)
+
+)
+
+I
+0
+
+(
+
+n
+
+¢ =
+)
+
+4
+
+g
+
+(
+
+1
+
+-
+
+n v
+·
+
+4
+c I
+)
+
+n
+( )
+
+º G
+
+4
+
+(
+
+n v
+,
+
+n
+I
+) ( )
+
+,
+
+2
+( )
+
+where v is the ﬂow velocity, g º
+corresponding Lorentz factor, and
+comoving frame given by
+
+2
+
+1
+
+1
+
+- v
+
+is the
+¢n is the angle in the
+
+c
+
+2
+
+n
+
+¢ =
+
+g
+
+(
+
+1
+
+-
+
+1
+n v
+·
+
+⎡
+⎢
+⎣
+
+c
+
+)
+
+n
+
+-
+
+g
+
+⎛
+⎜
+⎝
+
+v
+c
+
+1
+
+-
+
+g
++
+
+n v
+·
+c
+
+1
+
+g
+
+⎞
+⎟
+⎠
+
+⎤
+⎥
+⎦
+
+.
+
+3
+( )
+
+We have deﬁned
+g
+1
+(
+for convenience.
+We multiply the left-hand sides of the source term with Γ4 to
+
+n v c
+·
+
+n v
+,
+(
+
+º
+
+-
+
+G
+
+)
+
+)
+
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+
+Jiang
+
+get
+
+MHD equations as
+
+¶
+I
+0
+¶
+t
+
+= G -
+[
+
+h
+
+c
+
+0
+
+c
+
+I
+0 0
+
+]
+
+.
+
+( )
+4
+
+Here the frequency-integrated emissivity (η0) and opacity (χ0)
+in the comoving frame are related to η, χ as
+
+h
+
+0
+
+= G
+
+3
+h c
+,
+
+0
+
+= G-
+
+1
+c
+.
+
+5
+( )
+
+Under the assumption of local thermal equilibrium, we can
+write the frequency-integrated source term in the comoving
+frame as
+
+¶
+I
+0
+¶
+t
+
+= G
+c
+
+[
+
+rk
+s
+
+(
+
+J
+0
+
+-
+
+I
+0
+
+)
+
++
+
+r k
+(
+
+a
+
++
+
+k
+
+d
+P
+
++
+
+rk
+
+a
+
+⎛
+⎜
+⎝
+
+4
+
+-
+
+⎞
+⎟
+I
+0
+⎠
+
++
+
+rk
+
+d
+P
+
+⎛
+⎜
+⎝
+
+4
+
+a T
+r
+p
+4
+
+⎞
+⎟
+J
+0
+⎠
+
+⎤
+⎥
+⎦
+
+-
+
+S E
+(
+r
+
+)
+
+º
+
+4
+
+p
+c
+
+a T
+r
+p
+4
++
+
+= G
+c
+
+r k
+[ (
+s
+
+k
+
+a
+
++
+
+r k
+(
+
+a
+
++
+
+k
+
+d
+P
+
+)
+
+)(
+⎛
+⎜
+⎝
+
+J
+0
+
+-
+
+I
+0
+
+)
+
+4
+
+a T
+r
+p
+4
+
+⎞
+⎟
+J
+0
+⎠
+
+⎤
+⎥
+⎦
+
+-
+
+6
+( )
+
+¶
+r
+¶
+t
+¶
+r
+v
+(
+¶
+t
+¶
+E
+¶
+t
+¶
+B
+¶
+t
+¶
+I
+¶
+t
+S
+I
+
++
+
+
+
+· (
+
+r
+v
+
+)
+
+=
+
+0,
+
+)
+
++
+
+
+
+· (
+
+r
+
+vv
+
+-
+
+BB
+
++
+
+*
+)
+P
+
+= -
+
+S P
+(
+r
+
+)
+
+,
+
++
+
+-
+
+
+
+· [(
+
+E
+
++
+
+P
+
+*
+)
+
+v
+
+-
+
+
+
+´ ´
+v
+(
+
+B
+)
+
+=
+
+0,
+
+B B v
+
+(
+
+·
+
+)]
+
+= -
+
+S E
+(
+r
+
+)
+
+,
+
++
+
+c
+
+n
+
+·
+
+
+
+I
+
+=
+
+cS
+I
+
+,
+
+º G
+
+-
+
+3
+
+r k
+[ (
+s
+
+k
+
+)(
+
+J
+0
+
+a
+
+-
+
++
+⎛
+⎜
+⎝
+
+)
+
+4
+
+a T
+r
+p
+4
+
+-
+
+I
+)
+0
+⎤
+⎞
+⎥
+⎟
+J
+0
+⎠
+⎦
+
+,
+
+ò
+ò
+
+S d
+I
+
+W
+
+,
+
+n
+
+S d
+I
+
+W
+.
+
+( )
+9
+
+S P
+(
+r
+
+)
+
+º
+
+4
+
+p
+
+Here B is the magnetic ﬁeld, P* ≡ (P + B2/2)I (with I the unit
+tensor), and the magnetic permeability μ is taken to be 1 in this
+unit system. The total gas energy density is
+
+E
+
+= +
+E
+g
+
+2
+
+r
+v
+
++
+
+1
+2
+
+2
+
+B
+2
+
+.
+
+(
+
+10
+
+)
+
+We assume ideal gas so that the gas internal energy is related to
+gas pressure via the adiabatic index γg as Eg = P/(γg − 1) for
+γg ≠ 1. The gas temperature is calculated with
+)r
+,
+where Rideal is the ideal gas constant.
+
+P Rideal
+(
+
+=T
+
+3. The Implicit Solver for the RT Equation
+
+We will use the normal explicit Godunov scheme with
+constrained transport in Athena++ to evolve the MHD part of
+Equation (9). The time step is limited by the Courant–Friedrichs–
+Lewy (CFL) condition based on the maximum ﬂow velocity,
+sound speed, and Alfvén speed. For the RT equation, we will solve
+all terms implicitly to remove the time-step constraint due to the
+speed of light. We will describe how we discretize and solve the
+RT equation in this section.
+
+3.1. Spatial and Angular Discretization
+The radiation ﬁeld shares the same spatial grid as used for the
+gas quantities in Athena++. We label the three coordinates as
+x, y, z, which can be any orthogonal curvilinear systems such as
+Cartesian, cylindrical, or spherical polar coordinates. The total
+number of grid points along the three directions are Nx, Ny, and
+Nz, respectively. Notice that our ﬁnite volume scheme does not
+need the grid spacing to be uniform. What we need is the volume
+of each cell Vi,j,k for i ä [0, Nx − 1], j ä [0, Ny − 1], and k ä [0,
+Nz − 1], as well as surface areas of each cell facing the three
+directions Ax, Ay, and Az. All of the speciﬁc intensities are deﬁned
+at the volume center of each cell.
+
+We adopt the same angular discretization scheme as used by
+Davis et al. (2012) and Jiang et al. (2014) to be our default
+choice.1 The angular unit vectors n are deﬁned with respect to a
+
+1 Other angular discretization approaches can also be used for speciﬁc
+applications, as shown in Section 3.2.4.
+
+and the corresponding equation for gas internal energy Eg as
+
+¶
+
+E
+g
+
+¶
+t
+
+= -
+
+c
+
+r k
+(
+
+a
+
++
+
+k
+
+)(
+
+a T
+r
+
+d
+P
+
+4
+
+-
+
+p
+J4
+0
+
+)
+
+.
+
+7
+( )
+
+Here ar is the radiation constant, and ρ and T are the gas density
+and temperature, which should be comoving frame quantities,
+in principle. When the RT algorithm is coupled to a Newtonian
+MHD solver, we do not distinguish gas quantities as well as
+time in the lab and comoving frames. The angular averaged
+mean intensity in the comoving frame J0 is deﬁned as
+
+0
+
+,
+
+8
+( )
+
+W
+
+º
+
+J
+0
+
+I d
+0
+
+1
+òp
+4
+where Ω0 is the angular element in the comoving frame. The
+speciﬁc scattering opacity κs (with units of cm2 g−1) is assumed
+to be isotropic and does not change the mean photon energy
+such as electron scattering. The Rosseland mean absorption
+opacity is κa, and we take κδP to be the difference between the
+Planck mean and Rosseland mean opacity. This is designed to
+ensure that when we integrate the zeroth and ﬁrst moment of
+the comoving frame speciﬁc intensity over
+the angular
+the energy and momentum source terms
+space, we get
+4
+r k
+p
+k
+r k
+J4
+a T
+)
+(
+)(
+(
+0 with
+d
+s
+a
+r
+P
+0
+¢ W
+º
+nI
+H
+d
+. This is consistent with the Rosseland
+)
+0
+0
+and Planck mean opacities normally used for radiation moment
+equations. We multiply both sides of Equation (6) with Γ−4 to
+get the source term for lab frame speciﬁc intensities.
+
+-
+p
+4
+(
+
++
+ò
+
+p
+H4
+
+and
+
+k
+a
+
++
+
+-
+
+)(
+
+)
+
+0
+
+2.2. Equations of Radiation MHD
+
+Photons are coupled to the gas via momentum and energy
+exchange. Since the total energy and momentum are conserved
+in the lab frame, we integrate the source terms for lab frame
+speciﬁc intensities over the angles to get the full radiation
+
+3
+
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+
+Jiang
+
+x
+
+,
+
+global Cartesian coordinate, and they do not change with
+locations. The three components of each angle
+spatial
+=n
+m m m
+z , as well as the quadrature weight wn, are
+,
+(
+)
+y
+determined based on the same algorithm developed by Bruls
+et al.
+following the original quadrature principle
+described in Carlson (1963). This set of angles ensures that
+the following relations are satisﬁed numerically:
+
+(1999)
+
+The algorithm will also be ﬁrst-order accurate in time for RT to
+avoid oscillatory behavior during the temporal evolution of gas
+temperature and radiation energy density when the source term
+is very stiff.
+
+For the given initial conditions
+
+m at time step
+m
+T
+,
+m, the speciﬁc intensities
+m 1 with n ä [0, N − 1] at time step
++In
+m + 1 are calculated based on the following N + 1 equations:
+
+r
+
+m
+I
+n
+
+v
+
+m
+
+,
+
+,
+
+-
+N
+1
+å
+=
+n
+0
+-
+N
+1
+å
+=
+n
+0
+-
+N
+1
+å
+=
+n
+0
+
+2
+m
+x
+
+m
+
+x
+
+w
+n
+
+=
+
+1,
+
+w
+n
+
+=
+
+w
+n
+
+=
+
+-
+N
+1
+å
+=
+n
+0
+-
+N
+1
+å
+=
+n
+0
+
+m
+
+y
+
+w
+n
+
+=
+
+2
+m
+y
+
+w
+n
+
+=
+
+-
+N
+1
+å
+=
+n
+0
+-
+N
+1
+å
+=
+n
+0
+
+m
+
+z
+
+w
+n
+
+=
+
+0,
+
+2
+m
+z
+
+w
+n
+
+=
+
+1
+3
+
+,
+
+m
+I
+n
+´
+
++
+
+1
+
+-
+m
+r k
+s
+
+[
+
++
+
+m
+r k
+
+m
++ D
+I
+n
++
+m
+1
+J
+(
+0
+⎛
+⎜
+⎝
+
+a T
+(
+r
+4
+
+a
+
+tc
+
+n
+
+
+·
++
+m
+1
+I
+)
+n
+0,
+
+-
+
+m
+
++
+
+1 4
+)
+
+p
+
+m
+I
+n
+
++
+
+1
+
+= D G
+
+tc
+
+-
+n
+
+3
+
+-
+
++
+m
+I
+n
+0,
+
+⎞
+⎟
+1
+⎠
+
+-
+
++
+
+m
+J
+0
+
+⎞
+⎟
+1
+⎠
+
+⎤
+⎥
+⎦
+
+,
+
+(
+
+11
+
+)
+
++
+
+m
+r k
+
+d
+P
+
+⎛
+⎜
+⎝
+
+m
+
++
+
+1 4
+)
+
+a T
+(
+r
+4
+
+p
+
+where N is the total number of angles.
+
+Notice that these angles are always deﬁned in the lab frame.
+The angles in the comoving frame are determined based on
+Equation (3), while the quadrature weight in the comoving
+. For an inﬁnite number of angles, it can be
+frame is
+shown that ∫Γ−2dΩ0 = 1 for any ﬂow velocity. However, this
+relation normally is not satisﬁed numerically to machine
+precision due to truncation errors with a ﬁnite number of
+angles. We correct this error by normalizing
+
+¢ = G-
+2
+w
+n
+
+w
+n
+
+¢wn as
+
+¢ º
+w
+n
+
+å
+
+2
+
+-
+
+G
+w
+n
+- -
+N
+1
+G
+=
+n
+0
+
+2
+
+.
+
+w
+n
+
+(
+
+12
+
+)
+
+1
+
+N
+0
+
+- w
+1
+¢ =
+n
+
+is always satisﬁed. We ﬁnd it
+
+Therefore, å
+is
+necessary to correct this angular truncation error to avoid an
+accumulative energy error when the ﬂow velocity is not zero.
+The commonly used radiation energy density, radiation ﬂux,
+and radiation pressure in the lab and comoving frames are just
+derived quantities from speciﬁc intensities as
+
+E
+
+r
+
+=
+
+4
+
+p
+
+I w E
+,
+n
+n
+
+=
+
+4
+
+p
+
+r
+
+,0
+
+¢
+I w
+,
+n n
+0,
+
+F
+r
+
+=
+
+4
+
+p
+c
+
+n
+I w
+n
+n
+
+,
+
+F
+r
+
+,0
+
+=
+
+4
+
+I
+0,
+
+n
+
+n
+¢
+
+¢
+w
+,
+n
+
+-
+N
+1
+å
+=
+n
+0
+-
+N
+1
+å
+=
+n
+0
+-
+N
+1
+å
+=
+n
+0
+
+p
+c
+
+-
+N
+1
+å
+=
+n
+0
+-
+N
+1
+å
+=
+n
+0
+-
+N
+1
+å
+=
+n
+0
+
+p
+
+P
+r
+
+=
+
+4
+
+p
+
+I
+n
+
+nn
+
+w
+n
+
+,
+
+P
+r
+
+,0
+
+=
+
+4
+
+I
+0,
+
+n n
+¢
+¢
+
+n
+
+¢
+w
+.
+n
+
+(
+
+13
+
+)
+
+3.2. Discretized Equation for RT
+
+The radiation energy source term can be very stiff in the
+optically thick regions, while the radiation momentum source
+term is typically not (Sekora & Stone 2010; Jiang et al. 2012).
+Therefore, when we solve the RT equation, we will assume that
+the ﬂow velocity and gas density do not change. But we evolve
+the gas temperature with the radiation variables together to
+ensure that correct thermal equilibrium state is achieved. As
+higher-order spatial reconstruction without a ﬂux limiter cannot
+guarantee total variation diminishing, which is necessary to
+avoid oscillatory behavior around local maxima or minima, we
+will only use ﬁrst-order
+reconstruction for our
+algorithm. The commonly used ﬂux limiters will make the
+transport term nonlinear, which is very hard to solve implicitly.
+
+spatial
+
+4
+
+´
+
+r
+g
+g
+
+m
+R
+ideal
+-
+1
+
+m
+
++
+
+1
+
+(
+
+T
+
+-
+
+T
+
+m
+
+)
+
+= -D
+
+tc
+
+m
+r k
+(
+
+a
+
++
+
+k
+
+)[
+
+a T
+(
+r
+
+d
+P
+
+m
+
++
+
+1 4
+)
+
+-
+
+4
+
+m
+p
+J
+0
+
++
+
+1
+]
+
+,
+
+(
+
+14
+
+)
+
+where
+
+1
+
++
+m
+I
+n
+0,
+
+= G
+
+m
+4
+I
+n n
+
++
+
+1
+,
+
+m
+J
+0
+
++
+
+1
+
+=
+
+-
+N
+1
+å
+=
+n
+0
+
+¢
+w I
+n
+
++
+m
+n
+0,
+
+1
+,
+
+(
+
+15
+
+)
+
+and Γn is calculated using v m for each angle. The opacities (κs,
+κa, and κδP) can be functions of local gas properties,
+in
+principle. But we will assume that they keep the values at time
+step m in the above equations. This is a set of fully coupled
+equations for gas temperature and speciﬁc intensities at all
+angles (via the terms with
+1) and spatial locations (via the
+m 1). These equations are only linear
+transport term ·  +
+In
+)+T m 1 4 term.
+with respect to
+All of the transport and source terms are calculated using the
+variables at time step m + 1 to make the scheme uncondition-
+ally stable for any time step Δt. We will use an iterative
+approach to solve these equations as described below.
+
+n
+m 1 but not for T m+1 due to the (
++In
+
++J m
+0
+
+)
+
+)
+
+1,
+
+· (
+
+
+
+j k
+,
+
+and
+
++In
+m 1 to be
+
+3.2.1. The Transport Term
+Following Jiang et al. (2014), we can rewrite the transport
++n
+m 1 with our default
+In
+c
+term in the above equations as
+angular discretization because n does not change with spatial
+location. Then this term becomes the conservative format and
+can be calculated with the standard ﬁnite volume approach. For
+the interface at i − 1/2, j, k, we simply take the left and right
+-+I
+m 1
+j k
+i
+,
+)
+(
+,
+states for
+n
+respectively. The same approach is used for other directions.
+Special care is needed to determine the surface ﬂuxes for
+each speciﬁc intensity. If we simply take the upwind ﬂuxes as
+in Stone & Mihalas (1992), although the total energy is
+conserved, numerical diffusion can overcome the physical
+diffusion in the very optically thick regime. This can be easily
+demonstrated with only two angles in one dimension. If we
+assume the two angles have μx,1 > 0 and μx,2 < 0, the upwind
+ﬂuxes at i − 1/2 will be cμx,1I1(i − 1) and cμx,2I2(i). Similarly,
+the ﬂuxes at i + 1/2 for the two angles are cμx,1I1(i) and
+cμx,2I2(i + 1). The change of the mean radiation energy density
+then determined by cw2μx,2I2
+w1I1 + w2I2 at cell
+(i + 1) + cw1μx,1I1(i) − cw2μx,2I2(i) − cw1μx,1I1(i − 1). However,
+
++I
+m 1
+n
+
+is
+
+i
+(
+
+i
+
+,
+
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+
+Jiang
+
+it
+
+that
+
+equation requires
+
+radiation moment
+
+should
+the
+to Fr(i + 1) − Fr(i − 1) = cw2μx,2I2(i + 1) +
+be proportional
+cw1μx,1I1(i + 1) − cw2μx,2I2(i − 1) − cw1μx,1I1(i − 1). The differ-
+ence is essentially the truncation error, which is negligible in the
+optically thin regime. However, in the optically thick regime,
+when the radiation ﬁeld is very close to being isotropic,
+than |I1(i + 1) −
+|I2(i + 1) − I1(i + 1)| can be much smaller
+I1(i)|. This will cause the numerical ﬂux due to the truncation
+than the physical ﬂux due to
+errors to be much larger
+photon diffusion, which results in completely wrong numerical
+solutions. We have designed a modiﬁed HLLE ﬂux to overcome
+the issue.
+
+The dynamical diffusion regime also needs to be treated
+carefully, as discussed in Jiang et al. (2014). The numerical
+truncation error due to ﬁnite ﬂow velocity can also overcome
+the physical diffusion when the optical depth per cell is very
+large, particularly with ﬁrst-order spatial reconstruction. In
+principle,
+these numerical errors can be minimized with
+second- or third-order spatial reconstructions. However, it is
+not an option for our implicit scheme. Instead, we ﬁnd that a
+specially designed HLLE-type ﬂux can work very well in all
+regimes.
+
+We rewrite the transport term as
+
+Appendix. Then the ﬂux divergence term is calculated as
+
+
+
+· [(
+
+c
+
+n
+
+-
+
+m
+
+f
+
+v
+
+)
+
+m
+I
+n
+
++
+
+1
+]
+
+=
+
+´
++
++
+
+A i
+[
+(
+x
+A j
+(
+y
+A k
+(
+z
+
++
++
++
+
+F i
+)
+(
+1 2
+n
+F j
+(
+)
+1 2
+n
+F k
+(
+)
+1 2
+n
+
++
++
++
+
+1
+V
+i j k
+, ,
+)
+1 2
+)
+1 2
+)
+1 2
+
+-
+-
+-
+
+A i
+(
+x
+A j
+(
+y
+A k
+(
+z
+
+-
+-
+-
+
+F i
+)
+(
+1 2
+n
+F j
+(
+)
+1 2
+n
+F k
+(
+)
+1 2
+n
+
+-
+-
+-
+
+)
+1 2
+)
+1 2
+1 2 .
+)]
+19
+(
+)
+
+Reorganizing all terms results in the following equation that we
+will apply our iterative solver:
+
++
+
+m
+g I
+n
+3
+1
++
+j
+(
+
+1
+
+(
+
+i
+
++
+
+1
+
+)
+
+1
+
+)
+
+1
+
+(
+
+k
+
++
+
+1
+
+)
+
+- +
+1
+)
++
+m
+g I
+n
+5
+m
+g I
+n
+7
+m
+I
+)
+n
++
+1
+
++
+
+-
+
+1
+
+1
+
+1
+
+i
+
+(
+
+(
+
++
+
++
+
++
+
+m
+g I
+n
+2
+1
+- +
+j
+1
+)
+
+m
++
+g I
+n
+1
++
+m
++
+g I
+n
+4
+m
+- +
++
+g I
+k
+1
+(
+)
+n
+6
+m
+m
+= - D
+
+v
+I
+t
+· (
+n
+-
+m
+3
+m
++ D G
+r k
+J
+s
+n
+0
+⎛
+⎜
+⎝
+
+a T
+(
+r
+4
+
+m
+r k
+
+1 4
+)
+
++
+
+tc
+
+p
+
++
+
+m
+
+[
+
+(
+
+f
+
+a
+
++
+m
+I
+n
+0,
+⎞
+⎟
+1
+⎠
+
+-
+
++
+m
+I
+n
+0,
+
++
+
+m
+r k
+
+d
+P
+
+⎛
+⎜
+⎝
+
+m
+
++
+
+1 4
+)
+
+a T
+(
+r
+4
+
+p
+
+-
+
++
+
+m
+J
+0
+
+⎞
+⎟
+1
+⎠
+
+⎤
+⎥
+⎦
+
+,
+
+1
+)
+
+(
+
+20
+
+)
+
+c
+
+
+
+· (
+
++
+
+m
+n
+I
+n
+
+
++
+
+1
+)
+
+=
+
+· (
+
+f
+
+v
+
+
+m
+m
+I
+n
+
+· [(
++
+1
+)
+
+c
+
+n
+
+-
+
+m
+
+f
+
+v
+
+)
+
+m
+I
+n
+
++
+
+1
+]
+
+.
+
+(
+
+16
+
+)
+
+r
+g
+g
+
+m
+R
+ideal
+-
+1
+
+m
+
++
+
+1
+
+(
+
+T
+
+-
+
+T
+
+m
+
+)
+
+is a function of optical depth per cell t ºc
+, with ΔL to be a constant factor times the
+k+
+s
+
+Here f
+m
+r k
+(
+a
+cell size. The function is chosen as
+
+DL
+
+)
+
+f
+
+= -
+1
+
+exp
+
+(
+
+-
+
+t
+
+2
+c
+
+)
+
+.
+
+(
+
+17
+
+)
+
+This is designed to separate the advection term when the
+photon mean free path is not resolved ( f ≈ 1). This is not
+necessary when the optical depth per cell is much smaller than
+1 ( f ≈ 0). Since our time step will satisfy the CFL condition for
+ﬂow velocity, we
+term
+
+
+calculate
+Im m 1 explicitly, which means
+
+advective
+
+can
+
+the
+
+· (
+
+vf
+
++
+
+)
+
+c
+
+
+
++
+
+m
+n
+I
+· (
+n
+
++
+
+1
+)
+· (
+
+»
+v
+f
+
+
+m
+m
+I
+n
+
+· [(
+.
+)
+
+c
+
+n
+
+-
+
+f
+
+v
+
+m
+
+)
+
+m
+I
+n
+
++
+
+1
+]
+
+(
+
+18
+
+)
+
+1
+
+)
+
+i
+(
+
+I
+n L
+,
+
+I
+n R
+,
+
+ vf
+· (
+
+= +
+m
+I
+n
+
+m to get the
+We use second-order spatial reconstruction for In
+values at the cell faces and then upwind ﬂux based on fvm to
+m .
+Im
+)
+calculate the term
+n
+
+For the interface at (i − 1/2, j, k), we take the left and right
+states for each speciﬁc intensity to be
+=
+j k
+,
+)
+. Then we calculate the ﬂux Fn(i − 1/2)
+j k
+,
+,
+and
+at the interface for each angle based on a modiﬁed HLLE
+formula (Appendix). The key modiﬁcation is to make sure the
+ﬂux is the upwind value in the optically thin case and gets close
+to the centered value in the optically thick case based on the
+parameter τc. Similarly, we calculate the ﬂux Fn(i + 1/2)
+j, k), as well as ﬂuxes along
+for
+other directions Fn( j − 1/2), Fn( j + 1/2), Fn(k − 1/2), and
+Fn(k + 1/2). Detailed expressions for the ﬂuxes are given in the
+
+the interface (i + 1/2,
+
+-+
+i
+(
+
+m
+I
+n
+
+1,
+
+1
+
+= -D
+
+tc
+
+m
+r k
+(
+
+a
+
++
+
+k
+
+)[
+
+a T
+(
+r
+
+d
+P
+
+m
+
++
+
+1 4
+)
+
+-
+
+4
+
+m
+p
+J
+0
+
++
+
+1
+]
+
+.
+
+the coefﬁcients g1–g7 are given in the
+Expressions for
+Appendix. Notice that their values depend on the local optical
+depth τc, and they only need to be calculated once for each
+time step.
+
+3.2.2. The Iterative Solver
+We need to solve the N + 1 Equation (20) simultaneously to
+m 1 (n ä [0, N − 1]) and T m+1. These
++In
+get the solutions for
++In
+m 1. These terms can be rewritten
+equations are only linear for
+as a sparse matrix with a size of N × Nx × Ny × Nz. If the
+speciﬁc intensities are ordered in a 1D array such that
+is located at kNyNxN + jNxN + iN + n, the matrix
++I
+m 1
+n
+has the special structure that the diagonal direction are blocks
+with size N × N, which couple all of the angles at the same
+locations. All other elements are only nonzero at
+spatial
+locations corresponding to (n, i ± 1, j, k), (n, i, j ± 1, k), and (n,
+i, j, k ± 1). The terms related to T m+1 are nonlinear, but T m+1
+at different spatial locations are completely decoupled.
+
+j k
+,
+
+i
+(
+
+)
+
+,
+
+This motivates us to solve these equations iteratively, similar
+to the Jacobi approach used for linear systems. For each cell,
+we take all of the speciﬁc intensities at different spatial
+locations to be the values from the last step. Then we go
+through each cell and solve the equations for all of the speciﬁc
+intensities at once. We update the off-diagonal terms with the
+updated speciﬁc intensities and continue this process until the
+changes of the speciﬁc intensities between neighboring steps
+are below a certain threshold.
+
+5
+
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+
+Speciﬁcally, we solve the following equations iteratively:
+
+We sum up the equations with the appropriate weight
+each angle and get
+
++
+m
+g J
+l
+1 0,
+
+1
+
+=
+
+å
+n
+
+¢G + D G
+w
+n
+n
+
+4
+I
+n c
+
+tc
+
+[
+
++
+
+m
+r k
+
+a
+
+⎛
+⎜
+⎝
+
++
+
+1 4
+)
+
+m
+a T
+(
+r
+l
+4
+
+p
+
+(
+
+21
+
+)
+
++
+
+m
+r k
+
+d
+P
+
+⎛
+⎜
+⎝
+
++
+
+1 4
+)
+
+m
+a T
+(
+r
+l
+4
+
+p
+
+-
+
++
+m
+J
+l
+0,
+
+⎞
+⎟
+1
+⎠
+
+-
+
++
+m
+J
+l
+0,
+
+⎞
+⎟
+1
+⎠
+
+⎤
+⎥
+⎥
+⎦
+
+.
+
+Jiang
+
+¢wn for
+
+(
+
+25
+
+)
+
+(
+
+i
+
++
+
+1
+
+)
+
+1
+
++
+
+k
+
++
+
+m
++
+g I
+g I
+n l
+1 ,
+2
++
+m
+1
++
+g I
+j
+(
+-
+n l
+1
+,
+4
++
+m
+1
+g I
+(
+-
+n l
+1
+,
+6
+m
+
+= - D
+I
+t
+n
+-
+3
++ D G
+n
+⎛
+⎜
+⎝
+⎛
+⎜
+⎝
+
+m
+r k
+
+m
+r k
+
++
+
++
+
+tc
+
+d
+P
+
+[
+
+a
+
++
+m
+1
+-
+n l
+1
+,
++
+1
+
+)
+
++
+
+1
+
+)
+
+- +
+g I
+1
+)
+3
++
+m
+1
+j
+(
+-
+n l
+1
+,
++
+m
+1
+-
+n l
+1
+,
+
+k
+
+(
+
+i
+
+(
+
++
+m
+1
+-
+n l
+1
+,
+- +
+1
+)
+
+g I
+5
+g I
+7
+m
+I
+)
+n
++
+m
+1
+J
+l
+0,
+
+-
+
+- +
+1
+)
+m
+v
+f
+
+· (
+m
+r k
+s
+
+(
+
+m
+I
+0,
+
++
+1
+)
+n l
+,
+⎞
++
+⎟
+1
+n l
+,
+⎠
+
++
+
+1 4
+)
+
+m
+a T
+(
+r
+l
+4
+
+p
+
+-
+
+m
+I
+0,
+
++
+
+1 4
+)
+
+m
+a T
+(
+r
+l
+4
+
+p
+
+-
+
++
+m
+J
+l
+0,
+
+⎞
+⎟
+1
+⎠
+
+]
+
+,
+
+r
+g
+g
+
+m
+R
+ideal
+-
+1
+
++
+
+1
+
+(
+
+m
+T
+l
+
+-
+
+T
+
+m
+
+)
+
+= -D
+
+tc
+
+m
+r k
+(
+
+a
+
++
+
+k
+
+d
+P
+
+)[
+
+m
+a T
+(
+r
+l
+
++
+
+1 4
+)
+
+-
+
+4
+
++
+m
+p
+J
+l
+0,
+
+1
+]
+
+,
+
+where l represents each step during the iterative process. At the
+beginning, we need an initial guess for speciﬁc intensities at the
+whole grid for all of the angles. This is usually taken to be the
+solution from the last time step or the initial condition. Then we
+go through all of the grid points to solve the above equation for
+all of the angles at each cell together in the following way.
+
+For each step during the iteration, since all of the variables
++
++
++
+m
+m
+1
+1
+1
+I
+I
+, and
+-
+-
+-
+n l
+n l
+1
+1
+,
+,
+1
++
+1
+are already known, we can reorga-
+-
+1
+
+m
+I
+n l
+,
+m
+I
+n l
+,
+nize all of the equations we need to solve at each cell as
+
++
+1
+i
+(
+-
+1
++
+1
+k
+(
+-
+1
+
+m
+I
+n l
+,
+m
+I
+n l
+,
+
+)
+1 ,
+1 ,
+)
+
+,
+)
+1
+1
+)
+
++
++
+
+-
+-
+
+i
+(
+k
+(
+
+1
+))
+
+1 ,
+)
+
+-
+
++
+
+(
+
+(
+
+j
+
+j
+
++
+
+m
+g I
+n l
+1 ,
+
+1
+
+I
+c
+
++
+
+m
+r k
+
+= + D G
+tc
+⎛
+⎜
+⎝
+⎛
+⎜
+⎝
+
+m
+r k
+
++
+
+d
+P
+
+a
+
+-
+n
+
+3
+
+[
+
+m
+r k
+s
+
+(
+
++
+m
+J
+l
+0,
+
+1
+
+-
+
++
+
+1 4
+)
+
+m
+a T
+(
+r
+l
+4
+
+p
+
+-
+
+m
+I
+0,
+
++
+m
+1
+I
+)
+n l
+,
+0,
+⎞
++
+⎟
+1
+n l
+,
+⎠
+
++
+
+1 4
+)
+
+m
+a T
+(
+r
+l
+4
+
+p
+
+-
+
++
+m
+J
+l
+0,
+
+⎞
+⎟
+1
+⎠
+
+]
+
+,
+
+(
+
+22
+
+)
+
+r
+g
+g
+
+m
+R
+ideal
+-
+1
+
++
+
+1
+
+(
+
+m
+T
+l
+
+-
+
+T
+
+m
+
+)
+
+= -D
+
+tc
+
+m
+r k
+(
+
+a
+
++
+
+k
+
+d
+P
+
+)[
+
+m
+a T
+(
+r
+l
+
++
+
+1 4
+)
+
+-
+
+4
+
++
+m
+p
+J
+l
+0,
+
+1
+]
+
+,
+
+(
+
+23
+
+)
+
+where Ic includes all other terms that are already known before
+step l. We multiply the left and right sides of the equation for
+4 to get the equation for comoving frame
+1 with Gn
+each
+speciﬁc intensities as
+
++In l
+m
+,
+
+m
+g I
+1 0,
+
++
+1
+n l
+,
+
+= G + D G
+n
+
+4
+I
+n c
+
+[
+
+m
+r k
+s
+
+(
+
++
+m
+J
+l
+0,
+
+1
+
+-
+
++
+1
+)
+n l
+,
+
+tc
+⎛
+⎜
+⎝
+
++
+
+m
+r k
+
+a
+
++
+
+1 4
+)
+
+m
+a T
+(
+r
+l
+4
+
+p
+
+-
+
+m
+I
+0,
+
+m
+I
+0,
+⎞
++
+⎟
+1
+n l
+,
+⎠
+
++
+
+m
+r k
+
+d
+P
+
+⎛
+⎜
+⎝
+
++
+
+1 4
+)
+
+m
+a T
+(
+r
+l
+4
+
+p
+
+-
+
++
+m
+J
+l
+0,
+
+⎞
+⎟
+1
+⎠
+
+⎤
+⎥
+⎥
+⎦
+
+.
+
+(
+
+24
+
+)
+
+6
+
++I n l
+m
+,
+0,
+
++J l
+m
+0,
+
+1 and
+
+The scattering term drops out because it does not change the
+mean photon energy. Together with Equation (23), we can get
+m 1 by performing a root ﬁnding for
++Tl
+the solution for
+a fourth-order polynomial. Then the speciﬁc intensity for each
+1 can be calculated from Equation (24) indepen-
+angle
++In l
+m
+1 directly. In this way,
+dently, which can be converted to
+,
+the nonlinearity of the source term, as well as the coupling
+between different angles, all comes down to a fourth-order
+polynomial solver, which is trivial and independent of the
+number of angles. Therefore, the whole cost for each step
+during the iteration is linearly proportional to the number of
+angles. We continue the process for each grid and stop the
+iteration when
+
+D º
+I
+
+å
+n i j k
+, , ,
+
+m
+I
+∣
+n l
+,
+
+-+
+1
+
+m
+I
+n l
+,
+
++
+1
+∣
+-
+1
+
++
+
+m
+I
+∣
+n l
+,
+
+1
+∣
+
+å
+n i j k
+, , ,
+
+(
+
+26
+
+)
+
+is smaller than a threshold, typically 10−5.
+
+3.2.3. The Radiation Source Terms
+
+Since total energy and momentum are conserved in the lab
+frame, we use the conservation laws to determine the source
+terms we need to add to the gas. The radiation energy and
+momentum at the beginning of the time step are
+
+m
+E
+r
+
+=
+
+4
+
+p
+
+-
+N
+1
+å
+=
+n
+0
+
+m
+I w
+n
+n
+
+,
+
+m
+F
+r
+
+=
+
+4
+
+p
+c
+
+-
+N
+1
+å
+=
+n
+0
+
+n
+
+m
+I w
+.
+n
+n
+
+(
+
+27
+
+)
+
+At the end of the time step, they can be calculated as
+
++
+
+1
+
+m
+E
+r
+
+=
+
+4
+
+p
+
+m
+I
+n
+
++
+
+1
+
+w
+n
+
+,
+
+-
+N
+1
+å
+=
+n
+0
+-
+N
+1
+å
+=
+n
+0
+
++
+
+1
+
+m
+F
+r
+
+=
+
+4
+
+p
+c
+
++
+
+1
+
+m
+n
+I
+n
+
+w
+.
+n
+
+(
+
+28
+
+)
+
+Part of the change is due to the transport term, which can also
+be calculated as
+
+D =
+E
+r
+
+D =
+F
+r
+
+4
+
+p
+
+-
+N
+1
+å
+=
+n
+0
+
++ D
+t
+-
+N
+1
+å
+=
+n
+0
+
++ D
+t
+
+p
+c
+
+4
+
+D
+t
+{
+
+
+
+· [(
+
+c
+
+n
+
+-
+
+m
+
+f
+
+v
+
+)
+
+m
+I
+n
+
++
+
+1
+]
+
+· (
+
+f
+
+v
+
+m
+
+m
+I
+n
+
+)}
+
+w
+n
+
+,
+
+D
+t
+{
+
+
+
+· [(
+
+c
+
+n
+
+-
+
+m
+
+f
+
+v
+
+)
+
+m
+I
+n
+
++
+
+1
+]
+
+· (
+
+f
+
+v
+
+m
+
+m
+I
+n
+
+)}
+
+n
+
+w
+.
+n
+
+(
+
+29
+
+)
+
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+
+Jiang
+
+The source terms are then given by
+
++
+
+1
+
+-
+
+m
+E
+r
+
+- D
+
+E
+
+,
+
+r
+
+S E
+(
+r
+
+)
+
+=
+
+S P
+(
+r
+
+)
+
+=
+
+m
+E
+r
+1
+2
+c
+
+(
+
++
+
+1
+
+m
+F
+r
+
+-
+
+m
+F
+r
+
+- D
+
+F
+r
+
+)
+
+.
+
+(
+
+30
+
+)
+
+3.2.4. Additional Terms with Spherical Polar Angular System
+
+· (
+
+The choice of the angular system is not unique. If the angles
+vary with spatial locations, additional terms will show up when
+we convert n · ∇I to
+ nI . The RT equation with general
+)
+angular systems is described in Davis & Gammie (2020). One
+special case that is useful for nonrelativistic systems is the
+angular system in spherical polar coordinates, which allows us
+to use this scheme in 1D or 2D spherical polar coordinates.
+Notice that our default angular system as described in
+Section 3.1 can also be used, in principle. The alternative
+angular system we describe here can be more convenient and
+efﬁcient for certain applications.
+
+In spherical polar coordinates, we deﬁne a set of angles with
+respect to the local coordinates (r, θ, f) in each cell. We divide
+the longitudinal angles ψ uniformly from zero to 2π. For the
+for ζ ä [0, π].
+polar angle ζ, it is uniformly divided in
+These angles point to different directions at different spatial
+locations, which introduce additional terms in the transport
+term as (Davis & Gammie 2020)
+
+cos
+
+z
+
+¶
+I
+¶
+t
+
+-
+
+¶
+I
+¶
+t
+z
+I
+)
+
++
+
+c
+
+n
+
+·
+
+
+
+I
+
+=
+
+1
+sin
+
+z
+
+r
+
+¶
+
+(
+
+2
+sin
+z
+¶
+
++
+
+c
+
+
+
+· (
+
+n
+I
+
+)
+
+-
+
+z
+sin cos
+q
+sin
+
+r
+
+q
+
+¶
+
+(
+
+y
+I
+
+sin
+y
+¶
+
+)
+
+.
+
+(
+
+31
+
+)
+
+terms are unchanged. The numerical
+
+All other
+scheme
+described in the previous sections remains the same, except
+that we need to calculate the change of I due to the new terms.
+The new terms represent the transport of speciﬁc intensities
+
+in the angular space, which we can calculate implicitly as
+
+m
+I
+n
+
++
+
+1
+
+-
+D
+t
+
+m
+I
+n
+
+-
+
+z
+
+n
+
+2
+1 sin
+r
+
++
+m
+1
+I
++
+n
+1 2
++
+1 2
+z
+cos
+
+n
+
+-
+
+1 2
+
+-
+
+2
+sin
+
+z
+
+n
+
+-
+
+1 2
+
++
+m
+1
+I
+-
+n
+1 2
+
+-
+
+cos
+
+z
+
+n
+
++
+
+1 2
+
+-
+
+sin
+r
+
+z
+n
+sin
+
+cos
+q
+
+q
+
+sin
+
+y
+
+n
+
++
+
++
+m
+1
+I
+1 2
++
+n
+1 2
+y
+
+1 2
+
++
+
+n
+
+-
+
+sin
+
+y
+
+n
+
+-
+
+1 2
+
++
+m
+1
+I
+-
+n
+1 2
+
+-
+
+y
+
+n
+
+-
+
+1 2
+
+=
+
+0.
+
+(
+
+32
+
+)
+
++In
+m
+1 and +
+1 2
+
+Here the variables with subscripts n − 1/2 and n + 1/2
+represent the left- and right-hand sides in the angular space.
+We use ﬁrst-order upwind values for -
++In
+m
+1 . During
+1 2
+each iteration, we modify the coefﬁcient g1 in Equation (21) to
+1 from this term. For all
+include additional contributions for
+other speciﬁc intensities with different angles in the above
+equation, we use values from the last iteration, which are added
+to the right-hand side of Equation (21). We ﬁnd it necessary to
+include all of the terms during the iterative process in order to
+maintain a balance between all of the transport and source
+terms.
+
++In l
+m
+,
+
+3.3. Algorithm for the Full Radiation MHD Equation
+
+The implicit solver is coupled to the two-step van Leer MHD
+solver in Athena++ (Stone et al. 2020). We will not repeat
+the details of the Godunov scheme with constrained transport
+
+7
+
+for MHD here. Instead, we just outline the steps of the full
+algorithm.
+
+(a) Determine the time step Δt based on the ﬂow speed,
+sound speed, Alfvén speed, and cell sizes with CFL
+number 0.4.
+
+(b) Update the gas quantities and magnetic ﬁeld for a half
+time step Δt/2 with the MHD solver in Athena++.
+(c) Evolve the radiation ﬁeld for a half time step Δt/2 as
+described in the previous section to determine the energy and
+momentum source terms Sr(E) and Sr(P) (Equation (30)).
+Add these terms to the gas momentum and total energy.
+(d) Apply the MHD solver for a full time step Δt using the
+
+partially updated variables at Δt/2.
+
+(e) Repeat the implicit solver of the radiation ﬁeld for a full
+time step Δt and add the energy, as well as momentum
+source terms, to the gas.
+
+(f) Continue the above steps until the end of the simulation.
+
+4. Tests of the Algorithm
+
+The algorithm we developed here can, in principle, work in a
+wide range of parameter space in terms of optical depth and ratio
+between radiation pressure and gas pressure, since no approx-
+imation is made when we solve the transport equation. When the
+time step is made sufﬁciently small, the algorithm can also be
+reduced to the explicit scheme as described by Jiang et al.
+(2014). However,
+in practice, convergent properties for our
+iterative scheme can be very problem-dependent. We will repeat
+most of the tests done by Jiang et al. (2012, 2014) to explore the
+accuracy and efﬁciency of our algorithm. Unless otherwise
+speciﬁed, we will assume the temperature, density, and length
+units to be T0, ρ0, and L0, respectively. The velocity unit v0 is
+chosen to be the isothermal sound speed corresponding to the
+temperature T0, and the time unit is given by L0/v0. Radiation
+4, and radiation ﬂux is scaled to
+energy density is scaled to a Tr 0
+4. Solutions given in the dimensionless format can be
+ca Tr 0
+converted to any unit system given the two dimensionless
+(Jiang et al.
+parameters º c v0 and
+2012).
+
+T
+R
+0 ideal 0
+
+4
+a T
+r 0
+
+=
+
+r
+(
+
+)
+
+4.1. Thermal Equilibrium in a Uniform Medium
+
+1
+(
+
+To test our treatment of the source term, we set up a uniform
+box in 2D covering the region [0, 1] × [0, 1]. The box is
+initialized with a uniform density ρ = 1 and gas temperature
+T = 1. The radiation ﬁeld is initialized isotropically with the
+mean energy density Er = 100. We ﬁx the two dimensionless
+parameters  and  to be 1 and 100, respectively. We use 32
+grid points for both directions. A constant absorption opacity
+ρκa = 100 is adopted for the test. The typical thermalization
+)rk = -
+4, while the time step we use
+10
+timescale is then
+the system
+in one time step,
+is roughly 0.001. Therefore,
+reaches the correct thermal equilibrium state and stays there, as
+shown in the left panel of Figure 1. The equilibrium state also
+agrees with the analytical solution very well as constrained by
+the total energy conservation. During the thermalization
+process, the algorithm can also keep the sign of Er − arT4 so
+that there is no oscillatory behavior as a function of time, which
+can happen for high-order time integrators when the time step
+is much larger than the thermalization timescale. As another
+test, we change the initial condition to be T = 100, Er = 1, and
+ρκa = 1 so that the gas is much hotter than the equilibrium state
+
+a
+
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+
+Jiang
+
+Figure 1. Histories of Er and arT4 when gas and radiation relax to the thermal
+equilibrium state from static and uniform initial conditions. The left and right
+panels show cases with different relative values between arT4 and Er. The time
+unit is t0 = 1/(cρκa) in the two plots. The dotted blue lines indicate the
+analytical solution during the thermal equilibrium state.
+
+in this case. We can still get the correct equilibrium state even
+though there is a huge difference between arT4 and Er initially,
+as shown in the right panel of Figure 1.
+
+Our treatment of the source term is very similar to the
+scheme as described in Jiang et al. (2014), where the ﬂux
+divergence term is calculated explicitly. However, there are
+nontrivial differences for the term n · ∇I, even for the case with
+a uniform spatial distribution. When this term is calculated
+using the variables from the last time step, it is guaranteed to be
+zero to the level of the round-off error, as there is no spatial
+gradient at each step. This is not the case for the fully implicit
+scheme. During each cycle of the iteration when the gradient is
+calculated for each cell, variables in the neighboring cells are
+taken from the last iterative step while we use the values from
+this step for the current cell. Before the system reaches the
+equilibrium state, the ﬂux divergence term is actually not zero.
+After the solution converges, we recover the same solution as
+given by the explicit scheme with the accuracy set by the
+tolerance level. The Jacobi-like iterative scheme we adopt also
+guarantees that all of the cells are treated in the same way
+during each iteration. Therefore, we do not generate any
+artiﬁcial spatial gradient during the iteration.
+
+=1,
+
+We have also tested the velocity-dependent terms by giving
+the gas a uniform horizontal velocity, vx = 3. Speciﬁc
+intensities are initialized isotropically in the lab frame with
+the mean energy density Er = 1. The initial gas temperature and
+density are T = 1 and ρ = 1,
+respectively. We choose
+rk =
+and = 100 for this test and use 12 angles
+1
+a
+per cell. The system settles down to a steady state with gas
+velocity reduced to vx = 2.956 as a small fraction of gas
+momentum is transferred to photons. The horizontal lab frame
+radiation ﬂux in the steady-state Fr,x
+is very close to
+vx(Er + Pr,xx), which is the value given by the ﬁrst-order
+expansion in terms of v/c in radiation moment equations
+(Lowrie et al. 1999), since
+is only 3% in this test. During
+this process,
+the change of kinetic energy is converted to
+radiation energy and lab frame Er = 1.13 in the steady state.
+The speciﬁc intensities can also be compared with the
+analytical values directly, which are shown in Figure 2. In
+the steady state, the radiation ﬁeld is isotropic in the comoving
+frame. Angular distribution of speciﬁc intensities in the lab
+frame is then determined by the Lorentz transformation
+
+vx
+
+Figure 2. Angular distribution of the lab frame speciﬁc intensities in the steady
+state for a moving uniform gas, as described in Section 4.1. The black and blue
+lines connect the origin and points (4πμxI, 4πμyI) for the 12 angles we have in
+the numerical solution. All angles represented by the blue lines have
+μz = 0.333, while the angles represented by the black lines have μz = 0.882.
+The dashed blue and black circles represent analytical values for all angles (μx,
+μy) with the same corresponding μz, respectively.
+
+(Equation (2)). The numerical
+analytical values very well.
+
+solution agrees with the
+
+Notice that the radiation ﬁeld is not isotropic in the lab
+frame, and the Eddington tensor is Pr,xx/Er = 0.417. This will
+be different from the Eddington tensor returned by the VET
+method for this case, since the short characteristic algorithm
+typically neglects the velocity-dependent
+terms, and it will
+return an Eddington tensor 1/3I in the lab frame.
+
+4.2. Crossing Beams in Vacuum
+
+Our iterative scheme is typically easier to converge when the
+source term dominates over the transport term, because this
+means the diagonal coefﬁcients in the resulting matrix of
+Equation (20) are larger than the off-diagonal one. The most
+difﬁcult scenario is the transport of photons through a medium
+with zero opacity, where all of the source terms are zero and we
+only iterate over the transport term. To show how the algorithm
+works in this case, we inject two beams of photons from the
+bottom of a box covering the region [−0.5, 0.5] × [−2, 2]. At
+x = ±0.1, y = −2, the speciﬁc intensities with μx = ±0.577,
+μy = 0.577 are set to be 0.8, while the speciﬁc intensities along
+the other angles are zero. All of the intensities inside the box
+are also set to zero initially. The box is periodic along the x-
+direction and outﬂow at the top. The opacity coefﬁcients of the
+gas are set to zero, and the gas does not evolve in this test. The
+spatial resolution is 64 × 256 for the horizontal and vertical
+directions, and we use four angles per cell. The time step is
+4 × 10−3, which is also the light-crossing time across the
+vertical direction of the box. During the ﬁrst step, it takes 100
+iterations to reach the relative error of 10−3, which declines
+very slowly with more iterations. After one step, the two beams
+have crossed the whole simulation box. In about 10 time steps,
+the system reaches a steady state, and the spatial distribution of
+Er is shown in the left panel of Figure 3. Compared with the
+same test done by Jiang et al. (2014), the solution is very
+
+8
+
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+
+Jiang
+
+2
+
+)
+
+)
+
+r
+
+-
+
++
+
+x
+((
+
+0.1
+
+x y,
+(
+
+González et al. 2007). Diffusion-like approximation will
+always send photons to the region where the radiation energy
+density gradient exists and thus cannot keep the shadow. Other
+approximations that treat the radiation ﬁeld as a ﬂuid (such as
+M1; González et al. 2007; McKinney et al. 2014) have their
+own caveats, such as artiﬁcially merging photons coming from
+different directions. Our implicit scheme should get the correct
+shadows, as we still solve the speciﬁc intensities along different
+directions independently.
+
+= +
+1
+
+exp 10
+[
+
+to zero. For
+
+We used the same setup as in Jiang et al. (2012, 2014) for
+direct comparison. The simulation domain covers
+the
+Cartesian box [−0.5, 0.5] × [−0.3, 0.3] with resolution
+512 × 256. We use 40 angles per cell for the 2D simulation.
+9
+the distribution
+The gas density has
+2
++
+y
+[
+1
+)]]
+0.06
+)
+(
+1
+, while the temper-
+ature T is set to achieve a constant gas pressure P = 1 for the
+whole box. We use pure absorption opacity κa = ρT−3.5 so
+that the total optical depth across the box in the hot gas
+around the cloud is only 1, while the optical depth across the
+cloud is more than 105. For the left boundary, speciﬁc
+intensities along the directions ±15° with respect
+to the
+horizontal axis have a ﬁxed value of 103.13, but all others are
+the right boundary, outgoing speciﬁc
+set
+intensities are just copied from the last activated zones to
+the ghost zones, while incoming speciﬁc intensities are zero.
+A periodic boundary condition is used for the top and bottom
+boundaries. We choose the dimensionless speed of light to be
+ 1.9
+=
+the steady-state
+solution. All speciﬁc intensities are initialized to zero, and
+we keep the gas quantities ﬁxed for the shadow test. It takes
+about 1000 iterations to reach a relative error of 10−6 with
+three time steps, and the radiation quantities are very close to
+the steady-state values across the whole simulation box. The
+spatial distributions of the mean radiation energy density Er
+and the components of the Eddington tensor fxx and fyy are
+shown in Figure 4. Our implicit algorithm gets the umbra and
+penumbra correctly, and the results are very similar to the
+solutions returned by the explicit scheme as shown in Jiang
+et al. (2014), as well as the VET method as described by
+Jiang et al. (2012).
+
+105, which does not affect
+
+´
+
+
+
+One great advantage of our implicit algorithm is that it can
+also capture the time-dependent evolution of the radiation
+ﬁeld efﬁciently, even though the speed of light is 1.9 × 105
+times the typical sound speed. To demonstrate that our
+algorithm can also capture the full dynamical evolution of the
+cloud, we use the same setup as in the shadow test but evolve
+the hydrodynamic quantities with the radiation ﬁeld together.
+We choose the temperature scale such that = -
+10 7 so that
+the radiation pressure of the injected photons from the left
+boundary is about 10−3 of the initial gas pressure. Notice that
+the static shadow test
+this ratio. The
+parameter is also chosen to match the same experiment done
+by Jiang et al. (2012). An outﬂow boundary condition is used
+for
+the left and right
+boundaries, while a periodic boundary is used for the top
+and bottom. The typical sound-crossing timescale across the
+box is t0 = 1, while the light-crossing time in the low-density
+gas is ≈ 5.2 × 10−6t0. The photon diffusion timescale across
+the cloud is comparable to t0. Since the effective temperature
+of the incoming radiation ﬁeld is larger than the temperature
+of the cold gas by a factor of 30, the gas will be heated up in
+the timescale of 2 × 10−5t0. The density distributions of the
+
+the hydrodynamic variables at
+
+is independent of
+
+Figure 3. Spatial distribution of mean radiation energy density Er after two
+beams of photons propagate through the 2D box with zero opacity. The two
+beams are injected from x = ±0.1, y = −2 with angles μx = ±0.577,
+μy = 0.577. The left and right boundaries are periodic, while the two beams
+leave the box from the top. The left panel is the case with uniform resolution,
+while static mesh reﬁnement is used in the right panel as indicated by the
+overplotted grid lines.
+
+similar to the case with ﬁrst-order spatial reconstruction but
+more diffusive compared with the solution using second-order
+spatial
+implicit
+reconstruction. This is expected, as our
+algorithm only uses ﬁrst-order spatial
+reconstruction. The
+overall cost of the implicit algorithm is also comparable to the
+cost if the transport equation is solved explicitly for this case,
+because the number of iterations we need for convergence is
+now comparable to the ratio between the speed of light and the
+sound speed. Another reason that this test requires a lot of
+iterations for convergence is that the initial condition is far
+away from the steady-state solution. The injected photons at the
+bottom boundary need to be communicated with the whole
+simulation box during the iterations. However, a multigrid
+technique can signiﬁcantly speed up the convergence in this
+case because the information at the boundary can propagate to
+the domain much faster at lower resolution levels.
+
+Our algorithm is a ﬁnite volume scheme, which evolves the
+speciﬁc intensities using ﬂuxes at cell faces as other cell-
+centered variables such as density in Athena++. Therefore,
+the existing mesh reﬁnement module in the code (Stone et al.
+2020) can be directly used for our RT algorithm. One example
+is shown in the right panel of Figure 3. The setup is the same as
+that we reﬁne the region [−0.5,
+the left panel except
+0.5] × [−1, 1] with two levels of reﬁnements. Photons can
+cross the reﬁnement boundaries smoothly without any numer-
+ical artifacts.
+
+4.3. Shadow Test
+
+One widely used test to demonstrate the difference between
+solving the angular
+resolved RT and radiation moment
+equations based on simpliﬁed assumptions of the closure
+relation is to capture the shadow cast by an optically thick
+cloud with beams of photons (Hayes & Norman 2003;
+
+9
+
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+
+Jiang
+
+Figure 4. The top panel shows the distribution of radiation energy density Er
+after two beams of photons pass an optically thick cloud, which is located at the
+center of the box as described in Section 4.3. The middle and bottom panels
+show the x − x and y − y components of Eddington tensors fxx and fyy,
+respectively.
+
+Figure 5. Density evolution of an optically thick cloud irradiated by two beams
+of photons from the left boundary. The three snapshots are shown at times
+0.06t0, 0.1t0, and 0.16t0 from top to bottom, where t0 is the sound-crossing time
+across the whole box horizontally in the low-density gas.
+
+4.4. Static and Dynamic Diffusion
+
+cloud at three different times t = 0.06t0, 0.1t0, and 0.16t0 are
+shown in Figure 5. The cloud is initially heated up at the
+surface of the left side. The heated gas drives shocks into the
+cloud, and some gas is also evaporated simultaneously. The
+shock propagates inside the cloud and eventually gets
+destroyed. The overall evolution is very similar to the results
+shown by Jiang et al. (2012) and Proga et al. (2014), despite
+some small differences of the detailed structures. Compared
+with the VET scheme, there is a subtle difference in the
+equations
+that are solved. The VET scheme typically
+calculates the Eddington tensor at the beginning of each time
+step, which is then held ﬁxed when the radiation moment
+equations and hydrodynamic equations are evolved for one
+time step. The algorithm developed here solves the speciﬁc
+intensities implicitly with the same time evolution as the
+hydrodynamic variables. If we integrate the speciﬁc inten-
+sities over
+the angular space, we effectively evolve the
+radiation moments using the Eddington tensor determined at
+the end of each time step, consistent with the implicit update
+of the radiation ﬁeld. This will not make any difference for
+steady-state solutions or if the time step is sufﬁciently small.
+However, when the time step is much larger than the light-
+crossing time for each cell, a change of the Eddington tensor
+due to time evolution of the radiation ﬁeld within one time
+step may not be negligible. Future studies are needed to
+quantify the difference.
+
+10
+
+to require careful
+
+treatment when the full
+
+Photon diffusion in the optically thick regime, which is easy
+to solve with the classical diffusion approximation by design,
+time-
+turns out
+dependent transport equation is solved. This is because in the
+very optically thick regime, the numerical diffusion associated
+with the standard HLLE solver can be much larger than the
+physical diffusive ﬂux (see the Appendix of Jiang et al. 2013).
+To demonstrate that our treatment of the transport term as
+described in Section 3.2.1 is sufﬁcient to capture the photon
+radiation ﬁeld with
+diffusion correctly, we
+-
+40
+in the box
+mean energy density
+E
+10
+)
+x
+. We
+r
+use 256 grid points for the whole simulation box (−1, 1) and
+two angles per cell so that the Eddington tensor is always one-
+third. An outﬂow boundary condition is used for this test. The
+gas has a constant scattering opacity ρκs = 4 × 104, and we do
+not evolve the gas quantities for this test. We choose the
+dimensionless speed of light to be = 10. The evolution of Er
+can be described by the solution to the diffusion equation as
+(Sekora & Stone 2010; Jiang et al. 2014)
+
+set up a
+=
+E x
+(
+exp
+( )
+r
+0.5, 0.5 . For |x| > 0.5, we set
+
+)
+exp
+
+Î -
+(
+
+2
+x
+=
+
+-
+
+)
+
+(
+
+E x t
+(
+
+,
+
+r
+
+)
+
+=
+
+(
+
+160
+
+Dt
+
+1
++
+
+exp
+
+1
+
+1 2
+)
+
+⎛
+⎜
+⎝
+
+-
+160
+
+40
+Dt
+
+2
+
+x
++
+
+1
+
+⎞
+⎟
+⎠
+
+,
+
+(
+
+33
+
+)
+
+º D
+
+is the diffusion coefﬁcient. The speciﬁc
+where
+intensities are initialized isotropically with the mean energy density
+
+)rk
+s
+
+3
+(
+
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+
+Jiang
+
+=Dt
+
+Figure 6. Proﬁles of radiation energy density Er at three different
+times
+0.13, 0.18, 0.22 from an initial Gaussian proﬁle, as
+corresponding to
+black
+is
+indicated
+by
+5 for this test. The solid lines are numerical
+)rk
+D
+=
+3
+(
+s
+solutions, while the dashed lines are analytical solutions to the diffusion
+equation.
+
+dotted
+´ -
+10
+
+coefﬁcient
+
+line. The
+
+diffusion
+
+the
+=
+
+8.33
+
+Figure 7. Diffusion of photons in a moving background as described in
+Section 4.4. The gas has a constant scattering opacity ρκs = 4 × 104 and
+velocity v = 1, while the speed of light is 103 in this test. The colored solid
+lines are numerical solutions at times t = 4, 8, and 16, while the corresponding
+analytical solutions are indicated by the black dashed lines. The dotted line at
+x = 0 is the initial proﬁle.
+
+matching the initial proﬁle of Er. Proﬁles of Er at three different
+times from the numerical solution are shown in Figure 6 and match
+the analytical solution very well. Notice that because we do not set
+the boundary condition to match the diffusion solution exactly, we
+can only compare the region roughly Dt away from the
+boundary. We have also tried cases with larger opacity, and our
+algorithm can still get the correct solution. However, we need to
+use a larger value of the parameter τc (Equation (17)) to get the
+same accuracy with a larger κs.
+
+Another important regime is dynamic diffusion, where the
+photons are advected with the ﬂow while diffusion happens. We
+use a similar setup as for the static diffusion case but extend the
+simulation domain to (−10, 10) with 1280 grid points. A
+periodic boundary condition is used so that the photons are not
+advected out of the box. We give the ﬂow a constant velocity,
+v = 1. The dimensionless speed of light is also increased to
+= 1000 for this test so that the typical diffusion speed is not
+negligible compared with the advection speed. Proﬁles of the
+mean radiation energy densities at time t = 4, 8, and 16 are
+shown as the solid lines in Figure 7. The analytical solutions can
+also be estimated by replacing the position x in Equation (33)
+−3 in this test.
+with x − vt to the ﬁrst order of v/c, which is 10
+The analytical solutions are shown as the black dashed lines in
+Figure 7, and they match the numerical solution very well.
+
+)
+
+x
+
+-
+3
+
+-
+
+10
+
+r =
+
+exp 10
+(
+
+our iterative scheme performs when there is a large dynamical
+range of radiation energy density with both optically thin and
+optically thick regions.
+In particular, we can check the
+performance of our iterative scheme for problems that can be
+solved efﬁciently with the classical short characteristic method.
+We use 1280 grid points covering a simulation domain
+x ä [−10, 10] in 1D. The gas density follows the exponential
+, and the gas temperature is ﬁxed
+proﬁle
+to be Ti = 1. The ratio between absorption and total opacity is ò,
+which is taken to be a constant in the whole simulation domain.
+Therefore, the scattering and absorption opacity are κa = ò and
+κs = 1 − ò. The gas quantities are ﬁxed to be the initial
+conditions with zero velocity and do not evolve. Since our
+algorithm always solves the gas internal energy and radiation
+ﬁeld together, we simply reset the gas quantities to be the initial
+proﬁles at the end of each step. We use one angle per octant for
+this test so that the Eddington tensor is always one-third. At the
+the speciﬁc intensities to be the
+bottom boundary, we set
+)p
+4
+(
+. At the top boundary, the incoming
+isotropic value
+speciﬁc intensity is set to zero, while the outgoing speciﬁc
+intensity is copied from the last active zone to the ghost zone.
+Speciﬁc intensities inside the simulation domain are initialized
+to be
+
+4
+a T
+r
+i
+
+The steady-state proﬁle of radiation energy density for this
+
+4
+a T
+r
+i
+
+)p
+
+4
+(
+
+.
+
+4.5. Non-LTE Atmosphere
+
+The test of a uniform temperature, scattering-dominated
+atmosphere done by Davis et al. (2012) is useful to show how
+
+E
+
+r
+
+=
+
+⎡
+⎢
+4
+a T 1
+i
+⎣
+
+r
+
+-
+
+(
+exp
+1
+
+-
++
+
+⎤
+⎥
+⎦
+
+,
+
+)
+
+t
+
+3
+
+
+(
+
+34
+
+)
+
+atmosphere setup is
+
+11
+
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+
+Jiang
+
+Figure 8. Proﬁles of radiation energy density as a function of optical depth for
+the atmosphere test as described in Section 4.5. The solid lines are numerical
+solutions, while the dashed black lines are the corresponding analytical
+solutions. The ratio between absorption and total opacity ò varies from 0.1 to
+10−8 as indicated for each group of lines in the plot.
+
+10
+
+]
+
+)
+
+t
+
+r
+
+º
+
+dx
+
+¶
+
++
+
+E
+r
+
+ò
+x
+
+m
+x
+
+and
+
+=
+)
+
+1 4
+(
+
+=-I
+
+(
+1 4
+¶
+E
+r
+
++I
+m
+1 3
+(
+x
+
+where
+is the total optical depth integrated
+from x = 10. Upward and downward speciﬁc intensities are
+p
+¶
+t
+E
+)p
+)[
+1 3
+(
+given by
+r
+¶
+-
+t
+E
+]
+[
+, respectively. The steady-state numer-
+r
+ical solutions for ò varying from 0.1 to 10−8 are shown as the
+solid lines in Figure 8, which agree with the analytical solutions
+very well. Our algorithm requires more iterations to reach the
+same level of accuracy when ò decreases. The relative error is
+also larger in the optically thin surface, and the error increases
+with reduced ò for a ﬁxed spatial resolution. All of these
+properties are very similar to the results given by the short
+characteristic method for this test problem (Davis et al. 2012).
+We have also tried the test in a 3D domain with the atmosphere
+proﬁle aligned with the x-axis. We use a periodic boundary
+condition for the y- and z-directions in this case. The steady-
+state solutions are identical to the 1D case, and the rate of
+convergence is also the same. The overall cost
+is just
+proportional to the total number of grid points.
+
+To quantify the rate of convergence for our algorithm and
+compare with the short characteristic method, we pick the
+ò = 10−6 case and measure the relative error ΔI/I of the
+speciﬁc intensities at x = 10 after each iteration. Here we
+calculate ΔI as the difference between the solution at each
+iterative step and the analytical solution. We only focus on the
+location at x = 10 because the difference between the initial
+condition and the analytical solution is the largest there. It is
+also the most optically thin region and takes more iterations to
+converge. The criterion is different from what Davis et al.
+(2012) used because we do not iterate over the source term.
+the
+But both criteria serve the same purpose. Notice that
+
+12
+
+Figure 9. Change of the relative error for speciﬁc intensities at x = 10 of the
+atmosphere test described in Section 4.5 as a function of the total number of
+iterations. This is measured for the case with a destruction fraction ò = 10−6.
+Different lines represent the cases with three different values of the speed of
+light we used compared with the ﬁducial sound speed as indicated in the
+legend.
+
+steady-state solution does not depend on the speed of light.
+However, our algorithm always solves the time-dependent
+transport equation and relaxes to the steady-state solution with
+the time step Δt ﬁxed by the gas sound speed v0. We have tried
+three different values of c/v0, and the changes of ΔI/I with the
+number of iterations are shown in Figure 9. When c/v0 is small,
+although the implicit scheme is easier to converge per time
+step, it actually takes a larger total number of iterations to get
+the steady-state solution. When c/v0 is larger than 104 so that
+cΔt
+the
+is larger than the length of the simulation box,
+convergence rate is independent of c/v0. Our implicit algorithm
+also takes more iterations to converge with this initial condition
+compared with the short characteristic method. This test
+demonstrates that the implicit scheme is not optimal just to
+ﬁnd the steady-state solution, as we are solving the full time-
+dependent RT, although we can still get the correct answer.
+
+4.6. Homogeneous Sphere
+
+Solving the RT equations in 1D spherical polar coordinates
+can be useful for many systems that are close to spherically
+symmetric (such as
+stars), particularly with the future
+development of multiple frequency groups. Spherical polar
+angular systems as described in Section 3.2.4 need to be used
+in this case because of the assumed symmetry. One useful test
+for this case is the homogeneous sphere problem, which is
+widely used to test the numerical scheme for radiation and
+neutrino transport (Abdikamalov et al. 2012; Radice et al.
+2013). For this test, we set up the gas with a constant density
+ρ0 = 1 and temperature T0 = 1 from radius R0 = 0.05 to 1.
+Between R0 = 1 and the outer boundary, which is chosen to be
+
+at
+
+4
+(
+
+)p
+
+4
+a T
+r 0
+
+the inner boundary. For
+
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+7, the density is 10−7, and the temperature is 10−3. We assume
+an absorption opacity ρ0κa = 10 for R0 smaller than 1, and the
+opacity is zero in other regions. The gas is held with zero
+velocity and does not evolve. The units can be chosen to match
+any system and do not affect the solution to the transport
+equation. We set the speciﬁc intensity to be isotropic, with the
+the outer
+value
+boundary, we require the outgoing speciﬁc intensities to be
+continuous and the incoming speciﬁc intensities to be zero. We
+use 1000 uniformly distributed grid points for the spatial
+resolution and 40 angles per cell for the speciﬁc intensities.
+This setup covers both the optically thick and a sharp transition
+to the optically thin region, which can be challenging if the
+transport equation is not solved accurately. The speciﬁc
+)p
+4
+(
+intensities are initialized to be the isotropic value
+in the whole grid. We choose the speed of light to be 100 times
+the gas sound speed, and the code ﬁnds the steady-state
+solution in roughly 20 iterations. Notice that the steady-state
+solution does not depend on the speed of light.
+
+4
+a T
+r 0
+
+This setup also has an analytical solution, which we can
+compare with. The speciﬁc intensities as a function of radius r
+and angles n are (Smit et al. 1997)
+
+I r
+(
+
+,
+
+n
+)
+
+=
+
+4
+a T
+r
+0
+p
+4
+
+[
+
+1
+
+-
+
+exp
+
+(
+
+r k
+0
+
+a
+
+s r n
+,
+(
+
+))]
+
+,
+
+r
+
+(
+
+35
+
+)
+
+where nr is the radial component of the unit vector n and the
+function s(r, nr) is deﬁned as
+⎧
+⎪
+⎪
+⎨
+⎪
+⎪
+⎩
+
++
+r
+0
+R g r n
+(
+
+R g r n
+(
+,
+)
+
+-
+R r
+0
+otherwise,
+
+ 
+n
+r
+
+s r n
+,
+(
+
+R
+0
+R
+
+rn
+2
+
+<
+
+
+if
+if
+
+r
+r
+
+=
+
+&
+
+1
+
+1
+
+0
+
+)
+
+)
+
+(
+
+)
+
+,
+
+0
+
+0
+
+2
+
+r
+
+r
+
+r
+
+with the function g(r, nr) to be
+
+g r n
+,
+(
+
+)
+
+r
+
+=
+
+1
+
+-
+
+⎛
+⎜
+⎝
+
+r
+R
+
+0
+
+⎞
+2
+⎟
+⎠
+
+(
+
+1
+
+-
+
+n
+
+2
+r
+
+)
+
+.
+
+(
+
+36
+
+)
+
+(
+
+37
+
+)
+
+Moments of the radiation ﬁeld (Er, Fr, Pr) can be calculated
+directly via angular quadrature of I(r, n).
+
+Radial proﬁles of Er, Fr, and Pr/Er from the numerical
+solution are shown as the solid lines in Figure 10 and agree
+with the analytical solutions very well. In particular, our
+numerical algorithm can capture the sharp transition at r = 1
+without showing any artiﬁcial numerical effect. The Eddington
+tensor Pr/Er is one-third deep in the sphere. It is slightly
+smaller than one-third around r = 1. At a large distance, the
+sphere effectively becomes a point source, and only outgoing
+speciﬁc intensities pointing radially are nonzero. Therefore, the
+Eddington tensor approaches 1. The slight difference between
+the numerical and analytical solutions for Pr/Er is due to the
+ﬁnite angular
+resolution to resolve the angular domain
+2
+ 
+R r
+n
+(
+)
+r
+0
+
+at large r.
+
+-
+
+1
+
+1
+
+4.7. Convergence of Linear Waves
+
+Properties of convergence for
+
+radiation MHD
+algorithm can be checked with linear wave tests. The linearized
+equations we solve here are identical to what were evolved by
+Jiang et al. (2014). In order to compare directly, we adopt the
+same setup here. The background gas has a uniform density
+
+the full
+
+13
+
+Jiang
+
+Figure 10. Proﬁles of radiation energy density Er, Eddington tensor Pr/Er (top
+panel), and radiation ﬂux Fr (bottom panel) from the test of the homogeneous
+sphere as described in Section 4.6. The solid lines are from the numerical
+solution, while the analytical solutions are given by the dashed lines.
+
+ρ = 1 and temperature T = 1 with adiabatic index γ = 5/3. We
+use one angle per octant with a mean radiation energy density
+Er = 1 so that the Eddington tensor is always 1/3I, as used in
+the analytical solutions. We ﬁx the dimensionless speed of light
+to be = 10 and only use a constant pure absorption opacity.
+We use a 2D simulation box with size Lx = 1, Ly = 1 and
+change the spatial resolution from 32 × 32 to 512 × 512.
+Periodic boundary conditions are used for both directions. We
+measure the L1 error ò between the numerical and analytical
+solutions over the whole simulation box for each resolution and
+check how the errors change with resolution. We have also
+tried the same test in 3D and get the same results, although
+these 3D tests are more expensive to run. We initialize the
+calculation with the eigenmodes of the radiation-modiﬁed
+sound waves as given by Appendix B of Jiang et al. (2012) and
+stop the calculation after the waves propagate one period along
+the x-direction.
+
+the
+The two key dimensionless parameters that control
+properties of radiation-modiﬁed sound waves are optical depth
+per wavelength length τa and the ratio between radiation
+pressure and gas pressure  in the background state after  is
+ﬁxed. Figure 11 shows the change of ò with resolution N for
+three different values of τa and two different values of . When
+the error is dominated by the hydrodynamic part, as in the
+optically thin regime,
+low
+resolution, the error decreases with increasing resolution as
+N2. When the error is dominated by the RT module, it only
+shows ﬁrst-order convergence, as expected. Part of
+the
+truncation error in RT is due to different upwind directions
+for speciﬁc intensities propagating along opposite directions, as
+explained in Section 3.2.1. For the case with the highest
+resolution, N = 512, we ﬁnd that increasing τc (Equation (17))
+
+radiation pressure, or
+
+small
+
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+
+Jiang
+
+Figure 11. Convergence of the L1 error ò for the linear wave tests as a function
+of spatial resolution N. The dots with different colors are for different optical
+depths per wavelength, as labeled in the plot. The left and right panels are for
+background states with =
+
+0.01 and 10, respectively.
+
+in the HLLE ﬂux by a factor of 2 from our default value can
+help decrease the L1 error.
+
+We can also measure the numerically calculated propagation
+speed and damping rate of the linear waves with the resolution
+N = 256, which are shown in Figure 12 for τa varying from
+10−2 to 102 with three different values of  in each case. When
+the optical depth is small, our algorithm is able to capture both
+the adiabatic sound wave with =
+0.01 and the isothermal
+10. When τa is larger than 10 so that
+sound wave with =
+radiation and gas are tightly coupled, we are also able to
+capture the radiation-driven acoustic modes correctly. The
+results are the same as shown in Figure 10 of Jiang et al.
+(2014), as the same parameters are used. But the time step in
+this algorithm is a factor of 10 larger compared with the case
+when the time step is limited by the speed of light.
+
+4.8. Radiation Shocks
+
+Another challenging test
+
+the full algorithm is the
+for
+radiation-modiﬁed shocks, which check the numerical scheme
+in the nonlinear regime. In particular, we can see how well the
+source terms balance the transport terms for both the RT and
+hydrodynamic parts, which is crucial to get the structures of the
+shock correct, even though the time step is much larger than the
+light-crossing time per cell. Since our algorithm has the full
+angular distribution of the radiation ﬁeld, we will compare with
+the semianalytical solutions provided by Ferguson et al. (2017),
+which gets the radiation shock solutions by solving the time-
+independent RT and hydrodynamic equations numerically
+without making any assumption on the closure relation. These
+are the same radiation shock solutions that are used to test the
+explicit RT algorithm in Jiang et al. (2014).
+
+=
+
+´
+
+We choose a unit system such that the upstream adiabatic
+light
+sound speed is 1 and the dimensionless speed of
+103. The upstream gas has density and temper-
+ 1.73
+ature ρ0 = 1 and T0 = 0.6 with adiabatic index γ = 5/3. We
+change the upstream ﬂow velocity for cases with different
+Mach numbers. The dimensionless parameter  is 7.72 × 10−4,
+which is roughly the ratio between the radiation pressure and
+gas pressure in the upstream. We choose a constant absorption
+opacity ρκa = 577.4 for the whole simulation domain. We
+initialize the 1D simulation domain with the semianalytical
+solutions given by Ferguson et al. (2017) and see how well the
+code can keep the shock structures. We use 4096 grid points for
+
+Figure 12. Comparison of the propagation speed (top panel) and damping rate
+(bottom panel) for the radiation-modiﬁed linear waves between the numerical
+calculated values (stars) and analytical solutions (solid lines). The lines in
+black, blue, and red are for background states with =
+0.01, 1, and 10,
+respectively.
+
+it
+
+all of the tests. For the left boundary, all of the gas quantities
+are ﬁxed to be the upstream values, while the speciﬁc
+intensities are isotropic in the comoving frame with a mean
+energy density ﬁxed to be a Tr 0
+4. For the right boundary, we
+simply copy the gas quantities from the last active zone to the
+ghost zones, but we ﬁnd that
+is necessary to keep the
+gradients of speciﬁc intensities continuous across the boundary.
+Proﬁles of various quantities after the numerical solution
+reaches a steady state are shown in Figure 13 for the case with
+upstream ﬂow velocity v = 2. This is the case with a subcritical
+shock (Mihalas & Mihalas 1984; Sincell et al. 1999; Lowrie &
+Edwards 2008), where the gas temperature has a Zel’dovich
+spike (Zel’Dovich & Raizer 1967) while the radiation
+temperature is continuous. For the subcritical case, the gas
+temperature before the spike is smaller than the downstream
+temperature. Particularly, the Eddington tensor is smaller than
+one-third on the right-hand side of the spike and larger than
+one-third on the left-hand side of the spike. Our numerical
+solution in the steady state is identical to the semianalytical
+solution, shown as the dashed red lines. Notice that our time
+step is set by the ﬂow speed, and we only need roughly 20
+iterations per time step. The numerical cost is signiﬁcantly
+smaller than the explicit scheme in Jiang et al. (2014) for the
+same test, and it is also more efﬁcient than the VET scheme for
+a similar test done by Jiang et al. (2012). The steady-state
+numerical solution with upstream ﬂow velocity increased to
+v = 3 is shown in Figure 14. This is the case with a supercritical
+shock, which means the gas temperature at the upstream side of
+the spike is the same as the downstream temperature. The
+downstream gas is hotter, with an increased ratio between
+
+14
+
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+
+Jiang
+
+Figure 13. Structures of the subcritical radiation-modiﬁed shock with upstream
+= 2. The panels show steady-state proﬁles of radiation
+Mach number
+temperature Tr, gas temperature T, radiation ﬂux Fr, density ρ, horizontal
+component of Eddington tensor fxx, and ﬂow velocity v. The black lines are
+from our numerical solution in the steady state, while the dashed red lines are
+semianalytical solutions as described in Section 4.8.
+
+radiation pressure and gas pressure. Our algorithm is still able
+to keep the shock structures very well, as demonstrated in
+Figure 14, by comparing our numerical solution with the
+semianalytical solution.
+
+4.9. Radiation-driven Wind
+
+The simulation of radiation-driven dusty wind mentioned in
+the Introduction is a useful test to demonstrate the difference
+between different approaches to solve the RT equation. This is
+a test that requires solving the full radiation hydrodynamic
+equations, and the simulation results can be signiﬁcantly
+different if the RT equation is not solved accurately. In order to
+compare with the results based on the VET method directly, we
+use the same setup as in the run T3_F0.5 done by Davis et al.
+(2014). The simulation box is a 2D Cartesian domain covering
+the region [−256, 256]L0 × [0, 1024]L0, where the length scale
+L0 = 2.01 × 1015 cm is the ﬁducial scale height. The spatial
+resolution is 512 × 1024, and we use 40 angles per cell. The
+temperature is chosen to be T0 = 82 K, with a
+ﬁducial
+corresponding ﬁducial velocity v0 = 5.4 × 104 cm s−1 and
+timescale t0 = 3.72 × 1010 s. We adopt
+ﬁducial
+the same
+Rosseland and Planck mean dust opacities as in Davis et al.
+(2014):
+
+k
+
+a
+
+=
+
+0.0316
+
+⎛
+⎜
+⎝
+
+k
+
+aP
+
+=
+
+0.1
+
+⎛
+⎜
+⎝
+
+T
+10 K
+
+T
+10 K
+⎞
+2
+⎟
+⎠
+
+1
+2
+cm g .
+
+-
+
+(
+
+38
+
+)
+
+Notice that κδP = κaP − κa is what we need in Equation (6). We
+initialize the gas with a constant density ρ0 = 7.02 × 10−16 g cm−3
+for 9 < y/L0 < 10 and density ﬂoor 10−8ρ0 for all other regions.
+The gas has a uniform temperature T = T0 and a constant
+gravitational acceleration g = 1.45 × 10−6 cm s−2 along the −y
+direction. The radiation ﬁeld is initialized to give =E
+4 and
+Fr = 0.5c2g/κa(T0) through the whole simulation box. We assume
+that upward speciﬁc intensities have the same value at each cell,
+
+a T
+r 0
+
+r
+
+Figure 14. Same as Figure 13 but for the case of supercritical shock with Mach
+number
+
+= 3.
+
+9.26
+
+a T
+r 0
+
+and the same assumption is made for downward speciﬁc
+intensities. The same approach is used to set the bottom boundary
+4. This is designed
+condition with the same Fr but =E
+r
+to maintain a constant vertical radiation ﬂux Fr with an initial total
+optical depth τ0 = 3. At the top boundary, we set incoming speciﬁc
+intensities to zero and just copy the outgoing speciﬁc intensities
+from the last active zones to the ghost zones. For gas quantities, we
+use a reﬂecting boundary condition at the bottom and an outﬂow
+boundary condition at the top. We use a random perturbation on
+density with amplitude 12.5% to seed the instability. The ratio
+between the speed of light and the ﬁducial sound speed is
+ 5.54
+
+=
+Density distribution at two snapshots t = 35t0 and 80t0 are
+shown in Figure 15. The gas shell is initially pushed away by
+the radiation force, and Rayleigh–Taylor
+instability has
+developed at t = 35t0. The high-density ﬁlaments fall back
+temporarily, but they get accelerated again later on. At time
+t = 80t0, the majority of the gas is still ﬂowing outward. At
+each snapshot, we calculate the box-averaged Eddington ratio
+fE, volume (τV), and ﬂux-weighted (τF) optical depths as
+
+105 for this test.
+
+´
+
+⎞
+2
+⎟
+⎠
+
+1
+2
+cm g ,
+
+-
+
+t
+F
+
+=
+
+1000
+
+L
+
+0
+
+ñ
+
+,
+
+(
+
+39
+
+)
+
+f
+E
+
+=
+
+t
+V
+
+=
+
+,
+
+á
+
+rk
+cg
+1000
+
+ñ
+F
+a r
+á ñ
+r
+L
+
+0
+
+ñ
+á
+k r
+,
+a
+á
+k r
+F
+r y
+a
+,
+á
+ñ
+F
+r y
+,
+
+where 〈 · 〉 represents the volume average over the whole
+simulation box. Histories of fE, τV, and τF/τV are shown in
+Figure 16. The Eddington ratio dips below 1 around 30t0 due to
+the Rayleigh–Taylor instability but returns to 1 quickly. The
+timescale when the dip shows up and the evolution history are
+basically the same as in Figure 6 of Davis et al. (2014), despite
+some small difference at the early phase, which is likely due to
+slightly different initial conditions. This demonstrates that the
+two completely different algorithms capture the same growth
+rate and nonlinear structure of the radiation-driven Rayleigh–
+instability. The Eddington ratio in our simulation
+Taylor
+
+15
+
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+
+Jiang
+
+It is also interesting to compare the performance of our
+algorithm for this test with the performance of the VET
+scheme. The time step for our algorithm is 6 × 10−3t0, and we
+use 50 iterations per time step to achieve a relative accuracy of
+10−6, except for the ﬁrst few time steps, where 200 iterations
+are used per time step to pass the initial transient. With 256
+MPI ranks using Skylake nodes, we are able to run roughly
+2 × 104 steps to reach 120t0 within about 4 hr of wall-clock
+time. The cost per time step is comparable to the cost of the
+VET method used by Davis et al. (2014). However, Davis et al.
+(2014) used a time step that was a factor of 10 smaller to enable
+convergence, which made the overall cost signiﬁcantly larger
+than the cost of our new scheme developed here. Our implicit
+scheme also reduces the cost by a factor of ≈104 if we solve the
+problem using an explicit scheme by limiting the time step with
+the speed of light.
+
+5. Discussions and Conclusions
+We have developed a novel ﬁnite volume algorithm that
+solves the full time-dependent radiation MHD equations based
+on the discrete ordinates approach. The hydrodynamic
+equations are solved using the explicit MHD integrator in
+Athena++, while the RT equation is solved fully implicitly.
+The gas and radiation are coupled via both energy and
+momentum exchange. The velocity-dependent terms in the RT
+equation are handled via Lorentz transformation so that no
+expansion in terms of v/c is needed. The time step of the whole
+algorithm is only determined by the normal CFL condition for
+the MHD module. We have carried out an extensive set of tests
+to demonstrate the accuracy and efﬁciency of the algorithm for
+both gas pressure- and radiation pressure-dominated ﬂows with
+a wide range of optical depth. The ﬁnite volume approach also
+allows the algorithm to be easily used in both Cartesian and
+spherical polar coordinate systems, as demonstrated in our
+tests.
+
+transport equation for
+
+The difference between the algorithm developed here and
+radiation hydrodynamic schemes that adopt a simpliﬁed
+assumption of closure relations for the radiation moment
+equations (such as FLD and M1) are clear. We do not make any
+assumptions on the closure relation, as we do not need it.
+Therefore, we do not have the well-known artifacts of FLD and
+M1, although our algorithm is generally more expensive. Our
+algorithm does have the same ray effects as many other
+methods that are based on discrete ordinates (Castor 2004). The
+algorithm is also different from the classical short characteristic
+method, as well as the VET approach. We are solving the full
+speciﬁc intensities
+time-dependent
+directly, instead of the time-independent transport equation,
+which is normally adopted for the short characteristic method.
+It is often argued that for nonrelativistic systems, the light-
+crossing time is much shorter
+than the local dynamical
+is reasonable to drop the time-
+timescale, and therefore it
+dependent term for the radiation ﬁeld. This is widely used to
+estimate the heating and cooling rate of the gas for the
+modeling of stellar atmosphere. This is true for the low optical
+depth regime with negligible radiation pressure. However,
+when the thermalization timescale is reduced with increasing
+optical depth, this approach can be numerically unstable, even
+for the gas pressure-dominated regime (Davis et al. 2012).
+There are also systems where the typical sound speed is much
+smaller than the speed of light while the radiation pressure is
+larger than the gas pressure, such as the envelope of
+still
+
+Figure 15. Density distribution for two snapshots from the test of radiation-
+driven dusty wind as described in Section 4.9. The left panel shows the
+development of radiation-driven Rayleigh–Taylor instability at time t = 35t0,
+while the right panel shows the fully nonlinear stage at time t = 80t0. Here t0 is
+the typical sound-crossing time across one scale height.
+
+Figure 16. Histories of various volume-averaged quantities from the test of
+radiation-driven dusty wind (Section 4.9). The top panel
+is the volume-
+averaged Eddington ratio fE, while the Rosseland mean optical depth across the
+horizontal direction of the simulation box is shown in the middle panel. The
+bottom panel shows the ratio between the ﬂux-weighted (τF) and volume-
+averaged (τV) optical depth.
+
+eventually becomes larger than 1, and the gas is blown away
+from the top boundary. The 2D density structures shown in
+Figure 15 can also be directly compared with Figure 4 in Davis
+et al. (2014), and they share very similar structures.
+
+16
+
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+
+Jiang
+
+massive stars. Our algorithm can overcome the limitations of
+the short characteristic method, and it can be suitable for all of
+these regimes. The VET method can also be used, in principle,
+where a short characteristic module is only used to provide a
+closure relation. As discussed in Section 4.3, there is still a
+subtle difference compared with the algorithm developed here
+in that the VET approach calculates the Eddington tensor at the
+lab frame but neglecting the ﬂow velocity. The Eddington
+tensor is also calculated at the beginning of each time step
+assuming that the radiation ﬁeld has reached a steady state with
+the gas. Future studies will be needed to investigate the
+consequences of these differences for applications. Another
+advantage of our algorithm compared with VET is that the
+radiation ﬁeld is entirely described by one set of variables (the
+speciﬁc intensities), while VET- and Monte Carlo–based
+closure schemes typically need to evolve two completely
+different sets of radiation variables to get the Eddington tensor
+and determine the time evolution of the radiation moments. It
+can be an issue to keep the two sets of variables consistent with
+each other (Park et al. 2012), which we do not need to worry
+about. The algorithm we have developed here shares many
+common features with the neutrino transport scheme developed
+by Sumiyoshi & Yamada (2012) and Nagakura et al. (2014).
+The main differences are the modiﬁed HLLE solver we have
+developed here and the approach to solving the radiation source
+terms, where we do not linearize the equations.
+
+The computational cost of
+
+this algorithm can be very
+problem-dependent, because the convergent properties can
+change dramatically depending on the opacity and how quickly
+the radiation ﬁeld is changing within one time step. The cost to
+perform one iteration is smaller than the cost of one step for the
+explicit scheme. The overall cost is roughly proportional to the
+number of iterations we need for convergence. The algorithm
+also shows very good parallel scaling with domain decom-
+position because, unlike the short characteristic module, there
+is no requirement to perform the iteration in any particular
+order. This means that each domain can perform the iterations
+independently, and they only need to exchange the boundary
+condition after each iteration. However, MPI communications
+can take a larger fraction of the total computational cost
+compared with the explicit scheme. Because the equations for
+iteration in our scheme are nonlinear, many preconditioners and
+more efﬁcient matrix inversion algorithms that are designed for
+linear systems cannot be used here. However, a multigrid can
+be easily compatible with our algorithm and has been shown to
+be able to signiﬁcantly speed up the convergence of iterations,
+even for nonlinear equations (Fabiani Bendicho et al. 1997;
+Bjørgen & Leenaarts 2017). Incorporating the multigrid solver
+in Athena++ with our RT module is our
+immediate
+next step.
+
+The current algorithm solves
+
+the frequency-integrated
+transport equation as the ﬁrst step. It can be easily extended
+to the frequency-dependent case using the multigroup approach
+(Vaytet et al. 2011), which has been widely used to study
+neutrino transport (Just et al. 2015; Skinner et al. 2019). The
+key for this extension is to choose appropriate frequency bins,
+which can be in the lab frame, the ﬂuid rest frame, or both
+(Nagakura et al. 2014). All of these options will be explored
+with future development.
+
+The author thanks James Stone, Shane Davis, Zhaohuan
+Zhu, and the anonymous referee for valuable comments that
+
+17
+
+have improved the draft. The Center
+Astrophysics at
+Simons Foundation.
+
+for Computational
+the Flatiron Institute is supported by the
+
+Appendix
+Coefﬁcients of the Discretized RT Equation
+
+In our algorithm, the RT equation is solved fully implicitly
+
+as (Equation (14) and Section 3.2.1)
+
++ D
+
+t
+-
+3
+n
+
+· [(
+m
+r k
+s
+
+[
+
+c
+
+n
+m
+J
+0
+
+(
+
+-
++
+1
+
+m
+
+f
+
+v
+
+m
+I
+)
+n
++
+m
+I
+n
+0,
+
++
+
+1
+]
+
+=
+
+1
+)
+
++
+
+- D
+t
+
+
+
+· (
+
+f
+
+v
+
+m
+
+m
+I
+n
+
+)
+
+a
+
+1
+
++
+
+tc
+
+m
+I
+n
++ D G
+⎛
+⎜
+⎝
+
+a T
+(
+r
+4
+
+´
+
+m
+
++
+
+1 4
+)
+
+p
+
+-
+⎞
+⎟
+1
+⎠
+
+-
+
++
+m
+I
+n
+0,
+
++
+
+m
+r k
+
+d
+P
+
+m
+I
+n
+m
+r k
+⎛
+⎜
+⎝
+
+a T
+(
+r
+4
+
+m
+
++
+
+1 4
+)
+
+p
+
+-
+
++
+
+m
+J
+0
+
+⎞
+⎟
+1
+⎠
+
+⎤
+⎥
+⎦
+
+.
+
+(
+
+A1
+
+)
+
+At each cell (i, j, k), the left-hand side is calculated as
+
+1
+
++I
+m
+n
+
+-
++
+-
++
+-
+
++
+
+D
+t
+V
+i j k
+, ,
+-
+A i
+(
+x
++
+A j
+(
+y
+-
+A j
+(
+y
++
+A k
+(
+z
+-
+A k
+(
+z
+
+[
+
+A i
+(
+x
+
++
+
+1 2
+
+)
+
+F i
+(
+n
+
++
+
+1 2
+
+)
+
+F i
+)
+(
+1 2
+n
+F j
+(
+)
+1 2
+n
+F j
+)
+(
+1 2
+n
+F k
+(
+)
+1 2
+n
+F k
+(
+)
+1 2
+n
+
+-
++
+-
++
+-
+
+)
+1 2
+)
+1 2
+)
+1 2
+)
+1 2
+)]
+1 2 ,
+
+(
+
+A2
+
+)
+
+where Ax, Ay, and Az are the cell areas at the corresponding
+surfaces, while Vi,j,k is the cell volume. The surface ﬂux is
+calculated via the modiﬁed HLLE solver (taking Fn(i − 1/2) as
+an example):
+
+F i
+(
+n
+
+-
+
+/
+1 2
+
+)
+
+=
+
++
+S
+-
+i
+1 2
+-
+-
+S
+-
+i
+
+1 2
+
++
+S
+-
+i
+
+-
+
+1 2
+
+)]
+
+1
+
+(
+
+i
+
+-
+
+1
+
+)
+
+1 2
++
+
+m
+I
+n
+
+´
+
+[
+
+c
+
+m
+
+x
+
+i
+
+(
+
+m
+fv
+x
+
+-
+-
+S
+-
+i
+1 2
+-
+-
+S
+-
+i
+-
+S
+-
+i
+1 2
+1 2
+-
+-
+S
+-
+i
+
+1 2
+
+1 2
+
++
+S
+-
+i
+1 2
++
+S
+-
+i
++
+S
+-
+i
+
+1 2
+
+-
+
++
+
+[
+
+c
+
+m
+
+x
+
+-
+
+m
+fv
+x
+
+(
+
+i
+
+-
+
+1 2
+
+)]
+
++
+
+1
+
+m
+I
+n
+
+i
+( )
+
++
+
+1
+
+[
+
+m
+I
+n
+
+i
+( )
+
+-
+
++
+
+1
+
+m
+I
+n
+
+(
+
+i
+
+-
+
+1 .
+)]
+
+(
+
+A3
+
+)
+
+Here the maximum (
+speeds are deﬁned as
+
++Si 1 2
+-
+
+) and minimum (
+
+-Si 1 2
+-
+
+) signal
+
++S
+-
+i
+
+1 2
+
+=
+
+⎧
+⎪
+⎨
+⎩⎪
+
+c
+
+m
+
+x
+
+[
+
+1
+
+-
+
+exp
+
+(
+
+-
+
+t
+
+2
+c
+
+)]
+
+t
+
+2
+c
+
+if
+
+m
+
+x
+
+>
+
+0
+
+-
+
+c
+
+m
+
+x
+
+[
+
+1
+
+-
+
+exp
+
+(
+
+-
+
+4
+t
+c
+
+)]
+
+t
+
+2
+c
+
+if
+
+m
+
+x
+
+<
+
+0,
+
+-S
+-
+i
+
+1 2
+
+=
+
+⎧
+⎪
+⎨
+⎩⎪
+
+-
+
+c
+
+m
+
+x
+
+[
+
+1
+
+-
+
+exp
+
+(
+
+-
+
+4
+t
+c
+
+)]
+
+t
+
+2
+c
+
+if
+
+m
+
+x
+
+>
+
+0
+
+c
+
+m
+
+x
+
+[
+
+1
+
+-
+
+exp
+
+(
+
+-
+
+t
+
+2
+c
+
+)]
+
+t
+
+2
+c
+
+if
+
+m
+
+x
+
+<
+
+0.
+
+(
+
+A4
+
+)
+
+(
+
+A5
+
+)
+
+i
+(
+
+i
+(
+
+k
+a
+
+i
+( )][
+
+t
+c
+k
+s
+
+- +
+1
+)
+
+a rº
+[
+D
+x
+i
+( )]
+
+is deﬁned as
+m
+- +
+1
+)
+The optical depth per cell
+, where Δx
+a + (
+m
+r
+k
+i
+k
+- +
+( )
+i
+1
+)
+s
+is the local cell size and α is a free parameter with the default value
+chosen to be 5. The value of α is chosen to minimize numerical
+diffusion while still keep the numerical scheme stable. For all of the
+test problems we have shown, the solution is independent of α as
+long as it is large enough. The signal speeds, as well as the HLLE
+ﬂux, are chosen to preserve the asymptotic limit such that when
+
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+
+Jiang
+
+m
+g I
+n
+3
++
+1
+k
+(
+
++
+
+1
+
+(
+
+i
+
++ +
+1
+)
+m
+g I
+n
+7
+
+- +
+1
+)
+
+m
+g I
+n
+4
++
+1
+k
+(
+
++
+
+1
+
+(
+
+j
+
+-
+
+1
+
+)
+
++
+
+1
+)
+
+´ -
+[
+
+c
+
+m
+
++
+
+z
+
+m
+fv
+z
+
+]
+
+.
+
+1 2
+
+(
+
+A8
+
+)
+
+τc → ∞ ,
+
++S
+i
+
+-
+1 2
+
+∣m t
+c
+∣
+c
+x
+
+,
+
+-S
+-
+i
+
+1 2
+
+ -
+
+∣m t
+c
+∣
+c
+x
+
+, and
+
+F i
+(
+n
+
+-
+
+1 2
+
+)
+
+
+
+1
+2
+
+[
+
+c
+
+m
+
+x
+
+-
+
+m
+fv
+x
+
+(
+
+i
+
+-
+
+1 2
+
+)][
+
++
+
+1
+
+m
+I
+n
+
+(
+
+i
+
+-
+
+1
+
+)
+
++
+
++
+
+1
+
+m
+I
+n
+
+i
+( )]
+
+-
+
+∣
+
+x
+
+m
+c
+∣
+t
+2
+c
+
++
+
+1
+
+[
+
+m
+I
+n
+
+i
+( )
+
+-
+
++
+
+1
+
+m
+I
+n
+
+(
+
+i
+
+-
+
+)]
+1 .
+
+(
+
+A6
+
+)
+
+In the optically thin limit such that τc → 0, Fn(i − 1/2) is
+reduced to the simple upwind ﬂux. Similarly, surface ﬂuxes
++S
+from other directions, as well as the signal speeds
+,
+-
+j 1 2
+-
+-
+S,
+S,
+S
+1 2, can
+1 2,
++
+k
+-
+j
+be calculated.
+
+1 2, and
+
++
+S
++
+k
+
++
+S
+-
+k
+
+-
+S
+-
+k
+
+Replacing the expressions for the ﬂuxes at cell faces, we get
+
++
++
+j
+
+-
++
+j
+
+1 2
+
+1 2
+
+1 2
+
+1 2
+
+S
+
+,
+
+,
+
+the discretized equation
+
+1
+
+(
+
+i
+
+1
+
++
+
++
+
+m
+g I
+n
+1
++
+
+m
++
+g I
+n
+2
++
+m
+1
+g I
+j
+(
+n
+5
+m
+- D
+
+I
+t
+n
+-
+3
+m
++ D G
+r k
+n
+
+=
+
+tc
+
+[
+
++ +
+1
+)
+m
+v
+f
+
+· (
+
+(
+
+s
+
+m
+J
+0
+
+- +
+1
+)
+m
+g I
+n
+6
+m
+I
+)
+n
++
+1
+
+⎛
+⎜
+⎝
+
+´
+
++
+
+m
+
+a T
+(
+r
+p
+4
+
+1 4
+)
+
+-
+
+I
+
++
+m
+n
+0,
+
+-
+⎞
+1
+⎟
+⎠
+
++
+
+I
+
++
+m
+n
+0,
+
+1
+)
+
+m
+r k
+
++
+⎛
+⎜
+⎝
+
+d
+P
+
+m
+r k
+
+a
+
++
+
+m
+
+a T
+(
+r
+p
+4
+
+1 4
+)
+
+-
+
++
+
+m
+J
+0
+
+⎞
+1
+⎟
+⎠
+
+⎤
+⎥
+⎦
+
+,
+
+(
+
+A7
+
+)
+
+where the coefﬁcients are given by
+
+g
+1
+
+= -
+1
+
+A i
+(
+x
+
+)
+
+D
+t
+
+1 2
+
+-
+V
+i j k
+, ,
+
+´ -
+[
+
+c
+
+m
+
++
+
+x
+
+m
+fv
+x
+
+(
+
+i
+
+-
+
++
+S
+-
+i
+1 2
+
++
+S
++
+i
+1 2
+
+1 2
+)
+
+1 2
+]
+
+1 2
+
+-
+S
+-
+i
+1 2
+-
+-
+S
+-
+i
++
+S
+-
+i
+
++
+
+1 2
+)
++
+S
++
+i
+1 2
+-
+-
+S
++
+i
+-
+S
++
+i
+
+-
+-
+S
+-
+j
+1 2
+-
+S
+
+1 2
+]
+
+1 2
+
+S
+
++
+-
+j
+-
+
+1 2
+)
+1 2
+
++
+
+1 2
+
+-
+-
+j
++
+S
+-
+j
+
++
++
+j
+1 2
+-
+-
+S
++
+j
+-
++
+j
+
+S
+
+-
+
+1 2
+]
+
+1 2
+
+S
+
++
++
+j
+1 2
+
+1 2
+)
+
+-
+S
+-
+k
+-
+
++
+
++
+S
+-
+k
+1 2
+-
+)
+1 2
++
+S
++
+k
+-
+
++
+S
++
+k
+1 2
+
+1 2
+-
+)
+
+1 2
+-
+S
+-
+k
++
+S
+-
+k
+
+1 2
+
+]
+
+1 2
+
+1 2
+-
+S
++
+k
+-
+S
++
+k
+
+1 2
+]
+,
+
+1 2
+
+1 2
+]
+
+1 2
+
+,
+
++
+S
+-
+i
+1 2
+-
+-
+S
+-
+i
+-
+S
+-
+i
+
+-
+
+-
+
++
+S
+-
+i
+1 2
+)
+1 2
+-
+S
++
+i
+1 2
+-
+-
+S
++
+i
++
+
+1 2
+
++
+S
++
+i
+1 2
++
+i
+
+)
+
+(
+
+A i
+(
+x
+
+[
+
+c
+
+m
+
+x
+A j
+(
+y
+
+D
+t
+
++
+
+)
+
+1 2
+
++
+V
+i j k
+, ,
+m
+fv
+x
+1 2
+
+-
+
+(
+
+-
+
+i
+
+)
+
+D
+t
+
+V
+i j k
+, ,
+
++
+
+´
+
+-
+
++
+
+´
+
+[
+
+c
+
+m
+
+y
+
+A k
+(
+z
+
+-
+
+V
+i j k
+, ,
+m
+fv
+y
+
+-
+
+(
+
+j
+
++
+
+)
+
+D
+t
+
+1 2
+
+-
+V
+i j k
+, ,
+
+´ -
+[
+
+c
+
+m
+
++
+
+z
+
+m
+fv
+z
+
+(
+
+k
+
+A k
+(
+z
+
++
+
+1 2
+
+)
+
+D
+t
+
+(
+
+k
+
++
+
+)
+
+D
+t
+
++
+V
+i j k
+, ,
+m
+fv
+z
+
+-
+
+1 2
+
+-
+V
+i j k
+, ,
+m
+fv
+x
+)
+
+1 2
+
+-
+
+(
+
+i
+
+D
+t
+
+´
+
+[
+
+c
+
+m
+
+z
+
+A i
+(
+x
+
+g
+2
+
+= -
+
+´
+
+[
+
+c
+
+A i
+(
+x
+
+g
+3
+
+=
+
+m
+
+x
++
+V
+i j k
+, ,
+
+´ -
+[
+
+c
+
+m
+
++
+
+x
+
+m
+fv
+x
+
+1 2
++
+S
++
+i
+
+]
+
+,
+
+1 2
+
+18
+
+A j
+(
+y
+
+-
+
+1 2
+
+)
+
+D
+t
+
+S
+
+g
+4
+
+= -
+
+´
+
+[
+
+c
+
+m
+
+(
+
+j
+
+-
+
+-
+
+V
+i j k
+, ,
+m
+fv
+y
+)
+
+1 2
+
+y
++
+
+D
+t
+
+V
+i j k
+, ,
+
+S
+
++
+-
+j
+1 2
+)
+1 2
+-
++
+j
+1 2
+-
+S
+
+S
+
+S
+
++
++
+j
+1 2
++
+j
+
+1 2
+
+)
+
+A j
+(
+y
+
+g
+5
+
+=
+
+´ -
+[
+
+c
+
+m
+
++
+
+y
+
+m
+fv
+y
+
+(
+
+A k
+(
+z
+
+g
+6
+
+= -
+
+1 2
+
+)
+
+D
+t
+
++
+-
+j
+1 2
+-
+-
+S
+-
+j
+-
+-
+j
+
+-
+
+S
+
+1 2
+]
+
+1 2
+
+,
+
+-
++
+j
++
+
+1 2
++
+S
++
+j
+
+]
+
+,
+
+1 2
+
+-
+V
+i j k
+, ,
+m
+fv
+z
+)
+1 2
+
+-
+
+z
++
+V
+i j k
+, ,
+
++
+S
+-
+k
+-
+
+-
+
+1 2
+-
+S
+-
+k
+-
+S
+-
+k
+
+1 2
+]
+
+1 2
+
+,
+
+1 2
+-
+S
++
+k
+1 2
++
++
+S
++
+k
+
+)
+
+(
+
+k
+
+-
+
+D
+t
+
++
+S
+-
+k
+1 2
+)
+1 2
+-
+S
++
+k
+-
+
+1 2
+
+1 2
+
++
+S
++
+k
++
+k
+
+(
+
+´
+
+[
+
+c
+
+m
+
+A k
+(
+z
+
+g
+7
+
+=
+
+The convergent properties for our iterative scheme depend
+strongly on the values of g1. If g1 is large and positive for all
++In
+m 1, the diagonal term will dominate over the off-diagonal
+terms, and the iteration can converge quickly. Otherwise, the
+convergence may be slow, and it can even diverge sometimes.
+To improve the robustness of our iterative scheme, we have an
+alternative procedure to perform the iteration compared with
+Equation (21). The expression for g1 includes terms that can be
+positive or negative depending on the sign of μx, μy, and μz.
+For each angle, we separate g1 into two parts, = ¢ + 
+g
+1 ,
+¢g1 includes all terms that are positive, while all negative
+where
+terms are included in g1 . At each iterative step l, we replace
++
++
+1. All other
+m
+g In l
+-
+1
+,
+1
+terms are unchanged. This iterative scheme is much more
+robust over the wide range of parameters we have explored.
+However, when both schemes can converge, the convergent
+rate for this procedure is typically slower compared with
+iteration using Equation (21).
+
+1 in Equation (21) with
+
++ 
+g I
+1
+
+¢
+g I
+1
+
+m
+n l
+,
+
+m
+n l
+,
+
+g
+1
+
+g
+1
+
++
+
+1
+
+ORCID iDs
+
+https://orcid.org/0000-0002-2624-
+
+References
+
+Abdikamalov, E., Burrows, A., Ott, C. D., et al. 2012, ApJ, 755, 111
+Anninos, P., & Fragile, P. C. 2020, ApJ, 900, 71
+Asahina, Y., Takahashi, H. R., & Ohsuga, K. 2020, ApJ, 901, 96
+Bjørgen, J. P., & Leenaarts, J. 2017, A&A, 599, A118
+Bruls, J. H. M. J., Vollmöller, P., & Schüssler, M. 1999, A&A, 348, 233
+Carlson, B. G. 1963, in Methods in Computational Physics: Vol. 1, Statistical
+Physics, ed. B. Alder, S. Fernbach, & M. Rotenberg (New York: Academic)
+Castor, J. I. 2004, in Radiation Hydrodynamics, ed. J. I. Castor (Cambridge:
+
+Cambridge Univ. Press)
+
+Davis, S. W., & Gammie, C. F. 2020, ApJ, 888, 94
+Davis, S. W., Jiang, Y.-F., Stone, J. M., & Murray, N. 2014, ApJ, 796, 107
+Davis, S. W., Stone, J. M., & Jiang, Y.-F. 2012, ApJS, 199, 9
+Densmore, J. D., Urbatsch, T. J., Evans, T. M., & Buksas, M. W. 2007, JCoPh,
+
+222, 485
+
+Dubroca, B., & Feugeas, J. 1999, CRASM, 329, 915
+Fabiani Bendicho, P., Trujillo Bueno, J., & Auer, L. 1997, A&A, 324, 161
+Ferguson, J. M., Morel, J. E., & Lowrie, R. B. 2017, HEDP, 23, 95
+Foucart, F. 2018, MNRAS, 475, 4186
+Gehmeyr, M., & Mihalas, D. 1994, PhyD, 77, 320
+González, M., Audit, E., & Huynh, P. 2007, A&A, 464, 429
+Hayes, J. C., & Norman, M. L. 2003, ApJS, 147, 197
+Jiang, Y.-F., Stone, J. M., & Davis, S. W. 2012, ApJS, 199, 14
+
+´ -
+[
+
+c
+
+m
+
++
+
+y
+
+m
+fv
+y
+
+(
+
+j
+
+A j
+(
+y
+
++
+
+1 2
+
+)
+
+D
+t
+
+S
+
+]
+
+1 2
+
+Yan-Fei Jiang (姜燕飞)
+3399
+
+The Astrophysical Journal Supplement Series, 253:49 (19pp), 2021 April
+
+Jiang
+
+Jiang, Y.-F., Stone, J. M., & Davis, S. W. 2013, ApJ, 767, 148
+Jiang, Y.-F., Stone, J. M., & Davis, S. W. 2014, ApJS, 213, 7
+Just, O., Obergaulinger, M., & Janka, H. T. 2015, MNRAS, 453, 3386
+Krumholz, M. R., Klein, R. I., McKee, C. F., & Bolstad, J. 2007, ApJ, 667, 626
+Krumholz, M. R., & Thompson, T. A. 2013, MNRAS, 434, 2329
+Levermore, C. D., & Pomraning, G. C. 1981, ApJ, 248, 321
+Lowrie, R. B., & Edwards, J. D. 2008, ShWav, 18, 129
+Lowrie, R. B., Morel, J. E., & Hittinger, J. A. 1999, ApJ, 521, 432
+McKinney, J. C., Tchekhovskoy, A., Sadowski, A., & Narayan, R. 2014,
+
+MNRAS, 441, 3177
+
+Mihalas, D., & Klein, R. I. 1982, JCoPh, 46, 97
+Mihalas, D., & Mihalas, B. W. 1984, Foundations of Radiation Hydrodynamics
+
+(New York: Oxford Univ. Press)
+
+Nagakura, H., Sumiyoshi, K., & Yamada, S. 2014, ApJS, 214, 16
+Park, H., Knoll, D. A., Rauenzahn, R. M., Wollaber, A. B., & Densmore, J. D.
+
+2012, TTSP, 41, 284
+
+Pons, J. A., Ibáñez, J. M., & Miralles, J. A. 2000, MNRAS, 317, 550
+Proga, D., Jiang, Y.-F., Davis, S. W., Stone, J. M., & Smith, D. 2014, ApJ, 780, 51
+Radice, D., Abdikamalov, E., Rezzolla, L., & Ott, C. D. 2013, JCoPh, 242, 648
+Roth, N., & Kasen, D. 2015, ApJS, 217, 9
+Ryan, B. R., & Dolence, J. C. 2020, ApJ, 891, 118
+Sa̧dowski, A., Narayan, R., Tchekhovskoy, A., & Zhu, Y. 2013, MNRAS,
+
+429, 3533
+
+Sekora, M. D., & Stone, J. M. 2010, JCoPh, 229, 6819
+Sincell, M. W., Gehmeyr, M., & Mihalas, D. 1999, ShWav, 9, 391
+Skinner, M. A., Dolence, J. C., Burrows, A., Radice, D., & Vartanyan, D.
+
+2019, ApJS, 241, 7
+
+Skinner, M. A., & Ostriker, E. C. 2013, ApJS, 206, 21
+Smit, J. M., Cernohorsky, J., & Dullemond, C. P. 1997, A&A, 325, 203
+Smith, A., Kannan, R., Tsang, B. T. H., Vogelsberger, M., & Pakmor, R. 2020,
+
+ApJ, 905, 27
+
+Steinacker, J., Baes, M., & Gordon, K. D. 2013, ARA&A, 51, 63
+Stone, J. M., & Mihalas, D. 1992, JCoPh, 100, 402
+Stone, J. M., Mihalas, D., & Norman, M. L. 1992, ApJS, 80, 819
+Stone, J. M., Tomida, K., White, C. J., & Felker, K. G. 2020, ApJS, 249, 4
+Sumiyoshi, K., & Yamada, S. 2012, ApJS, 199, 17
+Teyssier, R. 2015, ARA&A, 53, 325
+Tsang, B. T. H., & Milosavljević, M. 2018, MNRAS, 478, 4142
+Turner, N. J., & Stone, J. M. 2001, ApJS, 135, 95
+van der Holst, B., Tóth, G., Sokolov, I. V., et al. 2011, ApJS, 194, 23
+Vaytet, N. M. H., Audit, E., Dubroca, B., & Delahaye, F. 2011, JQSRT,
+
+112, 1323
+
+Whitney, B. A. 2011, BASI, 39, 101
+Zel’Dovich, Y. B., & Raizer, Y. P. 1967, in Physics of Shock Waves and High-
+temperature Hydrodynamic Phenomena, ed. W. D. Hayes (New York:
+Academic)
+
+19
+
+

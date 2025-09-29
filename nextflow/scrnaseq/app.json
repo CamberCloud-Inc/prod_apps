@@ -1,10 +1,10 @@
 {
   "name": "scrnaseq-comprehensive",
-  "title": "Single-Cell RNA-seq: Gene Expression Analysis",
-  "description": "🧬 Comprehensive single-cell RNA sequencing analysis pipeline supporting multiple aligners (simpleaf, kallisto, STARsolo, cellranger) with flexible protocol configuration for 10x Genomics, DropSeq, and custom single-cell platforms.",
-  "content": "<h1 class=\"heading-node\">🧬 Single-Cell RNA-seq: Decoding Cellular Diversity</h1><p class=\"text-node\"><strong>What is Single-Cell RNA-seq?</strong></p><p class=\"text-node\">Single-cell RNA sequencing (scRNA-seq) revolutionizes our understanding of biology by measuring gene expression in individual cells rather than bulk tissue. This technique reveals cellular heterogeneity, developmental trajectories, and rare cell populations that would be hidden in traditional bulk RNA-seq analysis.</p><img src=\"https://raw.githubusercontent.com/nf-core/scrnaseq/master/docs/images/nf-core-scrnaseq_logo_light.png\" alt=\"nf-core/scrnaseq workflow\" title=\"Single-Cell RNA-seq Pipeline\" width=\"600\" height=\"400\"><h2 class=\"heading-node\">🎯 Choose Your Aligner</h2><p class=\"text-node\">This pipeline supports four major alignment approaches, each optimized for different experimental needs:</p><h3 class=\"heading-node\">📊 simpleaf (Alevin-fry) - Recommended</h3><ul><li><strong>🚀 Ultra-fast:</strong> Lightning-speed quantification with Alevin-fry</li><li><strong>🎯 Protocol flexibility:</strong> Define custom chemistries like <code>1{b[16]u[12]x:}2{r:}</code></li><li><strong>📋 Barcode control:</strong> Use trusted whitelists or derive from data</li><li><strong>✅ Best for:</strong> Most single-cell experiments, especially 10x data</li></ul><h3 class=\"heading-node\">🔬 kallisto|bustools</h3><ul><li><strong>⚡ Efficient:</strong> Pseudoalignment-based quantification</li><li><strong>🧬 Protocol support:</strong> Pre-defined protocols (10xv3, dropseq) or custom layouts</li><li><strong>🎨 Versatile:</strong> Excellent for comparative studies</li><li><strong>✅ Best for:</strong> Research requiring specific protocol customization</li></ul><h3 class=\"heading-node\">⭐ STARsolo</h3><ul><li><strong>🎯 10x optimized:</strong> Native support for 10x protocols (V1-V4)</li><li><strong>🧮 Comprehensive:</strong> Full alignment with detailed mapping statistics</li><li><strong>⚠️ Note:</strong> Limited support for non-10x custom protocols</li><li><strong>✅ Best for:</strong> 10x Genomics datasets requiring full alignment</li></ul><h3 class=\"heading-node\">🏢 cellranger/cellrangermulti/cellrangerarc</h3><ul><li><strong>🏭 Industry standard:</strong> 10x Genomics official pipeline</li><li><strong>🔧 Automated:</strong> Protocol detection and optimization</li><li><strong>📊 Multimodal:</strong> Supports feature barcoding and multi-omics</li><li><strong>✅ Best for:</strong> 10x data requiring official processing</li></ul><h2 class=\"heading-node\">🧪 Protocol Configuration Guide</h2><p class=\"text-node\"><strong>Understanding Cell Barcodes and Whitelists:</strong></p><ul><li><strong>🎯 Trusted Whitelists [WL✓]:</strong> Use known, validated barcode sets for reproducibility</li><li><strong>🔄 Data-derived [WL✗]:</strong> Let the algorithm discover barcodes from your data</li><li><strong>📊 Expected Cells:</strong> Guide cell calling with approximate cell count estimates</li></ul><h2 class=\"heading-node\">📋 Sample Sheet Configuration</h2><p class=\"text-node\">Your CSV samplesheet defines the experiment structure:</p><pre style=\"background-color: #f8f8f8; padding: 15px; border-radius: 5px; font-family: monospace;\">sample,fastq_1,fastq_2,expected_cells\ncontrol_rep1,control_1_R1.fastq.gz,control_1_R2.fastq.gz,5000\ncontrol_rep2,control_2_R1.fastq.gz,control_2_R2.fastq.gz,5000\ntreated_rep1,treated_1_R1.fastq.gz,treated_1_R2.fastq.gz,4500\ntreated_rep2,treated_2_R1.fastq.gz,treated_2_R2.fastq.gz,4500</pre><h2 class=\"heading-node\">📊 Your Results: Comprehensive Output</h2><h3 class=\"heading-node\">Gene Expression Data</h3><ul><li><strong>📊 Count Matrices:</strong> Gene × cell expression matrices in standard formats (H5, MTX)</li><li><strong>🏷️ Cell Metadata:</strong> Quality metrics, cell type assignments, and filtering statistics</li><li><strong>🧬 Feature Data:</strong> Gene annotations, mitochondrial content, and expression summaries</li></ul><h3 class=\"heading-node\">Quality Control</h3><ul><li><strong>📈 MultiQC Report:</strong> Comprehensive analysis summary with interactive plots</li><li><strong>🔍 Cell-level QC:</strong> UMI counts, gene detection, mitochondrial percentages</li><li><strong>📊 Sample Comparisons:</strong> Batch effects, sequencing depth, and technical metrics</li></ul><h3 class=\"heading-node\">Analysis-Ready Outputs</h3><ul><li><strong>🧮 Seurat Objects:</strong> Ready for downstream analysis in R</li><li><strong>🐍 AnnData Files:</strong> Compatible with scanpy and Python ecosystems</li><li><strong>📊 Visualization Files:</strong> UMAP/t-SNE coordinates and cluster assignments</li></ul><p class=\"text-node\"><strong>Perfect for Research in:</strong> Developmental biology • Cancer research • Immunology • Neuroscience • Plant biology • Stem cell research • Drug discovery • Tissue engineering</p><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/scrnaseq/4.0.0/\">nf-core/scrnaseq v4.0.0</a> • Containerized execution • Continuous integration tested</p>",
+  "title": "Single-Cell RNA-seq: Comprehensive Gene Expression Analysis",
+  "description": "Advanced single-cell RNA sequencing analysis pipeline supporting multiple aligners (simpleaf, kallisto, STARsolo, cellranger) with flexible protocol and barcode whitelist configuration for 10x Genomics, DropSeq, and custom single-cell platforms. Perfect for discovering cellular diversity and gene expression patterns.",
+  "content": "<h1 class=\"heading-node\">🧬 Single-Cell RNA-seq: Comprehensive Gene Expression Analysis</h1><p class=\"text-node\"><strong>Discover Cellular Diversity Through Gene Expression</strong></p><p class=\"text-node\">Single-cell RNA sequencing (scRNA-seq) reveals the unique gene expression profile of individual cells, uncovering cellular heterogeneity, developmental trajectories, and rare cell populations that traditional bulk RNA-seq cannot detect.</p><img src=\"https://raw.githubusercontent.com/nf-core/scrnaseq/4.0.0//docs/images/scrnaseq_pipeline_V3.0-metro_clean.png\" alt=\"nf-core/scrnaseq workflow\" width=\"600\" height=\"400\"><h2 class=\"heading-node\">🎯 Aligner Selection Guide</h2><p class=\"text-node\">Choose the optimal alignment approach for your experimental design:</p><h3 class=\"heading-node\">📊 simpleaf (Alevin-fry) - <strong>Recommended</strong></h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🚀 Ultra-fast:</strong> Lightning-speed quantification with Alevin-fry</p></li><li><p class=\"text-node\"><strong>🎯 Protocol flexibility:</strong> Define custom chemistries like <code class=\"inline\" spellcheck=\"false\">1{b[16]u[12]x:}2{r:}</code></p></li><li><p class=\"text-node\"><strong>📋 Barcode control:</strong> Use trusted whitelists [WL✓] or auto-derive [WL✗]</p></li><li><p class=\"text-node\"><strong>✅ Best for:</strong> Most single-cell experiments, especially 10x data</p></li></ul><h3 class=\"heading-node\">🔬 kallisto|bustools</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>⚡ Efficient:</strong> Pseudoalignment-based quantification</p></li><li><p class=\"text-node\"><strong>🧬 Protocol support:</strong> Pre-defined protocols (10xv3, dropseq) or custom layouts</p></li><li><p class=\"text-node\"><strong>📋 Whitelist support:</strong> Use known vendor whitelists [WL✓] or derive from data [WL✗]</p></li><li><p class=\"text-node\"><strong>✅ Best for:</strong> Research requiring specific protocol customization</p></li></ul><h3 class=\"heading-node\">⭐ STARsolo</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🎯 10x optimized:</strong> Native support for 10x protocols (V1-V4)</p></li><li><p class=\"text-node\"><strong>🧮 Comprehensive:</strong> Full alignment with detailed mapping statistics</p></li><li><p class=\"text-node\"><strong>⚠️ Whitelist limitation:</strong> Whitelist alone insufficient for non-10x custom layouts [WL✗]</p></li><li><p class=\"text-node\"><strong>✅ Best for:</strong> 10x Genomics datasets requiring full alignment</p></li></ul><h3 class=\"heading-node\">🏢 cellranger/cellrangermulti/cellrangerarc</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🏭 Industry standard:</strong> 10x Genomics official pipeline</p></li><li><p class=\"text-node\"><strong>🔧 Automated:</strong> Protocol detection and optimization</p></li><li><p class=\"text-node\"><strong>📊 Multimodal:</strong> Supports feature barcoding and multi-omics</p></li><li><p class=\"text-node\"><strong>🚫 Whitelist:</strong> Feature/multiplex barcodes are separate inputs (not cell CB whitelist) [WL✗]</p></li><li><p class=\"text-node\"><strong>✅ Best for:</strong> 10x data requiring official processing</p></li></ul><h2 class=\"heading-node\">🧬 Reference Genome Selection</h2><p class=\"text-node\">Choose from a comprehensive collection of reference genomes including:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🧑 Human:</strong> GRCh37, GRCh38, CHM13, hg19, hg38 - optimized for human single-cell studies</p></li><li><p class=\"text-node\"><strong>🐭 Model Organisms:</strong> Mouse (GRCm38, GRCm39, mm10, mm39), zebrafish, fly, C. elegans</p></li><li><p class=\"text-node\"><strong>🌱 Plants:</strong> Arabidopsis, rice, maize, sorghum - plant single-cell genomics</p></li><li><p class=\"text-node\"><strong>🐄 Livestock:</strong> Cow, pig, horse, chicken - agricultural and veterinary applications</p></li><li><p class=\"text-node\"><strong>🧫 Microbes:</strong> Yeast - single-cell microbiology research</p></li></ul><p class=\"text-node\">All genomes include curated gene annotations for accurate quantification and downstream analysis.</p><h2 class=\"heading-node\">📋 Barcode Whitelist Strategy</h2><p class=\"text-node\"><strong>Understanding When and How to Use Whitelists:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🎯 Trusted Whitelists [WL✓]:</strong> Use known, kit/lot-specific CB lists for reproducibility across runs</p><ul class=\"list-node\"><li><p class=\"text-node\">Enforce a fixed barcode set</p></li><li><p class=\"text-node\">Best for: Production pipelines, standardized protocols</p></li><li><p class=\"text-node\">Supported by: simpleaf, kallisto</p></li></ul></li><li><p class=\"text-node\"><strong>🔄 Auto-derive from Data [WL✗]:</strong> Let algorithms discover barcodes dynamically</p><ul class=\"list-node\"><li><p class=\"text-node\">Adapts to actual data characteristics</p></li><li><p class=\"text-node\">Best for: Exploratory analysis, unknown barcode distributions</p></li><li><p class=\"text-node\">Supported by: All aligners</p></li></ul></li><li><p class=\"text-node\"><strong>📊 Expected Cells:</strong> Guide cell calling with approximate cell count estimates</p><ul class=\"list-node\"><li><p class=\"text-node\">Not a whitelist, but helps optimize calling thresholds</p></li><li><p class=\"text-node\">Supported by: All aligners</p></li></ul></li></ul><h2 class=\"heading-node\">🧪 Protocol Configuration Examples</h2><p class=\"text-node\"><strong>Standard Protocols:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">10XV1</code>, <code class=\"inline\" spellcheck=\"false\">10XV2</code>, <code class=\"inline\" spellcheck=\"false\">10XV3</code>, <code class=\"inline\" spellcheck=\"false\">10XV4</code> - Standard 10x Genomics chemistries</p></li><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">dropseq</code> - Drop-seq protocol</p></li><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">auto</code> - Automatic detection (cellranger only)</p></li></ul><p class=\"text-node\"><strong>Custom Chemistry Strings:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\">simpleaf: <code class=\"inline\" spellcheck=\"false\">1{b[16]u[12]x:}2{r:}</code> (16bp barcode, 12bp UMI)</p></li><li><p class=\"text-node\">kallisto: <code class=\"inline\" spellcheck=\"false\">0,0,16:0,16,26:1,0,0</code> (R1: 0-16bp barcode, 16-26bp UMI; R2: all read)</p></li></ul><h2 class=\"heading-node\">📋 Sample Sheet Format</h2><p class=\"text-node\">Your CSV samplesheet defines the experiment structure:</p><pre class=\"block-node\"><code>sample,fastq_1,fastq_2,expected_cells\ncontrol_rep1,control_1_R1.fastq.gz,control_1_R2.fastq.gz,5000\ncontrol_rep2,control_2_R1.fastq.gz,control_2_R2.fastq.gz,5000\ntreated_rep1,treated_1_R1.fastq.gz,treated_1_R2.fastq.gz,4500\ntreated_rep2,treated_2_R1.fastq.gz,treated_2_R2.fastq.gz,4500</code></pre><h2 class=\"heading-node\">📊 Comprehensive Results</h2><h3 class=\"heading-node\">Gene Expression Data</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📊 Count Matrices:</strong> Gene × cell expression matrices in H5, MTX formats</p></li><li><p class=\"text-node\"><strong>🏷️ Cell Metadata:</strong> Quality metrics, cell type assignments, filtering statistics</p></li><li><p class=\"text-node\"><strong>🧬 Feature Data:</strong> Gene annotations, mitochondrial content, expression summaries</p></li></ul><h3 class=\"heading-node\">Quality Control</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📈 MultiQC Report:</strong> Comprehensive analysis summary with interactive plots</p></li><li><p class=\"text-node\"><strong>🔍 Cell-level QC:</strong> UMI counts, gene detection, mitochondrial percentages</p></li><li><p class=\"text-node\"><strong>📊 Sample Comparisons:</strong> Batch effects, sequencing depth, technical metrics</p></li></ul><h3 class=\"heading-node\">Analysis-Ready Outputs</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🧮 Seurat Objects:</strong> Ready for downstream analysis in R</p></li><li><p class=\"text-node\"><strong>🐍 AnnData Files:</strong> Compatible with scanpy and Python ecosystems</p></li><li><p class=\"text-node\"><strong>📊 Visualization Files:</strong> UMAP/t-SNE coordinates and cluster assignments</p></li></ul><p class=\"text-node\"><strong>Perfect for Research in:</strong> Developmental biology • Cancer research • Immunology • Neuroscience • Plant biology • Stem cell research • Drug discovery • Tissue engineering</p><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/scrnaseq/4.0.0/\" target=\"_blank\">nf-core/scrnaseq v4.0.0</a> • Containerized execution • Continuous integration tested</p>",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/scrnaseq/master/docs/images/nf-core-scrnaseq_logo_light.png",
-  "command": "cd ${outputDir} && rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cp prod_apps/nextflow/scrnaseq/platform-constrained-config.config ./ && rm -rf prod_apps && if [ \"${aligner}\" = \"star\" ]; then nextflow run nf-core/scrnaseq -r 4.0.0 -profile test,k8s -c /etc/mpi/nextflow.camber.config -c platform-constrained-config.config --outdir results; else nextflow run nf-core/scrnaseq -r 4.0.0 --input ${input} --outdir results --aligner ${aligner} --protocol ${protocol} --fasta https://github.com/nf-core/test-datasets/raw/scrnaseq/reference/GRCm38.p6.genome.chr19.fa --gtf https://github.com/nf-core/test-datasets/raw/scrnaseq/reference/gencode.vM19.annotation.chr19.gtf --skip_cellbender -c /etc/mpi/nextflow.camber.config -c platform-constrained-config.config -profile k8s; fi && echo \"Pipeline completed\"",
+  "command": "mkdir -p ${outputDir} && cd ${outputDir} && rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cp prod_apps/nextflow/scrnaseq/platform-constrained-config.config ./ && rm -rf prod_apps && if [ \"${aligner}\" = \"star\" ]; then nextflow run nf-core/scrnaseq -r 4.0.0 -profile test,k8s -c /etc/mpi/nextflow.camber.config -c platform-constrained-config.config --outdir results; elif [ \"${barcode_whitelist}\" != \"none\" ] && [ \"${barcode_whitelist}\" != \"\" ] && [ \"${aligner}\" != \"star\" ] && [ \"${aligner}\" != \"cellranger\" ]; then if [ \"${barcode_whitelist}\" = \"custom\" ] && [ \"${barcode_whitelist_param}\" != \"\" ]; then nextflow run nf-core/scrnaseq -r 4.0.0 --input ${input} --outdir results --aligner ${aligner} --protocol ${protocol} --barcode_whitelist ${barcode_whitelist_param} --genome ${genome} --skip_cellbender -c /etc/mpi/nextflow.camber.config -c platform-constrained-config.config -profile k8s; elif [ \"${barcode_whitelist}\" = \"10x_v3\" ]; then nextflow run nf-core/scrnaseq -r 4.0.0 --input ${input} --outdir results --aligner ${aligner} --protocol ${protocol} --barcode_whitelist 10x_v3 --genome ${genome} --skip_cellbender -c /etc/mpi/nextflow.camber.config -c platform-constrained-config.config -profile k8s; elif [ \"${barcode_whitelist}\" = \"10x_v2\" ]; then nextflow run nf-core/scrnaseq -r 4.0.0 --input ${input} --outdir results --aligner ${aligner} --protocol ${protocol} --barcode_whitelist 10x_v2 --genome ${genome} --skip_cellbender -c /etc/mpi/nextflow.camber.config -c platform-constrained-config.config -profile k8s; fi; else nextflow run nf-core/scrnaseq -r 4.0.0 --input ${input} --outdir results --aligner ${aligner} --protocol ${protocol} --genome ${genome} --skip_cellbender -c /etc/mpi/nextflow.camber.config -c platform-constrained-config.config -profile k8s; fi && echo \"Pipeline completed\"",
   "engineType": "NEXTFLOW",
   "jobConfig": [
     {
@@ -12,7 +12,7 @@
       "label": "System Size",
       "name": "system_size",
       "hidden": true,
-      "description": "Choose computing resources based on dataset size and complexity. Larger datasets and STARsolo alignment require more resources.",
+      "description": "",
       "options": [
         {
           "label": "Medium (32 CPUs, 180GB RAM) - Small experiments",
@@ -50,28 +50,28 @@
       "type": "Stash File",
       "label": "Sample Sheet",
       "name": "input",
-      "description": "CSV file with columns: sample, fastq_1, fastq_2, expected_cells. Defines your experimental design and sample information.",
+      "description": "CSV samplesheet with columns: sample, fastq_1, fastq_2, expected_cells.",
       "defaultValue": "https://raw.githubusercontent.com/nf-core/test-datasets/scrnaseq/samplesheet-2-0.csv",
       "hidden": false,
       "required": true,
       "disabled": false,
       "restrictions": {
         "allow_files": true,
-        "allow_folders": false,
-        "allowed_file_types": ["csv"]
+        "allow_folders": true,
+        "allowed_file_types": []
       }
     },
     {
       "type": "Stash File",
       "label": "Output Directory",
       "name": "outputDir",
-      "description": "Directory where analysis results and intermediate files will be saved. Creates organized subdirectories for different output types.",
+      "description": "Output directory for analysis results.",
       "defaultValue": "./",
       "hidden": false,
       "required": true,
       "disabled": false,
       "restrictions": {
-        "allow_files": false,
+        "allow_files": true,
         "allow_folders": true,
         "allowed_file_types": []
       }
@@ -80,26 +80,26 @@
       "type": "Select",
       "label": "Alignment Method",
       "name": "aligner",
-      "description": "Choose alignment algorithm based on your experimental needs and protocol requirements.",
+      "description": "Alignment algorithm: simpleaf/kallisto support whitelists, STARsolo/cellranger use auto-derivation.",
       "defaultValue": "star",
       "hidden": false,
       "required": true,
       "disabled": false,
       "options": [
         {
-          "label": "simpleaf (Alevin-fry) - Fast & Flexible [Recommended]",
+          "label": "simpleaf (Alevin-fry) - Fast & Flexible [Whitelist Supported]",
           "value": "simpleaf"
         },
         {
-          "label": "kallisto - Pseudoalignment with BUStools",
+          "label": "kallisto - Pseudoalignment with BUStools [Whitelist Supported]",
           "value": "kallisto"
         },
         {
-          "label": "STARsolo - Full alignment (10x optimized) [Test Proven]",
+          "label": "STARsolo - Full alignment (10x optimized)",
           "value": "star"
         },
         {
-          "label": "cellranger - 10x Genomics official pipeline",
+          "label": "cellranger - 10x Genomics official pipeline [10x Only]",
           "value": "cellranger"
         }
       ]
@@ -108,14 +108,14 @@
       "type": "Select",
       "label": "Single-Cell Protocol",
       "name": "protocol",
-      "description": "Single-cell chemistry protocol. 10XV2 works great for STARsolo. Use 'auto' only with cellranger aligner.",
+      "description": "Single-cell protocol: use 10X standards or custom chemistry strings for simpleaf/kallisto.",
       "defaultValue": "10XV2",
       "hidden": false,
       "required": false,
       "disabled": false,
       "options": [
         {
-          "label": "10X v2 Chemistry (Test Proven)",
+          "label": "10X v2 Chemistry",
           "value": "10XV2"
         },
         {
@@ -135,8 +135,16 @@
           "value": "auto"
         },
         {
-          "label": "Custom Chemistry String",
-          "value": "custom"
+          "label": "Custom Chemistry String (simpleaf: 1{b[16]u[12]x:}2{r:})",
+          "value": "1{b[16]u[12]x:}2{r:}"
+        },
+        {
+          "label": "Custom Chemistry String (kallisto: 0,0,16:0,16,26:1,0,0)",
+          "value": "0,0,16:0,16,26:1,0,0"
+        },
+        {
+          "label": "DropSeq Protocol",
+          "value": "dropseq"
         },
         {
           "label": "No Protocol Override",
@@ -146,31 +154,82 @@
     },
     {
       "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome to use for alignment and gene expression quantification.",
+      "defaultValue": "GRCm38",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {"label": "Human GRCh37 (Ensembl)", "value": "GRCh37"},
+        {"label": "Human GRCh38 (NCBI)", "value": "GRCh38"},
+        {"label": "Human CHM13 (UCSC)", "value": "CHM13"},
+        {"label": "Mouse GRCm38 (Ensembl)", "value": "GRCm38"},
+        {"label": "Mouse GRCm39 (Ensembl)", "value": "GRCm39"},
+        {"label": "Arabidopsis TAIR10 (Ensembl)", "value": "TAIR10"},
+        {"label": "Cow UMD3.1 (Ensembl)", "value": "UMD3.1"},
+        {"label": "C. elegans WBcel235 (Ensembl)", "value": "WBcel235"},
+        {"label": "Dog CanFam3.1 (Ensembl)", "value": "CanFam3.1"},
+        {"label": "Zebrafish GRCz10 (Ensembl)", "value": "GRCz10"},
+        {"label": "Zebrafish GRCz11 (Ensembl)", "value": "GRCz11"},
+        {"label": "Fly BDGP6 (Ensembl)", "value": "BDGP6"},
+        {"label": "Chicken Galgal4 (Ensembl)", "value": "Galgal4"},
+        {"label": "Rat Rnor_6.0 (Ensembl)", "value": "Rnor_6.0"},
+        {"label": "Yeast R64-1-1 (Ensembl)", "value": "R64-1-1"},
+        {"label": "Human hg38 (UCSC)", "value": "hg38"},
+        {"label": "Human hg19 (UCSC)", "value": "hg19"},
+        {"label": "Mouse mm10 (UCSC)", "value": "mm10"},
+        {"label": "Mouse mm39 (UCSC)", "value": "mm39"}
+      ]
+    },
+    {
+      "type": "Select",
       "label": "Barcode Whitelist Strategy",
       "name": "barcode_whitelist",
-      "description": "Choose barcode handling approach: use validated whitelists for reproducibility or derive barcodes from data.",
+      "description": "Barcode strategy: use trusted whitelists (simpleaf/kallisto only) or auto-derive from data.",
       "defaultValue": "none",
       "hidden": false,
       "required": false,
       "disabled": false,
       "options": [
         {
-          "label": "Auto-derive from data (recommended)",
+          "label": "Auto-derive from data (recommended for all aligners)",
           "value": "none"
         },
         {
-          "label": "Use 10x v3 whitelist",
+          "label": "Use 10x v3 whitelist (simpleaf/kallisto only)",
           "value": "10x_v3"
         },
         {
-          "label": "Use 10x v2 whitelist",
+          "label": "Use 10x v2 whitelist (simpleaf/kallisto only)",
           "value": "10x_v2"
         },
         {
-          "label": "Custom whitelist file (provide path)",
+          "label": "Custom whitelist file path (simpleaf/kallisto only)",
           "value": "custom"
         }
       ]
+    },
+    {
+      "type": "Stash File",
+      "label": "Custom Whitelist File Path",
+      "name": "barcode_whitelist_param",
+      "description": "Custom whitelist file path (only when 'custom' selected above).",
+      "defaultValue": "",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
     }
+  ],
+  "tags": [
+    {"name": "genomics", "type": "subfield"},
+    {"name": "analysis", "type": "task"},
+    {"name": "biology", "type": "field"}
   ]
 }

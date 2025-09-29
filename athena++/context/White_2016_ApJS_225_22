@@ -1,0 +1,8056 @@
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+© 2016. The American Astronomical Society. All rights reserved.
+
+doi:10.3847/0067-0049/225/2/22
+
+AN EXTENSION OF THE ATHENA++ CODE FRAMEWORK FOR GRMHD BASED ON ADVANCED
+RIEMANN SOLVERS AND STAGGERED-MESH CONSTRAINED TRANSPORT
+
+Christopher J. White1, James M. Stone1, and Charles F. Gammie2,3
+1 Department of Astrophysical Sciences, Princeton University, 4 Ivy Lane, Princeton, NJ 08544, USA
+2 Department of Physics, University of Illinois, 1110 West Green Street, Urbana, IL 61801, USA
+3 Department of Astronomy, University of Illinois, 1002 West Green Street, Urbana, IL 61801, USA
+Received 2015 October 30; revised 2016 June 18; accepted 2016 June 20; published 2016 August 11
+
+ABSTRACT
+We present a new general relativistic magnetohydrodynamics (GRMHD) code integrated into the Athena++
+framework. Improving upon the techniques used in most GRMHD codes, ours allows the use of advanced, less
+diffusive Riemann solvers, in particular HLLC and HLLD. We also employ a staggered-mesh constrained transport
+algorithm suited for curvilinear coordinate systems in order to maintain the divergence-free constraint of the
+magnetic ﬁeld. Our code is designed to work with arbitrary stationary spacetimes in one, two, or three dimensions,
+and we demonstrate its reliability through a number of tests. We also report on its promising performance and
+scalability.
+Key words: accretion, accretion disks – black hole physics – magnetohydrodynamics (MHD) – relativistic
+processes
+
+1. INTRODUCTION
+
+The complex, nonlinear dynamics of most astrophysical
+ﬂuids make numerical simulations a key tool for understanding
+them, even in ﬂat spacetime. A number of
+interesting
+phenomena, however, occur
+in regions of strong enough
+gravity that general relativity cannot be neglected, requiring
+numerical algorithms capable of evolving ﬂuids in curved
+spacetimes. Examples include accretion onto black holes
+(Abramowicz & Fragile 2013), collapsar models of long-
+duration gamma-ray bursts (Woosley 1993), and merging
+neutron star binaries (Faber & Rasio 2012), among others.
+
+Some of
+
+the most successful numerical algorithms for
+solving the equations of compressible ﬂuid dynamics are ﬁnite-
+volume methods, primarily due to their superior accuracy and
+stability for shock capturing (van Leer 1979). In such methods
+the domain is partitioned into discrete cells and the quantities
+stored and evolved are cell volume averages of the conserved
+quantities. In Godunov schemes, ﬂuxes of conserved quantities
+are determined by solving Riemann problems at each interface.
+In particular, one considers the interface to be a plane
+separating two spatially constant ﬂuids ﬁlling all space, and
+the solutions of the Riemann problem determine the time-
+averaged ﬂuxes across the plane in this simpliﬁed problem.
+
+A number of Godunov scheme codes have been developed
+with general relativistic magnetohydrodynamics (GRMHD)
+capabilities on a stationary background spacetime, including
+Harm (Gammie et al. 2003), Komissarov (2004), the Valencia
+group’s code (Antón et al. 2006), and ECHO (Del Zanna
+et al. 2007). In addition, some codes combine the GRMHD and
+Einstein equations, evolving a self-gravitating magnetized
+ﬂuid. These include the Tokyo/Kyoto group’s code (Shibata
+& Sekiguchi 2005), Anderson et al. (2006), WhiskyMHD
+(Giacomazzo & Rezzolla 2007), GRHydro (Mösta et al. 2014),
+SpEC (Muhlberger et al. 2014), and IllinoisGRMHD (Etienne
+et al. 2015).
+
+Two key algorithmic components of a ﬁnite-volume God-
+unov scheme for MHD are the Riemann solver and the method
+by which the divergence-free constraint on the magnetic ﬁeld is
+enforced. The accuracy of the solution depends critically on the
+
+accuracy of the Riemann solver adopted. Exact Riemann
+solvers are computationally expensive, however, and the
+simplest approximate solvers tend to be much more diffusive
+than their more exact counterparts for subsonic ﬂows. Most of
+the codes used to date employ simple solvers such as local LLF
+(local Lax–Friedrichs) or HLLE (Harten–Lax–van Leer+Ein-
+feldt; see Section 3.4 for descriptions); of the aforementioned
+10, only Komissarov (2004) and Antón et al. (2006) describe
+the use of Roe-type Riemann solvers (with the latter making the
+point that they can in principle use any Riemann solver), and
+only Shibata & Sekiguchi (2005) and Antón et al. (2006)
+describe the use of central, non-Godunov schemes. All others
+restrict themselves to HLLE and LLF. Meanwhile, efﬁcient,
+approximate solvers that capture some but not all of the wave
+structure between the outermost waves in the wavefan have
+been developed for relativistic ﬂuids (Mignone & Bodo 2005;
+Mignone et al. 2009). In this paper we describe how carefully
+chosen frame transformations can be used to incorporate such
+special relativistic algorithms into a general relativistic code,
+following the suggestion by Pons et al. (1998) and Antón
+et al. (2006).
+
+In the case of MHD, enforcing the divergence-free constraint
+is important
+to prevent spurious production of magnetic
+monopoles. A number of algorithms have been developed to
+this end, including the following:
+
+1. Divergence cleaning. Auxiliary equations are introduced
+in order to damp and/or advect to the boundaries any
+monopoles that are developed. These equations can be
+elliptic (Brackbill & Barnes 1980; Ramshaw 1983),
+(Dedner
+parabolic
+et al. 2002), with only the last naturally able to respect
+causality in relativistic settings.
+
+hyperbolic
+
+(Marder
+
+1987),
+
+or
+
+2. Vector potential evolution. The vector potential compo-
+the magnetic ﬁeld
+nents A i are evolved instead of
+components B i. This naturally obeys the divergence-free
+constraint if the vector potential is appropriately stag-
+gered,
+to choose an
+appropriate gauge, especially when including mesh
+reﬁnement (Etienne et al. 2012).
+
+though one must be careful
+
+1
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+3. Constrained transport
+
+(CT). The magnetic ﬁeld is
+staggered in such a way as to maintain a speciﬁc
+discretized version of the constraint. Evans & Hawley
+(1988)
+introduce staggered-mesh CT in a general-
+relativistic context.
+
+4. Flux-CT. Tóth (2000) discusses how to smooth the ﬂuxes
+so as to preseve the divergence-free constraint on a
+particular stencil of cell-centered magnetic ﬁelds.
+
+We choose to employ the Evans & Hawley method. The
+details of the algorithm are developed for Cartesian grids by
+Gardiner & Stone (2005), where only magnetic ﬁelds (and not
+formulation) are located at
+velocities as in the original
+interfaces between cells. Here we extend the Gardiner & Stone
+algorithm to arbitrary stationary coordinate systems. Of the
+(2006) uses
+aforementioned 10 codes, Anderson et al.
+a
+cleaning,
+hyperbolic divergence
+staggered vector potential, Harm and GRHydro use ﬂux-CT,
+and the remaining six use a staggered CT scheme.
+
+IllinoisGRMHD uses
+
+In this paper we describe a new numerical algorithm for
+GRMHD that we have developed and implemented in the
+Athena++ framework, a complete rewrite of the Athena MHD
+code (Stone & Gardiner 2008) that adopts a ﬂexible design
+necessary for allowing Newtonian, special relativistic, and
+general relativistic dynamics all within the same code. We will
+ﬁrst review the governing equations and their discretizations
+(Section 2) before detailing the steps in our method (Section 3).
+We then demonstrate our code’s reliability in a number of tests
+(Section 4), as well as full simulations of accretion onto a
+spinning black hole (Section 5). Statistics demonstrating the
+high-performance nature of the code are given in Section 6. In
+Section 7 we summarize and conclude our presentation of what
+is to our knowledge the only 3D ﬁnite-volume Godunov
+GRMHD code that
+includes both advanced approximate
+Riemann solvers and staggered-mesh CT, despite the success-
+ful use of these techniques in Newtonian and special-relativistic
+codes such as Athena (Stone & Gardiner 2008; Beckwith &
+Stone 2011).
+
+Throughout we use units where G and c are set to unity and a
+has been absorbed into all components of the
+factor of
+electromagnetic ﬁeld. Our metric sign convention, (−, +, +,
++), is the same as in Misner et al. (1973).
+
+p4
+
+in terms of the metric and 4-velocity. The ideal MHD stress-
+energy tensor then has components
+
+mn
+
+T
+
+r=
+h
+(
+
++
+
+l
+m n
+b b u u
+)
+l
+
++
+
+⎛
+⎜
+⎝
+
+p
+gas
+
++
+
+l
+b b g
+l
+
+⎞
+⎟
+⎠
+
+1
+2
+
+mn
+
+-
+
+m n
+b b
+
+.
+
+2
+( )
+
+The governing equations of ideal MHD are
+
+r
+(
+m
+
+mu
+
+)
+
+=
+
+0,
+
+
+m
+
+mnT
+
+=
+
+0,
+
+*
+m
+
+mnF
+
+=
+
+0
+
+(
+
+3
+
+a
+
+)
+
+(
+
+3
+
+b
+
+)
+
+(
+
+3
+
+c
+
+)
+
+(cf. Gammie et al. 2003, (1), (3), (14)). Here
+mn
+
+m n
+b u
+
+n m
+b u
+
+-
+
+=
+
+*
+F
+
+( )
+4
+are the components of the dual of the electromagnetic ﬁeld
+tensor. Note that there are different sign conventions for the
+ﬁeld tensor. In our convention, the components in terms of
+electric and magnetic ﬁelds are
+
+mn
+
+*
+F
+
+=
+
+⎛
+⎜
+⎜
+⎜⎜
+⎝
+
+0
+1
+B
+2
+B
+B
+
+3
+
+1
+-
+B
+0
+E
+E
+
+-
+
+3
+
+2
+
+3
+
+2
+
+-
+
+B
+E
+0
+1
+-
+E
+
+-
+-
+
+2
+
+3
+
+⎞
+B
+⎟
+E
+⎟
+⎟⎟
+1
+E
+⎠
+0
+
+,
+
+( )
+5
+
+where μ indexes rows and ν indexes columns. As we consider
+only ideal MHD here, the electric ﬁelds can always be inferred
+from the magnetic ﬁelds and ﬂuid velocities via (4).
+
+Our differential Equations (3) can be rewritten in terms of
+partial rather than covariant derivatives, at
+the expense of
+introducing some source terms related to the connection
+coefﬁcients Gmn
+s . Splitting timelike and spatial derivatives, we
+have the ﬂux-conservative equations
+
+¶ -
+(
+
+0
+
+r
+g u
+
+0
+
+)
+
++ ¶ -
+(
+j
+
+r
+g u
+
+j
+
+)
+
+=
+
+0,
+
+¶ -
+(
+
+0
+
+g T
+
+0
+
+)
+
+m
+
++ ¶ -
+(
+j
+
+g T
+
+j
+
+)
+
+m
+
+= - G
+
+g
+
+s
+rm
+
+r
+
+T
+
+,
+
+s
+
+¶ -
+(
+
+0
+
+g B
+
+i
+
+)
+
++ ¶ -
+(
+j
+
+*
+g F
+
+ij
+
+)
+
+=
+
+0,
+
+(
+
+6
+
+a
+
+)
+
+(
+
+6
+
+b
+
+)
+
+(
+
+6
+
+c
+
+)
+
+corresponding to (2), (4), and (18) of Gammie et al. (2003).
+
+Consider a cell Vi,j,k with x1-, x2-, and x3-indices i, j, and k.
+Assuming the metric to be stationary, we can assign it the time-
+independent (but coordinate-dependent) volume
+
+2. EQUATIONS
+
+D
+
+V
+i j k
+, ,
+
+=
+
+ò
+
+V
+
+i j k, ,
+
+-
+
+3
+g dx dx dx ,
+
+1
+
+2
+
+The relevant equations for GRMHD are derived in numerous
+sources in the literature (e.g., Gammie et al. 2003). Here we list
+only the most important results, both in order to remove any
+possible notational ambiguity and to make clear how our
+particular discretization is implemented.
+
+Consider a perfect ﬂuid with comoving mass density ρ,
+comoving gas pressure pgas, comoving enthalpy per unit
+mass h, and coordinate-frame 4-velocity components u μ.
+For
+have
+of
+. Given magnetic ﬁeld compo-
+h
+nents B i in the coordinate frame, deﬁne the contravariant ﬁeld
+components
+
+adiabatic
+= + G G - ´
+1
+)
+(
+
+Γ, we
+
+gas
+p
+gas
+
+index
+
+an
+
+r
+
+1
+
+0
+
+b
+
+= m
+g B u
+i
+
+i
+
+m
+
+,
+
+i
+
+b
+
+=
+
+1
+0
+u
+
+i
+
+(
+
+B
+
++
+
+0
+b u
+
+i
+
+)
+
+(
+
+1
+
+a
+
+)
+
+(
+
+1
+
+b
+
+)
+
+2
+
+7
+( )
+
+(
+
+8
+
+a
+
+)
+
+(
+
+8
+
+b
+
+)
+
+(
+
+8
+
+c
+
+)
+
+and we can assign its six faces the areas
+
+D
+
+A
+i
+
+
+
+j k
+1 2, ,
+
+=
+
+ò
+
+A
+
+i
+
+
+
+1 2, ,
+
+j k
+
+-
+
+2
+g dx dx
+
+3
+,
+
+D
+
+A
+
+i j
+,
+
+
+
+1 2,
+
+k
+
+=
+
+D
+
+A
+
+i j k
+, ,
+
+
+
+1 2
+
+=
+
+ò
+
+A
+
+ò
+
+A
+
+i j
+,
+
+
+
+1 2,
+
+k
+
+i j k, ,
+
+
+
+1 2
+
+-
+
+1
+g dx dx
+
+3
+,
+
+-
+
+1
+g dx dx
+
+2
+
+.
+
+For a conserved quantity
+stored on the grid at time level n is
+
+rÎ
+{
+
+C
+
+u T,0
+
+0
+
+}
+, the volume average
+m
+
+C
+
+n
+i j k
+, ,
+
+=
+
+1
+V
+i j k
+, ,
+
+D
+
+ò
+
+V
+
+i j k, ,
+
+C
+
+-
+
+g dx dx dx
+
+1
+
+2
+
+3
+.
+
+9
+( )
+
+For the corresponding ﬂuxes
+u T,3
+and
+
+1
+rÎ
+G
+}
+}
+{
+,
+,
+m
+m
+returned by the
+the area averages
+
+u T,2
+
+u T,1
+
+rÎ
+{
+
+rÎ
+{
+
+H
+
+F
+
+2
+
+3
+
+}
+,
+m
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+Riemann solver are
+
+Given the electric ﬁelds E i deﬁned along the edges (as found in
+Section 3.5), we can update the magnetic ﬁeld according to
+
++
+n
+1 2
+F
+
+j k
+i
+1 2, ,
+
+ò=
+
+A
+
+i
+
+
+
+1 2, ,
+
+j k
+
+F
+
+-
+
+2
+g dx dx
+
+3
+,
+
+(
+
+10
+
+a
+
+)
+
+(
+
++
+n
+1
+B
+)
+-
+i
+
+1
+j k
+1 2, ,
+
+=
+
+G
+
+n
+i j
+,
+
++
+
+
+1 2
+1 2,
+
+k
+
+ò=
+
+A
+
+i j
+,
+
+
+
+1 2,
+
+k
+
+G
+
+-
+
+1
+g dx dx
+
+3
+,
+
+(
+
+10
+
+b
+
+)
+
+H
+
++
+n
+i j k
+, ,
+
+1 2
+
+
+1 2
+
+ò=
+
+A
+
+i j k, ,
+
+
+
+1 2
+
+H
+
+-
+
+1
+g dx dx
+
+2
+
+.
+
+(
+
+10
+
+c
+
+)
+
+S
+the corresponding source term
+For
+nonzero volume averages are taken to be
+
+Î
+
+0,
+{
+
+s
+Grm
+
+T
+
+r
+
+}
+,
+s
+
+the
+
++
+
++
+
+(
+
+n
+1
+B
+)
+-
+j k
+i
+1 2, ,
+D
+t
+
+D
+
+A
+i
+
+-
+
+j k
+1 2, ,
+
+(
+
+D
+
+L
+
+i
+
+-
+
+1 2,
+
+j
+
+-
+
+1 2,
+
+k
+
+(
+
+E
+
++
+n
+3
+)
+-
+i
+
+1 2
+1 2,
+
+j
+
+-
+
+1 2,
+
+k
+
+-D
+
+L
+
+i
+
+-
+
+1 2,
+
+j
+
++
+
+1 2,
+
+k
+
+(
+
+E
+
++
+n
+3
+)
+-
+i
+
+1 2
+1 2,
+
+j
+
++
+
+1 2,
+
+k
+
+)
+
+D
+t
+
+D
+
+A
+i
+
+-
+
+j k
+1 2, ,
+
+(
+
+D
+
+L
+
+i
+
+-
+
+j k
+1 2, ,
+
+-
+
+1 2
+
+(
+
+-
+
+E
+
+2
+
++
+n
+)
+-
+i
+
+1 2
+j k
+1 2, ,
+
+-
+
+1 2
+
+-D
+
+L
+
+i
+
+-
+
+j k
+1 2, ,
+
++
+
+1 2
+
+(
+
+-
+
+E
+
+2
+
++
+n
+)
+-
+i
+
+1 2
+j k
+1 2, ,
+
+)
+
+,
+
++
+
+1 2
+
+(
+
+15
+
+)
+
+1 2
+
++
+n
+S
+i j k
+, ,
+
+s
+= Grm
+
+( ¯
+T
+
+r
+
+s
+
+1 2
+
++
+n
+)
+i j k
+, ,
+
+,
+
+(
+
+11
+
+)
+
+which is
+Equation (6).
+
+the discretized form of
+
+the
+
+third evolution
+
+stress-energy
+
+volume-averaged
+
+the
+1 2 are found by applying (2)
+
+components
+where
++
+( ¯
+n
+)r
+T
+to the primitive
+s
+i j k
+, ,
+quantities obtained from inverting the volume-averaged con-
+served quantities at the appropriate time level (see Section 3.1),
+with all geometric terms evaluated at the cell center.
+
+With the above deﬁnitions, the discretized form of the two
+
+hydrodynamical Equations in (6) can be written
+
+1
+
+C
+
++
+n
+i j k
+, ,
+
+=
+
+C
+
+n
+i j k
+, ,
+
++ D
+
+tS
+
+1 2
+
++
+n
+i j k
+, ,
+
++
+
+D
+t
+V
+i j k
+, ,
+
+D
+
+(
+
+D
+
+A
+i
+
+-
+
+j k
+1 2, ,
+
++
+n
+1 2
+F
+-
+j k
+i
+1 2, ,
+
+- D
+
+A
+i
+
++
+
+j k
+1 2, ,
+
++
+n
+1 2
+F
++
+j k
+i
+1 2, ,
+
+)
+
++
+
+D
+t
+V
+i j k
+, ,
+
+D
+
+(
+
+D
+
+A
+
+i j
+,
+
+-
+
+1 2,
+
+k
+
+G
+
+n
+i j
+,
+
++
+-
+
+1 2
+1 2,
+
+k
+
+- D
+
+A
+
+i j
+,
+
++
+
+1 2,
+
+k
+
+G
+
+n
+i j
+,
+
++
++
+
+1 2
+1 2,
+
+)
+
+k
+
++
+
+D
+t
+V
+i j k
+, ,
+
+D
+
+(
+
+D
+
+A
+
+i j k
+, ,
+
+-
+
+1 2
+
+H
+
++
+n
+i j k
+, ,
+
+1 2
+-
+
+1 2
+
+- D
+
+A
+
+i j k
+, ,
+
++
+
+1 2
+
+H
+
++
+n
+i j k
+, ,
+
+1 2
++
+
+1 2
+
+)
+
+,
+
+(
+
+12
+
+)
+
+where Dt is the change in the timelike coordinate x0 and time
+1 2 is somewhere between n and n+1, possibly the
+level +n
+same as n, depending on the substep of the integration (see
+Section 3.7).
+
+In the case of magnetic ﬁelds, we take the fundamental
+variables to be area averages. This is a crucial part of the CT
+scheme of Evans & Hawley (1988) (see Section 3.5). The
+positioning of quantities and orientations of surfaces and edges
+is the same as Figure 1 of Stone & Gardiner (2008). For
+concreteness, consider the evolution of
+
+(
+
+n
+1
+B
+)
+-
+i
+
+j k
+1 2, ,
+
+=
+
+1
+
+D
+
+A
+i
+
+-
+
+j k
+1 2, ,
+
+ò
+
+A
+1
+
+1
+B
+
+-
+
+2
+g dx dx
+
+3
+.
+
+(
+
+13
+
+)
+
+We deﬁne the edge lengths analogously to areas and volumes,
+
+D
+
+L
+
+i
+
+-
+
+j k
+1 2, ,
+
+
+
+1 2
+
+D
+
+L
+
+i
+
+-
+
+1 2,
+
+j
+
+
+
+1 2,
+
+k
+
+=
+
+ò
+
+L
+
+=
+
+ò
+
+L
+
+i
+
+-
+
+1 2, ,
+
+j k
+
+
+
+1 2
+
+i
+
+-
+
+1 2,
+
+j
+
+
+
+1 2,
+
+k
+
+-
+
+g dx
+
+2
+
+,
+
+(
+
+14
+
+a
+
+)
+
+-
+
+g dx
+
+3
+.
+
+(
+
+14
+
+b
+
+)
+
+3
+
+3. NUMERICAL ALGORITHM
+
+3.1. Variable Inversion
+
+One of the most challenging aspects of numerical methods
+for relativistic ﬂuid dynamics is variable inversion, the process
+of extracting the primitive variables from the conserved
+variables. The difﬁculty lies in the conserved variables being
+given by nonlinear functions of the primitive variables with no
+simple inverses. It is compounded by the fact that only certain
+primitive states are physically admissible (for example there
+can be no negative densities or superluminal velocities), and so
+a given set of conserved variables might not exactly correspond
+to any allowable set of primitives. Our methods described here
+are largely based on the D1 W inversion scheme of Noble
+et al. (2006).
+
+If magnetic ﬁelds are present, they are interpolated to the
+volume-averaged centers as follows, using the B1 case for
+concreteness. Given
+and
+volume-averaged coordinate x1
+)
+. Then the volume-averaged value of B1 is
+1
+-+
+x
+x
+(
+)
+i
+1 2
+taken to be
+
+at interface coordinates xi 1 2
+1
+- -
+x
+i
+
+i , deﬁne
+
+1
+Bi 1 2
+
+l =
+
+1
+-
+i
+
+1 2
+
+1 2
+
+x
+(
+
+1
+i
+
+1
+
+1
+B
+i
+
+= -
+1
+(
+
+l
+
+)
+
+1
++-
+B
+i
+1 2
+
+l
+
+1
+B
++
+i
+
+.
+
+1 2
+
+(
+
+16
+
+)
+
+n
+
+,
+
+m
+
+)
+
+0
+m
+
+gas
+
++
+
+ad
+
+i
+u
+˜ }
+
+r p
+,
+
+= -m
+n
+
+n
+n n u , where
+
+m
+n
+the future-pointing unit vector normal
+(
+
+In the case of general relativity, we take the primitive
+variables to be {
+and the conserved variables to be
+0
+u T,0
+r
+{
+}
+. Here we use the same velocities as in Noble et al.
+m
+(2006):
+m
+d=
+u
+are the
+(
+˜
+components of
+to
+constant-x0 hypersurfaces, and
+1 2 is the lapse.
+they
+These projections have the desirable property that
+describe subluminal motion no matter what values they have.
+Additionally, the fourth component is ˜ =u
+. The Lorentz
+factor of
+is
+j 1 2. Following the D1 W scheme, the New-
+g = + g u u
+1
+(
+ton–Raphson method is used to solve a nonlinear equation for
+the relativistic gas enthalpy
+. In the hydrodynamics
+case we use the same procedure as used with MHD, simply
+setting all magnetic ﬁelds to 0.
+
+the ﬂuid as seen by the normal observer
+ij
+
+h2
+g r=W
+
+a = -
+
+-g00
+)
+
+i
+˜ ˜ )
+
+0
+
+0
+
+and the conserved variables to be {
+
+In special relativity, we take the primitive variables to be
+i
+} =
+r p
+v
+}
+,
+{
+,
+gas
+, where γ=u0 is the ﬂuid Lorentz factor in the
+mT,
+0
+gr
+{
+}
+coordinate frame. For MHD, we also use the Newton–Raphson
+method to ﬁnd W, where we simply have
+. The
+
+h2
+g r=W
+
+D E M,
+,
+
+i
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+method is detailed in Mignone & McKinney (2007), though we
+iterate on the residual of E as a function of W rather than E−D
+as a function of W−D as they do.
+
+In the particular case of special relativistic hydrodynamics,
+we can avoid using an iterative method and instead directly
+solve a quartic equation (Schneider et al. 1993). In particular,
+the 3-velocity magnitude ∣ ∣v must satisfy
+
+4
+a v
+∣ ∣
+4
+
++
+
+3
+a v
+∣ ∣
+3
+
++
+
+2
+a v
+∣ ∣
+2
+
++
+
+a v
+∣ ∣
+1
+
++ =
+a
+0
+
+0,
+
+(
+
+17
+
+)
+
+where in terms of
+
+2
+h=M
+
+j
+
+and ∣
+
+∣ =M
+
+M 2 we deﬁne
+
+i
+M Mij
+2
+2
+D
+) (
+1
+
+a
+
+= G -
+(
+
+-
+
+M
+
+2
+
+)
+
+,
+
+= - G G -
+2
+
+(
+
+1
+
+)∣
+
+M E
+∣
+
+,
+
+4
+a
+3
+
+a
+
+2
+
+= G
+
+2
+
+E
+
+2
+
++ G -
+(
+
+2
+
+1
+
+)
+
+M
+
+2
+
+- G -
+(
+
+1
+
+)
+
+2
+
+D
+
+2
+
+,
+
+a
+1
+
+= - G
+
+2
+
+M E
+∣
+∣
+
+,
+
+=a
+0
+
+M
+
+2
+
+.
+
+Given the root ∣ ∣v , we recover the primitives
+
+r =
+
+D
+
+1
+
+-
+
+2
+v
+∣ ∣
+
+,
+
+i
+=v
+
+v
+∣ ∣
+M
+∣
+∣
+
+M
+
+i
+
+,
+
+p
+gas
+
+= G -
+(
+
+1
+
+)(
+
+E
+
+-
+
+h
+ij
+
+i
+M v
+
+j
+
+-
+
+r
+
+)
+
+.
+
+(
+
+18
+
+a
+
+)
+
+(
+
+18
+
+b
+
+)
+
+(
+
+18
+
+c
+
+)
+
+(
+
+18
+
+d
+
+)
+
+(
+
+18
+
+e
+
+)
+
+(
+
+19
+
+a
+
+)
+
+(
+
+19
+
+b
+
+)
+
+(
+
+19
+
+c
+
+)
+
+As part of variable inversion we impose limits on the
+recovered variables. Since negative densities and pressures are
+unphysical, and since vanishing values cause problems in
+ﬁnite-volume ﬂuid codes, we ensure r
+min,
+p
+gas
+where ρmin and pgas
+min are adjusted based on the problem. We
+also must obey the physical constraint γ1, and for numerical
+purposes we limit γ<γmax, where γmax is often chosen to
+be 100.
+
+r> min and
+
+>p
+gas
+
+If the recovered primitives fall outside these ranges, they are
+modiﬁed to the nearest admissible values. The primitives are
+also set to the ﬂoor values in cases where the iteration does not
+converge. Any such modiﬁcations are then followed by
+reevaluating the conserved quantities in the given cell.
+
+3.2. Reconstruction
+As input to the Riemann problem, one needs ﬂuid states on
+either side of the interface. While one can simply take the states
+from the two adjacent cells, this method is only ﬁrst-order
+accurate in the size of the cells. For smooth ﬂows, information
+from a larger stencil can be used to infer left and right states in
+a higher-order way. Reconstruction is the process of inter-
+polating these states while preserving any actual discontinuities
+and not introducing spurious extrema.
+
+1
+-xi 1 2
+
+For a primitive quantity q, we deﬁne the values on the left
+interface using piecewise linear
+and right sides of the
+reconstruction. Speciﬁcally, we use the modiﬁed vanLeer
+slope limiter algorithm of Mignone (2014), which reconstructs
+-qi 1 2,L R from the values
++qi 1. This
+-qi 2,
+algorithm correctly takes into account nonuniform spacing, as
+well as the difference between the volume-averaged cell center
+coordinates (“centroids of volume” in that work) and arithmetic
+means of surface coordinates (“geometrical cell centers”). The
+slope limiter has been proved to be total variation diminishing
+(TVD)
+for all orthogonal coordinate systems. While this
+guarantee has not been extended to non-orthogonal coordinate
+systems, to our knowledge this has not been done with any
+
+-qi 1, qi, and
+
+other method, and indeed a number of methods in use are not
+even TVD with orthogonal but non-Cartesian or non-uniform
+grids.
+
+For completeness, we summarize the Mignone algorithm
+
+here. Deﬁne
+
+D =
+L
+
+D =
+C
+
+D =
+R
+
+,
+
+2
+
+2
+
+1
+
+q
+-
+i
+1
+x
+-
+i
+q
+i
+1
+x
+i
+q
++
+i
+1
++
+i
+
+x
+
+-
+
+q
+-
+i
+1
+-
+x
+-
+i
+1
+-
+q
+i
+x
+-
+
+-
+
+1
+
+1
+
+-
+1
+-
+i
+q
+i
+1
+i
+
+x
+
+-
+
+1
+
+1
+
+,
+
+.
+
+Deﬁne also
+
+D =
+x
+L
+
+x
+
+1
+-
+i
+
+1 2
+
+-
+
+x
+
+1
+-
+i
+
+,
+1
+
+D = -
+
+x
+R
+
+x
+
+1
+i
+
+(
+
+20
+
+a
+
+)
+
+(
+
+20
+
+b
+
+)
+
+(
+
+20
+
+c
+
+)
+
+x
+
+1
+-
+i
+
+,
+
+1 2
+
+(
+
+21
+
+a
+
+)
+
+F
+C
+L
+
+=
+
+x
+
+1
+i
+
+1
+-
+i
+
+1
+
+,
+
+-
+x
+D
+x
+L
+
+F
+C
+R
+
+=
+
+1
+x
++
+i
+1
++
+i
+
+x
+
+-
+
+1
+
+x
+
+-
+
+1 2
+
+1
+i
+x
+
+1
+i
+
+,
+
+(
+
+21
+
+b
+
+)
+
+B
+C
+L
+
+=
+
+1
+x
+-
+i
+1
+x
+-
+i
+
+1
+
+1
+-
+x
+-
+i
+1
+1
+-
+x
+-
+i
+
+3 2
+
+2
+
+,
+
+B
+C
+R
+
+=
+
+x
+
+1
+i
+
+1
+-
+i
+
+-
+x
+D
+x
+R
+
+1
+
+.
+
+(
+
+21
+
+c
+
+)
+
+The left and right quantities are then given by
+q
+i
+
+1 2,L
+
+-
+⎧
+⎪
+⎨
+⎪
+⎩
+
+=
+
+q
+i
+
+-
+
+,
+1
+
+q
+i
+
+-
+
+1
+
++
+
+D D D
+x
+L
+L
+F
+2
+D +
++
+C
+(
+L
+L
+
+B
+F
+D + D
+C
+C
+(
+C
+L
+L
+B
+- D D + D
+C
+L
+L
+
+L
+2
+)
+
+)
+
+C
+
+C
+
+,
+
+2
+C
+
+D D
+L
+
+C
+
+
+
+0,
+
+D D >
+
+C
+
+L
+
+0;
+
+q
+i
+
+1 2,R
+
+-
+⎧
+⎪
+⎨
+⎪
+⎩
+
+=
+
+q
+i
+
+,
+
+q
+i
+
+-
+
+B
+F
+D D D
+D + D
+C
+x
+C
+(
+C R
+R
+R
+R
+R
+2
+B
+F
+2
+- D D + D
+D +
++
+C
+C
+(
+C R
+R
+L
+L
+C
+
+C
+2
+)
+
+)
+
+(
+
+22
+
+a
+
+)
+
+D D
+C R
+
+
+
+0,
+
+,
+
+D D >
+C R
+
+0.
+
+(
+
+22
+
+b
+
+)
+
+In the case of transverse magnetic ﬁeld
+
+3 , the
+}
+cell-centered values are used in the reconstruction algorithm.
+The longitudinal ﬁeld B1 is already deﬁned at
+, so no
+reconstruction is needed for this quantity. Reconstruction for
+x2- and x3-surfaces proceeds analogously.
+
+1
+-xi 1 2
+
+B B,2
+{
+
+Îq
+
+3.3. Frame Transformation
+
+Rather than try to solve a Riemann problem directly in
+general coordinates, we choose to explicitly transform the left
+and right states at an interface to a locally Minkowski frame. In
+this way, we can leverage the advances made in special
+relativistic Riemann problems, as suggested by Pons et al.
+(1998) and Antón et al. (2006). While the scalar quantities ρ
+and pgas transform between frames trivially, vector quantities
+rely on constructing a new basis {
+from the old coordinate
+}( )¶ m , where the inner product with respect to the metric
+basis {
+e
+¶
+·
+yields
+. Note that here we
+n
+( ˆ )
+use parentheses around subscripts to indicate indices into
+generic sets, as opposed to components of tensors.
+
+ˆ ˆh=
+mn
+
+¶ =
+n
+( )
+
+}( ˆ )me
+
+For a surface of constant x i, we deﬁne the new basis to have
+
+e
+( ˆ )
+m
+
+mng
+
+but
+
+m
+( )
+
+·
+
+the following properties:
+
+1.
+
+( ˆ )me must be orthogonal to ( ˆ )ne
+
+for all m
+
+n¹ .
+
+4
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+2. Each ( ˆ )me must be normalized to have an inner product of
+being
+
+±1 with itself, with (ˆ)e t being timelike and
+spacelike.
+(ˆ)e t must be orthogonal to surfaces of constant x0.
+
+ȷ(ˆ )e
+
+( ˆ)e x onto the surface of constant x0 must
+be orthogonal to the surface of constant x i within that
+submanifold.
+
+3.
+4. The projection of
+
+·
+
+e
+n
+( ˆ )
+
+ˆ ˆh=
+mn
+
+The ﬁrst two properties are a restatement of the condition
+. Without the third property, the ﬂuxes returned
+e
+( ˆ )
+m
+by the Riemann solver would not necessarily correspond to
+time evolution in the understood x0-direction. The fourth
+property allows us to ignore y- and z-ﬂuxes in the Riemann
+problem, using only the x-ﬂuxes returned by a one-dimensional
+Riemann solver to infer the x1-ﬂuxes.
+
+The details of the frame transformation are worked out in the
+Appendix. Here we quote the results. For an x1-interface, deﬁne
+the components
+
+m
+
+M
+
+ˆ =
+n
+
+⎛
+⎜
+⎜
+⎜
+⎜⎜
+⎝
+
+00
+
+01
+
+02
+
+Ag
+Ag
+Ag
+
+01 01
+
+B g g
+(
+B g g
+(
+
+01 02
+
+0
+-
+-
+
+g g
+g g
+
+00 11
+)
+00 12
+)
+
+0
+0
+Dg
+
+33
+
+03
+
+Ag
+
+B g g
+(
+
+01 03
+
+-
+
+g g
+
+00 13
+)
+
+-
+
+Dg
+
+23
+
+where we have the shorthands
+
+A
+
+= - -
+
+(
+
+g
+
+00
+
+-
+)
+
+1 2
+
+,
+
+B
+
+=
+
+(
+
+g
+
+00
+
+00 11
+
+g g
+
+(
+
+-
+
+01 01
+
+g g
+
+-
+))
+
+1 2
+
+,
+
+C
+
+=
+
+(
+
+-
+g
+)
+33
+
+1 2
+
+,
+
+D
+
+=
+
+(
+
+g
+33
+
+(
+
+g g
+22 33
+
+-
+
+g g
+23 23
+
+-
+))
+
+1 2
+
+.
+
+⎞
+⎟
+⎟
+⎟
+⎟⎟
+⎠
+
+0
+0
+0
+
+C
+
+,
+
+(
+
+23
+
+)
+
+(
+
+24
+
+a
+
+)
+
+(
+
+24
+
+b
+
+)
+
+(
+
+24
+
+c
+
+)
+
+(
+
+24
+
+d
+
+)
+
+1
+=m
+
+This matrix transforms contravariant
+tensors in the locally
+Minkowski basis to the coordinate basis, so, for example,
+are the x1-ﬂuxes of 4-momentum in the
+1
+T
+g M M T
+ˆ
+m
+n
+ˆ
+mn
+coordinate basis if
+are the stress-energy tensor components
+in the orthonormal basis. The inverse transformation takes
+the form
+
+ˆ ˆmnT
+
+ˆ ˆ
+mn
+
+n
+
+the cyclic permutation  
+nM and the columns of
+rows of
+
+2
+
+1
+
+m
+
+ˆ
+
+3 in all indices, including the
+ˆm
+nM .
+to be noted is that
+
+One important detail
+
+the constant-
+coordinate interface across which we desire ﬂuxes will
+generally appear to be moving in the orthonormal coordinates.
+To see this, consider an interface of constant x1 and how it
+appears in orthonormal coordinates (ˆ
+. According to
+(23) we know
+
+t x y z
+,
+,
+ˆ)
+
+ˆ
+
+ˆ
+
+,
+
+1
+
+x
+
+=
+
+ˆ
+01
+Ag t
+
++
+
+B g g
+(
+
+01 01
+
+-
+
+00 11
+
+g g
+
+) ˆ
+x.
+
+(
+
+27
+
+)
+
+Given that x1 is constant, differentiation of (27) tells us the
+interface velocity can be calculated as
+
+v
+
+ˆ º
+x
+
+ˆ
+dx
+ˆ
+dt
+
+= -
+
+01
+
+Ag
+
+B g g
+(
+
+01 01
+
+-
+
+g g
+
+00 11
+)
+
+=
+
+01
+
+g
+
+01 01
+
+g g
+
+-
+
+00 11
+
+g g
+
+.
+
+(
+
+28
+
+)
+
+1 formalism with lapse α, shift
+In the language of the +3
+components β i, and contravariant 3-metric components γ ij, we
+can write
+in agreement with Pons et al.
+(1998). That is, a nonzero shift in the direction of interest
+results
+in a nonzero interface velocity in the chosen
+orthonormal frame.
+
+b a g
+
+ˆ
+=v x
+
+11 ,
+
+1
+
+As this transformation yields physical quantities as measured
+it can be applied even inside the
+by a normal observer,
+ergosphere or, in the case of horizon-penetrating coordinates,
+inside the event horizon. This would not be the case if, for
+example, we attempted to transform into the frame of a
+stationary observer, since the spacetime might not everywhere
+admit timelike stationary worldlines. The transformation can be
+singular at coordinate singularities such as a polar axis, but
+such cases must be handled carefully no matter what method is
+being employed.
+
+3.4. Riemann solver
+
+The Riemann problem is that of determining time-averaged
+ﬂuxes across an interface given constant left and right states. A
+wide variety of exact and approximate solvers have been
+
+M
+
+ˆ =
+m
+n
+
+⎛
+⎜
+⎜
+⎜
+⎜
+⎝
+
+(
+
+-
+A
+01
+Bg
+00
+B Eg Dg
+
+2
+
+33
+00
+B C g G Eg
+(
+
++
+
+)
+
+2
+
+g
+)
+33
+
+(
+
+23
+
+0
+Bg
+00
+B Fg Dg
+
+-
+
+00
+
+2
+
+33
+00
+B C g H Fg
+(
+
++
+
+)
+
+2
+
+23
+
+0
+0
+Dg
+
+33
+
+1
+
+0
+0
+0
+
+g
+)
+33
+
+(
+
+1
+
+C g
+)
+
+23
+
+g
+33
+
+1
+
+C
+
+⎞
+⎟
+⎟
+⎟
+⎟
+⎠
+
+,
+
+(
+
+25
+
+)
+
+where we deﬁne
+
+E
+
+=
+
+01 12
+
+g g
+
+-
+
+11 02
+g g
+
+,
+
+F
+
+=
+
+01 02
+
+g g
+
+-
+
+00 12
+
+g g
+
+,
+
+=
+G g g
+
+01 13
+
+-
+
+11 03
+g g
+
+,
+
+=
+H g g
+
+01 03
+
+-
+
+00 13
+
+g g
+
+.
+
+(
+
+26
+
+a
+
+)
+
+(
+
+26
+
+b
+
+)
+
+(
+
+26
+
+c
+
+)
+
+(
+
+26
+
+d
+
+)
+
+With this matrix we can, for example, write the orthonormal
+frame ﬂuid 4-velocity components in terms of the coordinate
+ˆ=m
+ˆ
+n
+m
+M u .
+basis components:
+n
+the interfaces of constant x2
+These formulas hold for
+(respectively x3) under one (respectively two) applications of
+
+u
+
+developed. For example, Roe solvers (Roe 1981) solve a full
+linearized set of equations, obtaining high accuracy at the cost
+of performance.
+
+An alternative is the HLL family of Riemann solvers, based
+on the work of Harten et al. (1983), which have the advantage
+of being computationally simple while guaranteeing positivity
+(i.e., returning physically admissible intermediate states given
+physically admissible inputs). All HLL Riemann solvers take
+left and right states as well as leftgoing and
+as input
+rightgoing signal speeds, which we calculate as either the
+sound speeds in hydrodynamics or the fast magnetosonic
+speeds in MHD.
+
+5
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+Figure 1. Schematic 1+1 spacetime diagrams of different HLL Riemann solvers’ wavefans. The solid diagonal lines indicate the fastest moving waves in either
+direction, with LLF assuming the speeds are the same. The dotted lines in HLLC and HLLD represent the contact discontinuity, and the dashed lines in HLLD
+represent the Alfvén waves. The ordering of the waves shown is accurate, though waves can be degenerate. Fluxes are determined along the x=0 surface for
+interfaces at rest, which can be in any of the 3, 4, or 6 regions of the wavefan. Slopes are qualitative; in particular all wavespeeds are subluminal.
+
+A number of different HLL Riemann solvers have been
+relativistic ﬂuids. We have the following
+
+developed for
+available in the code:
+
+1. LLF. The largest in magnitude eigenvalue of the Roe
+matrix (Roe 1981), i.e., the fastest linear wavespeed, is
+taken to be the signal speed on both sides of the interface.
+This solver
+is computationally inexpensive even in
+relativity, as it has only a single intermediate state and
+neglects the physical nature of the left and right states.
+This comes at the cost of being diffusive for ﬂows slower
+than the extremal wavespeed (see Section 4.1).
+
+2. HLLE. This solver is nearly identical to LLF, having just
+a single intermediate state, with the only difference being
+that the two signal speeds are allowed to be different. We
+use the speed of the fastest leftgoing wave, considering
+both sides of
+the interface, as well as the fastest
+rightgoing wave, as suggested by Einfeldt (1988). In
+practice HLLE and LLF give very similar results and
+have only small performance differences.
+
+results. Such an HLLC Riemann solver
+
+3. HLLC. By resolving not only the extremal waves but also
+the contact discontinuity in the Riemann fan, one can get
+better
+is
+developed for special relativity in Mignone & Bodo
+(2005), and we implement
+that algorithm for hydro-
+dynamics. Mignone & Bodo (2006) also develop an
+HLLC solver for relativistic MHD, though we forego
+implementing this in favor of HLLD.
+
+it
+
+(2009). Given the extremal
+
+4. HLLD. This solver is developed for relativistic MHD by
+(fast
+Mignone et al.
+magnetosonic) wavespeeds,
+resolves not only the
+improves the
+contact but also the Alfvén waves. It
+the ﬂuxes by lessening the numerical
+accuracy of
+diffusion, though at the expense of requiring nonlinear
+root ﬁnds. In particular, we use the secant method to ﬁnd
+the total pressure across the contact. In the case of a
+strong longitudinal magnetic ﬁeld, the conserved HLLE
+state is constructed and inverted using a Newton–
+
+6
+
+Raphson solver in order to ﬁnd a total pressure to
+initialize the secant method.
+
+Figure 1 illustrates how the different solvers treat the internal
+
+shock structure.
+
+ˆM t
+
+Owing to the frame transformation,
+
+the same Riemann
+solvers can be used in both special and general relativity. As
+noted in Section 3.3, however, one must be careful to consider
+the Riemann problem with a moving interface. This is done by
+constructing the waves and intermediate states as usual and
+then determining the relevant portion of
+the wavefan
+according to where the generally nonzero interface velocity
+(28) falls relative to the wavespeeds. In the schematic sense of
+the ﬂuxes sought are not necessarily along the
+Figure 1,
+vertical lines, but could be along angled lines also passing
+through the origin.
+Additionally,
+
+the transformation (23) back to global
+1 , in addition
+coordinates will have a nonzero component
+1 , whenever there is a moving interface.
+ˆM x
+to the ever-present
+ˆ ˆnT x but also
+This necessitates having not just the components
+ˆˆnT t
+in the orthonormal frame. That is, we need the conserved
+state in the appropriate region of the wavefan, not just the
+associated ﬂuxes.
+In practice even the more complicated
+Riemann solvers solve for the intermediate states by ﬁnding
+primitive variables, from which one can deduce consistent
+conserved states as well as ﬂuxes.
+
+The general procedure for obtaining ﬂuxes proceeds as
+follows. First, the Riemann problem consisting of left and right
+states, extremal wavespeeds, and an interface velocity is
+transformed into the appropriate locally Minkowski frame.
+Next, the Riemann solver is used to solve for the wavefan,
+including the speeds of internal waves as well as the conserved
+quantities and their associated ﬂuxes normal to the interface in
+each region separated by the waves. The appropriate region is
+then selected based on where the interface velocity falls inside
+the wavefan. Finally, the ﬂuxes and conserved quantities in that
+region are transformed back to ﬂuxes in the original coordinate
+system.
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+Figure 2. 2+0 spacetime diagram showing a timeslice of four cells. The x3 direction is out of the plane of the ﬁgure, and indices k have been suppressed from all
+quantities. The top left cell shows what is known at the end of the Riemann problem: electric ﬁelds on the faces, as well as easily deducible cell-centered electric ﬁelds.
+The top right cell illustrates how a gradient is determined. The bottom two cells show gradients being upwinded back to the faces. Four face-centered ﬁelds, four
+upwinded gradients, and two edge-centered widths are combined to yield the edge-centered electric ﬁeld
+
+.
+
+3
+Ei
+-
+
+1 2,
+
+j
+
+-
+
+1 2
+
+3.5. Constrained Transport
+We employ a CT update of the face-centered magnetic ﬁelds
+in order to maintain the divergence-free constraint without
+resorting to divergence cleaning. The fundamentals of CT were
+in fact developed within the context of general relativity (Evans
+& Hawley 1988). Our implementation differs slightly from that
+original description, for example, by having cell-centered rather
+than face-centered velocities. Ours is a simple extension of the
+algorithm detailed in Gardiner & Stone (2005) to relativity, and
+we summarize it here.
+the
+
+edge-
+algorithm is
+centered electric ﬁelds to use in the update (15) consistent
+with the ﬂuxes
+returned by the Riemann solver. For
+concreteness, we will show how we calculate
+,
+1 2
+dropping all
+time superscripts. The algorithm proceeds in
+ﬁve steps:
+
+The goal of
+
+to determine
+
+3
+Ei
+-
+
+1 2,
+
+-
+
+j
+
+1. Obtain the four face-centered electric ﬁelds
+
+3
+Ei
+-
+
+1 2,
+
+j
+
+(
+
+-
+1
+
+)
+
+and
+
+3
+Ei
+(
+
+)- -
+j1 ,
+
+1 2
+
+from the Riemann solver.
+
+the
+
+3
+¶
+E i
+)
+(
+1
+
+2. Calculate the four cell-centered electric ﬁelds
+ﬁeld
+eight
+3. Calculate
+1 and (
+1 2 .
+-
+-
+1 4
+(
+)
+)
+
+¶
+4. Upwind the electric ﬁeld gradients to obtain the four gradients
+¶
+5. Combine the face-centered ﬁelds and upwinded gradients
+
+1 .
+-
+-
+j1 ,
+(
+)
+(
+)
+gradients
+
+electric
+3
+E i
+) (
+
+1 2 and (
+
+3
+¶
+E i
+)
+(
+1
+
+1 2 .
+-
+)
+
+3
+E i
+)
+
+- -
+1 ,
+)
+
+1 2 ,
+)
+
+1 2 ,
+)
+
+1 2,
+
+Ei
+
+1 4
+
+1 4
+
+1 4
+
+-
+
+-
+
+-
+
+-
+
+-
+
+-
+
+-
+
+2
+
+2
+
+(
+
+(
+
+(
+
+(
+
+j
+
+j
+
+j
+
+j
+
+to get the edge-centered ﬁeld
+
+3
+Ei
+-
+
+1 2,
+
+j
+
+-
+
+1 2
+
+.
+
+The relevant quantities are laid out schematically in Figure 2.
+For the ﬁrst step, we simply note that the electric ﬁelds in the
+3-direction are nothing more than the (1, 2)-components of the
+dual of the electromagnetic ﬁeld tensor (5) and are thus the
+
+j
+
+j
+
+j
+
+)
+
+(
+
+(
+
+.
+
+-
+1
+
+1 2
+
+1 2,
+
+- -
+1 ,
+)
+
+- -
+1 ,
+)
+
+*=
+
+12
+F
+i
+(
+
+ﬂuxes returned by the Riemann solver in the x1 and x2
+directions (after transforming back to global coordinates). In
+are the negatives of the x1-ﬂuxes of B2,
+3
+Ei
+particular,
+-
+-
+j
+(
+1
+1 2,
+)
+. Similarly, we use the positive x2-
+3
+21
+*= -
+E
+F
+-
+-
+-
+i
+i
+)
+1
+ﬂuxes of B1 to obtain
+
+1 2
+For the second step (which does not depend on the ﬁrst), we
+calculate the cell-centered electric ﬁelds from the cell-centered
+velocities and the interpolated magnetic ﬁelds (e.g., (16)). This
+amounts to simply constructing the appropriate 4-vector
+components u μ
+
+and using (4) and (5).
+
+and b μ
+
+j
+1 2,
+3
+E
+i
+(
+
+In the third step we take gradients of electric ﬁeld
+components from cell centers to faces, similar to (45) of
+Gardiner & Stone. In order to calculate such gradients, we
+though as we shall see these can be
+require cell widths,
+canceled from the ﬁnal expression to a good approximation.
+3 located between cell center i, j and
+Consider the gradient ¶ E1
+face center -i
+, as in the top right cell of Figure 2. If we
+have
+
+1 2,
+
+j
+
+D
+
+1
+-x
+i
+
+1 4,
+
+j
+
+=
+
+ò
+
+C
+
+g
+11
+
+1
+
+dx
+
+(
+
+29
+
+)
+
+with C as the curve of constant x0, x2, and x3 running from the
+cell center to the face, then we can take
+
+(
+
+¶
+E
+1
+
+3
+)
+i
+
+-
+
+1 4,
+
+j
+
+=
+
+E
+
+-
+
+3
+i j
+,
+D
+x
+
+3
+E
+-
+i
+1
+-
+i
+
+1 4,
+
+j
+
+1 2,
+
+j
+
+.
+
+(
+
+30
+
+)
+
+Similarly we can calculate the other seven such gradients.
+
+7
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+Fourth, we shift the gradients onto the faces via upwinding.
+
+For example, as illustrated in Figure 2, we calculate
+
+(
+
+¶
+
+2
+
+E
+
+3
+)
+i
+
+-
+
+1 2,
+
+j
+
+-
+
+3 4
+
+=
+
+⎧
+⎪
+⎨
+⎪
+⎩
+
+(
+
+¶
+
+2
+
+E
+
+3
+)
+i
+
+- -
+j
+1,
+
+3 4
+
+,
+
+(
+
+¶
+
+E
+
+3
+)
+i j
+,
+
+2
+
+-
+
+3 4
+
+,
+
+u
+
+1
+-
+i
+
+u
+
+1
+-
+i
+
+1 2,
+
+j
+
+-
+
+1
+
+1 2,
+
+j
+
+-
+
+1
+
+>
+
+0,
+
+<
+
+0,
+
+(
+
+31
+
+)
+
+according to the sign of the mass ﬂux returned by the Riemann
+solver. This is (50) of Gardiner & Stone.
+
+Finally, we compute the edge-centered value as is done in
+(41) of Gardiner & Stone. If we have an appropriate width
+1
+D -
+xi
+is, by
+-
+g11 as x1 varies over half a cell, as shown in
+integrating
+Figure 2—then the value we seek is
+
+deﬁned similarly to D -xi
+
+1 —that
+j
+
+1 4,
+
+1 2,
+
+1 2
+
+j
+
+3
+E
+-
+i
+
+-
+
+1 2
+
+=
+
+j
+
+1 2,
+1
+4
+D
+x
+
+(
+
++
+
+1
+-
+i
+
+D
+x
+
+2
+-
+i
+
++
+
+3
+E
+-
+i
+
++
+
+3
+E
+-
+i
+
+1 2,
+
+j
+
+1 2,
+
+j
+
+-
+
+1
+
++
+
+E
+
+3
+i j
+,
+
+-
+
+1 2
+
++
+
+3
+E
+- -
+j
+i
+1,
+
+)
+
+1 2
+
+j
+
+-
+
+1 2
+
+(
+
+3
+E
+-
+i
+
+3 4,
+
+j
+
+-
+
+1 2
+
+-
+
+3
+E
+-
+i
+
+1 4,
+
+j
+
+-
+
+1 2
+
+j
+
+-
+
+1 2
+
+(
+
+3
+E
+-
+i
+
+1 2,
+
+j
+
+-
+
+3 4
+
+-
+
+3
+E
+-
+i
+
+1 2,
+
+j
+
+-
+
+1 4
+
+)
+
+)
+
+.
+
+(
+
+32
+
+)
+
+1 2,
+4
+
+1 2,
+4
+
+However, if the metric and grid spacing are varying smoothly,
+we can approximately cancel the Dx factors in (32) with those
+in (30).
+
+(Section 3.5). The same procedure is repeated at
+timestep
+1 2, except the resulting ﬂuxes and source terms are used
++n
+to update the step n state to step n+1. Schematically, we
+advance the grid by a single timestep via
+
++C
+n
+
+1 2
+
+=
+
+n
+
+C
+
++
+
+D
+t
+2
+
+n
+
+S
+
++
+
+D
+t
+D
+V
+2
+
+n
+
+D
+
+A
+
+,
+
+F
+
+å
+faces
+
+(
+
+33
+
+a
+
+)
+
+n
+
++
+
+1
+
+C
+
+=
+
+n
+
+C
+
++ D
+
+tS
+
+n
+
++
+
+1 2
+
++
+
+D
+t
+D
+V
+
+F
+
+å
+faces
+
+n
+
++
+
+1 2
+
+D
+
+A
+
+.
+
+(
+
+33
+
+b
+
+)
+
+The vanLeer integrator is TVD, so it will not
+spurious extrema.
+
+introduce
+
+Athena++ implements a variety of other temporal integra-
+tion algorithms, including the TVD second-order and third-
+order Runge–Kutta methods of Shu & Osher (1988). The RK2
+integrator is the same as Heun’s method and we have found is
+no better than the vanLeer method we implement. It suffers
+from the drawback that second-order spatial reconstruction is in
+both substeps, whereas we can use ﬁrst-order reconstruction for
+the ﬁrst half step with the vanLeer scheme and still obtain
+convergence. RK3 and other higher-order
+second-order
+schemes generally require extra storage of intermediate results,
+and for our present purposes we ﬁnd second order in time to be
+sufﬁcient. CT corner transport upwind (CTU) integrators have
+also been developed for MHD (Gardiner & Stone 2005, 2008),
+but CTU methods require time-advanced variable estimates that
+are difﬁcult to generalize to arbitrary coordinate systems.
+
+3.6. Source Terms
+
+3.8. Storage Requirements
+
+In non-Cartesian coordinates one must consider not only
+ﬂuxes but also geometric source terms when updating
+conserved quantities according to (12). As can be seen in (6),
+the continuity and magnetic ﬁeld equations never have source
+terms but the energy-momentum equation generally does.
+
+As noted in Gammie et al. (2003), with the adopted index
+mT 0
+placement on the stress-energy tensor the source terms for
+will vanish when the metric does not depend on x μ. In
+particular, since the metric is stationary we never have
+geometric source terms in energy.
+
+For the remaining momentum equations we evaluate the
+stress-energy components using the primitive variables at the
+appropriate timestep, taking the metric to have its cell-centered
+values. We then contract these components with the connection
+coefﬁcients according to (11), resulting in the appropriate
+quantities for adding to the conserved variables.
+
+Source terms for additional physics (e.g., heating and
+cooling functions) can be added to the conserved quantities
+along with the geometric terms.
+
+3.7. Time Integrator
+
+At the heart of the numerical implementation is the time
+integrator. We employ a temporally second-order vanLeer
+integrator for all quantities. Given the conserved variables at
+time step n, we ﬁrst calculate the associated primitive variables
+(Section 3.1). Next, Riemann problems are set up (Sections 3.2
+and 3.3) and solved (Section 3.4), yielding ﬂuxes. We also
+compute any necessary source terms from the primitives
+(Section 3.6).
+
+The ﬂuxes and source terms are used to update all conserved
+including the magnetic ﬁelds
+
+variables by half a timestep,
+
+8
+
+At each cell, we must store 5 primitive variables and 5
+conserved variables for each half step as required by the
+vanLeer integrator. For MHD in 3 spatial dimensions we also
+store 3 each of face-centered and cell-centered magnetic ﬁelds
+and edge-centered, face-centered, and cell-centered electric
+ﬁelds, all at each half step. This amounts to 20 numbers per cell
+in hydrodynamics, and 50 numbers per cell in MHD.
+
+Any ﬁnite volume code must have access to cell volumes,
+interface areas, edge lengths (in the case of MHD), and cell
+widths (to determine maximum stable timesteps). In general
+relativity, the values of gμν, g μν
+s , and the transformation
+matrices (23) and (25) are also required at various stages of the
+integration. Fortunately the assumption of a stationary metric
+means these terms can be precomputed. Moreover, symmetries
+of the metric combined with the restriction that cells be divided
+by interfaces of constant coordinate values often results in
+separable formulas for these values, obviating the need for 3D
+storage arrays.
+
+For example, in the Kerr–Schild coordinates used in Sections
+4.5 and 5, the volume (7) of a cell bounded by coordinates r±,
+θ±, and f± is
+
+, Gmn
+
+D =
+V
+
+1
+3
+´
+
+(
+
+r
++
+
+-
+
+r
+-
+
+)(
+
+cos
+
+q
+-
+
+-
+
+cos
+
+q
++
+
+)
+
+(
+
+f
++
+
+-
+
+f
+-
+
+)(
+
+f r
+(
+
+r
+,
+- +
+
+)
+
++
+
+2
+a f
+
+(
+
+cos
+
+q
+-
+
+, cos
+
+q
++
+
+))
+
+,
+
+(
+
+34
+
+)
+
+2
+
+x
+
+y
+
+xy
+
+f x y
+,
+(
+
+) = + +
+
+2. The three parenthesized pre-
+where
+factors and the two f terms can each be stored in 1D arrays,
+where DV is computed using just a small handful of additions
+and multiplications when needed. In fact, no more than 2D
+storage is required for any metric discussed in this work.
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+Figure 3. Convergence tests for special relativistic hydrodynamics. Both Riemann solvers converge at second order, with HLLC having a smaller overall error
+compared to HLLE for the entropy wave. LLF results are indistinguishable from HLLE.
+
++
+
++
+
++
+
+N
+q
+
+32
+
+N N
+q
+r
+
+values
+
+22
+N
+f
++
+4
+
+store
+´q
+N
+N
+4
+x
+
+For the most complicated metric discussed here, Kerr–Schild,
+N
+N
+9
+20
+we
+an
+f
+r
+´
+N
+grid. This may seem substantial in comparison
+r
+N
+to the
+z coordinate-related values stored when
+y
+using the Minkowski metric, but still pales in comparison to the
+3 values holding evolving variables. Thus the
+20 50 1 2
+(
+memory footprint of our code is substantially smaller than that
+of codes that store all geometric factors without regard for
+symmetry or separability.
+
+)N N N
+
+on
+
++
+
+N
+
+–
+
+4
+
+4. TESTS
+
+Because much of the machinery for our code is the same in
+both general and special relativity, several of our tests are
+special relativistic in nature. Some are run in both special and
+general relativistic settings, and others are purely general
+relativistic.
+
+4.1. Linear Waves
+
+Linear wave convergence is a strong test of a code, and so
+we present convergence results for special relativistic hydro-
+dynamics and MHD.
+
+Choose a background constant state and consider only
+perturbations in the x-direction. If we write the time evolution
+equations in terms of a matrix A depending on the background
+and the vector of primitives P,
+
+¶ + ¶ =
+
+PA
+x
+
+P
+
+t
+
+0,
+
+(
+
+35
+
+)
+
+then the linear waves are perturbations dP that are eigenvectors
+of A.
+
+In order to quantify the error, we evolve a wave for exactly
+one period and calculate the error for each primitive quantity q
+as the L1 norm of the difference between the initial and ﬁnal
+
+9
+
+states:
+
+
+q
+
+N
+1
+init
+å=
+q
+∣
+i
+=N
+i
+1
+
+-
+
+fin
+q
+i
+
+∣
+
+.
+
+(
+
+36
+
+)
+
+We then take the overall error to be the rms of the set of
+errors q.
+
+=p
+gas
+
+The eigenvectors for hydrodynamics are given in Falle &
+Komissarov (1996, their Appendix). We choose a background
+, v i=(0.1, 0.3, −0.05), with a ratio of
+state of ρ=4,
+1
+speciﬁc heats Γ=4/3. The resulting wavespeeds are approxi-
+mately −0.30, 0.1, and 0.47. We evolve the entropy and
+rightgoing sound wave, using both HLLE and HLLC Riemann
+solvers. The results are shown in Figure 3. Both methods
+converge at second order in the number of cells, as is expected
+since the reconstruction and time integration are both second
+order. Note that the error in the entropy wave is 1.7 times larger
+using HLLE compared to HLLC for these parameters, while
+the solvers have the same error for the sound wave. This
+reﬂects the fact that when inside the wavefan, using just the
+sound speeds leads to averaging over too large a domain of
+dependence, diffusing the solution.
+
+For MHD we take the same background state and add a
+magnetic ﬁeld B i=(2.5, 1.8, −1.2), which results in all
+wavespeeds (approximately −0.71, −0.55, −0.21, 0.1, 0.35,
+0.54, and 0.81) being well separated. The eigenvectors are
+given in Antón et al. (2010) as their (46) (entropy), (65)
+(Alfvén), and (71) (magnetosonic). The results for the four
+rightmost waves are given in Figure 4. Again we have second
+order convergence, and again the more advanced Riemann
+solver has smaller errors for the internal waves of the Riemann
+fan. Here the HLLD error is a factor of 3.1, 1.7, and 1.4 times
+lower than that of HLLE for the entropy, slow magnetosonic,
+and Alfvén waves, respectively.
+
+We can also perform these same tests in a way that exercises
+the general relativistic portions of the code. Consider the
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+Figure 4. Convergence tests for special relativistic MHD. Both Riemann solvers converge at second order, with HLLD having a smaller overall error compared to
+HLLE for all but the fast wave. LLF results are indistinguishable from HLLE.
+
+“tilted” coordinates (
+t
+nates (t, x, y, z) by
+
+¢
+
+,
+
+x
+
+¢
+
+,
+
+¢
+y z
+,
+
+¢
+
+)
+
+related to Minkowski coordi-
+
+t
+
+¢ =
+
+x
+
+¢ =
+
+t
+
++
+
+ax
+
+1
+x
+
++
+-
+
+2
+
+a
+at
+
+1
+
++
+
+2
+
+a
+
+,
+
+,
+
+¢ =y
+
+y
+
+,
+
+¢ =z
+
+z
+
+(
+
+37
+
+a
+
+)
+
+(
+
+37
+
+b
+
+)
+
+(
+
+37
+
+c
+
+)
+
+(
+
+d37
+
+)
+
+for some parameter a, ∣ ∣ <a
+1. This coordinate system has its
+time axis corresponding to an observer moving with velocity a
+with respect to the Minkowski frame, while the surface of
+constant time corresponds to that of an observer with velocity
+-a. Visually this corresponds to rigidly rotating the tx-axes
+into the t′x′-axes. While the connection coefﬁcients and thus
+source terms vanish in this coordinate system, the t′x′ metric
+coefﬁcients are nonvanishing and so there are off-diagonal
+components in the transformation matrices (23) and (25).
+Additionally, the interface velocity (28) is nonzero.
+
+We can rerun the previous convergence tests in this new
+coordinate system. We use the same background states, with
+the given numbers understood to be
+in Minkowski
+coordinates. The linear solution is known throughout space-
+time, and we initialize the perturbation over a single
+0. This is evolved until
+wavelength on the surface
+¢ = +
+t
+∣
+1
+(
+) ∣
+, which corresponds to one wavelength
+crossing the domain at Minkowski 3-velocity λ. For most
+waves we choose a=0.1. For the entropy waves we choose
+a=0.05, since if a matches λ the HLLC and HLLD
+solvers will exactly capture the wave, placing our comparison
+(36) at
+the machine precision noise ﬂoor even for low
+resolutions.
+
+¢ =t
+
+-
+
+l
+
+l
+
+a
+
+a
+
+The results for hydrodynamics and MHD are given in
+Figures 5 and 6. For the hydrodynamic entropy wave, the
+HLLC solver’(s) error is lower than that of HLLE by a factor of
+2.8. In MHD, the HLLD solver’s error beats that of HLLE by
+4.8, 1.8, and 1.4 in the entropy, slow, and Alfvén waves. We
+note that in these particular tests the advanced Riemann solvers
+outperform HLLE by larger margins in general
+relativity
+compared to special relativity.
+
+10
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+Figure 5. Convergence tests for general relativistic hydrodynamics. Both Riemann solvers converge at second order, with HLLC improving upon HLLE for the
+entropy wave, as in Figure 3.
+
+Figure 6. Convergence tests for general relativistic MHD. Both Riemann solvers converge at second order, with HLLD improving upon HLLE for all but the fast
+wave, as in Figure 4.
+
+11
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+Figure 7. Komissarov shock tubes for special relativistic MHD. Results are computed with HLLD on a grid of 220 (black) and 2200 (red) cells. The blue lines show
+the relative error between the two resolutions normalized by the maximum value attained by the variable over the domain, with the plot limits being ±10% in all cases.
+
+4.2. Shock Tubes
+
+Another class of one-dimensional special relativistic tests is
+that of shock tubes. While the above wave tests focus on linear
+perturbations, shock tubes emphasize the nonlinear behavior of
+the equations, as well as the ability to resolve discontinuities in
+the solutions.
+
+discontinuity, despite using the same resolution as Komissarov.
+That HLLD in particular does well at capturing shocks is not
+surprising; Mignone et al. (2009) note this in comparing
+different Riemann solvers. We conclude that we are correctly
+capturing the nonlinear behavior expected in this special
+relativistic test suite.
+
+We
+
+results
+
+show the
+
+seven shock tubes
+
+from
+for
+Komissarov (1999) (cf. Gammie et al. 2003, their Figures 4
+and 5) in Figure 7. These results in black all use the HLLD
+[−1.1, 1.1],
+solver with 220 grid cells in the interval
+corresponding to the same ﬁxed resolution used by Gammie
+et al. in all cases. The underplotted red line is a reference
+solution computed with 10 times the resolution. The CFL
+number is 0.8 except in the cases of the fast shock (0.2) and
+the collision (0.5).
+
+Some of the same numerical artifacts observed by Komis-
+sarov can be seen in our results. For example, we see ringing
+upstream of the slow shock, a spurious bump at the low-density
+end of the switch-off rarefaction wave, and overshooting at the
+low-density end of the shock tube2 rarefaction wave. In the
+case of shock tube1 we do not observe the overshooting in
+density at the base of the density rarefaction wave, and we have
+the top of the velocity
+greatly diminished overshooting at
+
+4.3. Spherical Blast Wave
+
+2.5
+
+=p
+gas
+
+test of our general
+
+As a two-dimensional
+
+relativistic
+formulation, we evolve a spherical blast wave. The initial
+conditions are uniform density (ρ = 1) with a central over-
+pressure (
+outside).
+inside a radius of 0.5;
+We enforce periodic boundary conditions on a rectangular grid
+of width 4 and height 6. By time t=15, the blast wave has
+inducing Richtmyer–
+intersected itself a number of times,
+Meshkov instability features. The shock velocities here are not
+so high as to be in the regime where Richtmyer–Meshkov
+instability is strongly suppressed, as discussed in Mohseni et al.
+(2014) and Zanotti & Dumbser (2015).
+
+=p
+gas
+
+0.1
+
+In order to test nontrivial spatial geometry, we evolve the
+system not only in Minkowski coordinates but also in “snake”
+coordinates that vary sinusoidally with Minkowski position.
+
+12
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+Figure 8. Density ρ for the spherical blast wave at t=15 in Minkowski coordinates (left), snake coordinates transformed back to Minkowski (center left), and snake
+coordinates (center right). The right panels show the fractional difference
+Minkowski and white
+regions have a fractional difference of less than 1%. The top panels use HLLE, while the bottom use HLLC.
+
+between the ﬁrst and second columns, where
+
+r
+snake
+
+D =
+r
+
+r rD
+
+-
+
+r
+
+Explicitly, given Minkowski (
+
+t x y z
+,
+,
+
+,
+
+, deﬁne
+
+)
+
+0
+=x
+
+t
+
+,
+
+1
+=x
+
+x
+
+,
+
+2
+
+x
+
+= +
+y
+
+a
+
+sin
+
+kx
+
+,
+
+(
+
+38
+
+a
+
+)
+
+(
+
+38
+
+b
+
+)
+
+(
+
+38
+
+c
+
+)
+
+z
+d
+,
+)
+where a and k are free parameters. If we deﬁne the parameter
+
+38
+
+(
+
+3
+=x
+
+d = ak
+
+cos
+
+kx
+
+1
+,
+
+(
+
+39
+
+)
+
+the metric becomes
+
+⎛
+⎜
+⎜
+⎜⎜
+⎝
+
+⎞
+⎟
+⎟
+⎟⎟
+⎠
+
+2
+
+d
+
+0
+
+-
+1
+
+=
+
+g
+mn
+
+0
+0
+0
+
+0
+d
+-
+1
+0
+
+0
++
+1
+d
+-
+0
+The transformations (23) and (25) differ from the identity via
+M
+
+2 .
+, and there is a source term due to G11
+
+ˆ
+x
+The hydrodynamical blast wave density is shown in Figure 8.
+The top row displays results using the HLLE Riemann solver,
+
+= -
+
+0
+0
+1
+
+40
+
+M
+
+ˆ
+y
+1
+
+=
+
+d
+
+(
+
+.
+
+2
+
+)
+
+while the bottom row uses HLLC. The ﬁrst column shows the
+results at t=15 as computed in Minkowski coordinates on a
+200×300 grid with a CFL number of 0.4. The second column
+shows the same results as calculated in snake coordinates and
+transformed back to Minkowski at the end of the calculation.
+Here we also use a 200×300 grid, with a=0.3 and k=π/2.
+Lines of constant x2 in snake coordinates follow the sinusoidal
+variation of the shaded region.
+
+the ﬂuxes,
+
+One can see that
+
+remain qualitatively
+the solutions
+unchanged when the coordinates are varied, despite the fact
+that
+the source terms, and even the conserved
+quantities themselves vary between coordinate systems. To
+give a sense of how the internal representation of the ﬂuid
+changes between coordinate systems,
+the third column of
+Figure 8 plots density in snake coordinates (x1, x2).
+
+For a more quantitative comparison, the last column shows
+the fractional difference in density between the Minkowski
+solution and the snake solution transformed to Minkowski
+coordinates. Colored areas indicate regions where the fractional
+difference exceeds 1%. Differences are generally conﬁned to
+cell-level variations in the locations of shock fronts, or else to
+the details of the Richtmyer–Meshkov ﬁngering. This latter
+
+13
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+Figure 9. Similar to Figure 8 with MHD added. Density ρ (color) and magnetic ﬁeld B i (streamlines) are shown for the strongly magnetized blast wave at t=5 in
+Minkowski coordinates (left), snake coordinates transformed back to Minkowski (center left), and snake coordinates (center right). The right panel shows the
+fractional difference between the ﬁrst and second columns as in Figure 8. All panels use HLLD.
+
+effect is to be expected with an instability seeded with grid
+noise. We also note that the HLLC Riemann solver leads to
+more sharply deﬁned ﬁngers, whereas using just HLLE the
+structures are notably more diffuse.
+
+1, 1, 0
+(
+
+As a further test, we add an initially uniform magnetic ﬁeld
+(
+) and rerun the blast wave, this time with the
+i
+=B
+HLLD solver. In this strongly magnetized regime, the blast
+wave should be guided by the magnetic ﬁeld lines, breaking its
+initial symmetry.
+
+)
+
+The MHD results are shown in Figure 9, with color denoting
+ρ and streamlines showing the magnetic ﬁeld. The same layout
+is used here as in both rows of Figure 8. Both MHD
+calculations are done with HLLD on a 200×300 periodic grid
+with a CFL number of 0.4.
+
+As expected, the ﬁeld guides the blast wave and suppress the
+Richtmeyer–Meshkov instability. Moreover, the same results
+are found in both coordinate systems. The self-interaction of
+the wave after wrapping around the boundaries induces a slight
+curvature in the boundary of the rarefaction region and in the
+magnetic ﬁeld lines, and even this is the same in the two
+coordinate systems.
+
+4.4. Bondi Accretion
+
+As a test of the code in a nontrivial spacetime, we model
+Bondi accretion onto a Schwarzschild black hole. That is, we
+seek steady-state solutions to radial ﬂow onto a black hole,
+where pressure can be nonnegligible.
+
+The Bondi solution is derived in Hawley et al. (1984), and
+we summarize the pertinent formulas here. Begin with a black
+hole mass M, an adiabatic index Γ, an adiabat K, and a critical
+radius rc. Deﬁne the polytropic index n=1/(Γ − 1). The
+critical velocity and temperature are then
+
+u
+
+1
+c
+
+= -
+
+M
+r2
+c
+
+,
+
+(
+
+41
+
+)
+
+14
+
+T
+c
+
+=
+
+n
++
+
+n
+
+·
+
+1
+
+1
+
+1
+u u
+c
+- +
+n
+(
+
+1
+c
+3
+
+.
+
+)
+
+1
+u u
+c
+
+1
+c
+
+Next we calculate the constants
+
+=C
+1
+
+n
+c
+
+2
+1
+T u r ,
+c
+c
+⎛
+⎜
+⎝
+
+-
+
+1
+
+)
+
+2
+
+C
+2
+
+= + +
+
+n
+
+1
+
+(
+
+(
+
+1
+
+)
+
+T
+c
+
++
+
+2
+u u
+c
+
+⎞
+⎟
+1
+c
+⎠
+
+.
+
+M
+2
+r
+c
+
+(
+
+42
+
+)
+
+(
+
+43
+
+)
+
+(
+
+44
+
+)
+
+The run of temperature with radius is given by solving the
+equation
+
+(
+
+1
+
++ +
+n
+(
+
+1
+
+)
+
+T
+
+)
+
+2
+
+⎛
+⎜
+⎝
+
+1
+
+-
+
+M
+2
+r
+
++
+
+2
+C
+1
+4 2
+r T
+
+n
+
+⎞
+⎟
+⎠
+
+=
+
+C
+2
+
+.
+
+(
+
+45
+
+)
+
+There will generally be two roots to this equation. The lesser
+root is taken for <r
+rc, while the greater root is taken outside
+the critical point. We can then ﬁnd the radial velocity according
+to
+
+1
+=u
+
+C
+1
+2
+r T
+
+.
+
+n
+
+Finally, density and pressure are given by
+
+⎛
+r = ⎜
+⎝
+
+n
+
+⎞
+⎟
+⎠
+
+,
+
+T
+K
+
+r=p
+T .
+gas
+
+(
+
+46
+
+)
+
+(
+
+47
+
+)
+
+(
+
+48
+
+)
+
+Note these formulas assume Schwarzschild coordinates.
+
+We choose parameters M=1, Γ=4/3, K=1, and =r
+8
+,
+and we simulate the region 3<r<10, π/4<θ<3π/4. In
+order
+to test MHD as well as pure hydrodynamics, we
+optionally include a purely radial monopole ﬁeld with
+r
+µB
+10 at the inner
+radius. This corresponds to plasma β=0.246 at the critical
+point. The 2D domain is divided into N equally spaced cells in
+each direction. We initialize the Bondi solution and run the
+simulation until time t=10, computing the L1 difference in
+
+2, normalized such that
+
+lb b
+l
+
+r =
+
+r1
+
+c
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+Figure 12. We ﬁnd second-order convergence, demonstrating
+that the code is solving the correct equations even in a highly
+nontrivial spacetime. In particular, this test is performed with a
+frame-transforming HLLE Riemann solver, showing that the
+frame transformations work even when there is a large shift
+between the frames.
+
+5. TORUS SIMULATIONS
+
+Figure 10. Magnetized Bondi ﬂow in Schwarzschild coordinates with
+parameters as described in the text. Lines indicate the initial solution, while
+the circles indicate the values at each cell at t=10. The conserved variables
+are scaled by the lapse α.
+
+pgas between the beginning and end. We use the inner 3/4 of
+the grid in each direction, and normalize the errors ò by the L1
+norm of the initial pgas.
+
+The steady-state solution is shown in Figure 10. The
+convergence is second order for both hydrodynamics using
+HLLC and MHD using HLLD, as shown in Figure 11. Since
+this is a stationary problem, convergence is not affected by the
+order of the integrator. However, it is limited by the order of
+reconstruction, and so these tests show we are correctly getting
+the full second-order convergence in space as expected, even in
+a curved spacetime.
+
+4.5. Magnetized Equatorial Inﬂow
+For a ﬁnal test problem, we simulate the plunging region of a
+magnetized thin disk around a spinning black hole, as
+described in Gammie (1999). We choose the same values for
+(2003): M=1,
+the free parameters as in Gammie et al.
+a M 0.5, FM=−1, and
+0.5, with the ﬂow matching
+=qfF
+onto the innermost stable circular orbit. The simulation covers
+the range 2<r<4 (where the horizon is at r = 1.86603 and
+the innermost stable circular orbit is at r = 4.23300). We use
+the same Kerr–Schild coordinates {
+as Gammie et al.,
+with line element
+
+q f
+,
+}
+
+t r,
+
+=
+
+,
+
+2
+
+ds
+
+= -
+
+⎛
+⎜
+⎝
+
+1
+
+-
+
+⎞
+⎟
+⎠
+
+2
+
+Mr
+S
+
+4
+
+2
+
+dt
+
++
+
+Mr
+S
+⎛
+⎜
+⎝
+
+1
+
+dt dr
+
++
+
+⎞
+⎟
+⎠
+
+2
+
+Mr
+S
+
+2
+
+dr
+
+4
+
+-
+
+-
+
+2
+
+a
+
+Mar
+S
+⎛
+⎜
+⎝
+
+1
+
+2
+sin
+
+q
+
+dt d
+
+f
+
++
+
++
+
+⎞
+⎟
+⎠
+
+2
+
+Mr
+S
+
+2
+sin
+
+q
+
+dr d
+
+f
+
++ S
+
+d
+
+q
+
+2
+
+⎛
+⎜
+⎝
+
++
+
+2
+
+r
+
+2
++ +
+a
+
+2
+
+2
+Ma r
+S
+
+2
+sin
+
+q
+
+⎞
+⎟
+⎠
+
+2
+sin
+
+q f
+d
+
+2
+
+.
+
+(
+
+49
+
+)
+
+2
+
+S = +r
+
+2
+Here
+same as Boyer–Lindquist r and θ.
+
+2
+a cos
+
+q
+
+. Note that Kerr–Schild r and θ are the
+
+The ﬂow is initialized to the steady-state solution, with gas
+pressure set to 10−10 times the density, and is run to time
+t=15. A plot of the L1 error in four quantities is shown in
+
+u ut
+f
+
+the radius of
+
+(in Boyer–Lindquist coordinates).
+
+As a full demonstration of the code in a science application
+setting, we simulate a ﬂuid torus around a spinning black hole.
+As proven in Fishbone & Moncrief (1976), there are steady-
+state solutions for hydrodyamical tori of an isentropic ﬂuid with
+constant angular momentum orbiting in Kerr spacetime. Given
+a black hole mass and spin and a ﬂuid equation of state, the
+solutions are deﬁned by choosing the radius of the inner edge
+of the torus, redge, and either
+the pressure
+maximum, rpeak, or the angular momentum per unit mass,
+ℓ
+
+=
+A general relativistic code should be able to maintain such a
+torus, balancing gravity, centrifugal
+force, and pressure
+gradients. We take a black hole with mass M=1 and spin
+a M 0.95 and initialize a Γ=13/9 ﬂuid torus with
+=
+). The torus is evolved
+=r
+r
+peak
+edge
+on a 2D grid with Nr cells in the radial direction and N 2r
+cells
+in the polar direction using the aforementioned Kerr–Schild
+coordinates. Our grid extends radially from 0.98 times the outer
+2 to r=20, with geometric grid
+horizon radius +
+spacing such that each cell is 1.025 times as wide as its inner
+4,
+neighbor. We limit
+excising parts of the necessarily non-stationary atmosphere that
+should not impact the torus proper. This simulation employs
+uniform spacing in θ. We impose outﬂow conditions on the
+inner and outer boundaries and reﬂecting boundary conditions
+on the constant-θ boundaries.
+
+the polar angle to p
+
+3.85 (so
+
+and =ℓ
+
+< <
+q
+
+7.82
+
+3.7
+
+M
+
+M
+
+-
+
+=
+
+p
+
+3
+
+a
+
+4
+
+2
+
+The simulation is evolved using the HLLC solver with a
+CFL number of 0.2 until a time t=1, at which point the error
+accrued in ρ is calculated. Deﬁne the region T to be those cells
+for which ρ is initially at least 0.02 its peak value. We calculate
+the error ò over the region T (thus avoiding edge effects) in the
+L1 sense:
+
+
+
+=
+
+ò
+T
+
+r
+∣
+
+fin
+
+-
+
+r
+
+∣
+
+init
+
+-
+
+g dr d
+
+q
+
+ò
+T
+
+r
+∣
+
+∣
+
+init
+
+-
+
+g dr d
+
+q
+
+.
+
+(
+
+50
+
+)
+
+The errors are shown in Figure 13, where one can see that they
+are second order. This is the same test problem as done in
+Gammie et al. (2003, cf. their Figure 15) with the exception
+that we use a slightly different grid with no equatorial
+compression of the constant-θ surfaces.
+
+Our torus is indeed able to maintain equilibrium, even over
+longer times. To demonstrate this we continue the 64×32
+simulation to t=430, corresponding to three orbital periods at
+the pressure maximum, using both HLLE and HLLC solvers.
+With the HLLE solver the error is ò=0.030, while it
+is
+ò=0.021 with HLLC.
+
+We next consider a 3D Fishbone–Moncrief torus with an
+added magnetic ﬁeld, upsetting equilibrium via the magnetorota-
+tional instability (MRI). Here we choose M=1,
+=
+a M 0.9375,
+4.28). The grid is
+Γ=13/9,
+=
+12
+, and
+2
+p
+-
++
+a
+expanded to
+40
+)
+(with no artiﬁcial boundary at the poles), and it covers the entire
+
+=r
+6
+edge
+M
+0.98
+(
+
+(so =ℓ
+< <
+r
+
+r
+peak
+2
+M
+
+< <
+q
+
+and
+
+0
+
+15
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+Figure 11. Errors in gas pressure for hydrodynamical (left) and MHD (right) Bondi ﬂow on various N×N grids. In both cases we achieve second-order convergence,
+as indicated by the dotted lines.
+
+)
+
+3
+
+p
+
+µ
+
+an
+
+16
+
+13
+
+fA
+
+max
+
+forms
+
+range.
+
+< <
+q
+
+In one case we use the equivalent of
+azimuthal
+144×128×96 cells in the radial, polar, and azimuthal
+directions, with geometric radial spacing (ratio 1.02397) and
+uniform spacing in the angles. Static mesh reﬁnement is used to
+dereﬁne the polar regions outside the torus by a factor of 4 in
+each dimension, thus preventing the timestep from being limited
+by those regions. Explicitly, there are 80 cells equally spaced in
+the range p
+16. For a higher resolution grid,
+we further double the number of cells in each dimension in the
+effective
+region
+288×256×192 grid.
+
+7π/32<θ<25π/32. This
+
+To this torus we add a magnetic ﬁeld with purely azimuthal
+-
+r
+0.2, 0 , calculated from a
+(
+vector potential
+density normalized to unity at its maximum. The magnetic
+ﬁeld is normalized such that the ratio of maximum gas pressure
+to maximum magnetic pressure (necessarily located at different
+points) is 100. These parameters are chosen to roughly match
+those of Shiokawa et al. (2012) except
+in not having an
+equatorially compressed grid like theirs. In particular, our low
+and high resolution runs have Δθ=0.0245 and Δθ=0.0123
+in
+the
+96×96×64 and 144×144×96 grids from Shiokawa
+et al. have Δθ=0.00983 and Δθ=0.0065 at the midplane.
+We evolve the system using an LLF Riemann solver just as
+is used in Harm. The simulation is run until a time t=12,000.
+For comparison, a geodesic circular orbit at
+the pressure
+maximum has a period of t=267. After several orbits the MRI
+sets in, causing turbulence that eventually disrupts the entire
+torus. The initial and ﬁnal densities for the run are illustrated in
+Figure 14.
+
+respective most
+
+regions, while
+
+reﬁned
+
+For a more quantitative analysis, we construct radial proﬁles
+of physical quantities. Following Shiokawa et al. (2012, cf.
+their (9) and (10)) , we deﬁne a spherical shell average of a
+quantity q at a Kerr–Schild time t according to
+
+their
+
+q
+¯
+
+=
+
+2
+
+p
+
+q
+
+ò
+0
+
+ò
+q
+p
+2
+ò ò
+q
+0
+
+min
+q
+
+max
+
+min
+
+max
+
+q
+
+r
+
+-
+
+g d d
+
+q f
+
+,
+
+(
+
+51
+
+)
+
+r
+
+-
+
+g d d
+
+q f
+
+q
+q
+where in our case we take (
+,
+in order
+min max
+to exclude any effects of the atmosphere. We then average ¯q
+the time range 4000–12,000, noting the mean and
+over
+
+4, 3
+
+p
+(
+
+=
+
+p
+
+4
+
+)
+
+)
+
+Figure 12. Errors in density, azimuthal magnetic ﬁeld, and radial and
+azimuthal velocities as functions of the number of radial grid cells in the
+magnetized inﬂow test. As expected, all quantities converge at second order.
+
+Figure 13. Errors in density for 2D Fishbone–Moncrief hydrodynamical tori on
+grids. Errors are deﬁned by (50). The dotted line indicates
+various ´N
+second-order convergence.
+
+N 2
+r
+
+r
+
+16
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+Figure 14. Density ρ of a 3D Fishbone–Moncrief MHD torus with effective resolution 288×256×192. Shown are the initial conditions in the rθ-plane (left), the
+ﬁnal state at t=12,000 in the same plane (center), and the ﬁnal state in the rf-plane (right).
+
+Figure 15. Spherically averaged, time-averaged proﬁles of various quantities in the 3D torus. These are the gas-to-magnetic pressure ratio (spherical averages taken
+before ratio, time averages take after; top left), plasma β (top right), electron temperature (bottom left), and magnetic pressure (bottom right). The left two panels show
+the same quantities as plotted in Figure 2 of Shiokawa et al. (2012), corresponding to their “soft” polar boundary condition. In all cases shaded regions indicate 1σ
+standard deviations from 800 samples at different times.
+
+17
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+Figure 16. Azimuthal correlation lengths as functions of radius in the 3D torus runs. These are for density (top left), magnetic ﬁeld (top right), gas pressure
+(equivalently internal energy; bottom left), and electron temperature (bottom right). The black lines show two select data sets from Shiokawa et al. (2012), both using
+the “soft” polar boundary condition.
+
+standard deviation of values at each radius. This is done for
+plasma β, electron temperature
+(called qe by
+p gas
+Shiokawa et al.), and magnetic pressure
+= l
+b b 2
+in
+l
+Figure 15. For a more direct comparison to Shiokawa et al. we
+p
+also show the result of time-averaging ¯
+gas mag, the result of
+which is simply called β in that work.
+
+m2
+p
+mag
+
+=T m p
+
+p
+¯
+
+r
+
+e
+
+p
+
+The electron temperature roughly matches what Shiokawa
+et al. ﬁnd, both in magnitude and in trend with radius, though
+they do not have the same kink at around r=5–6 and our disk
+gets notably hotter inside the innermost stable circular orbit at
+r=2.04420. We get the same shape as Shiokawa et al. for
+gas mag, especially their low resolution “soft” polar run (cf.
+p
+the upper left panel of their Figure 2; data reproduced in
+Figure 15). They ﬁnd p
+gas mag to be less than about 60 in all
+cases, whereas our simulations get up to about 200 in the outer
+regions. Our ratio also approaches unity in the innermost
+regions, while theirs never drops below 4. The same shape is
+found when we perform spherical averages of β itself, rather
+than pgas and pmag separately, as shown in the upper right of
+Figure 15. While there are some differences, we also note that
+gas mag proﬁle approaches
+as we increase resolution our p
+theirs, and we expect even better agreement if we were to have
+midplane
+
+qD values as small as theirs.
+
+p
+
+p
+
+Shiokawa et al. also examined azimuthal correlation lengths
+in the equatorial plane. We use the same deﬁnitions as they do
+(their (13) through (17)), which we summarize here. For a
+vector quantity with components q μ, deﬁne the time-dependent
+correlation function
+
+R r
+(
+
+,
+
+f
+
+,
+
+t
+
+)
+
+=
+
+1
+D D
+q
+r
+d
+q r
+(
+m
+
+r
+´
+
+q
+
+max
+
+ò
+q
+min
+q f
+¢
+¢
+,
+,
+
+ò
+r
+min
++
+
+0
+
+r
+max
+
+f
+
+,
+
+2
+
+p
+
+¢
+
+,
+
+d
+
+m
+q r
+(
+
+ò
+0
+¢
+t d r dr d
+)
+
+f
+
+¢
+
+¢
+q f
+,
+
+,
+
+0
+
+t
+
+)
+
+q
+
+¢
+
+.
+
+(
+
+52
+
+)
+
+of
+and
+
+over
+a
+
+run
+of
+
+a
+single
+
+integrals
+radial width
+region
+The
+-
+D =
+r
+r
+r
+polar width
+cell
+min
+max
+D =
+q
+-max
+q
+q
+min of two cells bordering the equatorial plane.
+The quantities δ q μ and δ qμ are deviations from averages of q μ
+and qμ over the domains of integration. For scalar quantities we
++
+¢
+d
+t
+q r
+,
+(
+)
+simply use the integrand
+instead. Deﬁne the time-averaged correlation function as
+
+d
+t q r
+)
+(
+
+q f
+¢
+,
+
+q f
+¢
+,
+
+f
+
+,
+
+,
+
+,
+
+¢
+
+0
+
+0
+
+¯ (
+R r
+
+,
+
+f
+
+)
+
+=
+
+t
+
+max
+
+min
+
+ò
+
+t
+
+R r
+(
+R r
+(
+
+f
+,
+,
+, 0,
+
+t
+t
+
+)
+)
+
+dt
+
+,
+
+(
+
+53
+
+)
+
+18
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+Table 1
+Athena++ Single-core Performance (105 Cell Updates per Second)
+
+Riemann Solver
+
+SR
+
+GR: Minkowski
+
+GR: Kerr–Schild
+
+Hydro
+LLF-NT
+LLF-T
+HLLC
+MHD
+LLF-NT
+LLF-T
+HLLD
+
+12.8
+L
+8.57
+
+3.24
+L
+1.23
+
+10.4
+10.1
+7.36
+
+4.70
+2.60
+1.13
+
+3.82
+4.28
+3.28
+
+2.94
+1.97
+1.22
+
+where we average from 4000 to 12,000. Then the correlation
+length λ at
+for
+radius
+which ¯ (
+l =
+R r
+)
+
+given
+e
+)
+, 0
+
+a
+¯ (
+R r
+
+value
+
+the
+
+is
+
+r
+
+.
+
+,
+
+We plot the runs of four correlation lengths in Figure 16, to
+be compared to Figure 4 of Shiokawa et al. (2012), from which
+select data have been replotted here. Compared to Shiokawa
+et al. our disks have larger correlation lengths, especially in the
+outer regions. This is a sign that we have not yet reached the
+fully saturated,
+is worth
+repeating, however, that our midplane resolution is not as high
+as in Shiokawa et al., and moreover our correlation lengths
+decrease as we increase resolution.
+
+turbulent state in that region. It
+
+6. PERFORMANCE
+In writing Athena++, we paid close attention to the
+performance of the code. The following techniques proved
+useful in improving performance:
+
+1. Minimizing expensive evaluations and memory access.
+We precompute trigonometric and other such expensive
+functions related to the stationary metric as much as
+possible. At the same time, we minimize memory usage
+by storing only 1D and 2D arrays of precomputed values,
+as discussed in Section 3.8.
+2. Sweeping through arrays as
+
+in
+memory. For example,
+the hydrodynamical primitive
+variables are stored in a 5×N3×N2×N1 array. All
+nested loops range over N1 in the innermost
+loop,
+avoiding strides greater than unity and thus minimizing
+cache misses. This includes calculating the ﬂuxes,
+where even the x2- and x3-ﬂuxes are evaluated in the
+x1-direction order.
+
+they are laid out
+
+there are several failure modes we sought
+
+3. Vectorizing all innermost loops. While modern compilers
+can often automatically vectorize loops, even when that
+entails inlining functions deﬁned in other compilation
+to
+units,
+address. For one, complicated functions
+sometimes
+require manual inlining (e.g., in the HLLD solver, the
+function to evaluate the residual given a guess for the
+contact pressure). Additionally, vectorization cannot
+happen if the loop we seek to vectorize has indeterminate
+loops within it, as happens with algorithms that iterate
+until convergence. In such cases we examine how many
+iterations are typically used in cases were convergence
+happens at all, enabling us to ﬁx a constant number of
+iterations.
+
+19
+
+Figure 17. Performance per core running a 3D GRMHD simulation on a
+cluster.
+
+We measure hydrodynamics and MHD performance as a
+function of both the metric and the Riemann solver. For
+special
+relativity, we run a shock tube in Minkowski
+coordinates. We then run the same shock tube using the
+in Minkowski coordinates.
+full GR framework but still
+Finally, we run a Fishbone–Moncrief torus (Section 5) in
+Kerr–Schild coordinates with nonzero spin. All tests are 3D.
+For the Riemann solvers we use a non-frame-transforming
+LLF solver (LLF-NT, as used in many GRMHD codes), a
+frame-transforming LLF solver (LLF-T), and either HLLC or
+HLLD (both frame-transforming) as appropriate. The dis-
+tinction between using or not using a frame transformation
+(Section 3.3) only applies to GR.
+
+Tests were performed on a single core of an Intel Xeon E5-
+2670 (2.6 GHz Sandy Bridge) processor. We report the number
+of cells updated per wall time second in Table 1.
+
+The decrease in performance from SR to GR with the
+Minkowski metric reﬂects the cost of using the GR variable
+inversion and wavespeed formulas. The full cost of GR in
+realistic but reasonable metrics is represented by the ﬁnal
+column of numbers, where nontrivial Kerr–Schild geometric
+factors enter into most calculations.
+
+For a ﬁxed geometry and Riemann solver, MHD problems
+run at 1/4 to 3/4 the speed of pure hydrodynamics problems in
+both SR and GR. We also performed tests using HLLE solvers.
+These ran at 93±6% the speed of the corresponding LLF
+tests, with similar accuracies.
+
+We further report on the scaling of Athena++ with a full 3D
+GR computation using Kerr–Schild coordinates. Scaling was
+calculated on the NAOJ CrayXC30, which has 24 cores per
+node. We divide the domain into blocks of 643 cells, assigning
+one block to each core. The scaling results out to 6144 cores
+are shown in Figure 17. For both hydrodynamics and MHD,
+there is a 20% per-core performance penalty to go from one
+core to one full node, almost certainly associated with
+saturating the memory bus when all cores on a node are used.
+However,
+the cost of going to many nodes from one is
+negligible. The performance of 6144 cores is over 97% relative
+to 24 cores for hydrodynamics, and it is indistinguishable from
+100% for MHD.
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+7. SUMMARY
+
+We have described the GRMHD capabilities of the new
+Athena++ code, a modular framework for astrophysical ﬂuid
+dynamics that now supports arbitrary stationary spacetimes.
+This code is distinguished by employing two techniques in
+particular that have been used with great success in Newtonian
+and special-relativistic settings but have not been combined in
+GRMHD. We support the use of advanced HLL Riemann
+solvers such as HLLC and HLLD (Section 3.4), employing a
+local
+to achieve this
+without creating new general-relativistic Riemann solvers.
+Additionally, we support staggered-mesh CT in the style of
+Evans & Hawley (1988) and Stone & Gardiner
+(2008)
+(Section 3.5).
+
+frame transformation (Section 3.3)
+
+the implementation.
+
+The modularity of the framework allows us to employ
+In
+variations on individual parts of
+particular, we have static mesh reﬁnement available, with
+adaptive mesh reﬁnement being developed. We are also
+working to incorporate higher-order reconstruction such as
+the piecewise parabolic method of Colella & Woodward
+(1984), as well as higher-order temporal integration such as the
+RK3 method of Shu & Osher (1988). Additionally, GR-
+compatible radiative transfer techniques are being developed
+for inclusion in the framework.
+
+in general, we employ tests
+
+The code has been thoroughly tested. In addition to the
+linear waves, shock tubes, and blast waves used to test MHD
+speciﬁc to general
+codes
+relativity. These include reparameterizing Minkowski space
+induce time–space (Section 4.1) or
+with coordinates that
+space–space (Section 4.3) terms in the metric, as well as
+standard Schwarzschild Bondi accretion. We have further
+the code can properly simulate ﬂuids
+demonstrated that
+is
+around spinning black holes. This is true whether
+maintaining the stationary equilibrium of a hydrodynamical
+torus or evolving a turbulent, magnetized accretion ﬂow. This
+latter problem combines hydrodynamics, magnetic ﬁelds,
+spatially varying time-space and space–space metric terms,
+nontrivial frame transformations with shifts orthogonal to and
+along interfaces, a number of geometrical source terms, and
+horizon-penetrating coordinates,
+thus exercising all compo-
+nents of the code in unison.
+
+it
+
+Finally, we note that the performance and scalability of
+GRMHD in Athena++ will enable us to perform numerical
+analyses not only with more accurate methods, but also with
+improved resolution. Numerous applications stand to beneﬁt
+from this tool. For example, we look forward to better resolving
+magnetically arrested disks (Tchekhovskoy et al. 2011) as well
+as disks tilted with respect to the black hole spin (Fragile
+et al. 2007).
+
+We are particularly grateful
+
+to Vasileios Paschalidis for
+useful feedback, to Kengo Tomida for helping measure code
+performance, and to Hotaka Shiokawa for providing data used
+to compare our results to his. We acknowledge support from
+the NSF through grant AST-1333091. Many of the computa-
+tions presented were performed with the resources made
+available via the Princeton Institute for Computational Science
+and Engineering.
+
+APPENDIX
+FRAME TRANSFORMATION
+
+Given a coordinate basis {
+
+}( ˆ )me
+satisfying the enumerated list of properties in Section 3.3,
+which we repeat here:
+
+}( )¶ m , we desire a new basis {
+
+( ˆ )me must be orthogonal to ( ˆ )ne
+
+1.
+2. Each ( ˆ )me must be normalized to have an inner product of
+being
+
+±1 with itself, with (ˆ)e t being timelike and
+spacelike.
+(ˆ)e t must be orthogonal to surfaces of constant x0.
+
+for all m
+
+n¹ .
+
+ȷ(ˆ )e
+
+3.
+4. The projection of
+
+( ˆ)e x onto the surface of constant x0 is
+to the surface of constant x i within that
+
+orthogonal
+submanifold.
+
+As in the main text, we note that
+tensor components are
+indicated with unparenthesized subscripts and superscripts,
+with parentheses reserved for indices into generic sets. For
+concreteness we will work with an interface of constant x1;
+results in the other directions follow from cyclic permuta-
+tions  
+
+1
+
+2
+Property 3 tells us
+
+3.
+
+t
+
+(ˆ) =me
+
+A 1, 0, 0, 0
+
+(
+
+)
+
+for some A, which is determined by property 2:
+
+- =
+1
+
+(ˆ)
+t
+mn
+g e
+m
+
+(ˆ)
+t
+e
+n
+
+=
+
+2 00
+
+A g
+
+.
+
+Thus we have
+
+A
+
+= - -
+
+(
+
+g
+
+00
+
+-
+)
+
+1 2
+
+,
+
+(
+
+54
+
+)
+
+(
+
+55
+
+)
+
+(
+
+56
+
+)
+
+where the sign is chosen such that the ˆt -direction is forward in
+. Our ﬁrst
+time, as can be easily checked in the case
+basis vector has components
+
+h=mn
+g
+
+mn
+
+m
+e
+(ˆ)
+t
+
+=
+
+(ˆ)
+t
+mn
+g e
+n
+
+=
+
+m
+0
+Ag ,
+
+(
+
+57
+
+)
+
+and this is nothing more than the unit timelike normal ˆn used in
++3
+
+1 foliations of spacetime.
+
+Next we set the ˆx direction. It might be tempting to simply
+have it be parallel to ( )¶ 1 , since this vector is already orthogonal
+to (ˆ)e t by construction of the latter. However, this complicates
+the transformation of ﬂuxes back to the global frame, as it
+results in ˆy- and ˆz -ﬂuxes entering into the formula for x1-ﬂuxes.
+to the
+It
+3-surface of constant x1. Though this would lead to a very
+simple formula for the ﬂux conversion (requiring no knowledge
+of conserved quantities inside the wavefan), this vector can
+only be orthogonal to (ˆ)e t
+
+is a more serious error to make
+
+if g01 vanishes.
+
+( ˆ)e x orthogonal
+
+Instead, we enforce property 4. This amounts to saying the
+( ˆ)e x onto the constant-x0 subspace must have
+
+projection of
+components
+
+3
+( )
+
+( ˆ) µe
+x
+i
+
+(
+
+1, 0, 0 .
+)
+
+(
+
+58
+
+)
+
+j
+
+0
+
+i
+0
+g g
+
+Raising indices with the appropriate 3-metric components
+(by property 1
+ij
+ij
+00 and noting ( ˆ) =
+g =
+-g
+g
+and (54)), we have
+m
+( ˆ) =
+e
+x
+
+01 0
+B g g
+(
+
+00 1
+g g
+
+59
+
+-
+
+0
+x
+
+0
+
+e
+
+)
+
+(
+
+m
+
+m
+
+.
+
+)
+
+The normalization is again set by property 2:
+
+1
+
+=
+
+g e
+mn
+
+m
+( ˆ)
+x
+
+n
+e
+( ˆ)
+x
+
+=
+
+2 00
+
+B g
+
+00 11
+
+g g
+
+(
+
+-
+
+g g
+
+01 01
+)
+
+.
+
+(
+
+60
+
+)
+
+20
+
+(
+
+70
+
+b
+
+)
+
+(
+
+70
+
+c
+
+)
+
+(
+
+70
+
+d
+
+)
+
+(
+
+71
+
+)
+
+(
+
+72
+
+a
+
+)
+
+(
+
+72
+
+b
+
+)
+
+(
+
+72
+
+c
+
+)
+
+(
+
+72
+
+d
+
+)
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+me
+( ˆ) =
+x
+
+0,
+(
+
++
+
+1, 0, 0
+
+)
+
+if
+
+h=mn
+g
+
+mn
+
+,
+
+B
+
+=
+
+(
+
+g
+
+00
+
+00 11
+
+g g
+
+(
+
+-
+
+01 01
+
+g g
+
+-
+))
+
+1 2
+
+,
+
+Choosing the sign such that
+we take
+
+B
+
+=
+
+(
+
+g
+
+00
+
+00 11
+
+g g
+
+(
+
+-
+
+01 01
+
+g g
+
+-
+))
+
+1 2
+
+.
+
+(
+
+61
+
+)
+
+C
+
+=
+
+(
+
+-
+g
+)
+33
+
+1 2
+
+,
+
+D
+
+=
+
+(
+
+g
+33
+
+(
+
+g g
+22 33
+
+-
+
+g g
+23 23
+
+-
+))
+
+1 2
+
+.
+
+The inverse transformation (25) is the inverse matrix
+
+M
+
+ˆ =
+m
+n
+
+⎛
+⎜
+⎜
+⎜
+⎜
+⎝
+
+(
+
+-
+A
+01
+Bg
+00
+B Eg Dg
+
+2
+
+33
+00
+B C g G Eg
+(
+
++
+
+)
+
+2
+
+g
+)
+33
+
+(
+
+23
+
+0
+Bg
+00
+B Fg Dg
+
+-
+
+00
+
+2
+
+33
+00
+B C g H Fg
+(
+
++
+
+)
+
+2
+
+23
+
+Property 1, together with (54), forces
+
+with
+
+0
+e
+(ˆ )
+y
+
+0
+( ˆ)=
+e
+z
+
+=
+
+0;
+
+(
+
+62
+
+)
+
+(ˆ )e y and ( ˆ)e z must lie in the constant-x0 plane. From (58)
+
+that is,
+and property 1 we have
+
+0
+0
+Dg
+
+33
+
+1
+
+0
+0
+0
+
+g
+)
+33
+
+(
+
+1
+
+C g
+)
+
+23
+
+g
+33
+
+1
+
+C
+
+⎞
+⎟
+⎟
+⎟
+⎟
+⎠
+
+,
+
+E
+
+=
+
+01 12
+
+g g
+
+-
+
+11 02
+g g
+
+,
+
+F
+
+=
+
+01 02
+
+g g
+
+-
+
+00 12
+
+g g
+
+,
+
+=
+G g g
+
+01 13
+
+-
+
+11 03
+g g
+
+,
+
+=
+H g g
+
+01 03
+
+-
+
+00 13
+
+g g
+
+.
+
+=
+
+0,
+
+1
+e
+(ˆ )
+y
+
+1
+( ˆ)=
+e
+z
+which conveniently implies no ˆy- or ˆz -ﬂuxes will be needed
+from the special relativistic Riemann solver.
+2
+( ˆ)e z
+For slight convenience we choose
+(ˆ )e y and ( ˆ)e z
+corresponds to choosing an orientation of
+plane they must span. Then we have
+
+to be 0. This
+in the
+
+63
+
+(
+
+)
+
+( ˆ) =me
+
+z
+
+C 0, 0, 0, 1 .
+)
+
+(
+
+From property 2 we know
+
+1
+
+=
+
+g e
+mn
+
+m
+( ˆ)
+z
+
+n
+e
+( ˆ)
+z
+
+=
+
+2
+C g
+
+33
+
+,
+
+so
+
+(
+
+64
+
+)
+
+(
+
+65
+
+)
+
+(
+
+C
+
+=
+
+1 2
+
+-
+g
+)
+)
+66
+33
+where again we check that we have a sensible deﬁnition when
+h=mn
+g
+.
+1
+)
+Finally, we solve for the two nonzero components of
+
+me
+( ˆ) =
+z
+
+0, 0, 0,
+(
+
++
+
+mn
+
+(
+
+:
+
+,
+
+(ˆ )e y .
+together with normal-
+
+Orthogonality (property 1) with ( ˆ)e z ,
+ization (property 2), constrains the solution to be
+
+me
+(ˆ ) =
+y
+
+D
+
+(
+
+0, 0,
+
+g
+33
+
+,
+
+-
+
+g
+)
+23
+
+,
+
+where
+
+D
+
+=
+
+(
+
+g
+33
+
+(
+
+g g
+22 33
+
+-
+
+g g
+23 23
+
+-
+))
+
+(
+
+67
+
+)
+
+(
+
+68
+
+)
+
+0, 0,
+(
+
++
+
+1, 0
+
+)
+
+1 2
+
+.
+me
+(ˆ ) =
+y
+
+Once again we check the sign choice:
+if
+
+h=mn
+g
+Given the formulas (57), (59), (64), (67), it is a simple matter
+
+mn
+
+.
+
+to assemble the transformation matrix (23):
+
+m
+
+M
+
+ˆ
+n
+
+m
+(ˆ )=
+e
+n
+
+=
+
+⎛
+⎜
+⎜
+⎜
+⎜⎜
+⎝
+
+with
+
+00
+
+01
+
+02
+
+Ag
+Ag
+Ag
+
+01 01
+
+B g g
+(
+B g g
+(
+
+01 02
+
+0
+-
+-
+
+g g
+g g
+
+00 11
+)
+00 12
+)
+
+0
+0
+Dg
+
+33
+
+03
+
+Ag
+
+B g g
+(
+
+01 03
+
+-
+
+g g
+
+00 13
+)
+
+-
+
+Dg
+
+23
+
+A
+
+= - -
+
+(
+
+g
+
+00
+
+-
+)
+
+1 2
+
+,
+
+⎞
+⎟
+⎟
+⎟
+⎟⎟
+⎠
+
+0
+0
+0
+
+C
+
+,
+
+(
+
+69
+
+)
+
+(
+
+70
+
+a
+
+)
+
+Both matrices are lower-diagonal, mostly as a result of our
+enumerated properties but also thanks to our choice of
+rotation ( ˆ) =
+e
+
+0
+
+2
+z
+
+.
+
+REFERENCES
+
+Abramowicz, M. A., & Fragile, P. C. 2013, LRR, 16, 1
+Anderson, M., Hirschmann, E. W., Liebling, S. L., & Neilsen, D. 2006,
+
+CQGra, 23, 6503
+
+Antón, L., Miralles, J. A., Martí, J. M., et al. 2010, ApJS, 188, 1
+Antón, L., Zanotti, O., Miralles, J. A., et al. 2006, ApJ, 637, 296
+Beckwith, K., & Stone, J. M. 2011, ApJS, 193, 6
+Brackbill, J., & Barnes, D. 1980, JCoPh, 35, 426
+Colella, P., & Woodward, P. R. 1984, JCoPh, 54, 174
+Dedner, A., Kemm, F., Kröner, D., et al. 2002, JCoPh, 175, 645
+Del Zanna, L., Zanotti, O., Bucciantini, N., & Londrillo, P. 2007, A&A, 473, 11
+Einfeldt, B. 1988, SJNA, 25, 294
+Etienne, Z. B., Paschalidis, V., Haas, R., Mösta, P., & Shapiro, S. L. 2015,
+
+CQGra, 32, 175009
+
+Etienne, Z. B., Paschalidis, V., Liu, Y. T., & Shapiro, S. L. 2012, PhRvD, 85,
+
+024013
+
+Evans, C. R., & Hawley, J. F. 1988, ApJ, 322, 659
+Faber, J. A., & Rasio, F. A. 2012, LRR, 15, 8
+Falle, S., & Komissarov, S. 1996, MNRAS, 278, 586
+Fishbone, L. G., & Moncrief, V. 1976, ApJ, 207, 962
+Fragile, P. C., Blaes, O. M., Anninos, P., & Salmonson, J. D. 2007, ApJ,
+
+668, 417
+
+Gammie, C. F. 1999, ApJL, 522, L57
+Gammie, C. F., McKinney, J. C., & Tóth, G. 2003, ApJ, 589, 444
+Gardiner, T. A., & Stone, J. M. 2005, JCoPh, 205, 509
+Gardiner, T. A., & Stone, J. M. 2008, JCoPh, 227, 4123
+Giacomazzo, B., & Rezzolla, L. 2007, CQGra, 24, S235
+Harten, A., Lax, P. D., & van Leer, B. 1983, SIAMR, 25, 35
+Hawley, J. F., Smarr, L. L., & Wilson, J. R. 1984, ApJ, 277, 296
+Komissarov, S. 1999, MNRAS, 303, 343
+Komissarov, S. 2004, MNRAS, 350, 1431
+Marder, B. 1987, JCoPh, 68, 48
+Mignone, A. 2014, JCoPh, 270, 784
+Mignone, A., & Bodo, G. 2005, MNRAS, 364, 126
+Mignone, A., & Bodo, G. 2006, MNRAS, 368, 1040
+Mignone, A., & McKinney, J. C. 2007, MNRAS, 378, 1118
+Mignone, A., Ugliano, M., & Bodo, G. 2009, MNRAS, 393, 1141
+Misner, C. W., Thorne, K. S., & Wheeler, J. A. 1973, Gravitation (New York:
+
+W. H. Freeman and Company)
+
+Mohseni, F., Mendoza, M., Succi, S., & Herrmann, H. 2014, PhRvD, 90,
+
+125028
+
+21
+
+The Astrophysical Journal Supplement Series, 225:22 (22pp), 2016 August
+
+White, Stone, & Gammie
+
+Mösta, P., Mundim, B. C., Faber, J. A., et al. 2014, CQGra, 31, 015005
+Muhlberger, C. D., Nouri, F. H., Duez, M. D., et al. 2014, PhRvD, 90, 104014
+Noble, S. C., Gammie, C. F., McKinney, J. C., & Del Zanna, L. 2006, ApJ,
+
+641, 626
+
+Pons, J. A., Font, J. A., Ibáñez, J. M., Martí, J. M., & Miralles, J. A. 1998,
+
+A&A, 339, 638
+
+Ramshaw, J. D. 1983, JCoPh, 52, 592
+Roe, P. 1981, JCoPh, 43, 357
+Schneider, V., Katscher, U., Rischke, D., Waldhauser, B., & Maruhn, J. 1993,
+
+JCoPh, 105, 92
+
+Shibata, M., & Sekiguchi, Y. 2005, PhRvD, 72, 044014
+Shiokawa, H., Dolence, J. C., Gammie, C. F., & Noble, S. C. 2012, ApJ,
+
+744, 187
+
+Shu, C., & Osher, S. 1988, JCoPh, 77, 439
+Stone, J. M., & Gardiner, T. A. 2008, ApJS, 178, 137
+Tchekhovskoy, A., Narayan, R., & McKinney, J. C. 2011, MNRAS, 418, L79
+Tóth, G. 2000, JCoPh, 161, 605
+van Leer, B. 1979, JCoPh, 32, 101
+Woosley, S. 1993, ApJ, 405, 273
+Zanotti, O., & Dumbser, M. 2015, PhFl, 27, 074105
+
+22
+
+
