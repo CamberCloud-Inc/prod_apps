@@ -1,0 +1,212 @@
+{
+  "name": "ampliseq-16s",
+  "title": "16S Bacterial Community Profiling",
+  "description": "Characterize bacterial communities from 16S rRNA amplicon sequencing data. This pipeline performs quality control, denoising with DADA2, taxonomic classification using SILVA database, and generates diversity metrics and visualizations for microbiome analysis.",
+  "content": "<h2 class=\"heading-node\"><strong>Introduction</strong></h2><p class=\"text-node\">The <strong>nf-core/ampliseq</strong> pipeline is a bioinformatics analysis workflow designed for 16S rRNA amplicon sequencing data. This application is specifically configured for bacterial community profiling using the SILVA taxonomic database.</p><h3 class=\"heading-node\"><strong>Pipeline Overview</strong></h3><img src=\"https://raw.githubusercontent.com/nf-core/ampliseq/master/docs/images/ampliseq_workflow.png\" alt=\"nf-core/ampliseq workflow\" title=\"\" width=\"800\"><p class=\"text-node\"></p><h3 class=\"heading-node\"><strong>Key Features</strong></h3><ul class=\"list-node\"><li><p class=\"text-node\">Quality control and adapter trimming</p></li><li><p class=\"text-node\">ASV inference using DADA2</p></li><li><p class=\"text-node\">Taxonomic classification with SILVA database</p></li><li><p class=\"text-node\">Alpha and beta diversity analysis</p></li><li><p class=\"text-node\">Phylogenetic tree construction</p></li><li><p class=\"text-node\">Interactive visualization reports</p></li></ul><h3 class=\"heading-node\"><strong>Typical Workflow</strong></h3><ol class=\"list-node\"><li><p class=\"text-node\">Read quality control (<code class=\"inline\" spellcheck=\"false\">FastQC</code>)</p></li><li><p class=\"text-node\">Primer trimming (<code class=\"inline\" spellcheck=\"false\">Cutadapt</code>)</p></li><li><p class=\"text-node\">ASV inference and denoising (<code class=\"inline\" spellcheck=\"false\">DADA2</code>)</p></li><li><p class=\"text-node\">Taxonomic classification (<code class=\"inline\" spellcheck=\"false\">SILVA</code>)</p></li><li><p class=\"text-node\">Diversity metrics (<code class=\"inline\" spellcheck=\"false\">QIIME2</code>)</p></li><li><p class=\"text-node\">Comprehensive QC report (<code class=\"inline\" spellcheck=\"false\">MultiQC</code>)</p></li></ol><blockquote class=\"block-node\"><p class=\"text-node\"><strong><em>Note</em></strong><em>: This pipeline is optimized for bacterial 16S rRNA gene sequencing using common primer sets (V3-V4, V4 regions). SILVA database is automatically downloaded and used for taxonomic assignments.</em></p></blockquote>",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "rm -rf prod_apps && git clone git@github.com:CamberCloud-Inc/prod_apps.git && cd ./prod_apps/nextflow/ampliseq/16s-bacterial-profiling/ && sh run_ampliseq.sh",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/ampliseq/master/docs/images/nf-core-ampliseq_logo_flat_light.png",
+  "spec": [
+    {
+      "defaultValue": "",
+      "description": "CSV samplesheet file containing information about the samples (sampleID, forwardReads, reverseReads, run)",
+      "disabled": false,
+      "hidden": false,
+      "label": "Input Samplesheet",
+      "name": "input",
+      "options": null,
+      "placeholder": "samplesheet.csv",
+      "required": true,
+      "type": "Stash File"
+    },
+    {
+      "defaultValue": "CCTACGGGNGGCWGCAG",
+      "description": "Forward primer sequence for the V3-V4 region (341F)",
+      "disabled": false,
+      "hidden": false,
+      "label": "Forward Primer",
+      "name": "fw_primer",
+      "options": null,
+      "placeholder": "Enter forward primer sequence",
+      "required": true,
+      "type": "Input"
+    },
+    {
+      "defaultValue": "GACTACHVGGGTATCTAATCC",
+      "description": "Reverse primer sequence for the V3-V4 region (805R)",
+      "disabled": false,
+      "hidden": false,
+      "label": "Reverse Primer",
+      "name": "rv_primer",
+      "options": null,
+      "placeholder": "Enter reverse primer sequence",
+      "required": true,
+      "type": "Input"
+    },
+    {
+      "defaultValue": "v3v4",
+      "description": "Select the hypervariable region targeted by your primers",
+      "disabled": false,
+      "hidden": false,
+      "label": "16S Region",
+      "name": "region",
+      "options": [
+        {
+          "label": "V3-V4 (341F-805R)",
+          "value": "v3v4"
+        },
+        {
+          "label": "V4 (515F-806R)",
+          "value": "v4"
+        },
+        {
+          "label": "V1-V2",
+          "value": "v1v2"
+        },
+        {
+          "label": "Custom",
+          "value": "custom"
+        }
+      ],
+      "placeholder": "",
+      "required": true,
+      "type": "Select"
+    },
+    {
+      "defaultValue": "",
+      "description": "Output directory where results will be saved",
+      "disabled": false,
+      "hidden": false,
+      "label": "Output Directory",
+      "name": "outdir",
+      "options": null,
+      "placeholder": "results",
+      "required": true,
+      "type": "Stash File"
+    },
+    {
+      "defaultValue": "",
+      "description": "Optional metadata file (TSV format) with first column 'ID' matching sampleIDs",
+      "disabled": false,
+      "hidden": false,
+      "label": "Metadata File",
+      "name": "metadata",
+      "options": null,
+      "placeholder": "metadata.tsv (optional)",
+      "required": false,
+      "type": "Stash File"
+    },
+    {
+      "defaultValue": "silva=138",
+      "description": "Taxonomic database for classification (SILVA v138 recommended for bacteria)",
+      "disabled": true,
+      "hidden": false,
+      "label": "Taxonomy Database",
+      "name": "dada_ref_taxonomy",
+      "options": null,
+      "placeholder": "silva=138",
+      "required": false,
+      "type": "Input"
+    },
+    {
+      "defaultValue": true,
+      "description": "Skip Krona plots (reduces processing time)",
+      "disabled": false,
+      "hidden": false,
+      "label": "Skip Krona",
+      "name": "skip_krona",
+      "options": null,
+      "placeholder": "",
+      "required": false,
+      "type": "Switch"
+    },
+    {
+      "defaultValue": false,
+      "description": "Skip adapter and primer trimming (use if reads are already trimmed)",
+      "disabled": false,
+      "hidden": false,
+      "label": "Skip Cutadapt",
+      "name": "skip_cutadapt",
+      "options": null,
+      "placeholder": "",
+      "required": false,
+      "type": "Switch"
+    },
+    {
+      "defaultValue": 0,
+      "description": "Truncate forward reads to this length (0 = auto)",
+      "disabled": false,
+      "hidden": false,
+      "label": "Truncate Forward Length",
+      "name": "trunclenf",
+      "options": null,
+      "placeholder": "0",
+      "required": false,
+      "type": "Input"
+    },
+    {
+      "defaultValue": 0,
+      "description": "Truncate reverse reads to this length (0 = auto)",
+      "disabled": false,
+      "hidden": false,
+      "label": "Truncate Reverse Length",
+      "name": "trunclenr",
+      "options": null,
+      "placeholder": "0",
+      "required": false,
+      "type": "Input"
+    },
+    {
+      "defaultValue": "2.11.0",
+      "description": "Pipeline version to use",
+      "disabled": false,
+      "hidden": false,
+      "label": "Pipeline Revision",
+      "name": "revision",
+      "options": null,
+      "placeholder": "2.11.0",
+      "required": true,
+      "type": "Input"
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": false,
+      "description": "Select computational resources. MEDIUM recommended for most 16S analyses.",
+      "options": [
+        {
+          "label": "MEDIUM (Recommended)",
+          "value": "default",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "SMALL (Test datasets)",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (Many samples)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "default"
+    }
+  ]
+}

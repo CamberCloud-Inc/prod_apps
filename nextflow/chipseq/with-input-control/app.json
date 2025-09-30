@@ -1,0 +1,98 @@
+{
+  "name": "chipseq-with-input-control",
+  "title": "ChIP-seq: Transcription Factor & Histone Binding Analysis with Input Controls",
+  "description": "Comprehensive ChIP-seq analysis pipeline for identifying protein-DNA interactions with matched input controls for accurate background correction. Identify where transcription factors bind and histone modifications occur across the genome.",
+  "content": "<h1 class=\"heading-node\">🧬 ChIP-seq: Protein-DNA Interaction Analysis</h1><p class=\"text-node\"><strong>Map Where Proteins Bind to DNA with Precision</strong></p><p class=\"text-node\">Chromatin Immunoprecipitation followed by sequencing (ChIP-seq) reveals where proteins interact with DNA across your genome. By enriching DNA bound to your protein of interest and comparing against matched input controls, you can pinpoint regulatory elements, transcription factor binding sites, and chromatin modifications that control gene expression.</p><img src=\"https://raw.githubusercontent.com/nf-core/chipseq/master/docs/images/nf-core-chipseq_logo_light.png\" alt=\"nf-core/chipseq workflow\" width=\"600\" height=\"400\"><h2 class=\"heading-node\">🎯 Why Input Controls Are Essential</h2><p class=\"text-node\">Input controls are <strong>critical</strong> for accurate ChIP-seq analysis. Here's why:</p><h3 class=\"heading-node\">📊 Background Correction</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🧪 Chromatin accessibility bias:</strong> Some genomic regions are naturally more accessible and get enriched regardless of your antibody</p></li><li><p class=\"text-node\"><strong>🔬 Amplification bias:</strong> PCR and sequencing introduce technical artifacts that must be normalized</p></li><li><p class=\"text-node\"><strong>🧬 Copy number variation:</strong> Regions with more DNA copies appear enriched without true binding</p></li></ul><h3 class=\"heading-node\">✅ What Input Controls Do</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Measure background signal:</strong> Input DNA (chromatin without immunoprecipitation) represents the baseline</p></li><li><p class=\"text-node\"><strong>Enable statistical testing:</strong> Compare ChIP vs Input to identify <em>true</em> binding sites</p></li><li><p class=\"text-node\"><strong>Control for technical variation:</strong> Account for differences in DNA preparation and sequencing</p></li></ul><p class=\"text-node\">Without input controls, you cannot distinguish true protein binding from technical artifacts!</p><h2 class=\"heading-node\">🔬 Experimental Design</h2><p class=\"text-node\"><strong>Standard ChIP-seq Workflow:</strong></p><ol class=\"list-node\"><li><p class=\"text-node\"><strong>Crosslink proteins to DNA</strong> - Formaldehyde fixes proteins to their binding sites</p></li><li><p class=\"text-node\"><strong>Chromatin fragmentation</strong> - Sonication breaks DNA into ~200-500bp fragments</p></li><li><p class=\"text-node\"><strong>Immunoprecipitation</strong> - Antibody pulls down your protein + bound DNA</p></li><li><p class=\"text-node\"><strong>Library preparation</strong> - Both ChIP and Input DNA are prepared for sequencing</p></li><li><p class=\"text-node\"><strong>Paired sequencing</strong> - ChIP samples AND matched input controls</p></li></ol><p class=\"text-node\"><strong>Critical Requirements:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\">Each ChIP sample MUST have a matched input control</p></li><li><p class=\"text-node\">Input controls should be from the same batch of cells</p></li><li><p class=\"text-node\">Biological replicates improve statistical power (minimum 2 recommended)</p></li></ul><h2 class=\"heading-node\">🔍 What This Pipeline Does</h2><h3 class=\"heading-node\">Quality Control & Preprocessing</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📊 FASTQC:</strong> Assess read quality, adapter content, duplication levels</p></li><li><p class=\"text-node\"><strong>✂️ Trimming:</strong> Remove adapters and low-quality bases</p></li><li><p class=\"text-node\"><strong>📈 Alignment QC:</strong> Check mapping rates and library complexity</p></li></ul><h3 class=\"heading-node\">Peak Calling with Input Controls</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🎯 MACS2:</strong> Industry-standard peak caller that uses your input controls for background modeling</p></li><li><p class=\"text-node\"><strong>🔬 Statistical testing:</strong> Identifies regions significantly enriched in ChIP vs Input</p></li><li><p class=\"text-node\"><strong>📊 Narrow peaks:</strong> Sharp binding sites for transcription factors</p></li><li><p class=\"text-node\"><strong>📈 Broad peaks:</strong> Extended regions for histone modifications</p></li></ul><h3 class=\"heading-node\">Downstream Analysis</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🧬 Peak annotation:</strong> Which genes are near your binding sites?</p></li><li><p class=\"text-node\"><strong>🔍 Motif discovery:</strong> DNA sequence patterns in binding sites</p></li><li><p class=\"text-node\"><strong>📊 Consensus peaks:</strong> Reproducible peaks across replicates</p></li><li><p class=\"text-node\"><strong>📈 Coverage tracks:</strong> Visualize binding in genome browsers</p></li></ul><h2 class=\"heading-node\">🧬 Reference Genome Selection</h2><p class=\"text-node\">Choose the genome matching your organism:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🧑 Human:</strong> GRCh38/hg38 (recommended) or GRCh37/hg19 (legacy)</p></li><li><p class=\"text-node\"><strong>🐭 Mouse:</strong> GRCm39/mm39 (recommended) or GRCm38/mm10 (legacy)</p></li><li><p class=\"text-node\"><strong>🔬 Model organisms:</strong> Yeast, fly, worm, zebrafish - all supported</p></li></ul><h2 class=\"heading-node\">📋 Sample Sheet Format</h2><p class=\"text-node\">Your CSV file defines ChIP samples and their matching input controls:</p><pre class=\"block-node\"><code>sample,fastq_1,fastq_2,antibody,control\nH3K27ac_rep1,chip_r1_R1.fq.gz,chip_r1_R2.fq.gz,H3K27ac,INPUT_rep1\nH3K27ac_rep2,chip_r2_R1.fq.gz,chip_r2_R2.fq.gz,H3K27ac,INPUT_rep2\nINPUT_rep1,input_r1_R1.fq.gz,input_r1_R2.fq.gz,,\nINPUT_rep2,input_r2_R1.fq.gz,input_r2_R2.fq.gz,,</code></pre><p class=\"text-node\"><strong>Column Descriptions:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>sample:</strong> Unique identifier for each sample</p></li><li><p class=\"text-node\"><strong>fastq_1:</strong> Read 1 file (R1)</p></li><li><p class=\"text-node\"><strong>fastq_2:</strong> Read 2 file (R2) - leave empty for single-end</p></li><li><p class=\"text-node\"><strong>antibody:</strong> Name of ChIP antibody (empty for input controls)</p></li><li><p class=\"text-node\"><strong>control:</strong> Name of matching input sample for this ChIP sample</p></li></ul><h2 class=\"heading-node\">📊 Expected Results</h2><h3 class=\"heading-node\">Peak Files</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📄 BED files:</strong> Genomic coordinates of binding sites</p></li><li><p class=\"text-node\"><strong>📊 Summit files:</strong> Peak centers (highest enrichment)</p></li><li><p class=\"text-node\"><strong>📈 BigWig tracks:</strong> Coverage visualization for genome browsers</p></li></ul><h3 class=\"heading-node\">Quality Reports</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📊 MultiQC:</strong> Comprehensive quality report across all samples</p></li><li><p class=\"text-node\"><strong>🎯 FRiP scores:</strong> Fraction of reads in peaks (quality metric)</p></li><li><p class=\"text-node\"><strong>📈 Correlation plots:</strong> Reproducibility between replicates</p></li></ul><h3 class=\"heading-node\">Biological Insights</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🧬 Peak annotations:</strong> Which genes are regulated?</p></li><li><p class=\"text-node\"><strong>🔍 Motif analysis:</strong> DNA binding preferences</p></li><li><p class=\"text-node\"><strong>📊 Consensus peaks:</strong> High-confidence binding sites</p></li></ul><p class=\"text-node\"><strong>Perfect for Research in:</strong> Gene regulation • Transcription factor studies • Epigenetics • Chromatin biology • Drug target discovery • Disease mechanisms • Developmental biology</p><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/chipseq/2.0.0/\" target=\"_blank\">nf-core/chipseq v2.0.0</a> • Containerized execution • MACS2 peak calling</p>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/chipseq/master/docs/images/nf-core-chipseq_logo_light.png",
+  "command": "nextflow run nf-core/chipseq -r 2.0.0 --input ${input} --outdir ${output} --genome ${genome} -c /etc/mpi/nextflow.camber.config -c chipseq-with-input-control-config.config -profile singularity",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Computational resources for ChIP-seq analysis",
+      "options": [
+        {
+          "label": "Small (16 CPUs, 90GB RAM) - Test data only",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Medium (32 CPUs, 180GB RAM) - Small experiments (2-5 samples)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Large (64 CPUs, 360GB RAM) - Recommended for standard ChIP-seq",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLarge (96 CPUs, 540GB RAM) - Large cohorts (20+ samples)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet (ChIP + Input Controls)",
+      "name": "input",
+      "description": "CSV file with columns: sample, fastq_1, fastq_2, antibody, control. Each ChIP sample must have a matching input control. See documentation for format details.",
+      "required": true
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "output",
+      "description": "Where to save peak calls, coverage tracks, QC reports, and analysis results.",
+      "defaultValue": "./chipseq-results",
+      "required": true
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome matching your organism. Use GRCh38 for human, GRCm39 for mouse.",
+      "defaultValue": "GRCh38",
+      "required": true,
+      "options": [
+        {"label": "Human GRCh38/hg38 (latest)", "value": "GRCh38"},
+        {"label": "Human GRCh37/hg19 (legacy)", "value": "GRCh37"},
+        {"label": "Mouse GRCm39/mm39 (latest)", "value": "GRCm39"},
+        {"label": "Mouse GRCm38/mm10 (legacy)", "value": "GRCm38"},
+        {"label": "Yeast R64-1-1 (S. cerevisiae)", "value": "R64-1-1"},
+        {"label": "Zebrafish GRCz11", "value": "GRCz11"},
+        {"label": "Fly BDGP6 (D. melanogaster)", "value": "BDGP6"},
+        {"label": "Worm WBcel235 (C. elegans)", "value": "WBcel235"}
+      ]
+    }
+  ],
+  "tags": [
+    {"name": "genomics", "type": "subfield"},
+    {"name": "chip-seq", "type": "task"},
+    {"name": "epigenetics", "type": "task"},
+    {"name": "biology", "type": "field"}
+  ]
+}

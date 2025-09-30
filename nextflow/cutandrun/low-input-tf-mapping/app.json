@@ -1,0 +1,239 @@
+{
+  "name": "cutandrun-low-input-tf",
+  "title": "CUT&RUN: Low-Input Transcription Factor Mapping",
+  "description": "Revolutionary CUT&RUN technology for mapping transcription factor binding sites with minimal cell input (100-1000x less than ChIP-seq). Perfect for rare cell populations, limited samples, and high-resolution epigenomic profiling with superior signal-to-noise ratios.",
+  "content": "<h1 class=\"heading-node\">🧬 CUT&RUN: Low-Input Transcription Factor Mapping</h1><p class=\"text-node\"><strong>Revolutionary Technology for Limited Cell Numbers</strong></p><p class=\"text-node\">CUT&RUN (Cleavage Under Targets and Release Using Nuclease) is a breakthrough chromatin profiling technology that maps transcription factor binding sites and histone modifications with <strong>100-1000x fewer cells</strong> than traditional ChIP-seq. By using an antibody-targeted nuclease to precisely cut DNA at binding sites, CUT&RUN delivers exceptional signal-to-noise ratios with minimal background.</p><img src=\"https://raw.githubusercontent.com/nf-core/cutandrun/master/docs/images/nf-core-cutandrun_logo_light.png\" alt=\"nf-core/cutandrun workflow\" width=\"600\" height=\"400\"><h2 class=\"heading-node\">🎯 Why CUT&RUN Over ChIP-seq?</h2><p class=\"text-node\"><strong>Game-Changing Advantages for Low-Input Studies:</strong></p><h3 class=\"heading-node\">📊 Minimal Cell Requirements</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔬 As Few as 100 Cells:</strong> Successfully profile TF binding from tiny cell populations</p></li><li><p class=\"text-node\"><strong>💉 Rare Cell Types:</strong> Study stem cells, circulating tumor cells, or sorted populations</p></li><li><p class=\"text-node\"><strong>🧪 Limited Biopsies:</strong> Extract maximum information from precious clinical samples</p></li><li><p class=\"text-node\"><strong>⚡ ChIP-seq Comparison:</strong> Requires 10,000-1,000,000 cells vs. CUT&RUN's 100-10,000</p></li></ul><h3 class=\"heading-node\">🎨 Superior Data Quality</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📈 Lower Background:</strong> Minimal non-specific binding and genomic DNA contamination</p></li><li><p class=\"text-node\"><strong>🎯 Higher Signal-to-Noise:</strong> Precise antibody-targeted cutting eliminates noise</p></li><li><p class=\"text-node\"><strong>🔍 Better Resolution:</strong> Single-nucleotide resolution mapping of binding sites</p></li><li><p class=\"text-node\"><strong>💰 Cost Effective:</strong> Lower sequencing depth required (5-10M reads vs. 20-50M)</p></li></ul><h3 class=\"heading-node\">⚡ Simplified Protocol</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>⏱️ Faster:</strong> Complete protocol in 1 day vs. 3-4 days for ChIP-seq</p></li><li><p class=\"text-node\"><strong>🧊 No Cross-linking:</strong> Native chromatin binding reduces artifacts</p></li><li><p class=\"text-node\"><strong>🚫 No Sonication:</strong> Eliminates DNA shearing variability</p></li><li><p class=\"text-node\"><strong>✅ Direct Profiling:</strong> In situ digestion captures genuine binding events</p></li></ul><h2 class=\"heading-node\">🔬 Technology: How CUT&RUN Works</h2><p class=\"text-node\"><strong>The Antibody-Targeted Nuclease Approach:</strong></p><ol class=\"list-node\"><li><p class=\"text-node\"><strong>🎯 Antibody Binding:</strong> Primary antibody recognizes target transcription factor</p></li><li><p class=\"text-node\"><strong>🔗 Protein A-MNase:</strong> Secondary fusion protein binds antibody and carries nuclease</p></li><li><p class=\"text-node\"><strong>✂️ Targeted Cleavage:</strong> Ca²⁺ activation triggers precise DNA cutting at binding sites</p></li><li><p class=\"text-node\"><strong>🧬 Fragment Release:</strong> Small DNA fragments diffuse out, ready for sequencing</p></li><li><p class=\"text-node\"><strong>📊 Low Background:</strong> Bulk chromatin remains intact, minimizing contamination</p></li></ol><h2 class=\"heading-node\">🧪 Perfect Research Applications</h2><h3 class=\"heading-node\">🔬 Rare Cell Populations</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Stem Cells:</strong> Limited cell numbers in embryonic or adult stem cell niches</p></li><li><p class=\"text-node\"><strong>Clinical Samples:</strong> Precious patient biopsies with finite material</p></li><li><p class=\"text-node\"><strong>FACS-Sorted Cells:</strong> Specific cell populations isolated by flow cytometry</p></li><li><p class=\"text-node\"><strong>Circulating Tumor Cells:</strong> Ultra-rare cancer cells in blood samples</p></li></ul><h3 class=\"heading-node\">🧬 Transcription Factor Studies</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Master Regulators:</strong> Map pluripotency factors like OCT4, SOX2, NANOG</p></li><li><p class=\"text-node\"><strong>Cell Fate Decisions:</strong> Track TF binding during differentiation</p></li><li><p class=\"text-node\"><strong>Oncogenic Factors:</strong> Profile cancer-driving TFs like MYC, TP53, RUNX1</p></li><li><p class=\"text-node\"><strong>Developmental Biology:</strong> Study TF networks in embryonic development</p></li></ul><h3 class=\"heading-node\">🎨 Epigenomic Profiling</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Histone Modifications:</strong> H3K4me3, H3K27me3, H3K27ac with low cell input</p></li><li><p class=\"text-node\"><strong>Chromatin States:</strong> Active promoters, enhancers, and repressive domains</p></li><li><p class=\"text-node\"><strong>Regulatory Elements:</strong> High-resolution mapping of gene regulatory regions</p></li><li><p class=\"text-node\"><strong>Comparative Epigenomics:</strong> Profile changes across cell types or conditions</p></li></ul><h2 class=\"heading-node\">📋 Sample Sheet: Experimental Design</h2><p class=\"text-node\"><strong>CSV Format with Control Samples:</strong></p><p class=\"text-node\">CUT&RUN experiments typically include IgG controls or input samples for background normalization. The sample sheet links experimental samples to their controls:</p><pre class=\"block-node\"><code>group,replicate,fastq_1,fastq_2,control\nctcf_tf,1,ctcf_rep1_r1.fastq.gz,ctcf_rep1_r2.fastq.gz,igg_ctrl\nctcf_tf,2,ctcf_rep2_r1.fastq.gz,ctcf_rep2_r2.fastq.gz,igg_ctrl\nigg_ctrl,1,igg_rep1_r1.fastq.gz,igg_rep1_r2.fastq.gz,\nigg_ctrl,2,igg_rep2_r1.fastq.gz,igg_rep2_r2.fastq.gz,</code></pre><p class=\"text-node\"><strong>Key Design Principles:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Biological Replicates:</strong> Minimum 2 replicates per condition for statistical power</p></li><li><p class=\"text-node\"><strong>IgG Controls:</strong> Essential for normalizing non-specific antibody binding</p></li><li><p class=\"text-node\"><strong>Matched Processing:</strong> Controls must be processed identically to samples</p></li><li><p class=\"text-node\"><strong>Replicate Consistency:</strong> Use same cell number and protocol across replicates</p></li></ul><h2 class=\"heading-node\">⚙️ Analysis Pipeline Parameters</h2><h3 class=\"heading-node\">📁 Input/Output Configuration</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Sample Sheet:</strong> CSV file defining experimental structure and sample-control relationships</p></li><li><p class=\"text-node\"><strong>Output Directory:</strong> Organized results with alignment, peaks, QC, and visualization files</p></li></ul><h3 class=\"heading-node\">🧬 Reference Genome Selection</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Human:</strong> GRCh37, GRCh38, hg19, hg38 - comprehensive TF binding annotations</p></li><li><p class=\"text-node\"><strong>Model Organisms:</strong> Mouse (GRCm38/39, mm10/39), fly, zebrafish, C. elegans</p></li><li><p class=\"text-node\"><strong>Custom References:</strong> Provide your own FASTA, Bowtie2 index, and GTF annotation</p></li><li><p class=\"text-node\"><strong>Spike-in Normalization:</strong> E. coli K12 default for cross-sample normalization</p></li></ul><h3 class=\"heading-node\">🎯 Peak Calling Strategy</h3><p class=\"text-node\"><strong>SEACR (Recommended for CUT&RUN):</strong></p><ul class=\"list-node\"><li><p class=\"text-node\">Sparse Enrichment Analysis optimized for low-background data</p></li><li><p class=\"text-node\">No input DNA control required (uses IgG or threshold-based calling)</p></li><li><p class=\"text-node\">Excellent for transcription factors with focal binding sites</p></li><li><p class=\"text-node\">Stringent mode reduces false positives in low-signal regions</p></li></ul><p class=\"text-node\"><strong>MACS2 (Traditional ChIP-seq Method):</strong></p><ul class=\"list-node\"><li><p class=\"text-node\">Gold-standard peak caller adapted for CUT&RUN data</p></li><li><p class=\"text-node\">Broader peak detection for histone modifications</p></li><li><p class=\"text-node\">Adjustable q-value threshold for sensitivity/specificity balance</p></li><li><p class=\"text-node\">Useful for comparing with existing ChIP-seq datasets</p></li></ul><p class=\"text-node\"><strong>Combined Approach:</strong> Run both callers to identify high-confidence peaks</p><h3 class=\"heading-node\">🔧 Advanced Options</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Use Control Normalization:</strong> Enable to normalize against IgG controls (recommended)</p></li><li><p class=\"text-node\"><strong>Duplicate Filtering:</strong> Remove PCR/optical duplicates (enabled by default)</p></li><li><p class=\"text-node\"><strong>Mitochondrial Filtering:</strong> Remove contaminating mitochondrial reads</p></li><li><p class=\"text-node\"><strong>Fragment Size Filtering:</strong> Keep fragments 120-600bp for nucleosome-bound regions</p></li><li><p class=\"text-node\"><strong>Spike-in Calibration:</strong> Normalize to E. coli spike-in for quantitative comparisons</p></li></ul><h2 class=\"heading-node\">📊 Comprehensive Results Output</h2><h3 class=\"heading-node\">Peak Calling Results</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📍 Peak Coordinates:</strong> BED format files with genomic locations and scores</p></li><li><p class=\"text-node\"><strong>🎯 Consensus Peaks:</strong> High-confidence peaks identified by multiple methods</p></li><li><p class=\"text-node\"><strong>📊 Peak Annotations:</strong> Gene associations, promoter/enhancer classification</p></li><li><p class=\"text-node\"><strong>📈 Differential Binding:</strong> Statistical comparisons between experimental conditions</p></li></ul><h3 class=\"heading-node\">Quality Control</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📄 MultiQC Report:</strong> Comprehensive HTML summary with all QC metrics</p></li><li><p class=\"text-node\"><strong>📊 Fragment Distribution:</strong> Nucleosome positioning and fragment size analysis</p></li><li><p class=\"text-node\"><strong>🎯 Peak Statistics:</strong> Number of peaks, signal strength, reproducibility</p></li><li><p class=\"text-node\"><strong>🔍 Mapping Efficiency:</strong> Alignment rates, duplicate rates, coverage depth</p></li></ul><h3 class=\"heading-node\">Visualization Files</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🌐 BigWig Tracks:</strong> Genome browser tracks for UCSC, IGV, or WashU</p></li><li><p class=\"text-node\"><strong>📊 Heatmaps:</strong> Signal intensity across genomic features</p></li><li><p class=\"text-node\"><strong>📈 Profile Plots:</strong> Average signal at promoters, enhancers, gene bodies</p></li><li><p class=\"text-node\"><strong>🎨 Coverage Plots:</strong> Sample-specific and differential binding visualization</p></li></ul><h3 class=\"heading-node\">Processed Data</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🧬 BAM Files:</strong> Aligned, filtered, and deduplicated reads</p></li><li><p class=\"text-node\"><strong>📋 Count Matrices:</strong> Peak-by-sample quantification for downstream analysis</p></li><li><p class=\"text-node\"><strong>📊 Normalization Factors:</strong> Spike-in and library size normalization values</p></li><li><p class=\"text-node\"><strong>🔍 IGV Session:</strong> Pre-configured genome browser for immediate exploration</p></li></ul><h2 class=\"heading-node\">🎓 Biological Insights You'll Gain</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🎯 TF Binding Sites:</strong> Precise genomic locations where transcription factors regulate genes</p></li><li><p class=\"text-node\"><strong>🧬 Regulatory Networks:</strong> Master regulators controlling cell identity and function</p></li><li><p class=\"text-node\"><strong>🔄 Dynamic Changes:</strong> How TF binding shifts during differentiation or disease</p></li><li><p class=\"text-node\"><strong>🎨 Chromatin Context:</strong> Relationship between TF binding and chromatin accessibility</p></li><li><p class=\"text-node\"><strong>🩺 Disease Mechanisms:</strong> Aberrant TF binding in cancer or developmental disorders</p></li><li><p class=\"text-node\"><strong>💊 Drug Targets:</strong> Therapeutic opportunities targeting TF-driven pathways</p></li></ul><p class=\"text-node\"><strong>Perfect for Research in:</strong> Cancer genomics • Stem cell biology • Developmental biology • Immunology • Neuroscience • Rare disease research • Single-cell epigenomics • Clinical translation</p><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/cutandrun/3.2.2/\" target=\"_blank\">nf-core/cutandrun v3.2.2</a> • Containerized execution • Continuous integration tested</p>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/cutandrun/master/docs/images/nf-core-cutandrun_logo_light.png",
+  "command": "mkdir -p ${outputDir} && cd ${outputDir} && rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cp prod_apps/nextflow/cutandrun/low-input-tf-mapping/platform-constrained-config.config ./ && rm -rf prod_apps && nextflow run nf-core/cutandrun -r 3.2.2 --input ${input} --outdir results --peakcaller ${peakcaller} --use_control ${use_control} --genome ${genome} --mito_name ${mito_name} --minimum_alignment_q_score ${min_alignment_q} --remove_linear_duplicates ${remove_duplicates} --remove_mitochondrial_reads ${remove_mito} -c /etc/mpi/nextflow.camber.config -c platform-constrained-config.config -profile k8s -ansi-log false && echo \"Pipeline completed\"",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Choose computing resources based on dataset size. More samples require more computational power.",
+      "options": [
+        {
+          "label": "Medium (32 CPUs, 180GB RAM) - Small experiments (2-4 samples)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Large (64 CPUs, 360GB RAM) - Recommended (5-12 samples)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLarge (96 CPUs, 540GB RAM) - Large cohorts (>12 samples)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV samplesheet with columns: group, replicate, fastq_1, fastq_2, control. Each row represents a paired-end sample. Control column links samples to their IgG controls.",
+      "defaultValue": "https://raw.githubusercontent.com/nf-core/test-datasets/cutandrun/samplesheet_2_0/test-GSE145187-small.csv",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": ["csv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outputDir",
+      "description": "Directory for organized analysis results including peaks, alignments, QC reports, and visualizations.",
+      "defaultValue": "./results",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome for read alignment and peak annotation. Choose the appropriate build for your species and experimental design.",
+      "defaultValue": "GRCh38",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {"label": "Human GRCh38 (NCBI) [Recommended]", "value": "GRCh38"},
+        {"label": "Human GRCh37 (Ensembl)", "value": "GRCh37"},
+        {"label": "Human hg38 (UCSC)", "value": "hg38"},
+        {"label": "Human hg19 (UCSC)", "value": "hg19"},
+        {"label": "Mouse GRCm38 (Ensembl)", "value": "GRCm38"},
+        {"label": "Mouse GRCm39 (Ensembl)", "value": "GRCm39"},
+        {"label": "Mouse mm10 (UCSC)", "value": "mm10"},
+        {"label": "Mouse mm39 (UCSC)", "value": "mm39"},
+        {"label": "Arabidopsis TAIR10", "value": "TAIR10"},
+        {"label": "C. elegans WBcel235", "value": "WBcel235"},
+        {"label": "Zebrafish GRCz10", "value": "GRCz10"},
+        {"label": "Zebrafish GRCz11", "value": "GRCz11"},
+        {"label": "Fly BDGP6", "value": "BDGP6"},
+        {"label": "Yeast R64-1-1", "value": "R64-1-1"},
+        {"label": "Rat Rnor_6.0", "value": "Rnor_6.0"}
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Peak Caller",
+      "name": "peakcaller",
+      "description": "Peak calling algorithm. SEACR is optimized for CUT&RUN's low-background data. MACS2 is traditional ChIP-seq method. Use both for high-confidence peak sets.",
+      "defaultValue": "seacr",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "SEACR only (Recommended for CUT&RUN)",
+          "value": "seacr"
+        },
+        {
+          "label": "MACS2 only (Traditional ChIP-seq caller)",
+          "value": "macs2"
+        },
+        {
+          "label": "Both SEACR and MACS2 (High-confidence consensus)",
+          "value": "seacr,macs2"
+        }
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Use Control Normalization",
+      "name": "use_control",
+      "description": "Normalize peak calling using IgG control samples. Recommended for reducing non-specific binding background.",
+      "defaultValue": "true",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Yes - Use IgG controls (Recommended)",
+          "value": "true"
+        },
+        {
+          "label": "No - Threshold-based calling only",
+          "value": "false"
+        }
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Mitochondrial Chromosome Name",
+      "name": "mito_name",
+      "description": "Mitochondrial chromosome identifier for filtering contaminating mitochondrial reads.",
+      "defaultValue": "chrM",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "chrM (UCSC naming convention)",
+          "value": "chrM"
+        },
+        {
+          "label": "MT (Ensembl naming convention)",
+          "value": "MT"
+        },
+        {
+          "label": "chrMT (Alternative naming)",
+          "value": "chrMT"
+        }
+      ]
+    },
+    {
+      "type": "Input",
+      "label": "Minimum Alignment Quality Score",
+      "name": "min_alignment_q",
+      "description": "Minimum MAPQ score for keeping aligned reads. Higher values (20) ensure uniquely mapped reads.",
+      "defaultValue": "20",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "validation": {
+        "type": "number",
+        "min": 0,
+        "max": 60
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Remove PCR Duplicates",
+      "name": "remove_duplicates",
+      "description": "Remove duplicate reads arising from PCR amplification. Recommended for accurate quantification.",
+      "defaultValue": "true",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Yes - Remove duplicates (Recommended)",
+          "value": "true"
+        },
+        {
+          "label": "No - Keep all reads",
+          "value": "false"
+        }
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Remove Mitochondrial Reads",
+      "name": "remove_mito",
+      "description": "Filter out mitochondrial reads that don't provide gene regulation information. Recommended for cleaner data.",
+      "defaultValue": "true",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Yes - Remove mitochondrial reads (Recommended)",
+          "value": "true"
+        },
+        {
+          "label": "No - Keep mitochondrial reads",
+          "value": "false"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    {"name": "genomics", "type": "subfield"},
+    {"name": "epigenomics", "type": "subfield"},
+    {"name": "transcription-factors", "type": "subfield"},
+    {"name": "low-input", "type": "technique"},
+    {"name": "cutandrun", "type": "technique"},
+    {"name": "analysis", "type": "task"},
+    {"name": "biology", "type": "field"}
+  ]
+}

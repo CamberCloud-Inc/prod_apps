@@ -1,0 +1,6 @@
+group,replicate,fastq_1,fastq_2,control
+h3k27me3,1,https://raw.githubusercontent.com/nf-core/test-datasets/cutandrun/testdata/SRR11539111_1.fastq.gz,https://raw.githubusercontent.com/nf-core/test-datasets/cutandrun/testdata/SRR11539111_2.fastq.gz,igg_ctrl
+h3k27me3,2,https://raw.githubusercontent.com/nf-core/test-datasets/cutandrun/testdata/SRR11539112_1.fastq.gz,https://raw.githubusercontent.com/nf-core/test-datasets/cutandrun/testdata/SRR11539112_2.fastq.gz,igg_ctrl
+h3k4me3,1,https://raw.githubusercontent.com/nf-core/test-datasets/cutandrun/testdata/SRR11539113_1.fastq.gz,https://raw.githubusercontent.com/nf-core/test-datasets/cutandrun/testdata/SRR11539113_2.fastq.gz,igg_ctrl
+igg_ctrl,1,https://raw.githubusercontent.com/nf-core/test-datasets/cutandrun/testdata/SRR11539109_1.fastq.gz,https://raw.githubusercontent.com/nf-core/test-datasets/cutandrun/testdata/SRR11539109_2.fastq.gz,
+igg_ctrl,2,https://raw.githubusercontent.com/nf-core/test-datasets/cutandrun/testdata/SRR11539110_1.fastq.gz,https://raw.githubusercontent.com/nf-core/test-datasets/cutandrun/testdata/SRR11539110_2.fastq.gz,

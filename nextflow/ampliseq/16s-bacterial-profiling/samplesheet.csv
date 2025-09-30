@@ -1,0 +1,5 @@
+sampleID,forwardReads,reverseReads,run
+sample1,https://github.com/nf-core/test-datasets/raw/ampliseq/testdata/16S_V3V4/16S_1_L001_R1_001.fastq.gz,https://github.com/nf-core/test-datasets/raw/ampliseq/testdata/16S_V3V4/16S_1_L001_R2_001.fastq.gz,run1
+sample2,https://github.com/nf-core/test-datasets/raw/ampliseq/testdata/16S_V3V4/16S_2_L001_R1_001.fastq.gz,https://github.com/nf-core/test-datasets/raw/ampliseq/testdata/16S_V3V4/16S_2_L001_R2_001.fastq.gz,run1
+sample3,https://github.com/nf-core/test-datasets/raw/ampliseq/testdata/16S_V3V4/16S_3_L001_R1_001.fastq.gz,https://github.com/nf-core/test-datasets/raw/ampliseq/testdata/16S_V3V4/16S_3_L001_R2_001.fastq.gz,run1
+sample4,https://github.com/nf-core/test-datasets/raw/ampliseq/testdata/16S_V3V4/16S_4_L001_R1_001.fastq.gz,https://github.com/nf-core/test-datasets/raw/ampliseq/testdata/16S_V3V4/16S_4_L001_R2_001.fastq.gz,run1
