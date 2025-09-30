@@ -1,0 +1,45 @@
+{
+  "name": "heic-to-jpg",
+  "title": "HEIC to JPG Converter",
+  "description": "Convert Apple HEIC format images to standard JPG format",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application converts Apple HEIC (High Efficiency Image Container) format images to standard JPG format. Built using <a class=\"link\" href=\"https://github.com/bigcat88/pillow_heif\" target=\"_blank\">pillow-heif</a>, it provides high-quality conversion with optimized compression.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Convert HEIC/HEIF images to JPG</li><li class=\"list-item-node\">High-quality output (95% JPEG quality)</li><li class=\"list-item-node\">Automatic color mode conversion</li><li class=\"list-item-node\">Optimized JPEG compression</li><li class=\"list-item-node\">Preserves image dimensions</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input File</strong>: Upload your HEIC/HEIF image file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a JPG file with the same name as the input file in the specified output directory.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Converting iPhone photos to universal JPG format</li><li class=\"list-item-node\">Sharing HEIC images with users on non-Apple devices</li><li class=\"list-item-node\">Preparing images for web upload (many sites don't support HEIC)</li><li class=\"list-item-node\">Batch processing Apple photos for compatibility</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/heic_to_jpg.py \"${inputFile}\" -o \"${outputDir}\" -q 95",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input HEIC File",
+      "description": "Upload the HEIC/HEIF image file you want to convert",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the JPG file will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

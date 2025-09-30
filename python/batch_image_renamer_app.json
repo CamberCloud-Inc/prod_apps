@@ -1,0 +1,45 @@
+{
+  "name": "batch-image-renamer",
+  "title": "Batch Image Renamer",
+  "description": "Rename multiple images with customizable patterns",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application renames multiple image files in a directory using customizable naming patterns. Perfect for organizing photo collections and standardizing file names.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Rename images with sequential numbering</li><li class=\"list-item-node\">Custom naming patterns using {n} for numbers</li><li class=\"list-item-node\">Filter by file extension</li><li class=\"list-item-node\">Preserves original file extensions</li><li class=\"list-item-node\">Safe renaming with conflict detection</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input Directory</strong>: Select a stash folder containing images to rename</li><li class=\"list-item-node\"><strong>Pattern</strong>: Default pattern is 'vacation_{n}' (use {n} for sequential numbers)</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">Images are renamed in place within the same directory following the specified pattern.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Organizing photo collections with consistent naming</li><li class=\"list-item-node\">Preparing images for batch processing</li><li class=\"list-item-node\">Standardizing file names for web galleries</li><li class=\"list-item-node\">Sequential numbering for image sequences</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/batch_image_renamer.py \"${inputDir}\" -p \"${pattern}\" -s 1",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputDir",
+      "label": "Input Directory",
+      "description": "Select a stash folder containing images to rename",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "pattern",
+      "label": "Naming Pattern",
+      "description": "Pattern for new filenames (use {n} for sequential numbers, e.g., vacation_{n})",
+      "defaultValue": "vacation_{n}"
+    }
+  ]
+}
