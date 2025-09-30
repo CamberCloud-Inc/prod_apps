@@ -126,10 +126,12 @@ git push
     "name": "system_size",
     "hidden": true,
     "options": [
-      {"label": "Small", "value": "small", "mapValue": {"nodeSize": "SMALL", "numNodes": 1, "withGpu": false}},
-      {"label": "Large (Recommended)", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}
+      {"label": "XSMALL - Testing", "value": "xsmall", "mapValue": {"nodeSize": "XSMALL", "numNodes": 1, "withGpu": false}},
+      {"label": "SMALL - Small data", "value": "small", "mapValue": {"nodeSize": "SMALL", "numNodes": 1, "withGpu": false}},
+      {"label": "MEDIUM - Standard", "value": "medium", "mapValue": {"nodeSize": "MEDIUM", "numNodes": 1, "withGpu": false}},
+      {"label": "LARGE - Large data", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}
     ],
-    "defaultValue": "large"
+    "defaultValue": "xsmall"
   }],
   "spec": [
     {"type": "Stash File", "label": "Sample Information Sheet", "name": "input", "description": "CSV with columns: ...", "required": true},

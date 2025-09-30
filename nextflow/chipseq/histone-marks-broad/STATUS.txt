@@ -1,0 +1,27 @@
+Status: Ready for Testing
+App: chipseq-histone-broad
+Created: 2025-09-30
+
+Configuration:
+- Command: nextflow run nf-core/chipseq --input ${input} --outdir ${outdir} --genome ${genome} --macs_gsize 2.7e9 --broad_cutoff 0.1 -r 2.0.0 -profile singularity
+- Parameters: 3 (input, outdir, genome)
+- Hardcoded: macs_gsize=2.7e9, broad_cutoff=0.1
+- Peak calling: Broad peaks optimized for histone modifications
+
+Biology:
+- Target: Histone modifications (H3K27me3, H3K4me3, H3K9me3, H3K36me3)
+- Users: Epigenetics researchers studying chromatin states
+- Application: Map diffuse chromatin marks across the genome
+
+Files:
+- app.json: Created and configured
+- samplesheet.csv: Downloaded from nf-core/test-datasets
+- README.md: Exists (from previous implementation)
+- TESTING_LOG.md: Created
+- STATUS.txt: This file
+
+Next Steps:
+- Test with camber commands
+- Monitor job execution
+- Document results in TESTING_LOG.md
+- Commit to git after successful testing

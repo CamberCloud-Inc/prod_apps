@@ -309,29 +309,30 @@ Then create `app.json`:
       "label": "System Size",
       "name": "system_size",
       "hidden": true,
+      "description": "Select compute resources. Start with XSMALL for testing, scale up for production data.",
       "options": [
         {
-          "label": "Small - Test datasets",
+          "label": "XSMALL (4 CPUs, 15GB RAM) - Testing/nf-core test data",
+          "value": "xsmall",
+          "mapValue": {"nodeSize": "XSMALL", "numNodes": 1, "withGpu": false}
+        },
+        {
+          "label": "SMALL (8 CPUs, 30GB RAM) - Small datasets (1-3 samples)",
           "value": "small",
           "mapValue": {"nodeSize": "SMALL", "numNodes": 1, "withGpu": false}
         },
         {
-          "label": "Medium - {use case}",
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Standard datasets (5-20 samples)",
           "value": "medium",
           "mapValue": {"nodeSize": "MEDIUM", "numNodes": 1, "withGpu": false}
         },
         {
-          "label": "Large - {use case} (Recommended)",
+          "label": "LARGE (64 CPUs, 360GB RAM) - Large datasets (20-50 samples)",
           "value": "large",
           "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}
-        },
-        {
-          "label": "XLarge - {use case}",
-          "value": "xlarge",
-          "mapValue": {"nodeSize": "XLARGE", "numNodes": 1, "withGpu": false}
         }
       ],
-      "defaultValue": "large"
+      "defaultValue": "xsmall"
     }
   ],
   "spec": [
