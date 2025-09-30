@@ -1,0 +1,4 @@
+Status: 📝 Ready
+App: dualrnaseq-host-pathogen
+Version: 1.0.0
+Use Case: Host-pathogen interaction RNA-seq
