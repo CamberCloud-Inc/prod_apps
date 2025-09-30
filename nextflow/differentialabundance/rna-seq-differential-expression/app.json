@@ -1,0 +1,107 @@
+{
+  "name": "diffabundance-rnaseq",
+  "title": "RNA-seq Differential Expression Analysis (nf-core/differentialabundance)",
+  "description": "Perform differential gene expression analysis on RNA-seq count matrices using DESeq2, edgeR, and limma. Generates comprehensive statistical reports, visualizations, and optional interactive Shiny app for exploring results. Takes count matrices from upstream pipelines like nf-core/rnaseq.",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/differentialabundance --input ${input} --contrasts ${contrasts} --matrix ${matrix} --outdir ${outdir} -r 1.5.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/differentialabundance/master/docs/images/nf-core-differentialabundance_logo_light.png",
+  "content": "<h2><strong>RNA-seq Differential Expression Analysis</strong></h2><p>The <strong>nf-core/differentialabundance</strong> pipeline performs comprehensive differential gene expression analysis on count matrices from RNA-seq experiments. This is a <strong>downstream analysis pipeline</strong> that takes count data (from pipelines like nf-core/rnaseq) and identifies genes that are differentially expressed between experimental conditions.</p><h3><strong>What This Pipeline Does</strong></h3><ul><li><strong>Statistical Analysis</strong>: DESeq2, edgeR, and limma differential expression</li><li><strong>Quality Control</strong>: Sample clustering, PCA, correlation heatmaps</li><li><strong>Visualizations</strong>: Volcano plots, MA plots, heatmaps</li><li><strong>Gene Set Enrichment</strong>: GSEA pathway analysis</li><li><strong>Interactive Reports</strong>: HTML reports and optional Shiny app</li><li><strong>Multiple Comparisons</strong>: Analyze multiple contrasts simultaneously</li></ul><h3><strong>Input Requirements</strong></h3><p>This pipeline requires three CSV files:</p><ol><li><strong>Sample Sheet</strong>: Links samples to experimental conditions<ul><li>Columns: sample, condition, other covariates</li></ul></li><li><strong>Contrasts File</strong>: Defines comparisons to make<ul><li>Columns: id, variable, reference, target</li><li>Example: Treatment_vs_Control, condition, Control, Treatment</li></ul></li><li><strong>Count Matrix</strong>: Gene counts per sample<ul><li>Rows: genes, Columns: samples</li><li>From nf-core/rnaseq: salmon.merged.gene_counts.tsv</li></ul></li></ol><h3><strong>Workflow</strong></h3><ol><li><strong>Upstream</strong>: Run nf-core/rnaseq to get count matrices</li><li><strong>This Pipeline</strong>: Differential expression analysis</li><li><strong>Downstream</strong>: Biological interpretation and validation</li></ol><h3><strong>Key Outputs</strong></h3><ul><li><strong>Differential Expression Tables</strong>: Genes with fold-changes and p-values</li><li><strong>HTML Report</strong>: Comprehensive interactive report</li><li><strong>QC Plots</strong>: PCA, sample clustering, correlations</li><li><strong>Volcano Plots</strong>: Visualize DE genes</li><li><strong>Heatmaps</strong>: Expression patterns across samples</li><li><strong>GSEA Results</strong>: Enriched biological pathways</li></ul><blockquote><p><strong>Perfect for:</strong> RNA-seq researchers • Bioinformaticians • Cancer biologists • Drug discovery • Basic research • Any project with gene expression data</p></blockquote><p>Built with <a href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a href=\"https://nf-co.re/differentialabundance/1.5.0/\" target=\"_blank\">nf-core/differentialabundance v1.5.0</a> • DESeq2/edgeR/limma • Publication-ready</p>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV file linking samples to experimental conditions. Columns: sample, condition, and any covariates (batch, replicate, etc.)",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Contrasts File",
+      "name": "contrasts",
+      "description": "CSV file defining comparisons. Columns: id, variable, reference, target. Example: Treatment_vs_Control,condition,Control,Treatment",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Count Matrix",
+      "name": "matrix",
+      "description": "Gene count matrix (TSV). Rows are genes, columns are samples. From nf-core/rnaseq: use salmon.merged.gene_counts.tsv",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".tsv", ".txt", ".csv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory for results including DE tables, plots, and HTML report",
+      "defaultValue": "./differential-expression-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "description": "SMALL sufficient for most analyses. Use MEDIUM for very large datasets (>50 samples or >50k genes).",
+      "options": [
+        {
+          "label": "XSMALL (4 CPUs, 15GB RAM) - Testing",
+          "value": "xsmall",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "SMALL (8 CPUs, 30GB RAM) - Recommended",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Large datasets",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xsmall"
+    }
+  ],
+  "tags": [
+    {"name": "genomics", "type": "subfield"},
+    {"name": "rna", "type": "task"},
+    {"name": "differential-expression", "type": "task"},
+    {"name": "statistics", "type": "task"},
+    {"name": "biology", "type": "field"}
+  ]
+}
