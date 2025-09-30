@@ -1,0 +1,45 @@
+{
+  "name": "whitespace-trimmer",
+  "title": "Whitespace Trimmer",
+  "description": "Remove trailing and leading whitespace from text files",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application removes leading and trailing whitespace from each line in text files, with options to remove empty lines.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Remove leading whitespace (spaces, tabs)</li><li class=\"list-item-node\">Remove trailing whitespace</li><li class=\"list-item-node\">Remove both leading and trailing whitespace</li><li class=\"list-item-node\">Optional empty line removal</li><li class=\"list-item-node\">Statistics on whitespace removed</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input File</strong>: Upload your text file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a cleaned text file with the suffix '_trimmed.txt' in the specified output directory.</p>",
+  "command": "rm -rf prod_apps && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/whitespace_trimmer.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input Text File",
+      "description": "Upload the text file you want to process",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where cleaned text will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
