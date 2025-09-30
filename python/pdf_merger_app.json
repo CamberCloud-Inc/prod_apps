@@ -1,0 +1,66 @@
+{
+  "name": "pdf-merger",
+  "title": "PDF Merger",
+  "description": "Combine multiple PDF files into a single PDF document",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application merges multiple PDF files into a single PDF document in the order specified. Built using <a class=\"link\" href=\"https://pymupdf.readthedocs.io/\" target=\"_blank\">PyMuPDF</a>, it preserves the original quality and formatting of all pages.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Merge 2 or more PDF files into one document</li><li class=\"list-item-node\">Preserves original page formatting and quality</li><li class=\"list-item-node\">Maintains page order as specified in inputs</li><li class=\"list-item-node\">Automatic installation of dependencies</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>First PDF File</strong>: Upload the first PDF from stash</li><li class=\"list-item-node\"><strong>Second PDF File</strong>: Upload the second PDF from stash</li><li class=\"list-item-node\"><strong>Third PDF File</strong> (optional): Upload additional PDF from stash</li><li class=\"list-item-node\"><strong>Fourth PDF File</strong> (optional): Upload additional PDF from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for the merged PDF</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a single PDF file named <code class=\"inline\" spellcheck=\"false\">merged.pdf</code> containing all pages from the input PDFs in the order they were specified.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Combining multiple document chapters into one file</li><li class=\"list-item-node\">Merging separate scanned pages</li><li class=\"list-item-node\">Consolidating multiple reports or invoices</li><li class=\"list-item-node\">Creating a single PDF from multiple sources</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/pdf_merger.py \"${pdfFile1}\" \"${pdfFile2}\" \"${pdfFile3}\" \"${pdfFile4}\" -o \"${outputDir}\" -n merged.pdf",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "pdfFile1",
+      "label": "First PDF File",
+      "description": "Upload the first PDF file to merge",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "pdfFile2",
+      "label": "Second PDF File",
+      "description": "Upload the second PDF file to merge",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "pdfFile3",
+      "label": "Third PDF File (optional)",
+      "description": "Upload an optional third PDF file to merge",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "pdfFile4",
+      "label": "Fourth PDF File (optional)",
+      "description": "Upload an optional fourth PDF file to merge",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where merged PDF will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
