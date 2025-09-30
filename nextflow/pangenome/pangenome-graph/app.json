@@ -4,7 +4,7 @@
   "description": "Build pangenome graphs from multiple genome assemblies using PGGB tools. Constructs graph representations capturing genomic variation across multiple individuals or strains, enabling comprehensive variation analysis and comparative genomics.",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/pangenome --input ${input} --n_haplotypes ${n_haplotypes} --outdir ${outdir} -r 1.1.3 ",
+  "command": "nextflow run nf-core/pangenome --input ${input} --outdir ${outdir} -r 1.1.3 ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/pangenome/master/docs/images/nf-core-pangenome_logo_light.png",
   "content": "<h2><strong>Pangenome Graph Construction</strong></h2><p>The <strong>nf-core/pangenome</strong> pipeline builds pangenome graphs from genome assemblies, representing genomic variation across populations as graph structures rather than linear references.</p><h3><strong>Scientific Applications</strong></h3><blockquote><ul><li><strong>Population Genomics</strong>: Capture variation across populations</li><li><strong>Comparative Genomics</strong>: Compare multiple strains or species</li><li><strong>Structural Variation</strong>: Identify large genomic rearrangements</li><li><strong>Reference Genomes</strong>: Build graph-based reference genomes</li><li><strong>Haplotype Analysis</strong>: Study haplotype diversity</li></ul></blockquote><h3><strong>Key Features</strong></h3><ul><li>All-versus-all genome alignment (WFMASH)</li><li>Graph construction and normalization</li><li>Visualization and statistics</li><li>Handles multiple haplotypes</li></ul><h3><strong>Input Requirements</strong></h3><ul><li>Bgzipped FASTA file with multiple genomes</li><li>Number of haplotypes</li></ul><blockquote><p><strong>Perfect for:</strong> Population geneticists • Comparative genomics • Microbiologists studying bacterial diversity • Plant genomics</p></blockquote>",
   "spec": [
@@ -19,13 +19,6 @@
         "allow_folders": false,
         "allowed_file_types": [".fa.gz", ".fasta.gz"]
       }
-    },
-    {
-      "type": "Text",
-      "label": "Number of Haplotypes",
-      "name": "n_haplotypes",
-      "description": "Number of haplotypes in the FASTA file",
-      "required": true
     },
     {
       "type": "Stash File",
