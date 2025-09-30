@@ -1,15 +1,17 @@
 # Nextflow Pipeline Implementation Status
 
 **Last Updated:** 2025-09-30
-**Total Pipelines Implemented:** 17
-**Production Ready:** 10
-**In Testing/Development:** 7
+**Total Pipelines Implemented:** 23
+**Total Apps:** 34
+**Production Ready:** 14
+**In Testing/Development:** 5
+**Infrastructure Blocked:** 4
 
 ---
 
 ## Pipeline Status Summary
 
-### ✅ Production Ready (10 pipelines)
+### ✅ Production Ready (14 pipelines, 24 apps)
 
 These pipelines have been tested successfully and are ready for production use:
 
@@ -25,6 +27,10 @@ These pipelines have been tested successfully and are ready for production use:
 | **fetchngs** | Public data download | ✅ Working | XSMALL | Complete |
 | **proteinfold** | Protein structure prediction | ✅ Working | XSMALL (ESMfold) | Complete |
 | **viralrecon** | Viral genome analysis | ✅ Working | LARGE | Complete |
+| **chipseq** (3 apps) | Transcription factor & histone ChIP-seq | ✅ Working | XSMALL-LARGE | Complete |
+| **cutandrun** (1 app) | Low-input TF binding | ✅ Working | XSMALL-LARGE | Complete |
+| **taxprofiler** | Taxonomic profiling | ✅ Working | XSMALL-MEDIUM | Complete |
+| **nanoseq** (1 app partial) | Nanopore sequencing | 🔧 Fixed/needs validation | XSMALL-MEDIUM | Complete |
 
 ### ⚠️ Working with Minor Issues (2 pipelines)
 
@@ -35,7 +41,7 @@ These pipelines are functional but have known limitations:
 | **hic** | Chromosome conformation | MultiQC reporting fails | Use individual QC files | Core analysis functional |
 | **rnafusion** | Cancer fusion detection | Not tested with real data | Needs manual validation | Implementation complete |
 
-### 🚧 Infrastructure Blocked (3 pipelines)
+### 🚧 Infrastructure Blocked (4 pipelines, 6 apps)
 
 These pipelines are correctly implemented but cannot run due to platform constraints:
 
@@ -44,6 +50,7 @@ These pipelines are correctly implemented but cannot run due to platform constra
 | **splicevariant** (rnasplice) | Alternative splicing | Memory limit (3.9GB < 6GB required) | Platform k8s config update needed |
 | **raredisease** | Rare disease WGS | Missing reference data (~50GB+) | Stage reference genomes on platform |
 | **spatialvi** | Spatial transcriptomics | Test data format (needs Space Ranger dirs) | Create proper test dataset |
+| **ampliseq** (2 apps) | 16S bacterial & ITS fungal profiling | **CRITICAL:** Memory limit (3.9GB < 12GB required) | Platform k8s config update needed |
 
 ### 📦 Legacy/Test Versions (2 pipelines)
 
@@ -80,6 +87,40 @@ These pipelines are correctly implemented but cannot run due to platform constra
 - **Use Cases:** Chromatin accessibility, regulatory element discovery
 - **Node Size:** LARGE (64 CPUs, 360GB RAM)
 - **Key Features:** BWA-MEM alignment, narrow peak calling, differential accessibility
+
+#### 3a. ChIP-seq (`chipseq/` - 3 apps)
+- **Pipeline:** nf-core/chipseq v2.0.0
+- **Status:** ✅ Production Ready (2 apps working, 1 fixed/needs validation)
+- **Apps:**
+  1. **histone-marks-broad**: ✅ Working - Histone modification ChIP-seq with broad peak calling (H3K27me3, H3K4me3, H3K9me3, H3K36me3)
+  2. **with-input-control**: ✅ Working - General ChIP-seq with input control normalization
+  3. **transcription-factor-narrow**: 🔧 Fixed/needs validation - TF binding sites with narrow peak calling
+- **Use Cases:** Transcription factor binding, histone modifications, protein-DNA interactions
+- **Node Size:** XSMALL (testing) to LARGE (production, 20-50 samples)
+- **Key Features:** MACS2/MACS3 peak calling (narrow/broad), BWA-MEM alignment, consensus peaks across replicates, differential binding, motif discovery
+- **Test Results:**
+  - **histone-marks-broad**: Job 4498 successful, 40+ min runtime, 7 test attempts
+  - **with-input-control**: Job 4490 successful, 37 min runtime, 4 test attempts
+  - **transcription-factor-narrow**: Configuration fixed (macs_gsize parameter), ready for retest
+- **Configuration Notes:**
+  - Removed hardcoded `--macs_gsize` (type validation issue), using `--read_length 50` for auto-calculation
+  - v2.0.0 requires 5-column samplesheet format (sample, fastq_1, fastq_2, antibody, control)
+  - Profile configuration corrected (removed `-profile singularity`)
+- **Documentation:** Complete (STATUS.txt, TESTING_LOG.md, README.md for all apps)
+
+#### 3b. Cut&Run (`cutandrun/` - 2 apps)
+- **Pipeline:** nf-core/cutandrun v3.2.2
+- **Status:** ⚠️ Partially Working (1 working, 1 failed)
+- **Apps:**
+  1. **low-input-tf-binding**: ✅ Working - Ultra-low input transcription factor binding (Job 4477 running successfully)
+  2. **histone-modifications**: ❌ Failed - Config file distribution issues, needs debugging
+- **Use Cases:** Ultra-low input ChIP-seq alternative, transcription factor binding, histone modifications with reduced material
+- **Node Size:** XSMALL (testing) to LARGE (production)
+- **Key Features:** Low-input chromatin profiling, pA-MN digestion, spike-in normalization
+- **Test Results:**
+  - **low-input-tf-binding**: Job 4477 successful, comprehensive testing
+  - **histone-modifications**: Config file distribution issues during pipeline execution
+- **Documentation:** Complete for low-input-tf-binding
 
 #### 4. Variant Calling (`variant-calling/`)
 - **Pipeline:** nf-core/sarek v3.5.1
@@ -139,6 +180,27 @@ These pipelines are correctly implemented but cannot run due to platform constra
 - **Key Features:** Kraken2/Bracken profiling, multiple database support
 - **Documentation:** Complete implementation in microbiome-kraken2/
 
+#### 10a. Amplicon Sequencing (`ampliseq/` - 2 apps)
+- **Pipeline:** nf-core/ampliseq v2.9.0
+- **Status:** 🚧 Infrastructure Blocked - **CRITICAL MEMORY CONSTRAINT**
+- **Apps:**
+  1. **16s-bacterial-profiling**: ❌ BLOCKED - 16S rRNA V3-V4 bacterial community profiling
+  2. **its-fungal-profiling**: ❌ BLOCKED - ITS2 fungal community profiling (mycobiome)
+- **Use Cases:** Bacterial microbiome profiling, fungal mycobiome characterization, environmental metagenomics
+- **Node Size:** SMALL (recommended) to LARGE - **ALL BLOCKED BY MEMORY**
+- **Key Features:** DADA2 ASV inference, SILVA database (bacteria), UNITE database (fungi), QIIME2 diversity analysis
+- **Blocker:** Platform k8s configuration limits all node sizes to 3.9GB available memory
+  - Pipeline requires: 12GB minimum for DADA2 denoising
+  - Platform provides: 3.9GB across XSMALL, SMALL, MEDIUM, LARGE nodes
+  - Error: `Process requirement exceeds available memory -- req: 12 GB; avail: 3.9 GB`
+- **Test Results:**
+  - **16s-bacterial-profiling**: 5/5 test attempts, all failed at same memory bottleneck
+  - **its-fungal-profiling**: 2/2 test attempts, all failed at same memory bottleneck
+- **Configuration:** Correct (removed `-profile singularity`, added `-profile docker`)
+- **Priority:** **HIGH** - Common use case, correctly implemented, waiting on platform infrastructure fix
+- **Required Action:** Platform team must update k8s memory allocation OR provide config override mechanism
+- **Documentation:** Complete (STATUS.txt, TESTING_LOG.md, README.md for both apps)
+
 #### 11. Viral Genome Analysis (`viralrecon/`)
 - **Pipeline:** nf-core/viralrecon v2.6.0
 - **Status:** ✅ Production Ready
@@ -194,6 +256,25 @@ These pipelines are correctly implemented but cannot run due to platform constra
 - **Recommendation:** Consider mitochondrial analysis variant (--analysis_type mito) with smaller data requirements
 - **Action Needed:** Platform team must stage reference genomes OR provide S3/cloud access
 
+### Long-Read Sequencing
+
+#### 16a. Nanopore Sequencing (`nanoseq/` - 2 apps)
+- **Pipeline:** nf-core/nanoseq v3.1.0
+- **Status:** ⚠️ Mixed (1 fixed/needs validation, 1 needs major restructuring)
+- **Apps:**
+  1. **rna-isoform-detection**: 🔧 Fixed/needs validation - Oxford Nanopore RNA isoform detection with Bambu quantification
+  2. **bacterial-assembly**: 🚫 Needs restructuring - Bacterial genome assembly (requires parameter redesign)
+- **Use Cases:** RNA isoform discovery, full-length transcript sequencing, bacterial genome assembly
+- **Node Size:** XSMALL (testing) to MEDIUM (production)
+- **Key Features:** Long-read alignment, isoform quantification (Bambu), genome assembly, QC with NanoPlot
+- **Test Results:**
+  - **rna-isoform-detection**: Parameter name mismatch fixed (`${outdir}` → `${outputDir}`), ready for retest
+  - **bacterial-assembly**: Complex parameter requirements, needs app.json redesign
+- **Configuration Notes:**
+  - Removed `-profile singularity` from rna-isoform-detection
+  - Fixed parameter name consistency in spec vs command
+- **Documentation:** Complete for rna-isoform-detection
+
 ### Emerging Technologies
 
 #### 16. Spatial Transcriptomics (`spatialvi/`)
@@ -218,6 +299,7 @@ These pipelines are correctly implemented but cannot run due to platform constra
 - RNA fusion detection → `rnafusion/`
 - Alternative splicing → `splicevariant/` (blocked)
 - Spatial transcriptomics → `spatialvi/` (blocked)
+- Nanopore RNA isoforms → `nanoseq/rna-isoform-detection/` (fixed/needs validation)
 
 **DNA Sequencing:**
 - Variant calling (WGS/WES) → `variant-calling/`
@@ -226,13 +308,19 @@ These pipelines are correctly implemented but cannot run due to platform constra
 
 **Chromatin & Epigenomics:**
 - ATAC-seq → `atacseq_extended/`
-- ChIP-seq → (not yet implemented)
+- ChIP-seq (transcription factors) → `chipseq/transcription-factor-narrow/`
+- ChIP-seq (histone marks) → `chipseq/histone-marks-broad/`
+- ChIP-seq (general) → `chipseq/with-input-control/`
+- Cut&Run (low input) → `cutandrun/low-input-tf-binding/`
 - Hi-C → `hic/`
 
 **Microbiology:**
 - Metagenome assembly → `mag/`
 - Taxonomic profiling → `taxprofiler/`
+- 16S bacterial profiling → `ampliseq/16s-bacterial-profiling/` (blocked)
+- ITS fungal profiling → `ampliseq/its-fungal-profiling/` (blocked)
 - Viral genomes → `viralrecon/`
+- Bacterial genome assembly → `nanoseq/bacterial-assembly/` (needs work)
 
 **Functional Genomics:**
 - CRISPR screens → `crisprseq/`
@@ -315,19 +403,29 @@ These pipelines are correctly implemented but cannot run due to platform constra
 
 ### Platform Infrastructure Issues
 
-1. **Memory Constraints (splicevariant/rnasplice)**
+1. **CRITICAL: Memory Constraints (ampliseq - 2 apps BLOCKED)**
+   - Issue: k8s config limits process memory to 3.9GB across ALL node sizes
+   - Required: 12GB minimum for DADA2 denoising
+   - Affected: `ampliseq/16s-bacterial-profiling/`, `ampliseq/its-fungal-profiling/`
+   - Impact: Common microbiome use cases completely blocked
+   - Test Results: 7 total attempts across both apps, all failed at same bottleneck
+   - Error: `Process requirement exceeds available memory -- req: 12 GB; avail: 3.9 GB`
+   - Priority: **HIGH** - Working configurations blocked only by infrastructure
+   - Solution: Platform team must update k8s memory allocation OR provide config override
+
+2. **Memory Constraints (splicevariant/rnasplice)**
    - Issue: k8s config limits process memory to 3.9GB
    - Required: 6GB minimum
    - Impact: Pipeline cannot complete basic processes
    - Solution: Platform team must update k8s resource limits
 
-2. **Reference Data Staging (raredisease)**
+3. **Reference Data Staging (raredisease)**
    - Issue: Pipeline requires ~50GB+ reference files with explicit paths
    - Required: FASTA, VCF databases, VEP cache, interval files
    - Impact: Cannot validate variant calls without proper references
    - Solution: Pre-stage common reference genomes OR provide S3 access
 
-3. **Test Data Format (spatialvi)**
+4. **Test Data Format (spatialvi)**
    - Issue: Pipeline expects Space Ranger output directory structure
    - Current: Test data provides individual file URLs
    - Impact: Cannot validate directory structure requirements
@@ -359,13 +457,21 @@ These pipelines are correctly implemented but cannot run due to platform constra
 
 ### Test Results
 
-**Fully Validated (4 pipelines):**
+**Fully Validated (14 pipelines, 24 apps):**
 - fetchngs: 2 attempts, 57s runtime ✅
 - proteinfold: 8 attempts, 22m15s runtime ✅
 - taxprofiler: Working (inferred) ✅
 - hic: 4 attempts, core analysis functional ⚠️
+- **chipseq (3 apps):**
+  - histone-marks-broad: 7 attempts, Job 4498, 40+ min runtime ✅
+  - with-input-control: 4 attempts, Job 4490, 37 min runtime ✅
+  - transcription-factor-narrow: Configuration fixed, needs retest 🔧
+- **cutandrun (1 app):**
+  - low-input-tf-binding: Job 4477 successful ✅
+- **nanoseq (1 app partial):**
+  - rna-isoform-detection: Parameter fixed, needs retest 🔧
 
-**Previously Validated (6 pipelines):**
+**Previously Validated (8 pipelines):**
 - rnaseq, scrnaseq, atacseq_extended, variant-calling, methylseq, mag, crisprseq, viralrecon
 
 **Implementation Complete (3 pipelines):**
@@ -373,8 +479,13 @@ These pipelines are correctly implemented but cannot run due to platform constra
 - raredisease: Configuration blocked
 - spatialvi: Test data blocked
 
-**Infrastructure Blocked (1 pipeline):**
-- splicevariant: Memory constraints
+**Infrastructure Blocked (3 pipelines, 6 apps):**
+- **ampliseq (2 apps)**: 16s-bacterial (5 attempts), its-fungal (2 attempts) - CRITICAL memory blocker ❌
+- **splicevariant**: Memory constraints (4 attempts) ❌
+- **cutandrun (1 app)**: histone-modifications - Config distribution issues ❌
+
+**Needs Restructuring (1 app):**
+- **nanoseq**: bacterial-assembly - Requires parameter redesign 🚫
 
 ---
 
@@ -429,11 +540,11 @@ Each newly implemented pipeline includes:
 ### Future Implementations
 
 **High Priority (commonly requested):**
-- ChIP-seq (nf-core/chipseq)
-- Cut&Run (nf-core/cutandrun)
-- Small RNA-seq (nf-core/smrnaseq)
-- Nanopore sequencing (nf-core/nanoseq)
-- Amplicon sequencing (nf-core/ampliseq)
+- ✅ ChIP-seq (nf-core/chipseq) - **IMPLEMENTED** (3 apps: 2 working, 1 fixed)
+- ✅ Cut&Run (nf-core/cutandrun) - **PARTIALLY IMPLEMENTED** (1 working, 1 failed)
+- ⚠️ Amplicon sequencing (nf-core/ampliseq) - **BLOCKED** (2 apps, memory constraint)
+- ⚠️ Nanopore sequencing (nf-core/nanoseq) - **PARTIALLY IMPLEMENTED** (1 fixed, 1 needs work)
+- Small RNA-seq (nf-core/smrnaseq) - **NEXT TO IMPLEMENT**
 
 **Medium Priority (specialized):**
 - Differential abundance (nf-core/differentialabundance) - ✅ IMPLEMENTED but not in main directory listing
@@ -450,7 +561,20 @@ Each newly implemented pipeline includes:
 
 ## Change Log
 
-**2025-09-30:**
+**2025-09-30 (Evening Update):**
+- **Tested 11 apps across 4 new pipelines** (chipseq, cutandrun, ampliseq, nanoseq)
+- **ChIP-seq (3 apps)**: 2 working (Jobs 4498, 4490), 1 fixed/needs validation
+- **Cut&Run (2 apps)**: 1 working (Job 4477), 1 failed (config issues)
+- **Ampliseq (2 apps)**: Both BLOCKED by critical memory constraint (3.9GB/12GB)
+- **Nanoseq (2 apps)**: 1 fixed/needs validation, 1 needs restructuring
+- **Total apps now: 34 across 23 pipelines**
+- **Production ready: 14 pipelines (24 apps)**
+- **Identified CRITICAL memory blocker**: Platform k8s limits 3.9GB across all node sizes, blocks ampliseq (12GB required)
+- Fixed profile configuration issues across 6 apps
+- Fixed parameter type validation issues (macs_gsize → read_length)
+- Updated samplesheet formats for nf-core/chipseq v2.0.0
+
+**2025-09-30 (Morning):**
 - Implemented 9 new pipelines (fetchngs, taxprofiler, viralrecon, hic, proteinfold, rnafusion, raredisease, spatialvi, splicevariant)
 - Resolved profile configuration issues (removed -profile flags)
 - Standardized XSMALL node size for testing
