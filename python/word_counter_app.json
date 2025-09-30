@@ -1,0 +1,45 @@
+{
+  "name": "word-counter",
+  "title": "Word Counter",
+  "description": "Count words, characters, lines, sentences, and paragraphs in text documents",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application analyzes text files and provides detailed statistics including word count, character count, line count, and more.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Count total and unique words</li><li class=\"list-item-node\">Count characters with and without spaces</li><li class=\"list-item-node\">Count lines (total and non-empty)</li><li class=\"list-item-node\">Count sentences and paragraphs</li><li class=\"list-item-node\">Calculate average word length</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input File</strong>: Upload your text file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a statistics report with the suffix '_stats.txt' containing comprehensive text analysis.</p>",
+  "command": "rm -rf prod_apps && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/word_counter.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input Text File",
+      "description": "Upload the text file you want to analyze",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where statistics will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
