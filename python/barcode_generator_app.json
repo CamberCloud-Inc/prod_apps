@@ -1,0 +1,45 @@
+{
+  "name": "barcode-generator",
+  "title": "Barcode Generator",
+  "description": "Create barcodes in various formats (Code128, EAN, UPC)",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application generates barcodes in various standard formats. Built using <a class=\"link\" href=\"https://github.com/WhyNotHugo/python-barcode\" target=\"_blank\">python-barcode</a>, it creates high-quality scannable barcodes suitable for retail, inventory management, and product labeling.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Multiple barcode formats: Code128 (default), Code39, EAN13, EAN8, UPC-A</li><li class=\"list-item-node\">High-quality PNG output</li><li class=\"list-item-node\">Automatic checksum calculation for EAN/UPC</li><li class=\"list-item-node\">Industry-standard barcode generation</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Data</strong>: Enter the data to encode (numbers for EAN/UPC, alphanumeric for Code formats)</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a barcode image named <code class=\"inline\" spellcheck=\"false\">barcode.png</code> in the specified output directory.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Product labeling and packaging</li><li class=\"list-item-node\">Inventory management</li><li class=\"list-item-node\">Asset tracking</li><li class=\"list-item-node\">Retail point-of-sale systems</li><li class=\"list-item-node\">Shipping and logistics</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/barcode_generator.py \"${data}\" -o \"${outputDir}\" -f code128",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Input",
+      "name": "data",
+      "label": "Barcode Data",
+      "description": "Enter the data to encode in the barcode (numbers for EAN/UPC, alphanumeric for Code formats)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the barcode will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "name": "qr-code-generator",
+  "title": "QR Code Generator",
+  "description": "Generate QR codes from text or URLs",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application generates QR codes from text or URLs. Built using the popular <a class=\"link\" href=\"https://github.com/lincolnloop/python-qrcode\" target=\"_blank\">qrcode</a> library, it creates high-quality scannable QR codes that can be used for sharing links, contact information, Wi-Fi credentials, and more.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Generate QR codes from any text or URL</li><li class=\"list-item-node\">High-quality PNG output</li><li class=\"list-item-node\">Configurable size (default: 10 box size)</li><li class=\"list-item-node\">Error correction for reliable scanning</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Text/URL</strong>: Enter the text or URL to encode</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a QR code image named <code class=\"inline\" spellcheck=\"false\">qr_code.png</code> in the specified output directory.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Sharing website URLs</li><li class=\"list-item-node\">Creating contact information cards</li><li class=\"list-item-node\">Generating Wi-Fi access codes</li><li class=\"list-item-node\">Event tickets and registration</li><li class=\"list-item-node\">Product information and tracking</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/qr_code_generator.py \"${text}\" -o \"${outputDir}\" -s 10",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Input",
+      "name": "text",
+      "label": "Text or URL",
+      "description": "Enter the text or URL you want to encode in the QR code",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the QR code will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
