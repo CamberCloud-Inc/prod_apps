@@ -1,0 +1,77 @@
+{
+  "name": "video-to-audio-extractor",
+  "title": "Video to Audio Extractor",
+  "description": "Extract audio track from video files in various formats",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application extracts the audio track from video files and saves it in various audio formats. Built using <a class=\"link\" href=\"https://zulko.github.io/moviepy/\" target=\"_blank\">MoviePy</a>, it supports multiple audio formats including MP3, WAV, AAC, and FLAC with customizable bitrate settings.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Extract audio from any video file with audio track</li><li class=\"list-item-node\">Support for MP3, WAV, AAC, and FLAC formats</li><li class=\"list-item-node\">Customizable bitrate for lossy formats</li><li class=\"list-item-node\">Preserves original audio quality</li><li class=\"list-item-node\">Automatic audio track detection</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input Video</strong>: Upload your video file from stash</li><li class=\"list-item-node\"><strong>Output Format</strong>: Select audio format (MP3, WAV, AAC, FLAC)</li><li class=\"list-item-node\"><strong>Bitrate</strong>: Audio bitrate for lossy formats (default: 192k)</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates an audio file with the same base name as the video but with the selected audio format extension (e.g., video.mp3).</p><h3 class=\"heading-node\">Format Details</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>MP3</strong>: Compressed, widely compatible, good for general use</li><li class=\"list-item-node\"><strong>WAV</strong>: Uncompressed, lossless, large file size</li><li class=\"list-item-node\"><strong>AAC</strong>: Compressed, better quality than MP3 at same bitrate</li><li class=\"list-item-node\"><strong>FLAC</strong>: Compressed but lossless, smaller than WAV</li></ul><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Extracting music or dialogue from videos</li><li class=\"list-item-node\">Creating audio podcasts from video recordings</li><li class=\"list-item-node\">Archiving audio content separately</li><li class=\"list-item-node\">Audio analysis and processing</li></ul>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/video_to_audio_extractor.py \"${videoFile}\" -o \"${outputDir}\" -f \"${format}\" -b \"${bitrate}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Small CPU",
+          "value": "xsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "videoFile",
+      "label": "Input Video",
+      "description": "Upload the video file to extract audio from",
+      "defaultValue": ""
+    },
+    {
+      "type": "Select",
+      "name": "format",
+      "label": "Output Audio Format",
+      "description": "Select the output audio format",
+      "options": [
+        {
+          "label": "MP3 (compressed, widely compatible)",
+          "value": "mp3"
+        },
+        {
+          "label": "WAV (uncompressed, lossless)",
+          "value": "wav"
+        },
+        {
+          "label": "AAC (compressed, high quality)",
+          "value": "aac"
+        },
+        {
+          "label": "FLAC (compressed, lossless)",
+          "value": "flac"
+        }
+      ],
+      "defaultValue": "mp3"
+    },
+    {
+      "type": "Input",
+      "name": "bitrate",
+      "label": "Bitrate (for lossy formats)",
+      "description": "Audio bitrate (e.g., 128k, 192k, 256k, 320k) - ignored for WAV/FLAC",
+      "defaultValue": "192k"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the audio file will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

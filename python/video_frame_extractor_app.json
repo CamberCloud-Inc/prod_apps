@@ -1,0 +1,76 @@
+{
+  "name": "video-frame-extractor",
+  "title": "Video Frame Extractor",
+  "description": "Extract frames from videos at specified intervals or timestamps",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application extracts individual frames from video files at specified intervals or specific timestamps. Built using <a class=\"link\" href=\"https://opencv.org/\" target=\"_blank\">OpenCV</a>, it provides high-quality frame extraction for video analysis, thumbnail creation, or creating image sequences.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Extract frames at regular time intervals</li><li class=\"list-item-node\">Extract frames at specific timestamps</li><li class=\"list-item-node\">High-quality JPEG output with 95% quality</li><li class=\"list-item-node\">Automatic video property detection (fps, duration, resolution)</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input Video</strong>: Upload your video file from stash</li><li class=\"list-item-node\"><strong>Extraction Mode</strong>: Choose between interval-based or timestamp-based extraction</li><li class=\"list-item-node\"><strong>Interval</strong>: Time in seconds between frames (for interval mode)</li><li class=\"list-item-node\"><strong>Timestamps</strong>: Comma-separated timestamps in seconds (for timestamp mode)</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates JPEG image files for each extracted frame, named with the timestamp (e.g., video_frame_1.50s.jpg).</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Creating image sequences from videos</li><li class=\"list-item-node\">Extracting specific moments for analysis</li><li class=\"list-item-node\">Video quality assessment</li><li class=\"list-item-node\">Creating storyboards or contact sheets</li></ul>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/video_frame_extractor.py \"${videoFile}\" -o \"${outputDir}\" -i \"${interval}\" ${timestamps:+-t \"${timestamps}\"}",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Small CPU",
+          "value": "xsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "videoFile",
+      "label": "Input Video",
+      "description": "Upload the video file to extract frames from",
+      "defaultValue": ""
+    },
+    {
+      "type": "Select",
+      "name": "extractionMode",
+      "label": "Extraction Mode",
+      "description": "Choose between interval-based or timestamp-based extraction",
+      "options": [
+        {
+          "label": "Interval (every N seconds)",
+          "value": "interval"
+        },
+        {
+          "label": "Specific Timestamps",
+          "value": "timestamps"
+        }
+      ],
+      "defaultValue": "interval"
+    },
+    {
+      "type": "Input",
+      "name": "interval",
+      "label": "Interval (seconds)",
+      "description": "Extract a frame every N seconds (used in interval mode)",
+      "defaultValue": "1.0"
+    },
+    {
+      "type": "Input",
+      "name": "timestamps",
+      "label": "Timestamps (seconds)",
+      "description": "Comma-separated timestamps to extract (e.g., 0,5.5,10.25,15) - used in timestamp mode",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where extracted frames will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

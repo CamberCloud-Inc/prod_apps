@@ -1,0 +1,59 @@
+{
+  "name": "video-thumbnail-generator",
+  "title": "Video Thumbnail Generator",
+  "description": "Generate thumbnail images from video at specified timestamps",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application generates thumbnail images from video files at specified timestamps. Built using <a class=\"link\" href=\"https://opencv.org/\" target=\"_blank\">OpenCV</a>, it creates resized preview images that maintain the original aspect ratio, perfect for video previews and galleries.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Extract thumbnails at specific timestamps</li><li class=\"list-item-node\">Customizable thumbnail width (height auto-calculated)</li><li class=\"list-item-node\">Maintains original video aspect ratio</li><li class=\"list-item-node\">High-quality JPEG output with adjustable quality</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input Video</strong>: Upload your video file from stash</li><li class=\"list-item-node\"><strong>Timestamps</strong>: Comma-separated timestamps in seconds for thumbnails (default: 0 for first frame)</li><li class=\"list-item-node\"><strong>Thumbnail Width</strong>: Width in pixels (default: 320px, height calculated automatically)</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates JPEG thumbnail images for each timestamp, named with the timestamp (e.g., video_thumbnail_5.00s.jpg).</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Creating video preview images</li><li class=\"list-item-node\">Generating thumbnails for video galleries</li><li class=\"list-item-node\">Creating chapter markers for videos</li><li class=\"list-item-node\">Video content preview generation</li></ul>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/video_thumbnail_generator.py \"${videoFile}\" -o \"${outputDir}\" -t \"${timestamps}\" -w ${width}",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Small CPU",
+          "value": "xsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "videoFile",
+      "label": "Input Video",
+      "description": "Upload the video file to generate thumbnails from",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "timestamps",
+      "label": "Timestamps (seconds)",
+      "description": "Comma-separated timestamps to generate thumbnails (e.g., 0,10,20,30)",
+      "defaultValue": "0"
+    },
+    {
+      "type": "Input",
+      "name": "width",
+      "label": "Thumbnail Width (pixels)",
+      "description": "Width of thumbnail in pixels (height will be calculated automatically)",
+      "defaultValue": "320"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where thumbnails will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

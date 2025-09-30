@@ -1,0 +1,73 @@
+{
+  "name": "video-to-gif",
+  "title": "Video to GIF Converter",
+  "description": "Convert video clips to animated GIF files",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application converts video clips to animated GIF files. Built using <a class=\"link\" href=\"https://zulko.github.io/moviepy/\" target=\"_blank\">MoviePy</a>, it allows you to specify the time range, resolution, and frame rate for optimal GIF creation.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Convert entire videos or specific time ranges to GIF</li><li class=\"list-item-node\">Customizable output resolution and frame rate</li><li class=\"list-item-node\">Maintains original video aspect ratio</li><li class=\"list-item-node\">Automatic optimization for file size</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input Video</strong>: Upload your video file from stash</li><li class=\"list-item-node\"><strong>Start Time</strong>: Start time in seconds (default: 0)</li><li class=\"list-item-node\"><strong>Duration</strong>: Duration of the clip in seconds (default: 5)</li><li class=\"list-item-node\"><strong>GIF Width</strong>: Width in pixels (default: 480px, height calculated automatically)</li><li class=\"list-item-node\"><strong>Frame Rate</strong>: Frames per second in GIF (default: 10)</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates an animated GIF file named with the time range (e.g., video_0.00s-5.00s.gif).</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Creating animated previews for social media</li><li class=\"list-item-node\">Converting video highlights to shareable GIFs</li><li class=\"list-item-node\">Creating looping animations from video clips</li><li class=\"list-item-node\">Generating GIF memes or reactions</li></ul>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/video_to_gif.py \"${videoFile}\" -o \"${outputDir}\" -s ${startTime} -d ${duration} -w ${width} -f ${fps}",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Small CPU",
+          "value": "xsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "videoFile",
+      "label": "Input Video",
+      "description": "Upload the video file to convert to GIF",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "startTime",
+      "label": "Start Time (seconds)",
+      "description": "Start time of the clip in seconds",
+      "defaultValue": "0"
+    },
+    {
+      "type": "Input",
+      "name": "duration",
+      "label": "Duration (seconds)",
+      "description": "Duration of the clip in seconds",
+      "defaultValue": "5"
+    },
+    {
+      "type": "Input",
+      "name": "width",
+      "label": "GIF Width (pixels)",
+      "description": "Width of GIF in pixels (height will be calculated automatically)",
+      "defaultValue": "480"
+    },
+    {
+      "type": "Input",
+      "name": "fps",
+      "label": "Frame Rate (fps)",
+      "description": "Frames per second in the output GIF",
+      "defaultValue": "10"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the GIF will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
