@@ -1,0 +1,89 @@
+{
+  "name": "hic-standard-insitu",
+  "title": "Chromatin 3D Organization Analysis: Standard Hi-C",
+  "description": "Reveal how DNA is organized in 3D space within the nucleus by analyzing Hi-C sequencing data. Identifies topologically associating domains (TADs), chromatin compartments, and long-range gene regulatory interactions - essential for understanding gene regulation, development, and disease mechanisms.",
+  "content": "<h1>Chromatin 3D Organization Analysis with Hi-C</h1><h2>What This Analysis Does</h2><p>Hi-C reveals the three-dimensional architecture of chromosomes inside the cell nucleus. While DNA sequence is linear, chromosomes fold into complex 3D structures that bring distant genes and regulatory elements into contact. This analysis identifies which genomic regions physically interact, revealing the organizational principles that control gene expression, DNA replication, and repair.</p><p>The analysis detects <strong>TADs</strong> (Topologically Associating Domains) - megabase-scale structural units where DNA interacts more frequently within the domain than outside. It also identifies <strong>A/B compartments</strong> - chromosome-scale organization separating active (A) and inactive (B) chromatin regions.</p><h2>When To Use This</h2><ul><li><strong>Gene Regulation Studies:</strong> Understand which enhancers contact which promoters across large genomic distances</li><li><strong>Development & Differentiation:</strong> Map how chromatin reorganization controls cell fate decisions</li><li><strong>Disease Research:</strong> Discover how structural variants disrupt 3D genome organization in cancer or genetic diseases</li><li><strong>Comparative Genomics:</strong> Compare chromatin architecture between species, cell types, or conditions</li><li><strong>Functional Genomics:</strong> Interpret non-coding variants by identifying the genes they may regulate through 3D contacts</li></ul><h2>What You Need</h2><h3>1. Hi-C Sequencing Data (FASTQ Files)</h3><p>You need paired-end sequencing files from a Hi-C experiment:</p><ul><li><strong>Protocol:</strong> Standard in situ Hi-C with restriction enzyme digestion</li><li><strong>File format:</strong> Paired FASTQ files (typically *_R1.fastq.gz and *_R2.fastq.gz)</li><li><strong>Read length:</strong> 50-150bp paired-end reads</li><li><strong>Sequencing depth:</strong> 100-500 million read pairs for standard resolution (mammalian genome)</li><li><strong>Read 1 & Read 2:</strong> Both reads contain genomic DNA from interacting loci</li></ul><h3>2. Sample Information Sheet (CSV File)</h3><p>Create a CSV file listing your samples with this exact format:</p><pre>sample,fastq_1,fastq_2\ncontrol_brain,control_brain_R1.fastq.gz,control_brain_R2.fastq.gz\ntreated_brain,treated_brain_R1.fastq.gz,treated_brain_R2.fastq.gz\ncontrol_liver,control_liver_R1.fastq.gz,control_liver_R2.fastq.gz\ntreated_liver,treated_liver_R1.fastq.gz,treated_liver_R2.fastq.gz</pre><p><strong>Column Details:</strong></p><ul><li><strong>sample:</strong> Unique name for this Hi-C sample (cell type, condition, replicate)</li><li><strong>fastq_1:</strong> Path to Read 1 file (forward reads)</li><li><strong>fastq_2:</strong> Path to Read 2 file (reverse reads)</li></ul><p><strong>Multiple Lanes:</strong> If your sample was sequenced across multiple lanes, list each lane as a separate row with the same sample name - the pipeline will merge them automatically.</p><h3>3. Restriction Enzyme</h3><p>Specify the restriction enzyme used in your Hi-C protocol:</p><ul><li><strong>MboI (^GATC):</strong> Most common, 4-cutter providing good resolution (recommended for standard Hi-C)</li><li><strong>DpnII (^GATC):</strong> Same recognition site as MboI, functionally equivalent</li><li><strong>HindIII (A^AGCTT):</strong> 6-cutter, provides lower resolution but good for large genomes</li><li><strong>NcoI (C^CATGG):</strong> Alternative 6-cutter enzyme</li></ul><p>Check your Hi-C library preparation protocol or lab notes to confirm which enzyme was used.</p><h3>4. Reference Genome</h3><p>Choose the genome matching your organism:</p><ul><li><strong>Human samples:</strong> GRCh38 (use this for current human studies)</li><li><strong>Mouse samples:</strong> GRCm39 (latest) or GRCm38 (mm10) for compatibility</li><li><strong>Other organisms:</strong> Specify your reference genome</li></ul><h2>What You'll Get</h2><h3>Contact Maps</h3><ul><li><strong>Normalized contact matrices:</strong> Genome-wide maps showing interaction frequencies between all genomic regions</li><li><strong>Multiple resolutions:</strong> From 5kb to 1Mb resolution for different scales of analysis</li><li><strong>Standard formats:</strong> .hic (Juicebox), .cool/.mcool (cooler), and HiC-Pro formats</li><li><strong>Visualization-ready:</strong> Compatible with Juicebox, HiGlass, and other Hi-C browsers</li></ul><h3>Structural Features</h3><ul><li><strong>TAD boundaries:</strong> Coordinates of Topologically Associating Domain borders</li><li><strong>A/B compartments:</strong> Genome-wide assignment of active (A) and inactive (B) compartments</li><li><strong>Interaction statistics:</strong> Cis/trans ratios, distance-dependent contact probabilities</li></ul><h3>Quality Control Reports</h3><ul><li><strong>Valid pairs percentage:</strong> Proportion of usable Hi-C contacts (should be >40%)</li><li><strong>Mapping statistics:</strong> Uniquely mapped, multi-mapped, and unmapped reads</li><li><strong>Duplicate rates:</strong> PCR duplication levels</li><li><strong>Distance distribution:</strong> Distribution of contact distances</li><li><strong>Cis/trans ratio:</strong> Ratio of intra- vs inter-chromosomal contacts (>70% expected)</li><li><strong>MultiQC report:</strong> Comprehensive HTML report with all QC metrics</li></ul><h2>Expected Analysis Time</h2><ul><li><strong>Small dataset (50-100M read pairs):</strong> 4-8 hours</li><li><strong>Standard dataset (200-300M read pairs):</strong> 10-16 hours</li><li><strong>Large dataset (500M-1B read pairs):</strong> 24-48 hours</li></ul><p>Time varies based on genome size, sequencing depth, and selected resolution.</p><h2>Scientific Background</h2><p>This pipeline uses the HiC-Pro workflow for processing raw Hi-C data, including alignment, filtering of valid interaction pairs, and generation of contact matrices. ICE (Iterative Correction and Eigenvector decomposition) normalization removes systematic biases. Compartment calling uses cooltools to perform principal component analysis on the correlation matrix, while TAD calling identifies domain boundaries based on the directionality index or insulation score.</p><p><a href='https://nf-co.re/hic' target='_blank'>Advanced users: See full pipeline documentation</a></p>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/hic/master/docs/images/nf-core-hic_logo.png",
+  "command": "nextflow run nf-core/hic --input ${input} --outdir ${outdir} --genome ${genome} --digestion ${enzyme} -r 2.1.0",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "options": [
+        {
+          "label": "XSmall - Test datasets only",
+          "value": "xsmall",
+          "mapValue": {"nodeSize": "XSMALL", "numNodes": 1, "withGpu": false}
+        },
+        {
+          "label": "Small - Limited data (<100M reads)",
+          "value": "small",
+          "mapValue": {"nodeSize": "SMALL", "numNodes": 1, "withGpu": false}
+        },
+        {
+          "label": "Medium - Standard experiments (100-300M reads)",
+          "value": "medium",
+          "mapValue": {"nodeSize": "MEDIUM", "numNodes": 1, "withGpu": false}
+        },
+        {
+          "label": "Large - Deep sequencing (300M-1B reads)",
+          "value": "large",
+          "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}
+        }
+      ],
+      "defaultValue": "xsmall"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Information Sheet",
+      "name": "input",
+      "description": "CSV file listing Hi-C samples. Required columns: sample, fastq_1, fastq_2. Multiple lanes for the same sample can be listed separately and will be merged automatically.",
+      "required": true
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Where to save contact maps, TAD calls, compartments, and quality reports",
+      "defaultValue": "stash://david40962/hic-results",
+      "required": true
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome matching your organism (use GRCh38 for human, GRCm39 for mouse)",
+      "defaultValue": "GRCh38",
+      "options": [
+        {"label": "Human GRCh38/hg38 (latest, recommended)", "value": "GRCh38"},
+        {"label": "Human GRCh37/hg19 (legacy)", "value": "GRCh37"},
+        {"label": "Mouse GRCm39/mm39 (latest)", "value": "GRCm39"},
+        {"label": "Mouse GRCm38/mm10", "value": "GRCm38"}
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Restriction Enzyme",
+      "name": "enzyme",
+      "description": "The restriction enzyme used in your Hi-C library preparation. Check your protocol notes. MboI/DpnII are most common for standard in situ Hi-C.",
+      "defaultValue": "mboi",
+      "options": [
+        {"label": "MboI (^GATC) - Most common, standard Hi-C", "value": "mboi"},
+        {"label": "DpnII (^GATC) - Equivalent to MboI", "value": "dpnii"},
+        {"label": "HindIII (A^AGCTT) - 6-cutter enzyme", "value": "hindiii"},
+        {"label": "NcoI (C^CATGG) - Alternative 6-cutter", "value": "ncoi"}
+      ]
+    }
+  ],
+  "tags": [
+    {"name": "genomics", "type": "subfield"},
+    {"name": "chromatin-structure", "type": "task"},
+    {"name": "3D-genome", "type": "task"},
+    {"name": "biology", "type": "field"}
+  ]
+}

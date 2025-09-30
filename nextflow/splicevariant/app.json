@@ -1,0 +1,85 @@
+{
+  "name": "rnasplice-disease-control",
+  "title": "Alternative Splicing Analysis: Disease vs. Control",
+  "description": "Identify genes with altered splicing patterns between disease and healthy samples. Detects differential exon usage, transcript usage, and alternative splicing events to reveal disease mechanisms and potential therapeutic targets beyond simple gene expression changes.",
+  "content": "<h1>Alternative Splicing Analysis: Disease vs. Control Comparison</h1><h2>What This Analysis Does</h2><p>This analysis identifies changes in how genes are spliced between disease and healthy samples. Alternative splicing allows one gene to produce multiple protein variants by including or excluding different exons. Many diseases show splicing dysregulation even when overall gene expression appears normal, making this analysis essential for understanding disease mechanisms and finding therapeutic targets.</p><p>The pipeline performs comprehensive splicing analysis including differential exon usage (DEXSeq), differential transcript usage (DRIMSeq), and alternative splicing event detection (rMATS, SUPPA2) to provide multiple perspectives on splicing changes.</p><h2>When To Use This</h2><ul><li><strong>Cancer Research:</strong> Identify tumor-specific splicing alterations that drive oncogenesis or therapeutic resistance</li><li><strong>Neurological Disorders:</strong> Discover splicing changes in brain diseases like Alzheimer's, Parkinson's, or ALS</li><li><strong>Rare Diseases:</strong> Find disease-causing splicing defects not detected by variant calling alone</li><li><strong>Immunological Studies:</strong> Analyze splicing changes in immune disorders or inflammation</li><li><strong>Metabolic Diseases:</strong> Understand splicing dysregulation in diabetes, obesity, or metabolic syndromes</li><li><strong>Drug Target Discovery:</strong> Identify splice variants amenable to therapeutic intervention</li></ul><h2>What You Need</h2><h3>1. RNA Sequencing Data (FASTQ Files)</h3><p>You need paired-end RNA sequencing files from both disease and control samples:</p><ul><li><strong>Sample source:</strong> Disease tissue/cells and matched healthy controls from the same tissue type</li><li><strong>File format:</strong> Paired FASTQ files (typically *_R1.fastq.gz and *_R2.fastq.gz)</li><li><strong>Read length:</strong> Minimum 50bp, 100-150bp optimal for splice junction detection</li><li><strong>Sequencing depth:</strong> At least 30-50 million paired reads per sample (higher depth improves detection of rare splicing events)</li><li><strong>Biological replicates:</strong> Minimum 3 replicates per condition (more replicates increase statistical power)</li><li><strong>Library type:</strong> Strand-specific libraries recommended for better isoform resolution</li></ul><h3>2. Sample Information Sheet (CSV File)</h3><p>Create a CSV file listing all samples with this exact format:</p><pre>sample,fastq_1,fastq_2,strandedness,condition\ncontrol_rep1,control1_R1.fastq.gz,control1_R2.fastq.gz,reverse,control\ncontrol_rep2,control2_R1.fastq.gz,control2_R2.fastq.gz,reverse,control\ncontrol_rep3,control3_R1.fastq.gz,control3_R2.fastq.gz,reverse,control\ndisease_rep1,disease1_R1.fastq.gz,disease1_R2.fastq.gz,reverse,disease\ndisease_rep2,disease2_R1.fastq.gz,disease2_R2.fastq.gz,reverse,disease\ndisease_rep3,disease3_R1.fastq.gz,disease3_R2.fastq.gz,reverse,disease</pre><p><strong>Column Details:</strong></p><ul><li><strong>sample:</strong> Unique sample identifier (avoid spaces, use underscores). This should clearly indicate replicate and condition.</li><li><strong>fastq_1:</strong> Full path to Read 1 file (forward reads). Can be stash:// path or relative path if files are in working directory.</li><li><strong>fastq_2:</strong> Full path to Read 2 file (reverse reads). Must be paired with fastq_1.</li><li><strong>strandedness:</strong> Library strand-specificity. Use <code>reverse</code> for most Illumina TruSeq/stranded protocols, <code>forward</code> for some older kits, or <code>unstranded</code> for non-directional libraries. Check your library prep kit documentation.</li><li><strong>condition:</strong> Experimental condition name (e.g., 'control', 'disease', 'treated', 'wild_type'). All replicates of the same condition must use identical spelling.</li></ul><p><strong>Important Notes:</strong></p><ul><li>Sample names must be unique across the entire experiment</li><li>Condition names are case-sensitive - use consistent naming</li><li>You can have more than 2 conditions, but contrasts must be defined pairwise</li><li>All FASTQ files should be gzip compressed (.gz)</li></ul><h3>3. Contrast Sheet (CSV File)</h3><p>Define which conditions to compare with this format:</p><pre>contrast,treatment,control\ndisease_vs_control,disease,control</pre><p><strong>Column Details:</strong></p><ul><li><strong>contrast:</strong> Unique name for this comparison (used in output file names). Use descriptive names like 'tumor_vs_normal' or 'treated_vs_untreated'.</li><li><strong>treatment:</strong> The experimental/disease condition (numerator in fold-change calculations).</li><li><strong>control:</strong> The baseline/control condition (denominator in fold-change calculations).</li></ul><p><strong>Multiple Comparisons:</strong> You can define multiple contrasts:</p><pre>contrast,treatment,control\nmild_vs_control,mild_disease,control\nsevere_vs_control,severe_disease,control\nsevere_vs_mild,severe_disease,mild_disease</pre><h3>4. Reference Genome</h3><p>Choose the reference genome matching your organism:</p><ul><li><strong>Human samples:</strong> GRCh38 (recommended for all new analyses)</li><li><strong>Mouse samples:</strong> GRCm39 (latest) or GRCm38 (legacy compatibility)</li><li><strong>Other organisms:</strong> Must have comprehensive gene annotations including isoform information</li></ul><h2>What You'll Get</h2><h3>Differential Exon Usage Analysis (DEXSeq)</h3><ul><li><strong>Exon-level changes:</strong> Which specific exons show different inclusion rates between conditions</li><li><strong>Gene-level summaries:</strong> Overall splicing changes per gene</li><li><strong>Statistical significance:</strong> Adjusted p-values and fold-changes for each exon</li><li><strong>Visualization:</strong> Plots showing exon usage patterns across samples</li></ul><h3>Differential Transcript Usage Analysis (DRIMSeq + DEXSeq)</h3><ul><li><strong>Isoform switches:</strong> Genes where the relative abundance of transcripts changes</li><li><strong>Transcript proportions:</strong> Percentage of each isoform in each condition</li><li><strong>Statistical testing:</strong> Robust testing accounting for isoform uncertainty</li></ul><h3>Alternative Splicing Event Detection (rMATS)</h3><ul><li><strong>Exon skipping (SE):</strong> Exons included in one condition but excluded in another</li><li><strong>Alternative 5' splice site (A5SS):</strong> Different splice donor sites used</li><li><strong>Alternative 3' splice site (A3SS):</strong> Different splice acceptor sites used</li><li><strong>Intron retention (RI):</strong> Introns retained in transcripts</li><li><strong>Mutually exclusive exons (MXE):</strong> Alternative exon selection</li><li><strong>Event-level statistics:</strong> Inclusion levels (PSI values) and significance for each event</li></ul><h3>Comprehensive Splicing Analysis (SUPPA2)</h3><ul><li><strong>Local splicing events:</strong> Event-based differential analysis</li><li><strong>Isoform-level changes:</strong> Full transcript usage analysis</li><li><strong>PSI values:</strong> Percent spliced-in quantification for all events</li></ul><h3>Quality Control Reports</h3><ul><li><strong>MultiQC report:</strong> Comprehensive quality metrics across all samples</li><li><strong>Alignment statistics:</strong> Mapping rates, splice junction counts</li><li><strong>Gene expression estimates:</strong> Count matrices and TPM values from Salmon/STAR</li><li><strong>Sample correlation:</strong> Check replicate consistency</li></ul><h2>Expected Analysis Time</h2><ul><li><strong>Small experiment (6 samples, test data):</strong> 2-4 hours</li><li><strong>Standard experiment (12 samples, ~50M reads each):</strong> 6-10 hours</li><li><strong>Large experiment (24 samples, high depth):</strong> 12-20 hours</li></ul><p>Runtime depends on sequencing depth, number of samples, and reference genome size. Human samples take longer than mouse due to genome size.</p><h2>Scientific Background</h2><p>This pipeline uses industry-standard tools for alternative splicing analysis. It aligns reads with STAR (splice-aware aligner) and quantifies transcripts with Salmon, then applies multiple complementary methods: DEXSeq tests for differential exon usage using generalized linear models, DRIMSeq filters and tests differential transcript usage with Dirichlet-multinomial models, rMATS detects specific alternative splicing events using a Bayesian framework, and SUPPA2 performs fast event-based analysis. Using multiple methods provides robust detection and reduces false positives.</p><p><a href='https://nf-co.re/rnasplice' target='_blank'>Advanced users: See full pipeline documentation</a></p>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/rnasplice/master/docs/images/nf-core-rnasplice_logo_light.png",
+  "command": "nextflow run nf-core/rnasplice -profile test --outdir ${outdir} -r 1.0.4",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "options": [
+        {
+          "label": "XSmall - Test datasets",
+          "value": "xsmall",
+          "mapValue": {"nodeSize": "XSMALL", "numNodes": 1, "withGpu": false}
+        },
+        {
+          "label": "Small - Small experiments (<6 samples)",
+          "value": "small",
+          "mapValue": {"nodeSize": "SMALL", "numNodes": 1, "withGpu": false}
+        },
+        {
+          "label": "Medium - Standard experiments (6-12 samples)",
+          "value": "medium",
+          "mapValue": {"nodeSize": "MEDIUM", "numNodes": 1, "withGpu": false}
+        },
+        {
+          "label": "Large - Large experiments (12-24 samples)",
+          "value": "large",
+          "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}
+        }
+      ],
+      "defaultValue": "xsmall"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Information Sheet",
+      "name": "input",
+      "description": "CSV file listing all RNA-seq samples. Required columns: sample (unique name), fastq_1 (R1 file path), fastq_2 (R2 file path), strandedness (reverse/forward/unstranded), condition (e.g., disease/control). Leave empty to use built-in test data.",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "type": "Stash File",
+      "label": "Contrast Sheet",
+      "name": "contrasts",
+      "description": "CSV file defining comparisons. Required columns: contrast (comparison name), treatment (experimental condition), control (baseline condition). Leave empty to use built-in test data.",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "type": "Input",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Where to save splicing analysis results, including differential exon usage, transcript usage, alternative splicing events, and quality reports. Use relative path like './results'",
+      "defaultValue": "./results",
+      "required": true
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Genome matching your samples. Use GRCh38 for human (recommended), GRCh37 for legacy human data, GRCm39 for mouse (latest), or GRCm38 for older mouse studies.",
+      "defaultValue": "GRCh38",
+      "options": [
+        {"label": "Human GRCh38/hg38 (latest, recommended)", "value": "GRCh38"},
+        {"label": "Human GRCh37/hg19 (legacy)", "value": "GRCh37"},
+        {"label": "Mouse GRCm39/mm39 (latest)", "value": "GRCm39"},
+        {"label": "Mouse GRCm38/mm10 (legacy)", "value": "GRCm38"}
+      ]
+    }
+  ],
+  "tags": [
+    {"name": "rna-seq", "type": "task"},
+    {"name": "alternative-splicing", "type": "task"},
+    {"name": "genomics", "type": "subfield"},
+    {"name": "biology", "type": "field"}
+  ]
+}
