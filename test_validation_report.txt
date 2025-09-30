@@ -1,0 +1,8 @@
+XML Validation Report
+==================================================
+
+File: python/test_data/test.xml
+
+Results:
+✓ XML is well-formed
+Note: No schema provided, only well-formedness checked

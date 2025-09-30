@@ -1,0 +1,10 @@
+This is a test file for text processing applications.
+Line two of the sample text file.
+Here is the third line with some content.
+The fourth line contains more text.
+Fifth line is here as well.
+Sixth line continues the pattern.
+Line number seven appears here.
+Eighth line of our test document.
+Nine is the magic number on this line.
+And finally, line number ten concludes our test.

@@ -1,0 +1,587 @@
+{
+  "summary": {
+    "total": 96,
+    "passed": 30,
+    "failed": 12,
+    "skipped": 54,
+    "errors": 0
+  },
+  "results": [
+    {
+      "app": "audio_format_converter",
+      "status": "SKIPPED",
+      "reason": "No audio test file",
+      "output": ""
+    },
+    {
+      "app": "audio_merger",
+      "status": "SKIPPED",
+      "reason": "No audio test file",
+      "output": ""
+    },
+    {
+      "app": "audio_metadata_extractor",
+      "status": "SKIPPED",
+      "reason": "No audio test file",
+      "output": ""
+    },
+    {
+      "app": "audio_normalizer",
+      "status": "SKIPPED",
+      "reason": "No audio test file",
+      "output": ""
+    },
+    {
+      "app": "audio_to_text_transcription",
+      "status": "SKIPPED",
+      "reason": "No audio test file",
+      "output": ""
+    },
+    {
+      "app": "audio_trimmer",
+      "status": "SKIPPED",
+      "reason": "No audio test file",
+      "output": ""
+    },
+    {
+      "app": "barcode_generator",
+      "status": "FAILED",
+      "output": "",
+      "error": "\"pip\", \"install\", \"python-barcode[images]\"])\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/subprocess.py\", line 419, in check_call\n    raise CalledProcessError(retcode, cmd)\nsubprocess.CalledProcessError: Command '['/opt/homebrew/opt/python@3.13/bin/python3.13', '-m', 'pip', 'install', 'python-barcode[images]']' returned non-zero exit status 1.\n"
+    },
+    {
+      "app": "base64_decoder",
+      "status": "PASSED",
+      "output": "Current working directory: /Users/david/git/prod_apps\nReceived input_file argument: python/test_outputs/sample.txt.b64\nExpanded input_path: python/test_outputs/sample.txt.b64\nDecoding file: sample.txt.b64\nEncoded size: 1,160 bytes\nDecoded size: 868 bytes\nSize reduction: 25.2%\n\nDecoded file saved to: python/test_outputs/sample.txt\n\nBase64 decoding completed!\n",
+      "error": ""
+    },
+    {
+      "app": "base64_encoder",
+      "status": "PASSED",
+      "output": "Current working directory: /Users/david/git/prod_apps\nReceived input_file argument: python/test_data/sample.txt\nExpanded input_path: python/test_data/sample.txt\nEncoding file: sample.txt\nFile size: 868 bytes\n\nEncoded size: 1,160 bytes\nSize increase: 33.6%\n\nEncoded file saved to: python/test_outputs/sample.txt.b64\n\nBase64 encoding completed!\n",
+      "error": ""
+    },
+    {
+      "app": "batch_image_renamer",
+      "status": "SKIPPED",
+      "reason": "No image test files",
+      "output": ""
+    },
+    {
+      "app": "color_palette_extractor",
+      "status": "SKIPPED",
+      "reason": "No image test file",
+      "output": ""
+    },
+    {
+      "app": "csv_column_extractor",
+      "status": "PASSED",
+      "output": "/test_data/sample.csv\nExpanded input_path: python/test_data/sample.csv\nColumns to extract: ['0']\n\nReading CSV file: python/test_data/sample.csv\nCSV validation: PASSED\nFound 5 data rows\nFound 5 columns: Name, Age, City, Email, Salary\n\nExtracting 1 columns: Name\n\nWriting extracted columns to: python/test_outputs/sample_extracted.csv\nSuccessfully extracted 1 columns\nOutput contains 6 rows (including header)\nOutput saved to: python/test_outputs/sample_extracted.csv\n\nCSV column extraction completed!\n",
+      "error": ""
+    },
+    {
+      "app": "csv_to_excel",
+      "status": "FAILED",
+      "output": "",
+      "error": "able, \"-m\", \"pip\", \"install\", \"pandas\", \"openpyxl\"])\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/subprocess.py\", line 419, in check_call\n    raise CalledProcessError(retcode, cmd)\nsubprocess.CalledProcessError: Command '['/opt/homebrew/opt/python@3.13/bin/python3.13', '-m', 'pip', 'install', 'pandas', 'openpyxl']' returned non-zero exit status 1.\n"
+    },
+    {
+      "app": "csv_to_json",
+      "status": "PASSED",
+      "output": "Current working directory: /Users/david/git/prod_apps\nReceived input_file argument: python/test_data/sample.csv\nExpanded input_path: python/test_data/sample.csv\n\nReading CSV file: python/test_data/sample.csv\nCSV validation: PASSED\nFound 5 data rows\nFound 5 columns: Name, Age, City, Email, Salary\n\nConverting CSV to JSON...\nJSON file saved to: python/test_outputs/sample.json\nConverted 5 records to JSON array\n\nCSV to JSON conversion completed successfully!\n",
+      "error": ""
+    },
+    {
+      "app": "database_table_dumper",
+      "status": "SKIPPED",
+      "reason": "Requires database connection",
+      "output": ""
+    },
+    {
+      "app": "directory_tree_generator",
+      "status": "PASSED",
+      "output": "\n\u251c\u2500\u2500 sample.csv\n\u251c\u2500\u2500 sample.docx\n\u251c\u2500\u2500 sample.log\n\u251c\u2500\u2500 sample.md\n\u251c\u2500\u2500 sample.txt\n\u251c\u2500\u2500 sample.xlsx\n\u251c\u2500\u2500 sample_calendar.ics\n\u251c\u2500\u2500 sample_contacts.vcf\n\u251c\u2500\u2500 sample_email.eml\n\u251c\u2500\u2500 sample_text.txt\n\u251c\u2500\u2500 test.csv\n\u251c\u2500\u2500 test.json\n\u251c\u2500\u2500 test.rtf\n\u251c\u2500\u2500 test.tex\n\u251c\u2500\u2500 test.xml\n\u251c\u2500\u2500 test.yaml\n\u251c\u2500\u2500 test_urls.json\n\u2514\u2500\u2500 urls.txt\n============================================================\n\nTotal items: 23\n\nTree diagram saved to: python/test_outputs/test_data_tree.txt\nOutput file size: 537 bytes\n\nDirectory tree generation completed!\n",
+      "error": ""
+    },
+    {
+      "app": "duplicate_line_remover",
+      "status": "PASSED",
+      "output": "Current working directory: /Users/david/git/prod_apps\nReceived input_file argument: python/test_data/sample_text.txt\nExpanded input_path: python/test_data/sample_text.txt\nReading input file: python/test_data/sample_text.txt\nRead 10 lines from input file\nRemoving duplicates (case-sensitive)...\nRemoved 0 duplicate lines\nSuccessfully removed duplicates\nOutput saved to: python/test_outputs/sample_text_unique.txt\nOriginal lines: 10\nUnique lines: 10\nDuplicate removal completed!\n",
+      "error": ""
+    },
+    {
+      "app": "email_parser",
+      "status": "PASSED",
+      "output": " python/test_data/sample_email.eml\nExpanded input_path: python/test_data/sample_email.eml\n\nReading email file: python/test_data/sample_email.eml\nEmail parsing: PASSED\n\nExtracted Email Data:\n  Subject: Test Email Message\n  From: John Doe <john.doe@example.com>\n  To: Jane Smith <jane.smith@example.com>\n  Date: Wed, 15 Jan 2025 10:30:00 -0500\n  Total unique addresses found: 3\n  Attachments: 0\n\nJSON output saved to: python/test_outputs/sample_email_parsed.json\n\nEmail parsing completed successfully!\n",
+      "error": ""
+    },
+    {
+      "app": "epub_to_pdf",
+      "status": "SKIPPED",
+      "reason": "No EPUB test file",
+      "output": ""
+    },
+    {
+      "app": "excel_to_csv",
+      "status": "FAILED",
+      "output": "pandas not found. Installing...\n",
+      "error": "   subprocess.check_call([sys.executable, \"-m\", \"pip\", \"install\", \"pandas\"])\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/subprocess.py\", line 419, in check_call\n    raise CalledProcessError(retcode, cmd)\nsubprocess.CalledProcessError: Command '['/opt/homebrew/opt/python@3.13/bin/python3.13', '-m', 'pip', 'install', 'pandas']' returned non-zero exit status 1.\n"
+    },
+    {
+      "app": "favicon_generator",
+      "status": "SKIPPED",
+      "reason": "No image test file",
+      "output": ""
+    },
+    {
+      "app": "file_checksum_verifier",
+      "status": "PASSED",
+      "output": "t working directory: /Users/david/git/prod_apps\nReceived input_file argument: python/test_data/sample.txt\nExpanded input_path: python/test_data/sample.txt\n\nCalculating hashes for: sample.txt\nFile size: 868 bytes\nCalculating hashes...\n\nHash Results:\nMD5:    483405d3bb3d8f8bdc09f11cedd82147\nSHA1:   c6c9b9ee69684eb4b975115dba7b5561897e1722\nSHA256: 3e2e32e1fce666a6ff365c408021493f9655e07e05e3129a0ff8e9159ffed754\n\nResults saved to: python/test_outputs/sample.txt_hashes.txt\nHash generation completed!\n",
+      "error": ""
+    },
+    {
+      "app": "file_hash_generator",
+      "status": "PASSED",
+      "output": "t working directory: /Users/david/git/prod_apps\nReceived input_file argument: python/test_data/sample.txt\nExpanded input_path: python/test_data/sample.txt\n\nCalculating hashes for: sample.txt\nFile size: 868 bytes\nCalculating hashes...\n\nHash Results:\nMD5:    483405d3bb3d8f8bdc09f11cedd82147\nSHA1:   c6c9b9ee69684eb4b975115dba7b5561897e1722\nSHA256: 3e2e32e1fce666a6ff365c408021493f9655e07e05e3129a0ff8e9159ffed754\n\nResults saved to: python/test_outputs/sample.txt_hashes.txt\nHash generation completed!\n",
+      "error": ""
+    },
+    {
+      "app": "file_merger",
+      "status": "FAILED",
+      "output": "Current working directory: /Users/david/git/prod_apps\nChunk pattern: python/test_data/sample.txt.part*\nOutput file: python/test_outputs/merged_file.txt\n\nSearching for chunks in: python/test_data\nPattern: sample.txt.part*\nError: No chunk files found matching pattern: sample.txt.part*\n",
+      "error": ""
+    },
+    {
+      "app": "file_splitter",
+      "status": "PASSED",
+      "output": "Current working directory: /Users/david/git/prod_apps\nInput file: python/test_data/sample.txt\nChunk size: 100 MB\nOutput directory: python/test_outputs\n\nFile to split: sample.txt\nFile size: 868 bytes (0.00 MB)\nWill create 1 chunk(s)\n\nCreating chunk 1/1: sample.txt.part001\n  Chunk size: 868 bytes\n\nFile splitting complete!\nCreated 1 chunk(s) in: python/test_outputs\n\nTo merge the chunks back, use the file-merger app with the base filename: sample.txt\n\nFile splitting completed!\n",
+      "error": ""
+    },
+    {
+      "app": "file_type_detector",
+      "status": "PASSED",
+      "output": "==========================\nFILE TYPE DETECTION REPORT\n============================================================\nFile: sample.txt\nPath: python/test_data/sample.txt\nSize: 868 bytes\n\n============================================================\nMIME Type: text/plain\nDescription: Text file (UTF-8)\nEncoding: utf-8\n============================================================\n\nReport saved to: python/test_outputs/sample_file_type_report.txt\nReport file size: 408 bytes\n\nFile type detection completed!\n",
+      "error": ""
+    },
+    {
+      "app": "font_converter",
+      "status": "SKIPPED",
+      "reason": "No font test file",
+      "output": ""
+    },
+    {
+      "app": "heic_to_jpg",
+      "status": "SKIPPED",
+      "reason": "No HEIC test file",
+      "output": ""
+    },
+    {
+      "app": "html_to_pdf",
+      "status": "SKIPPED",
+      "reason": "Requires wkhtmltopdf",
+      "output": ""
+    },
+    {
+      "app": "ical_to_csv",
+      "status": "PASSED",
+      "output": "python/test_data/sample_calendar.ics\nExpanded input_path: python/test_data/sample_calendar.ics\n\nReading iCalendar file: python/test_data/sample_calendar.ics\niCalendar parsing: PASSED\nFound 3 calendar events\n\nConverting to CSV format...\nCSV file saved to: python/test_outputs/sample_calendar.csv\nConverted 3 events to CSV\nOutput file size: 933 bytes\n\nSample event:\n  Summary: Team Meeting\n  Start: 2025-01-20 14:00:00\n  Location: Conference Room A\n\niCalendar to CSV conversion completed successfully!\n",
+      "error": ""
+    },
+    {
+      "app": "image_background_remover",
+      "status": "SKIPPED",
+      "reason": "Requires rembg library",
+      "output": ""
+    },
+    {
+      "app": "image_blur_tool",
+      "status": "SKIPPED",
+      "reason": "No image test file",
+      "output": ""
+    },
+    {
+      "app": "image_border_adder",
+      "status": "SKIPPED",
+      "reason": "No image test file",
+      "output": ""
+    },
+    {
+      "app": "image_brightness_adjuster",
+      "status": "SKIPPED",
+      "reason": "No image test file",
+      "output": ""
+    },
+    {
+      "app": "image_collage_maker",
+      "status": "SKIPPED",
+      "reason": "No image test files",
+      "output": ""
+    },
+    {
+      "app": "image_color_inverter",
+      "status": "SKIPPED",
+      "reason": "No image test file",
+      "output": ""
+    },
+    {
+      "app": "image_compressor",
+      "status": "SKIPPED",
+      "reason": "No image test file",
+      "output": ""
+    },
+    {
+      "app": "image_cropper",
+      "status": "SKIPPED",
+      "reason": "No image test file",
+      "output": ""
+    },
+    {
+      "app": "image_filter_applicator",
+      "status": "SKIPPED",
+      "reason": "No image test file",
+      "output": ""
+    },
+    {
+      "app": "image_format_converter",
+      "status": "SKIPPED",
+      "reason": "No image test file",
+      "output": ""
+    },
+    {
+      "app": "image_grayscale",
+      "status": "SKIPPED",
+      "reason": "No image test file",
+      "output": ""
+    },
+    {
+      "app": "image_metadata_extractor",
+      "status": "SKIPPED",
+      "reason": "No image test file",
+      "output": ""
+    },
+    {
+      "app": "image_metadata_remover",
+      "status": "SKIPPED",
+      "reason": "No image test file",
+      "output": ""
+    },
+    {
+      "app": "image_resizer",
+      "status": "SKIPPED",
+      "reason": "No image test file",
+      "output": ""
+    },
+    {
+      "app": "image_rotator",
+      "status": "SKIPPED",
+      "reason": "No image test file",
+      "output": ""
+    },
+    {
+      "app": "image_sharpener",
+      "status": "SKIPPED",
+      "reason": "No image test file",
+      "output": ""
+    },
+    {
+      "app": "image_stacker",
+      "status": "SKIPPED",
+      "reason": "No image test files",
+      "output": ""
+    },
+    {
+      "app": "image_watermarker",
+      "status": "SKIPPED",
+      "reason": "No image test file",
+      "output": ""
+    },
+    {
+      "app": "json_formatter",
+      "status": "PASSED",
+      "output": "Current working directory: /Users/david/git/prod_apps\nReceived input_file argument: python/test_data/test.json\nExpanded input_path: python/test_data/test.json\n\nReading JSON file: python/test_data/test.json\nJSON validation: PASSED\n\nFormatting JSON with indentation...\nFormatted JSON saved to: python/test_outputs/test_formatted.json\n\nJSON formatting completed successfully!\n",
+      "error": ""
+    },
+    {
+      "app": "json_minifier",
+      "status": "PASSED",
+      "output": "Current working directory: /Users/david/git/prod_apps\nReceived input_file argument: python/test_data/test.json\nExpanded input_path: python/test_data/test.json\n\nReading JSON file: python/test_data/test.json\nJSON validation: PASSED\n\nMinifying JSON (removing whitespace)...\nMinified JSON saved to: python/test_outputs/test_minified.json\n\nOriginal size: 149 bytes\nMinified size: 149 bytes\nSize reduction: 0.0%\n\nJSON minification completed successfully!\n",
+      "error": ""
+    },
+    {
+      "app": "json_to_csv",
+      "status": "PASSED",
+      "output": "Current working directory: /Users/david/git/prod_apps\nReceived input_file argument: python/test_data/test.json\nExpanded input_path: python/test_data/test.json\n\nReading JSON file: python/test_data/test.json\nJSON validation: PASSED\n\nConverting JSON to CSV...\nConverted 1 record to CSV\nCSV file saved to: python/test_outputs/test.csv\nNumber of columns: 9\n\nJSON to CSV conversion completed successfully!\n",
+      "error": ""
+    },
+    {
+      "app": "latex_to_pdf",
+      "status": "SKIPPED",
+      "reason": "Requires pdflatex (not installed)",
+      "output": ""
+    },
+    {
+      "app": "line_number_adder",
+      "status": "PASSED",
+      "output": "Current working directory: /Users/david/git/prod_apps\nReceived input_file argument: python/test_data/sample.txt\nExpanded input_path: python/test_data/sample.txt\nReading input file: python/test_data/sample.txt\nFound 22 lines in input file\nAdding line numbers (starting from 1, width: 2)...\nSuccessfully added line numbers\nOutput saved to: python/test_outputs/sample_numbered.txt\nProcessed 22 lines\nLine numbering completed!\n",
+      "error": ""
+    },
+    {
+      "app": "line_sorter",
+      "status": "PASSED",
+      "output": "Current working directory: /Users/david/git/prod_apps\nReceived input_file argument: python/test_data/sample.txt\nExpanded input_path: python/test_data/sample.txt\nReading input file: python/test_data/sample.txt\nRead 22 lines from input file\nSorting lines (alphabetic, forward)...\nSuccessfully sorted lines\nOutput saved to: python/test_outputs/sample_sorted.txt\nOriginal lines: 22\nOutput lines: 22\nLine sorting completed!\n",
+      "error": ""
+    },
+    {
+      "app": "log_file_parser",
+      "status": "PASSED",
+      "output": " argument: python/test_data/sample.log\nExpanded input_path: python/test_data/sample.log\nReading log file: python/test_data/sample.log\nFound 24 lines in log file\n\nParsing log entries...\nMatched 24 lines after filtering\n\nWriting parsed log to: python/test_outputs/sample_parsed.log\nSuccessfully parsed log file\nOutput saved to: python/test_outputs/sample_parsed.log\n\nLog Statistics:\n  Total lines: 24\n  Matched lines: 24\n  ERROR: 0\n  WARNING: 0\n  INFO: 0\n  DEBUG: 0\n  OTHER: 24\n\nLog parsing completed!\n",
+      "error": ""
+    },
+    {
+      "app": "markdown_to_html",
+      "status": "FAILED",
+      "output": "",
+      "error": "process.check_call([sys.executable, \"-m\", \"pip\", \"install\", \"markdown\"])\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/subprocess.py\", line 419, in check_call\n    raise CalledProcessError(retcode, cmd)\nsubprocess.CalledProcessError: Command '['/opt/homebrew/opt/python@3.13/bin/python3.13', '-m', 'pip', 'install', 'markdown']' returned non-zero exit status 1.\n"
+    },
+    {
+      "app": "markdown_to_pdf",
+      "status": "FAILED",
+      "output": "",
+      "error": "\"pip\", \"install\", \"markdown\", \"weasyprint\"])\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/subprocess.py\", line 419, in check_call\n    raise CalledProcessError(retcode, cmd)\nsubprocess.CalledProcessError: Command '['/opt/homebrew/opt/python@3.13/bin/python3.13', '-m', 'pip', 'install', 'markdown', 'weasyprint']' returned non-zero exit status 1.\n"
+    },
+    {
+      "app": "office_to_markdown",
+      "status": "PASSED",
+      "output": "d input_path: python/test_data/sample.docx\n\nProcessing .DOCX file: python/test_data/sample.docx\nConverting Word document using pypandoc...\nError with pypandoc conversion: No pandoc was found: either install pandoc and add it\nto your PATH or or call pypandoc.download_pandoc(...) or\ninstall pypandoc wheels with included pandoc.\nFalling back to basic extraction...\nBasic extraction completed\n\nMarkdown file saved to: python/test_outputs/sample.md\nOffice to Markdown conversion completed successfully!\n",
+      "error": ""
+    },
+    {
+      "app": "pdf_analyzer",
+      "status": "SKIPPED",
+      "reason": "No PDF test file",
+      "output": ""
+    },
+    {
+      "app": "pdf_merger",
+      "status": "SKIPPED",
+      "reason": "No PDF test files",
+      "output": ""
+    },
+    {
+      "app": "pdf_page_extractor",
+      "status": "SKIPPED",
+      "reason": "No PDF test file",
+      "output": ""
+    },
+    {
+      "app": "pdf_splitter",
+      "status": "SKIPPED",
+      "reason": "No PDF test file",
+      "output": ""
+    },
+    {
+      "app": "pdf_text_extractor",
+      "status": "SKIPPED",
+      "reason": "No PDF test file",
+      "output": ""
+    },
+    {
+      "app": "pdf_to_epub",
+      "status": "SKIPPED",
+      "reason": "No PDF test file",
+      "output": ""
+    },
+    {
+      "app": "qr_code_generator",
+      "status": "FAILED",
+      "output": "",
+      "error": "heck_call([sys.executable, \"-m\", \"pip\", \"install\", \"qrcode[pil]\"])\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/subprocess.py\", line 419, in check_call\n    raise CalledProcessError(retcode, cmd)\nsubprocess.CalledProcessError: Command '['/opt/homebrew/opt/python@3.13/bin/python3.13', '-m', 'pip', 'install', 'qrcode[pil]']' returned non-zero exit status 1.\n"
+    },
+    {
+      "app": "rss_feed_generator",
+      "status": "PASSED",
+      "output": "ved input_file argument: python/test_data/feed_items.json\nExpanded input_path: python/test_data/feed_items.json\n\nReading JSON feed data: python/test_data/feed_items.json\nFound 3 feed items\n\nGenerating RSS feed...\nRSS 2.0 feed saved to: python/test_outputs/feed.rss\n  File size: 1924 bytes\nAtom feed saved to: python/test_outputs/feed.atom\n  File size: 1833 bytes\n\nFeed Information:\n  Title: Tech Blog\n  Link: https://techblog.example.com\n  Total items: 3\n\nRSS feed generation completed successfully!\n",
+      "error": ""
+    },
+    {
+      "app": "rtf_to_docx",
+      "status": "FAILED",
+      "output": "",
+      "error": "process.check_call([sys.executable, \"-m\", \"pip\", \"install\", \"pypandoc\"])\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/subprocess.py\", line 419, in check_call\n    raise CalledProcessError(retcode, cmd)\nsubprocess.CalledProcessError: Command '['/opt/homebrew/opt/python@3.13/bin/python3.13', '-m', 'pip', 'install', 'pypandoc']' returned non-zero exit status 1.\n"
+    },
+    {
+      "app": "silence_remover",
+      "status": "SKIPPED",
+      "reason": "No audio/video test file",
+      "output": ""
+    },
+    {
+      "app": "sitemap_generator",
+      "status": "PASSED",
+      "output": "st_data/urls.txt\nFound 8 valid URLs\n\nGenerating XML sitemap...\nSitemap saved to: python/test_outputs/sitemap.xml\nTotal URLs in sitemap: 8\nDefault priority: 0.5\nDefault change frequency: weekly\nOutput file size: 1377 bytes\n\nSitemap generation completed successfully!\n\nUsage tips:\n  - Upload the sitemap to your website's root directory\n  - Submit to search engines via Google Search Console, Bing Webmaster Tools, etc.\n  - Add sitemap location to robots.txt: Sitemap: https://yoursite.com/sitemap.xml\n",
+      "error": ""
+    },
+    {
+      "app": "sql_to_csv_exporter",
+      "status": "SKIPPED",
+      "reason": "Requires database connection",
+      "output": ""
+    },
+    {
+      "app": "svg_to_png",
+      "status": "SKIPPED",
+      "reason": "No SVG test file",
+      "output": ""
+    },
+    {
+      "app": "tar_gz_creator",
+      "status": "PASSED",
+      "output": "on\n  Adding: test_data/urls.txt\n  Adding: test_data/test.rtf\n  Adding: test_data/sample.docx\n  Adding: test_data/test.tex\n  Adding: test_data/sample_email.eml\n  Adding: test_data/sample.txt\n  Adding: test_data/merge_test/file2.txt\n  Adding: test_data/merge_test/file3.txt\n  Adding: test_data/merge_test/file1.txt\n\nTotal original size: 52,862 bytes\n\nCompression complete!\nFiles compressed: 22\nCompressed size: 46,321 bytes\nCompression ratio: 12.4%\nSpace saved: 6,541 bytes\n\ntar.gz creation completed!\n",
+      "error": ""
+    },
+    {
+      "app": "tar_gz_extractor",
+      "status": "SKIPPED",
+      "reason": "No tar.gz test file",
+      "output": ""
+    },
+    {
+      "app": "text_case_converter",
+      "status": "PASSED",
+      "output": "Current working directory: /Users/david/git/prod_apps\nReceived input_file argument: python/test_data/sample.txt\nExpanded input_path: python/test_data/sample.txt\nReading input file: python/test_data/sample.txt\nConverting text to upper case...\nSuccessfully converted text to upper case\nOutput saved to: python/test_outputs/sample_upper.txt\nOriginal length: 868 characters\nConverted length: 868 characters\nText case conversion completed!\n",
+      "error": ""
+    },
+    {
+      "app": "text_merger",
+      "status": "PASSED",
+      "output": "eceived input_pattern argument: python/test_data/*.txt\nExpanded input_pattern: python/test_data/*.txt\n\nFound 3 files to merge:\n  - sample.txt (868 bytes)\n  - sample_text.txt (381 bytes)\n  - urls.txt (260 bytes)\n\nMerging files into: python/test_outputs/merged_test.txt\nProcessing 1/3: sample.txt\nProcessing 2/3: sample_text.txt\nProcessing 3/3: urls.txt\n\nMerge completed successfully!\nMerged 3 files\nTotal lines: 38\nTotal size: 1509 bytes (1.47 KB)\nOutput saved to: python/test_outputs/merged_test.txt\n",
+      "error": ""
+    },
+    {
+      "app": "text_splitter",
+      "status": "PASSED",
+      "output": "Current working directory: /Users/david/git/prod_apps\nReceived input_file argument: python/test_data/sample.txt\nExpanded input_path: python/test_data/sample.txt\nSplit mode: by lines (1000 lines per file)\nReading input file: python/test_data/sample.txt\nFound 22 lines in input file\nWill create 1 files\nCreated: sample_part001.txt (22 lines)\n\nSuccessfully split file into 1 parts by lines\nAll split files saved to: python/test_outputs\nText splitting completed!\n",
+      "error": ""
+    },
+    {
+      "app": "text_to_pdf",
+      "status": "FAILED",
+      "output": "",
+      "error": "cess.check_call([sys.executable, \"-m\", \"pip\", \"install\", \"reportlab\"])\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/subprocess.py\", line 419, in check_call\n    raise CalledProcessError(retcode, cmd)\nsubprocess.CalledProcessError: Command '['/opt/homebrew/opt/python@3.13/bin/python3.13', '-m', 'pip', 'install', 'reportlab']' returned non-zero exit status 1.\n"
+    },
+    {
+      "app": "thumbnail_generator",
+      "status": "SKIPPED",
+      "reason": "No image test file",
+      "output": ""
+    },
+    {
+      "app": "url_shortener_data",
+      "status": "SKIPPED",
+      "reason": "Requires database connection",
+      "output": ""
+    },
+    {
+      "app": "vcard_to_csv",
+      "status": "PASSED",
+      "output": "ample_contacts.vcf\nExpanded input_path: python/test_data/sample_contacts.vcf\n\nReading vCard file: python/test_data/sample_contacts.vcf\nvCard parsing: PASSED\nFound 3 contacts\n\nConverting to CSV format...\nCSV file saved to: python/test_outputs/sample_contacts.csv\nConverted 3 contacts to CSV\nOutput file size: 1066 bytes\n\nSample contact:\n  Name: John Doe\n  Organization: Tech Corporation, Engineering\n  Email: john.doe@techcorp.com\n  Phone: +1-555-0101\n\nvCard to CSV conversion completed successfully!\n",
+      "error": ""
+    },
+    {
+      "app": "video_compressor",
+      "status": "SKIPPED",
+      "reason": "No video test file",
+      "output": ""
+    },
+    {
+      "app": "video_frame_extractor",
+      "status": "SKIPPED",
+      "reason": "No video test file",
+      "output": ""
+    },
+    {
+      "app": "video_metadata_extractor",
+      "status": "SKIPPED",
+      "reason": "No video test file",
+      "output": ""
+    },
+    {
+      "app": "video_resolution_changer",
+      "status": "SKIPPED",
+      "reason": "No video test file",
+      "output": ""
+    },
+    {
+      "app": "video_speed_changer",
+      "status": "SKIPPED",
+      "reason": "No video test file",
+      "output": ""
+    },
+    {
+      "app": "video_thumbnail_generator",
+      "status": "SKIPPED",
+      "reason": "No video test file",
+      "output": ""
+    },
+    {
+      "app": "video_to_audio_extractor",
+      "status": "SKIPPED",
+      "reason": "No video test file",
+      "output": ""
+    },
+    {
+      "app": "video_to_gif",
+      "status": "SKIPPED",
+      "reason": "No video test file",
+      "output": ""
+    },
+    {
+      "app": "whitespace_trimmer",
+      "status": "PASSED",
+      "output": "id/git/prod_apps\nReceived input_file argument: python/test_data/sample.txt\nExpanded input_path: python/test_data/sample.txt\nReading input file: python/test_data/sample.txt\nRead 22 lines from input file\nRemoving both leading and trailing whitespace...\nOriginal size: 868 characters\nProcessed size: 868 characters\nWhitespace removed: 0 characters\nSuccessfully trimmed whitespace\nOutput saved to: python/test_outputs/sample_trimmed.txt\nOriginal lines: 22\nOutput lines: 22\nWhitespace trimming completed!\n",
+      "error": ""
+    },
+    {
+      "app": "word_counter",
+      "status": "PASSED",
+      "output": "===============\nTEXT STATISTICS\n==================================================\nCharacters (total):        868\nCharacters (no spaces):    730\nWords:                     131\nUnique words:              103\nAverage word length:       5.42\nLines (total):             22\nLines (non-empty):         13\nSentences (approx):        9\nParagraphs:                10\n==================================================\n\nStatistics report saved to: python/test_outputs/sample_stats.txt\nWord counting completed!\n",
+      "error": ""
+    },
+    {
+      "app": "word_to_pdf",
+      "status": "FAILED",
+      "output": "",
+      "error": "process.check_call([sys.executable, \"-m\", \"pip\", \"install\", \"docx2pdf\"])\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/subprocess.py\", line 419, in check_call\n    raise CalledProcessError(retcode, cmd)\nsubprocess.CalledProcessError: Command '['/opt/homebrew/opt/python@3.13/bin/python3.13', '-m', 'pip', 'install', 'docx2pdf']' returned non-zero exit status 1.\n"
+    },
+    {
+      "app": "xml_to_json",
+      "status": "FAILED",
+      "output": "",
+      "error": "cess.check_call([sys.executable, \"-m\", \"pip\", \"install\", \"xmltodict\"])\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/subprocess.py\", line 419, in check_call\n    raise CalledProcessError(retcode, cmd)\nsubprocess.CalledProcessError: Command '['/opt/homebrew/opt/python@3.13/bin/python3.13', '-m', 'pip', 'install', 'xmltodict']' returned non-zero exit status 1.\n"
+    },
+    {
+      "app": "xml_validator",
+      "status": "PASSED",
+      "output": "Requirement already satisfied: lxml in /opt/homebrew/lib/python3.13/site-packages (6.0.2)\nCurrent working directory: /Users/david/git/prod_apps\nReceived xml_path argument: python/test_data/test.xml\nExpanded xml_path: python/test_data/test.xml\n\nReading XML file: python/test_data/test.xml\n\u2713 XML is well-formed\n\nNote: No schema provided, only well-formedness checked\n\nValidation report saved to: ./test_validation_report.txt\nXML validation completed successfully!\n",
+      "error": ""
+    },
+    {
+      "app": "yaml_to_json",
+      "status": "FAILED",
+      "output": "",
+      "error": "   subprocess.check_call([sys.executable, \"-m\", \"pip\", \"install\", \"pyyaml\"])\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/subprocess.py\", line 419, in check_call\n    raise CalledProcessError(retcode, cmd)\nsubprocess.CalledProcessError: Command '['/opt/homebrew/opt/python@3.13/bin/python3.13', '-m', 'pip', 'install', 'pyyaml']' returned non-zero exit status 1.\n"
+    },
+    {
+      "app": "zip_compressor",
+      "status": "PASSED",
+      "output": "on\n  Adding: test_data/urls.txt\n  Adding: test_data/test.rtf\n  Adding: test_data/sample.docx\n  Adding: test_data/test.tex\n  Adding: test_data/sample_email.eml\n  Adding: test_data/sample.txt\n  Adding: test_data/merge_test/file2.txt\n  Adding: test_data/merge_test/file3.txt\n  Adding: test_data/merge_test/file1.txt\n\nTotal original size: 52,862 bytes\n\nCompression complete!\nFiles compressed: 22\nCompressed size: 47,245 bytes\nCompression ratio: 10.6%\nSpace saved: 5,617 bytes\n\nZIP compression completed!\n",
+      "error": ""
+    },
+    {
+      "app": "zip_extractor",
+      "status": "SKIPPED",
+      "reason": "No zip test file",
+      "output": ""
+    }
+  ]
+}

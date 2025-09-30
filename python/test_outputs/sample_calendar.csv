@@ -1,0 +1,4 @@
+summary,description,location,status,start_date,start_time,start_datetime,end_date,end_time,end_datetime,organizer,attendees,categories,url,uid,created,last_modified
+Team Meeting,Weekly team sync meeting,Conference Room A,CONFIRMED,2025-01-20,14:00:00,2025-01-20 14:00:00,2025-01-20,15:00:00,2025-01-20 15:00:00,mailto:manager@example.com,mailto:john@example.com; mailto:jane@example.com,<icalendar.prop.vCategory object at 0x106624830>,,event1@example.com,,
+Project Review,Quarterly project review session,Main Office,CONFIRMED,2025-01-22,10:00:00,2025-01-22 10:00:00,2025-01-22,11:00:00,2025-01-22 11:00:00,mailto:ceo@example.com,,<icalendar.prop.vCategory object at 0x106551bd0>,,event2@example.com,,
+Company Dinner,Annual company dinner event,Restaurant Downtown,CONFIRMED,2025-01-25,18:00:00,2025-01-25 18:00:00,2025-01-25,20:00:00,2025-01-25 20:00:00,,,<icalendar.prop.vCategory object at 0x106551d10>,,event3@example.com,,

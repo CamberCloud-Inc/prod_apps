@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+  <channel>
+    <title>Tech Blog</title>
+    <link>https://techblog.example.com</link>
+    <description>Latest technology news and articles</description>
+    <docs>http://www.rssboard.org/rss-specification</docs>
+    <generator>python-feedgen</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 30 Sep 2025 08:08:55 +0000</lastBuildDate>
+    <item>
+      <title>Cloud Computing in 2025</title>
+      <link>https://techblog.example.com/cloud-2025</link>
+      <description>Trends and predictions for cloud computing</description>
+      <content:encoded>Cloud computing continues to evolve...</content:encoded>
+      <guid isPermaLink="false">https://techblog.example.com/cloud-2025</guid>
+      <category>Cloud</category>
+      <category>Technology</category>
+    </item>
+    <item>
+      <title>Web Development Best Practices</title>
+      <link>https://techblog.example.com/web-dev-practices</link>
+      <description>Essential practices for modern web development</description>
+      <content:encoded>Modern web development requires...</content:encoded>
+      <guid isPermaLink="false">https://techblog.example.com/web-dev-practices</guid>
+      <category>Web Development</category>
+      <category>Best Practices</category>
+    </item>
+    <item>
+      <title>Getting Started with Python</title>
+      <link>https://techblog.example.com/python-guide</link>
+      <description>A comprehensive guide to learning Python programming</description>
+      <content:encoded>Python is a versatile programming language...</content:encoded>
+      <guid isPermaLink="false">https://techblog.example.com/python-guide</guid>
+      <category>Python</category>
+      <category>Programming</category>
+      <category>Tutorial</category>
+    </item>
+  </channel>
+</rss>

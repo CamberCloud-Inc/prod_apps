@@ -1,0 +1,37 @@
+[
+  {
+    "Name": "John Doe",
+    "Age": "30",
+    "City": "New York",
+    "Email": "john@example.com",
+    "Salary": "75000"
+  },
+  {
+    "Name": "Jane Smith",
+    "Age": "25",
+    "City": "Los Angeles",
+    "Email": "jane@example.com",
+    "Salary": "65000"
+  },
+  {
+    "Name": "Bob Johnson",
+    "Age": "35",
+    "City": "Chicago",
+    "Email": "bob@example.com",
+    "Salary": "85000"
+  },
+  {
+    "Name": "Alice Williams",
+    "Age": "28",
+    "City": "Houston",
+    "Email": "alice@example.com",
+    "Salary": "70000"
+  },
+  {
+    "Name": "Charlie Brown",
+    "Age": "32",
+    "City": "Phoenix",
+    "Email": "charlie@example.com",
+    "Salary": "72000"
+  }
+]

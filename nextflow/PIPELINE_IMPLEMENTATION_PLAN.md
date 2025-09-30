@@ -468,13 +468,62 @@ Brief description of pipeline and biological applications.
    cd {usecase}
    ```
 
-2. **Create Config File**
+2. **Find Test Data** (Do this BEFORE writing configs!)
+
+   **Option A: nf-core test-datasets** (preferred - always try first!)
+
+   The nf-core community maintains test data in branches:
+   https://github.com/nf-core/test-datasets
+
+   ```bash
+   # Check if your pipeline has a test data branch
+   git ls-remote --heads https://github.com/nf-core/test-datasets | grep {pipeline}
+
+   # Clone the branch for your pipeline
+   git clone -b {pipeline} --single-branch \
+     https://github.com/nf-core/test-datasets.git test-datasets-{pipeline}
+
+   # Browse available test data
+   cd test-datasets-{pipeline}
+   ls -la
+   ```
+
+   **Find test samplesheet**:
+   ```bash
+   # Check pipeline's test configuration for samplesheet location
+   cd ~/git/{pipeline}  # Your cloned pipeline repo
+   cat conf/test.config
+   # Look for: params.input = 'https://...'
+
+   # Download test samplesheet
+   curl -L -o test_samplesheet.csv \
+     "https://raw.githubusercontent.com/nf-core/test-datasets/{pipeline}/path/to/samplesheet.csv"
+   ```
+
+   **Or create samplesheet with test data URLs**:
+   ```csv
+   # Use direct URLs from test-datasets branch
+   sample,fastq_1,fastq_2
+   sample1,https://raw.githubusercontent.com/nf-core/test-datasets/{pipeline}/data/sample1_R1.fastq.gz,https://raw.githubusercontent.com/nf-core/test-datasets/{pipeline}/data/sample1_R2.fastq.gz
+   ```
+
+   **Benefits**:
+   - ✅ Known to work with pipeline
+   - ✅ Small files (fast testing)
+   - ✅ Community-validated
+   - ✅ Same data used in pipeline CI/CD
+
+   **Option B: Create minimal test data** (only if no test-datasets branch exists)
+   - Create smallest possible synthetic or subsampled data
+   - Document source and how it was created
+
+3. **Create Config File**
    - Start from working example (e.g., scrnaseq)
    - Adapt process resources
    - Hardcode use-case-specific parameters
    - Save as `{pipeline}-{usecase}-config.config`
 
-3. **Create app.json**
+4. **Create app.json**
    - Use biology-focused language
    - Detailed samplesheet instructions
    - Minimal exposed parameters (3-5)

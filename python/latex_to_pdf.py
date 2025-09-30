@@ -28,16 +28,32 @@ def main():
     # Create output directory if it doesn't exist
     os.makedirs(args.output_dir, exist_ok=True)
 
-    # Install texlive (basic LaTeX distribution)
-    print("Installing LaTeX distribution (texlive)...")
-    try:
-        subprocess.run(["apt-get", "update"], check=True, capture_output=True)
-        subprocess.run(["apt-get", "install", "-y", "texlive-latex-base", "texlive-latex-extra"],
-                      check=True, capture_output=True)
-        print("LaTeX distribution installed successfully")
-    except subprocess.CalledProcessError as e:
-        print(f"Warning: Could not install texlive via apt-get (may already be installed)")
-        print(f"Error: {e}")
+    # Check if pdflatex is available
+    if not shutil.which("pdflatex"):
+        print("LaTeX distribution (pdflatex) not found. Attempting to install...")
+        try:
+            # Detect OS and install accordingly
+            import platform
+            system = platform.system()
+
+            if system == "Linux":
+                subprocess.run(["apt-get", "update"], check=True, capture_output=True)
+                subprocess.run(["apt-get", "install", "-y", "texlive-latex-base", "texlive-latex-extra"],
+                              check=True, capture_output=True)
+                print("LaTeX distribution installed successfully")
+            elif system == "Darwin":  # macOS
+                print("On macOS, please install MacTeX or BasicTeX:")
+                print("  brew install --cask mactex")
+                print("  or: brew install --cask basictex")
+                print("\nSkipping LaTeX compilation - pdflatex not available")
+                sys.exit(1)
+            else:
+                print(f"Unsupported OS: {system}")
+                print("Please install a LaTeX distribution (e.g., TeX Live) manually")
+                sys.exit(1)
+        except Exception as e:
+            print(f"Warning: Could not install LaTeX distribution: {e}")
+            sys.exit(1)
 
     # Get the directory containing the .tex file (for any included files/images)
     tex_dir = os.path.dirname(os.path.abspath(tex_path))

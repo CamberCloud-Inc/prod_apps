@@ -1,0 +1,15 @@
+==================================================
+TEXT STATISTICS REPORT
+==================================================
+File: sample.txt
+
+Characters (total):        868
+Characters (no spaces):    730
+Words:                     131
+Unique words:              103
+Average word length:       5.42
+Lines (total):             22
+Lines (non-empty):         13
+Sentences (approx):        9
+Paragraphs:                10
+==================================================
