@@ -1,12 +1,12 @@
 # Nextflow Pipeline Implementation Status
 
-**Last Updated:** 2025-09-30 (Final - All Testing Complete)
-**Total Pipelines Implemented:** 37
-**Total Apps:** 54+
-**Production Ready:** 18 (tested and working) ⬆️ +4 NEW
-**Ready for Testing:** 8 (newly implemented, not yet tested)
+**Last Updated:** 2025-09-30 (Evening Extended Session)
+**Total Pipelines Implemented:** 44 ⬆️ +7 NEW
+**Total Apps:** 61+
+**Production Ready:** 18 (tested and working)
+**Ready for Testing:** 15 (newly implemented, not yet tested) ⬆️ +7 NEW
 **In Testing/Development:** 5
-**Infrastructure Blocked:** 4
+**Infrastructure Blocked:** 5 (includes 1 new incompatible pipeline)
 
 ---
 
@@ -52,29 +52,46 @@ These pipelines are functional but have known limitations:
 | **hic** | Chromosome conformation | MultiQC reporting fails | Use individual QC files | Core analysis functional |
 | **rnafusion** | Cancer fusion detection | Not tested with real data | Needs manual validation | Implementation complete |
 
-### 🚧 Infrastructure Blocked (4 pipelines, 6 apps)
+### 🚧 Infrastructure Blocked (5 pipelines, 7 apps)
 
-These pipelines are correctly implemented but cannot run due to platform constraints:
+These pipelines are correctly implemented but cannot run due to platform or pipeline constraints:
 
 | Pipeline | Use Case | Blocker | Required Action |
 |----------|----------|---------|-----------------|
+| **rnavar** | RNA variant calling | **Nextflow 24.10.5 incompatible** - DSL compilation error (`Variable 'Channel' already defined`) | Pipeline needs update from nf-core maintainers |
+| **clipseq** | RNA-protein interactions | **DSL1 not supported** in Nextflow 24.10+ | Pipeline needs DSL2 migration from nf-core |
 | **splicevariant** (rnasplice) | Alternative splicing | Memory limit (3.9GB < 6GB required) | Platform k8s config update needed |
 | **raredisease** | Rare disease WGS | Missing reference data (~50GB+) | Stage reference genomes on platform |
 | **spatialvi** | Spatial transcriptomics | Test data format (needs Space Ranger dirs) | Create proper test dataset |
 | **ampliseq** (2 apps) | 16S bacterial & ITS fungal profiling | **CRITICAL:** Memory limit (3.9GB < 12GB required) | Platform k8s config update needed |
 
-### 🆕 Newly Implemented - Ready for Testing (9 pipelines, 13 apps)
+### 🆕 Newly Implemented - Ready for Testing (15 pipelines, 20 apps)
 
 These pipelines were implemented in the September 30 session and await testing:
 
+**🆕 Extended Session - 7 NEW Pipelines (September 30, 2025 Evening)**
+- **proteomicslfq** - Label-free quantification proteomics
+- **quantms** - DIA/DDA proteomics with multiple acquisition methods
+- **phageannotator** - Phage genome identification and annotation
+- **metatdenovo** - Metatranscriptome/metagenome assembly & annotation
+- **nanostring** - NanoString nCounter gene expression analysis
+- **isoseq** - PacBio Iso-Seq isoform annotation
+- **rnavar** - RNA variant calling ❌ **INCOMPATIBLE** (Nextflow 24.10.5 DSL issue)
+
 | Pipeline | Use Case | Apps | Status | Priority |
 |----------|----------|------|--------|----------|
+| **proteomicslfq** | Label-free proteomics quantification | 1 app | 📝 Created, needs mzML test data | MEDIUM |
+| **quantms** | DIA/DDA mass spectrometry proteomics | 1 app | 📝 Created, needs SDRF test data | MEDIUM |
+| **phageannotator** | Phage genome annotation | 1 app | 📝 Created, needs assembly test data | MEDIUM |
+| **metatdenovo** | Metatranscriptome assembly | 1 app | 📝 Created, needs test data | MEDIUM |
+| **nanostring** | NanoString nCounter analysis | 1 app | 📝 Created, needs RCC test data | MEDIUM |
+| **isoseq** | PacBio Iso-Seq annotation | 1 app | 📝 Created, needs PacBio BAM test data | MEDIUM |
+| **rnavar** | RNA variant calling | 1 app | ❌ Pipeline incompatible with Nextflow 24.10.5 | BLOCKED |
 | **smrnaseq** | miRNA analysis & biomarker discovery | 3 apps | 📝 Testing issues (parameter validation) | HIGH |
 | **dualrnaseq** | Host-pathogen RNA-seq | 1 app | 📝 App created, ready for testing | MEDIUM |
 | **pangenome** | Pangenome graph construction | 1 app | 📝 App created, ready for testing | LOW |
-| **clipseq** | RNA-protein interactions | 1 app | 📝 App created, ready for testing | MEDIUM |
-| **circdna** | Extrachromosomal DNA detection | 1 app | 📝 App created, ready for testing | MEDIUM |
-| **airrflow** | BCR/TCR immune repertoire | 1 app | 📝 App created, ready for testing | MEDIUM |
+| **clipseq** | RNA-protein interactions | 1 app | ❌ DSL1 incompatible with Nextflow 24.10+ | BLOCKED |
+| **airrflow** | BCR/TCR immune repertoire | 1 app | 📝 Needs vprimers parameter | MEDIUM |
 | **eager** | Ancient DNA analysis | 1 app | 📝 App created, ready for testing | LOW |
 | **demultiplex** | NGS sample demultiplexing | 1 app | 📝 App created, ready for testing | LOW |
 | **differentialabundance** | Downstream DE analysis | 1 app | 📝 App created, ready for testing | MEDIUM |
@@ -83,8 +100,12 @@ These pipelines were implemented in the September 30 session and await testing:
 - ✅ **hlatyping**: TESTED & WORKING (Job 4505, 5m33s)
 - ✅ **funcscan**: TESTED & WORKING (Job 4507, 14m8s)
 - ✅ **bacass**: TESTED & WORKING (Job 4508, 24m57s)
+- ✅ **circdna**: TESTED & WORKING (Job 4516, 16m10s)
+- ❌ **rnavar**: Pipeline incompatible - Nextflow DSL compilation errors (Jobs 4518, 4519)
+- ❌ **clipseq**: DSL1 not supported in Nextflow 24.10+
 - ⚠️ **smrnaseq**: 5 test attempts failed (Jobs 4500-4503), parameter validation issues
-- 📝 **8 remaining**: Apps created on platform, ready for test data preparation
+- 📝 **8 remaining from first batch**: Apps created on platform, ready for test data preparation
+- 📝 **6 new proteomics/specialized**: Need complex test data (mzML, RCC, PacBio BAM, etc.)
 
 ### 📦 Legacy/Test Versions (2 pipelines)
 

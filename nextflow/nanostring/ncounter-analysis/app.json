@@ -1,0 +1,54 @@
+{
+  "name": "nanostring-ncounter",
+  "title": "NanoString nCounter Analysis (nf-core/nanostring)",
+  "description": "Analyze NanoString nCounter gene expression data with comprehensive quality control and normalization. Ideal for targeted gene expression profiling with high sensitivity and reproducibility.",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/nanostring --input ${input} --outdir ${outdir} -r 1.3.1 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/nanostring/master/docs/images/nf-core-nanostring_logo_light.png",
+  "content": "<h2><strong>NanoString nCounter Gene Expression Analysis</strong></h2><p>The <strong>nf-core/nanostring</strong> pipeline analyzes NanoString nCounter digital gene expression data with comprehensive QC and normalization.</p><h3><strong>NanoString Technology Advantages</strong></h3><blockquote><ul><li><strong>Direct Detection</strong>: No amplification bias - direct molecular barcoding</li><li><strong>FFPE Compatible</strong>: Works with degraded RNA from fixed tissues</li><li><strong>High Sensitivity</strong>: Single molecule detection</li><li><strong>Targeted Profiling</strong>: 800+ genes simultaneously</li><li><strong>Reproducible</strong>: Low technical variation</li></ul></blockquote><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Clinical Diagnostics</strong>: FDA-approved cancer diagnostics (Prosigna, etc.)</li><li><strong>Biomarker Validation</strong>: Confirm RNA-seq findings</li><li><strong>Immune Profiling</strong>: PanCancer Immune Profiling Panel</li><li><strong>Pathway Analysis</strong>: Focused gene set analysis</li><li><strong>FFPE Studies</strong>: Retrospective tissue analysis</li><li><strong>Spatial Biology</strong>: GeoMx Digital Spatial Profiler</li></ul><h3><strong>Pipeline Features</strong></h3><ul><li><strong>NACHO QC</strong>: Comprehensive quality control</li><li><strong>Normalization</strong>: Background, positive control, housekeeping gene normalization</li><li><strong>Count Tables</strong>: Normalized expression matrices</li><li><strong>Metadata Integration</strong>: Sample annotations</li><li><strong>MultiQC Reports</strong>: Summary QC visualizations</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet:</p><ul><li><code>RCC_FILE</code>: Path to RCC file (NanoString raw data)</li><li><code>RCC_FILE_NAME</code>: Filename</li><li><code>SAMPLE_ID</code>: Sample identifier</li></ul><p>RCC files are exported from NanoString nCounter instrument.</p><h3><strong>Key Outputs</strong></h3><ul><li><strong>Normalized Counts</strong>: Expression matrices ready for DEanalysis</li><li><strong>QC Metrics</strong>: Binding density, imaging QC, positive control linearity</li><li><strong>Quality Reports</strong>: Sample-level QC summaries</li><li><strong>Metadata Tables</strong>: Annotated sample information</li></ul><blockquote><p><strong>Perfect for:</strong> Clinical diagnostics • Biomarker validation • FFPE samples • Immune profiling • Focused gene panels</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV with RCC file paths and sample information",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory",
+      "defaultValue": "./nanostring-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "options": [
+        {"label": "SMALL (Recommended)", "value": "small", "mapValue": {"nodeSize": "SMALL", "numNodes": 1, "withGpu": false}},
+        {"label": "MEDIUM (Many samples)", "value": "medium", "mapValue": {"nodeSize": "MEDIUM", "numNodes": 1, "withGpu": false}}
+      ],
+      "defaultValue": "small"
+    }
+  ],
+  "tags": [
+    {"name": "transcriptomics", "type": "field"},
+    {"name": "nanostring", "type": "task"},
+    {"name": "gene-expression", "type": "task"}
+  ]
+}

@@ -1,0 +1,2 @@
+sample,fastq_1,fastq_2
+GM12878,https://raw.githubusercontent.com/nf-core/test-datasets/rnavar/testdata/GM12878_1.fastq.gz,https://raw.githubusercontent.com/nf-core/test-datasets/rnavar/testdata/GM12878_2.fastq.gz
