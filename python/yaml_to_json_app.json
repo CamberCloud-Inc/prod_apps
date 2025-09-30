@@ -1,0 +1,45 @@
+{
+  "name": "yaml-to-json",
+  "title": "YAML to JSON Converter",
+  "description": "Convert YAML configuration files to JSON format",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application converts YAML files into JSON format, preserving the data structure and hierarchy. It uses PyYAML for safe parsing and creates properly formatted JSON output.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Validates YAML syntax before conversion</li><li class=\"list-item-node\">Preserves nested structures and data types</li><li class=\"list-item-node\">Creates properly indented JSON output</li><li class=\"list-item-node\">Handles both .yml and .yaml file extensions</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input YAML File</strong>: Upload your YAML file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for the JSON output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a JSON file named <code class=\"inline\" spellcheck=\"false\">{original_name}.json</code> with the converted data structure.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Converting configuration files from YAML to JSON</li><li class=\"list-item-node\">Preparing YAML data for JSON-only APIs</li><li class=\"list-item-node\">Migrating from YAML-based to JSON-based configs</li><li class=\"list-item-node\">Creating JSON versions of YAML documentation</li></ul>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && python prod_apps_clone/python/yaml_to_json.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input YAML File",
+      "description": "Upload the YAML file you want to convert to JSON",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the JSON file will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
