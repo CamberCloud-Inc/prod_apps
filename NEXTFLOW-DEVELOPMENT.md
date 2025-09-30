@@ -2,6 +2,14 @@
 
 This document outlines the strategy for creating biologist-friendly Camber applications from nf-core workflows, with a focus on creating multiple focused apps per pipeline rather than exposing all parameters.
 
+## ⚠️ CRITICAL: Profile Configuration
+
+**DO NOT specify `-profile` in Nextflow commands.** The Camber backend automatically sets `-profile k8s` for all jobs.
+
+❌ **Wrong**: `nextflow run nf-core/pipeline -profile singularity ...`
+❌ **Wrong**: `nextflow run nf-core/pipeline -profile test,k8s ...`
+✅ **Correct**: `nextflow run nf-core/pipeline --input ${input} -r X.Y.Z`
+
 ## Philosophy: One Pipeline → Multiple Purpose-Built Apps
 
 Instead of creating a single complex app with dozens of parameters, create **10+ simplified apps** per nf-core pipeline, each optimized for a specific use case that biologists commonly encounter.
@@ -1094,6 +1102,8 @@ When defining parameters in the `spec` section, use biology-focused language:
 
 ### Command Structure
 
+**CRITICAL**: DO NOT specify `-profile` in commands. The Camber backend automatically sets `-profile k8s` for all Nextflow jobs.
+
 **Template:**
 ```bash
 nextflow run nf-core/{pipeline} \\
@@ -1102,10 +1112,10 @@ nextflow run nf-core/{pipeline} \\
   --genome ${genome} \\
   --{key_param} {value} \\          # Use case specific
   --{another_param} {value} \\      # Use case specific
-  -r {version} \\                    # Hardcoded
-  -c /etc/mpi/nextflow.camber.config \\  # Platform config FIRST
-  -c {usecase}-config.config        # Custom config SECOND
+  -r {version}                      # Hardcoded
 ```
+
+**Note**: All parameters (both user-provided like `${input}` and hardcoded like `--tools mutect2`) go directly in the command. Do NOT create separate config files unless absolutely necessary for complex resource tuning.
 
 **Real Example (Sarek Somatic):**
 ```bash
@@ -1115,9 +1125,7 @@ nextflow run nf-core/sarek \\
   --genome ${genome} \\
   --tools mutect2 \\
   --only_paired_variant_calling true \\
-  -r 3.5.1 \\
-  -c /etc/mpi/nextflow.camber.config \\
-  -c sarek-somatic-config.config
+  -r 3.5.1
 ```
 
 ### Config File Structure
