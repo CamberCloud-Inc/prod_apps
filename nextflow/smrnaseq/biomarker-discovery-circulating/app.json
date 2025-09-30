@@ -1,0 +1,126 @@
+{
+  "name": "smrnaseq-biomarker-discovery",
+  "title": "Circulating miRNA Biomarker Discovery (nf-core/smrnaseq)",
+  "description": "Discover circulating microRNA biomarkers from liquid biopsy samples (plasma, serum, CSF) using the nf-core/smrnaseq pipeline. Optimized for low-input biofluid samples with UMI deduplication, stringent quality control, and robust normalization for clinical biomarker discovery and diagnostics development.",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/smrnaseq --input ${input} --outdir ${outdir} --genome ${genome} --mirtrace_species ${species} --protocol ${protocol} --with_umi -r 2.4.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/smrnaseq/master/docs/images/nf-core-smrnaseq_logo_light.png",
+  "content": "<h2><strong>Circulating miRNA Biomarker Discovery</strong></h2><p>The <strong>nf-core/smrnaseq</strong> pipeline analyzes small RNA sequencing from liquid biopsies to discover circulating microRNA biomarkers. This app is specifically optimized for low-input biofluid samples (plasma, serum, CSF, urine) with enhanced quality control and UMI deduplication for clinical biomarker applications.</p><h3><strong>What Makes This Different?</strong></h3><p>This configuration is optimized for <strong>biofluid samples</strong> with special considerations:</p><ul><li><strong>UMI Deduplication</strong>: Removes PCR duplicates using Unique Molecular Identifiers</li><li><strong>Low Input Optimization</strong>: Handles lower miRNA concentrations in biofluids</li><li><strong>Protocol Selection</strong>: Specify library prep method (critical for clinical samples)</li><li><strong>Stringent QC</strong>: Enhanced contamination filtering for biofluid samples</li><li><strong>Robust Normalization</strong>: Methods suitable for biomarker discovery</li></ul><h3><strong>Clinical Applications</strong></h3><blockquote><p><strong>Use Cases:</strong></p><ul><li><strong>Cancer Diagnostics</strong>: Discover circulating miRNA signatures for early detection</li><li><strong>Disease Monitoring</strong>: Track disease progression via liquid biopsy</li><li><strong>Drug Safety</strong>: Identify organ injury biomarkers (liver, kidney, heart)</li><li><strong>Precision Medicine</strong>: Predict drug response or treatment outcomes</li><li><strong>Minimal Invasive Diagnostics</strong>: Blood-based tests replacing tissue biopsies</li></ul></blockquote><h3><strong>Input Requirements</strong></h3><p>Provide a CSV samplesheet with the following columns:</p><ul><li><code>sample</code>: Unique sample identifier (include patient ID and timepoint)</li><li><code>fastq_1</code>: Path/URL to single-end FASTQ file</li></ul><p><strong>Example samplesheet for biomarker study:</strong></p><pre>sample,fastq_1\nPatient001_Baseline,s3://bucket/patient001_t0.fastq.gz\nPatient001_Post_Treatment,s3://bucket/patient001_t1.fastq.gz\nHealthy_Control_01,s3://bucket/control_01.fastq.gz\nHealthy_Control_02,s3://bucket/control_02.fastq.gz</pre><h3><strong>Library Preparation Protocols</strong></h3><p>Select the protocol used for your library preparation:</p><ul><li><strong>Illumina</strong>: TruSeq Small RNA Library Prep (most common)</li><li><strong>QIAseq</strong>: QIAseq miRNA Library Kit (uses UMIs)</li><li><strong>NEXTflex</strong>: NEXTflex Small RNA-Seq Kit</li><li><strong>CATS</strong>: CATS Small RNA-seq Kit</li></ul><p><strong>Note:</strong> Protocol selection is critical for clinical samples as it affects adapter sequences and quantification accuracy.</p><h3><strong>Biofluid Sample Types</strong></h3><ul><li><strong>Plasma/Serum</strong>: Most common for cancer and disease biomarkers</li><li><strong>Cerebrospinal Fluid (CSF)</strong>: Neurological disease biomarkers</li><li><strong>Urine</strong>: Kidney disease, prostate cancer biomarkers</li><li><strong>Saliva</strong>: Oral cancer, non-invasive diagnostics</li><li><strong>Exosomes</strong>: Extracellular vesicle-associated miRNAs</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>UMI-Deduplicated Counts</strong>: <code>edger/counts_deduplicated.tsv</code> - PCR bias removed</li><li><strong>Expression Matrix</strong>: <code>edger/counts.tsv</code> - Raw miRNA counts per sample</li><li><strong>Normalized Counts</strong>: <code>edger/normalized_counts.tsv</code> - Ready for biomarker analysis</li><li><strong>miRTrace Report</strong>: <code>mirtrace/mirtrace-report.html</code> - Biofluid-specific QC</li><li><strong>Contamination Report</strong>: rRNA/tRNA filtering results</li><li><strong>QC Report</strong>: <code>multiqc/multiqc_report.html</code> - Comprehensive quality metrics</li></ul><h3><strong>Quality Metrics for Biofluid Samples</strong></h3><blockquote><p><strong>Good Biofluid Library:</strong></p><ul><li>✓ <strong>UMI deduplication rate</strong>: 20-40% (indicates PCR bias removal)</li><li>✓ <strong>miRNA content</strong>: >30% (lower than tissue due to low input)</li><li>✓ <strong>Library complexity</strong>: High diversity of miRNA species</li><li>✓ <strong>Contamination</strong>: <10% rRNA/tRNA (critical for biofluids)</li><li>✓ <strong>Adapter trimming</strong>: >80% reads trimmed (expected for small RNAs)</li></ul></blockquote><blockquote><p><strong>Potential Issues:</strong></p><ul><li>⚠️ <strong>High rRNA content</strong>: RNA extraction contamination</li><li>⚠️ <strong>Low miRNA diversity</strong>: Sample degradation or low quality</li><li>⚠️ <strong>Extreme UMI duplication</strong>: Over-amplification, low input</li><li>⚠️ <strong>Biased miRNA profile</strong>: Hemolysis (high miR-451a, miR-16)</li></ul></blockquote><h3><strong>Experimental Design for Biomarker Studies</strong></h3><ul><li><strong>📊 Sample Size</strong>: Minimum 20-30 samples per group for biomarker discovery</li><li><strong>🔬 Collection Protocol</strong>: Standardized across all samples (critical!)</li><li><strong>❄️ Storage Conditions</strong>: Document freeze-thaw cycles</li><li><strong>✓ Technical Controls</strong>: Include spike-in controls for normalization</li><li><strong>🧬 Validation Cohort</strong>: Independent cohort for biomarker validation</li><li><strong>📈 Sequencing Depth</strong>: 10-20 million reads per sample (higher for discovery)</li></ul><h3><strong>Biomarker Discovery Workflow</strong></h3><ol><li><strong>Discovery Phase</strong>: Use this pipeline to identify candidate miRNAs</li><li><strong>Statistical Analysis</strong>: Differential expression with adjustment for confounders</li><li><strong>Biomarker Selection</strong>: ROC curve analysis, sensitivity/specificity</li><li><strong>Validation Phase</strong>: Independent cohort with qPCR or sequencing</li><li><strong>Clinical Utility</strong>: Prospective studies for clinical implementation</li></ol><h3><strong>Real-World Examples</strong></h3><blockquote><p><strong>Cancer Early Detection:</strong> Circulating miRNA panels (e.g., miR-21, miR-155, miR-210) for early cancer detection in asymptomatic individuals.</p></blockquote><blockquote><p><strong>Liver Injury Monitoring:</strong> miR-122 as FDA-qualified biomarker for drug-induced liver injury (DILI).</p></blockquote><blockquote><p><strong>Cardiovascular Risk:</strong> Circulating miRNAs (miR-208a, miR-499) for acute myocardial infarction diagnosis.</p></blockquote><blockquote><p><strong>Perfect for:</strong> Clinical researchers • Translational scientists • Pharmaceutical companies • Diagnostic labs • Precision medicine • Liquid biopsy development</p></blockquote><p>Built with <a href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a href=\"https://nf-co.re/smrnaseq/2.4.0/\" target=\"_blank\">nf-core/smrnaseq v2.4.0</a> • UMI deduplication • Clinical-grade QC • Publication-ready results</p>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV file with columns: sample, fastq_1. Each row represents one biofluid sample with path or URL to single-end FASTQ file.",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory where all pipeline results will be saved, including UMI-deduplicated counts, biomarker candidates, and comprehensive QC reports.",
+      "defaultValue": "./smrnaseq-biomarker-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome matching your sample species. Most clinical samples are human (GRCh38).",
+      "defaultValue": "GRCh38",
+      "required": true,
+      "options": [
+        {"label": "Human GRCh38/hg38 (recommended for clinical)", "value": "GRCh38"},
+        {"label": "Human GRCh37/hg19 (legacy)", "value": "GRCh37"},
+        {"label": "Mouse GRCm39/mm39 (preclinical models)", "value": "GRCm39"},
+        {"label": "Mouse GRCm38/mm10 (widely used)", "value": "GRCm38"},
+        {"label": "Rat Rnor_6.0 (preclinical models)", "value": "Rnor_6.0"}
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Species Code (miRTrace)",
+      "name": "species",
+      "description": "Species code for miRTrace quality control. Must match your reference genome.",
+      "defaultValue": "hsa",
+      "required": true,
+      "options": [
+        {"label": "Human (hsa)", "value": "hsa"},
+        {"label": "Mouse (mmu)", "value": "mmu"},
+        {"label": "Rat (rno)", "value": "rno"}
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Library Preparation Protocol",
+      "name": "protocol",
+      "description": "Library preparation protocol used. Critical for accurate adapter trimming and quantification in clinical samples.",
+      "defaultValue": "illumina",
+      "required": true,
+      "options": [
+        {"label": "Illumina TruSeq (most common)", "value": "illumina"},
+        {"label": "QIAseq miRNA (with UMIs)", "value": "qiaseq"},
+        {"label": "NEXTflex Small RNA-Seq", "value": "nextflex"},
+        {"label": "CATS Small RNA-seq", "value": "cats"}
+      ]
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "description": "Select compute resources based on study size. SMALL is recommended for typical biomarker discovery studies (20-100 samples).",
+      "options": [
+        {
+          "label": "XSMALL (4 CPUs, 15GB RAM) - Testing/Demo",
+          "value": "xsmall",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "SMALL (8 CPUs, 30GB RAM) - Small studies (10-50 samples)",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Large studies (50-200 samples)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xsmall"
+    }
+  ],
+  "tags": [
+    {"name": "genomics", "type": "subfield"},
+    {"name": "rna", "type": "task"},
+    {"name": "mirna", "type": "task"},
+    {"name": "biomarker", "type": "task"},
+    {"name": "clinical", "type": "task"},
+    {"name": "biology", "type": "field"}
+  ]
+}
