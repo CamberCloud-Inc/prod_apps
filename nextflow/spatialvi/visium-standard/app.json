@@ -1,0 +1,63 @@
+{
+  "name": "spatialvi-visium-standard",
+  "title": "Spatial Transcriptomics: 10x Visium Tissue Architecture Analysis",
+  "description": "Map gene expression patterns across tissue sections with spatial coordinates. Discover how different cell types and functional zones are organized within tissues - essential for understanding tumor microenvironments, brain regions, organ development, and disease pathology.",
+  "content": "<h1>Spatial Transcriptomics: 10x Visium Tissue Architecture Analysis</h1><h2>What This Analysis Does</h2><p>This analysis processes 10x Genomics Visium spatial transcriptomics data to reveal how genes are expressed across tissue sections while preserving their spatial locations. Unlike traditional RNA-seq that loses tissue context, spatial transcriptomics shows you exactly where each cell type is located and how they interact within the tissue architecture.</p><p>The pipeline identifies spatial domains (regions with similar gene expression), discovers spatially variable genes, and performs differential expression analysis between tissue regions - all while maintaining the original tissue structure.</p><h2>When To Use This</h2><ul><li><strong>Tumor Biology:</strong> Map tumor heterogeneity, immune infiltration, and stromal interactions in cancer tissues</li><li><strong>Brain Research:</strong> Identify cortical layers, hippocampal zones, and region-specific gene expression patterns</li><li><strong>Developmental Biology:</strong> Track spatial gene expression during organ development and morphogenesis</li><li><strong>Tissue Organization:</strong> Characterize how different cell types are spatially arranged in any tissue</li><li><strong>Disease Pathology:</strong> Identify diseased vs healthy regions and spatial biomarkers</li></ul><h2>What You Need</h2><h3>1. Visium Spatial Gene Expression Data</h3><p>You need data from 10x Genomics Visium spatial transcriptomics:</p><ul><li><strong>Source:</strong> Fresh frozen or FFPE tissue sections on Visium slides</li><li><strong>Platform:</strong> Visium v1, v2, or HD</li><li><strong>Options:</strong> Either Space Ranger processed data OR raw FASTQ files</li><li><strong>Image:</strong> H&E stained tissue image (automatically included with Space Ranger)</li></ul><h3>2. Sample Information Sheet (CSV File)</h3><p>Create a CSV file listing your samples. Format depends on your data type:</p><p><strong>Option A: Pre-processed Space Ranger Data (Recommended for testing):</strong></p><pre>sample,spaceranger_dir\nbrain_section1,stash://username/data/brain_section1/outs\ntumor_section1,stash://username/data/tumor_section1/outs</pre><p><strong>Column Details:</strong></p><ul><li><strong>sample:</strong> Unique name for this tissue section (e.g., patient_tumor_section1)</li><li><strong>spaceranger_dir:</strong> Path to Space Ranger output directory (contains outs/ folder)</li></ul><p><strong>Option B: Raw FASTQ Files (requires Space Ranger processing):</strong></p><pre>sample,fastq_dir,image,slide,area\nbrain_section1,stash://username/fastqs/,hires_image.png,V11J26-123,A1</pre><p><strong>Column Details:</strong></p><ul><li><strong>sample:</strong> Unique name for this tissue section</li><li><strong>fastq_dir:</strong> Directory containing FASTQ files from sequencing</li><li><strong>image:</strong> H&E tissue image file (PNG or TIFF)</li><li><strong>slide:</strong> Visium slide serial number (e.g., V11J26-123)</li><li><strong>area:</strong> Capture area on slide (A1, B1, C1, or D1)</li></ul><h3>3. Reference Genome</h3><p>Choose the genome matching your organism:</p><ul><li><strong>Human samples:</strong> GRCh38 (recommended for all human studies)</li><li><strong>Mouse samples:</strong> GRCm39 or GRCm38</li></ul><h2>What You'll Get</h2><h3>Spatial Analysis Results</h3><ul><li><strong>Spatial cluster map:</strong> Tissue sections colored by spatial domains</li><li><strong>Spatially variable genes:</strong> Genes with significant spatial patterns (Moran's I scores)</li><li><strong>Spatial coordinates:</strong> X-Y positions of all spots on the tissue</li><li><strong>Tissue coverage:</strong> Which spots are on tissue vs background</li></ul><h3>Gene Expression Data</h3><ul><li><strong>Expression matrices:</strong> Gene counts for each spot with spatial coordinates</li><li><strong>Normalized data:</strong> Ready for visualization and downstream analysis</li><li><strong>H5AD files:</strong> Compatible with Scanpy (Python) and Seurat (R)</li><li><strong>Zarr format:</strong> For large-scale data analysis</li></ul><h3>Quality Control</h3><ul><li><strong>Spot QC metrics:</strong> Total counts, gene counts per spot</li><li><strong>Tissue detection:</strong> On-tissue vs off-tissue classification</li><li><strong>MultiQC report:</strong> Comprehensive quality control summary</li></ul><h3>Differential Expression</h3><ul><li><strong>Between clusters:</strong> Genes differentially expressed between spatial domains</li><li><strong>Marker genes:</strong> Top genes defining each spatial region</li><li><strong>Statistical tests:</strong> P-values and fold changes</li></ul><h2>Expected Analysis Time</h2><ul><li><strong>Test dataset (1 section, pre-processed):</strong> 30-60 minutes</li><li><strong>1-2 sections (pre-processed):</strong> 1-2 hours</li><li><strong>4-8 sections (pre-processed):</strong> 2-4 hours</li><li><strong>Raw FASTQ processing:</strong> Add 4-8 hours for Space Ranger</li></ul><h2>Scientific Background</h2><p>This pipeline uses the nf-core/spatialvi workflow to process 10x Genomics Visium data. It performs quality control, normalization with scanpy, Leiden clustering to identify spatial domains, and calculates Moran's I statistic to find spatially variable genes. Output files are compatible with TissUUmaps for interactive spatial visualization.</p><p><a href='https://nf-co.re/spatialvi' target='_blank'>Advanced users: See full pipeline documentation</a></p>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/spatialvi/master/docs/images/nf-core-spatialvi_logo_light.png",
+  "command": "nextflow run nf-core/spatialvi --input ${input} --outdir ${outdir} -r dev",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select compute resources. Start with XSMALL for testing, scale up for production data.",
+      "options": [
+        {
+          "label": "XSMALL (4 CPUs, 15GB RAM) - Testing/nf-core test data",
+          "value": "xsmall",
+          "mapValue": {"nodeSize": "XSMALL", "numNodes": 1, "withGpu": false}
+        },
+        {
+          "label": "SMALL (8 CPUs, 30GB RAM) - 1-2 sections",
+          "value": "small",
+          "mapValue": {"nodeSize": "SMALL", "numNodes": 1, "withGpu": false}
+        },
+        {
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - 4-8 sections",
+          "value": "medium",
+          "mapValue": {"nodeSize": "MEDIUM", "numNodes": 1, "withGpu": false}
+        },
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Large experiments or Visium HD",
+          "value": "large",
+          "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}
+        }
+      ],
+      "defaultValue": "small"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Information Sheet",
+      "name": "input",
+      "description": "CSV file with format: sample,spaceranger_dir (for processed data) OR sample,fastq_dir,image,slide,area (for raw data). Each row represents one tissue section. For spaceranger_dir, upload your complete Space Ranger outs/ directory to stash first.",
+      "required": true
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Where to save analysis results, spatial plots, and reports",
+      "defaultValue": "./spatialvi-results",
+      "required": true
+    }
+  ],
+  "tags": [
+    {"name": "genomics", "type": "subfield"},
+    {"name": "spatial-transcriptomics", "type": "task"},
+    {"name": "biology", "type": "field"}
+  ]
+}
