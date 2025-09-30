@@ -1,204 +1,179 @@
 # nf-core/fetchngs Use Cases
 
-**Pipeline**: fetchngs v1.12.0
-**Last Updated**: 2025-09-30
-
 ## Overview
 
-The nf-core/fetchngs pipeline downloads sequencing data and metadata from public databases (SRA, ENA, DDBJ, GEO) and prepares it for downstream analysis with other nf-core pipelines. This is a utility pipeline focused on data retrieval rather than analysis.
+The fetchngs pipeline is designed to download publicly available sequencing data from databases like SRA, ENA, DDBJ, and GEO. This document identifies specific biological use cases where researchers need to access public sequencing data.
 
 ---
 
-## Use Case 1: SRA Download for RNA-seq Analysis
+## Use Case 1: Download RNA-seq Data for Reanalysis (PRIORITY: P0)
 
-**Priority**: P0 (Highest)
+### Biological Question
+How can researchers access published RNA-seq datasets to validate findings, perform meta-analyses, or apply new analysis methods?
 
-**Biological Question**: How do I download publicly available RNA-seq data from NCBI SRA or GEO for reanalysis?
+### Target Audience
+- Researchers validating published results
+- Scientists performing meta-analyses across multiple studies
+- Bioinformaticians developing or benchmarking new tools
+- Students learning RNA-seq analysis with real data
 
-**Target Audience**:
-- Researchers reproducing published RNA-seq studies
-- Scientists performing meta-analyses across multiple datasets
-- Biologists validating methods on reference datasets
+### Typical Experimental Design
+- Published RNA-seq studies from SRA/GEO
+- Single or multiple samples from the same study
+- Various organisms and experimental conditions
+- Data quality varies by original study
 
-**Typical Experimental Design**:
-- Input: List of SRA/GEO accession IDs (e.g., SRR11605097, GSM4432381)
-- Scale: 2-100 samples from published studies
-- Output: Downloaded FastQ files + samplesheet ready for nf-core/rnaseq
+### Key Parameters
 
-**Key Parameters**:
-- **Hardcoded**:
-  - Download method: FTP (reliable and widely available)
-  - nf-core pipeline format: rnaseq
-  - Force sra-tools: false (prefer FTP)
-  - Skip FastQ download: false (we want the files)
-- **Exposed**:
-  - Input file (list of accession IDs)
-  - Output directory
-  - nf-core pipeline type (rnaseq, atacseq, etc.)
+**Hardcoded:**
+- Download method: FTP (reliable and fast)
+- nf_core_pipeline: rnaseq (generates rnaseq-compatible samplesheet)
+- Force_samplesheet_check: false (handle diverse metadata)
 
-**Tools**:
+**Exposed:**
+- Input file: List of SRA/ENA/GEO accession IDs
+- Output directory: Where to save downloaded files and samplesheets
+- (Optional) Email for notifications on download completion
+
+### Tools/Methods
 - ENA API for metadata retrieval
-- FTP download for FastQ files
+- FTP download for FASTQ files
 - MD5 checksum verification
+- Samplesheet generation for nf-core/rnaseq
 
-**Expected Outputs**:
-- Downloaded FastQ files (paired-end or single-end)
-- `samplesheet.csv` formatted for nf-core/rnaseq
-- `id_mappings.csv` with metadata
-- `multiqc_config.yml` for downstream QC
+### Expected Outputs
+- Raw FASTQ files
+- ENA metadata (CSV)
+- nf-core/rnaseq-compatible samplesheet
+- MD5 checksums for verification
+- Download quality report
 
-**Resource Requirements**: XSMALL (minimal computation, mainly network I/O)
+### Priority
+**P0** - This is the most common use case for fetchngs. RNA-seq is the most widely used sequencing technology, and there are thousands of published datasets that researchers regularly need to download and reanalyze.
 
-**Example Input File** (`ids.csv`):
-```csv
-SRR11605097
-SRR11605098
-GSM4432381
-```
-
-**Priority Justification**: Most common use case - researchers regularly need to download published data for validation, reanalysis, or meta-analysis studies.
-
----
-
-## Use Case 2: ENA Bulk Data Download
-
-**Priority**: P1
-
-**Biological Question**: How do I efficiently download large cohorts of sequencing data from the European Nucleotide Archive?
-
-**Target Audience**:
-- Researchers conducting large-scale meta-analyses
-- Bioinformaticians building reference datasets
-- Data scientists training machine learning models on public data
-
-**Typical Experimental Design**:
-- Input: Large list of ENA accession IDs (50-500 samples)
-- Scale: Cohort-level downloads (e.g., entire studies)
-- Output: Downloaded FastQ files organized by study/sample
-
-**Key Parameters**:
-- **Hardcoded**:
-  - Download method: Aspera (faster for bulk downloads)
-  - Force FTP fallback: true (in case Aspera fails)
-  - Parallel downloads: enabled
-- **Exposed**:
-  - Input file (ENA accession list)
-  - Output directory
-  - Download method (FTP vs Aspera)
-
-**Tools**:
-- ENA API for metadata
-- Aspera for high-speed downloads
-- FTP fallback for reliability
-
-**Expected Outputs**:
-- Downloaded FastQ files
-- Study-level organization
-- Comprehensive metadata file
-
-**Resource Requirements**: XSMALL to SMALL (network-bound, but may need more memory for large cohorts)
-
-**Priority Justification**: Secondary use case for researchers working with larger datasets requiring optimized download strategies.
+### Implementation Notes
+- Use nf-core test data (SRR IDs) for initial testing
+- XSMALL node should be sufficient (downloads not compute-intensive)
+- Runtime depends mainly on file sizes and network speed
+- Should work out-of-the-box with default settings
 
 ---
 
-## Use Case Prioritization
+## Use Case 2: Download Any Sequencing Data (Generic) (PRIORITY: P1)
 
-| Use Case | Priority | Complexity | Test Data | Implementation Order |
-|----------|----------|------------|-----------|---------------------|
-| SRA Download for RNA-seq | P0 | Low | ✅ Available | 1 |
-| ENA Bulk Data Download | P1 | Medium | ✅ Available | 2 |
+### Biological Question
+How can researchers download any type of sequencing data (ChIP-seq, ATAC-seq, whole genome, etc.) from public databases?
 
----
+### Target Audience
+- Researchers working with any sequencing modality
+- Teams downloading data for diverse analysis types
+- Labs accessing reference datasets
 
-## Implementation Notes
+### Typical Experimental Design
+- Any published sequencing study
+- Multiple data types (ChIP-seq, ATAC-seq, WGS, etc.)
+- Can be single samples or entire projects
 
-### Use Case 1 (SRA Download)
-- **Test Data**: Use nf-core/test-datasets fetchngs branch
-- **Expected Runtime**: 5-10 minutes for test data (small files)
-- **Challenges**:
-  - Network reliability (handle download failures gracefully)
-  - Stash integration (ensure files are properly written to output)
-  - FTP vs Aspera selection
+### Key Parameters
 
-### Use Case 2 (ENA Bulk)
-- **Test Data**: Same as Use Case 1 but with Aspera download method
-- **Expected Runtime**: Similar to Use Case 1 for test data
-- **Challenges**:
-  - Aspera installation and configuration
-  - Parallel download limits
-  - Large file handling
+**Hardcoded:**
+- Download method: FTP
+- Force_samplesheet_check: false
 
----
+**Exposed:**
+- Input file: List of accession IDs
+- Output directory: Where to save files
+- nf_core_pipeline: Optional selector (atacseq, chipseq, rnaseq, etc.)
 
-## Common Parameters Across Use Cases
+### Expected Outputs
+- Raw FASTQ files
+- Generic samplesheet
+- Metadata from ENA
+- MD5 checksums
 
-### Always Hardcoded
-- `--md5sum`: true (verify downloads)
-- `--skip_fastq_download`: false (we want the files)
+### Priority
+**P1** - Important but less common than RNA-seq specific use case. Many users will know their data type upfront.
 
-### Always Exposed
-- `--input`: Path to ID list file
-- `--outdir`: Output directory for results
-- `--nf_core_pipeline`: Which nf-core pipeline to format samplesheet for
-
-### Download Method Selection
-- **FTP**: Reliable, works everywhere, moderate speed
-- **Aspera**: Very fast, requires Aspera Connect, may need configuration
-- **SRA Tools**: For dbGaP or restricted access data
+### Implementation Notes
+- Very similar to Use Case 1 but without hardcoding pipeline type
+- Allows flexibility for different downstream analyses
+- Could serve as a template for pipeline-specific apps
 
 ---
 
-## Biological Research Applications
+## Use Case 3: Download Complete Study/Project (PRIORITY: P2)
 
-**Perfect for Research in**:
-- Reproducibility studies (validating published findings)
-- Meta-analyses (combining data from multiple studies)
-- Method development (testing on reference datasets)
-- Comparative genomics (downloading samples across species)
-- Time-series analyses (downloading historical datasets)
-- Reanalysis with updated methods (applying new algorithms to old data)
+### Biological Question
+How can researchers download all samples from a published study in one operation?
 
-**Typical Research Workflows**:
-1. **Literature Review → Data Download**: Find relevant studies, extract SRA IDs, download data
-2. **Meta-Analysis Pipeline**: Download multiple studies → Combine → Unified analysis
-3. **Method Validation**: Download benchmark datasets → Test new tools → Compare results
-4. **Reanalysis Studies**: Download original data → Apply updated pipelines → New insights
+### Target Audience
+- Researchers performing comprehensive reanalysis
+- Teams building reference databases
+- Meta-analysis projects
+
+### Typical Experimental Design
+- Entire GEO study (GSE accession)
+- Complete SRA project (SRP accession)
+- Can include dozens or hundreds of samples
+
+### Key Parameters
+
+**Hardcoded:**
+- Download method: FTP
+- Auto-resolve study to individual runs
+
+**Exposed:**
+- Study/Project ID (GSE, SRP, etc.)
+- Output directory
+
+### Expected Outputs
+- All FASTQ files from study
+- Complete metadata
+- Samplesheets for downstream analysis
+
+### Priority
+**P2** - Useful but can be achieved by providing all sample IDs from a study in Use Case 1 or 2. The pipeline automatically handles study IDs, so separate app may not be needed.
+
+### Implementation Notes
+- May require larger node sizes for projects with many samples
+- Download times can be very long (hours to days)
+- Consider implementing as enhancement to Use Case 2 rather than separate app
 
 ---
+
+## Recommendations
+
+### Implement First
+**Use Case 1: RNA-seq Data Download**
+- Clearest use case with specific output format
+- Most common biological application
+- Easy to test with nf-core test data
+- Direct integration with nf-core/rnaseq pipeline
+
+### Future Considerations
+- **Use Case 2** could be implemented if Use Case 1 succeeds
+- **Use Case 3** may not need separate app (functionality already in Use Case 1/2)
+
+### Testing Strategy
+1. Start with nf-core test data (small SRA IDs)
+2. Test with 2-3 real RNA-seq samples
+3. Verify samplesheet format compatibility with rnaseq pipeline
+4. Check download integrity (MD5 sums)
+
+---
+
+## Research Sources
+
+- nf-core/fetchngs documentation: https://nf-co.re/fetchngs/1.12.0/
+- GitHub repository: https://github.com/nf-core/fetchngs
+- Test datasets: https://github.com/nf-core/test-datasets (fetchngs branch)
+- Common user queries on nf-core Slack
 
 ## Success Criteria
 
-**App is working when**:
-- ✅ Successfully downloads FastQ files from test accessions
-- ✅ Generates valid samplesheet for downstream pipeline
-- ✅ MD5 checksums verified
-- ✅ Output files properly written to stash
-- ✅ Job completes with COMPLETED status
-
-**Common Failure Modes to Test**:
-- Network timeouts during download
-- Invalid accession IDs
-- Mixed single-end and paired-end data
-- Large file handling
-- Stash write permissions
-
----
-
-## Pipeline-Specific Considerations
-
-### Lightweight Nature
-- No heavy computation (just downloads)
-- Network-bound rather than CPU/memory-bound
-- XSMALL nodes should be sufficient
-
-### Integration Points
-- Output must work with nf-core/rnaseq, atacseq, etc.
-- Samplesheet format must match downstream pipeline requirements
-- Metadata preservation for sample tracking
-
-### Testing Strategy
-- Start with small test accessions (fast iteration)
-- Verify samplesheet format compatibility
-- Test with both SRA and GEO accession types
-- Ensure proper error handling for failed downloads
+An app is successful if:
+- Downloads complete without errors
+- FASTQ files pass MD5 verification
+- Generated samplesheet is valid for target nf-core pipeline
+- Metadata is comprehensive and accurate
+- Runtime is reasonable for test data (<30 minutes)
