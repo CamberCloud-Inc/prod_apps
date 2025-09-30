@@ -1,0 +1,45 @@
+{
+  "name": "json-to-csv",
+  "title": "JSON to CSV Converter",
+  "description": "Convert JSON data into CSV tables by flattening nested structures",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application converts JSON data into CSV format, automatically flattening nested objects and arrays. It handles both single JSON objects and arrays of objects, making hierarchical data accessible in spreadsheet format.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Flattens nested JSON structures automatically</li><li class=\"list-item-node\">Handles JSON arrays and single objects</li><li class=\"list-item-node\">Creates column headers from JSON keys</li><li class=\"list-item-node\">Preserves all data values in CSV format</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input JSON File</strong>: Upload your JSON file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for the CSV output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a CSV file named <code class=\"inline\" spellcheck=\"false\">{original_name}.csv</code> with flattened data. Nested keys are joined with underscores (e.g., <code class=\"inline\" spellcheck=\"false\">address_street</code>).</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Converting API responses to spreadsheet format</li><li class=\"list-item-node\">Importing JSON data into Excel or databases</li><li class=\"list-item-node\">Analyzing JSON datasets in data analysis tools</li><li class=\"list-item-node\">Creating reports from nested JSON structures</li></ul>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && python prod_apps_clone/python/json_to_csv.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input JSON File",
+      "description": "Upload the JSON file you want to convert to CSV",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the CSV file will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
