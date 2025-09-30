@@ -1,0 +1,66 @@
+{
+  "name": "image-rotator",
+  "title": "Image Rotator",
+  "description": "Rotate images by 90, 180, or 270 degrees",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application rotates images by 90, 180, or 270 degrees clockwise without any quality loss. Built using <a class=\"link\" href=\"https://pillow.readthedocs.io/\" target=\"_blank\">Pillow</a>, it uses lossless transpose operations for perfect rotation.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Rotate by 90, 180, or 270 degrees clockwise</li><li class=\"list-item-node\">Lossless rotation operation</li><li class=\"list-item-node\">Preserves original file format</li><li class=\"list-item-node\">Maintains image quality</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input Image</strong>: Upload your image file from stash</li><li class=\"list-item-node\"><strong>Rotation Angle</strong>: Select 90, 180, or 270 degrees</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a rotated image with the suffix <code class=\"inline\" spellcheck=\"false\">_rotated_[angle]</code> in the specified output directory.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Correcting image orientation from cameras</li><li class=\"list-item-node\">Rotating scanned documents</li><li class=\"list-item-node\">Adjusting images for proper display</li><li class=\"list-item-node\">Creating different viewing angles</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/image_rotator.py \"${inputFile}\" -o \"${outputDir}\" -r ${rotationAngle}",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input Image",
+      "description": "Upload the image file you want to rotate",
+      "defaultValue": ""
+    },
+    {
+      "type": "Select",
+      "name": "rotationAngle",
+      "label": "Rotation Angle",
+      "description": "Select the rotation angle (clockwise)",
+      "options": [
+        {
+          "label": "90 degrees",
+          "value": "90"
+        },
+        {
+          "label": "180 degrees",
+          "value": "180"
+        },
+        {
+          "label": "270 degrees",
+          "value": "270"
+        }
+      ],
+      "defaultValue": "90"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the rotated image will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

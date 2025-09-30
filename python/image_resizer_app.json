@@ -1,0 +1,45 @@
+{
+  "name": "image-resizer",
+  "title": "Image Resizer",
+  "description": "Resize images to specific dimensions (default: 800x600)",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application resizes images to specific dimensions with high-quality resampling. Built using <a class=\"link\" href=\"https://pillow.readthedocs.io/\" target=\"_blank\">Pillow</a>, it uses the LANCZOS algorithm for optimal quality when scaling images.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Resize images to 800x600 pixels by default</li><li class=\"list-item-node\">High-quality LANCZOS resampling</li><li class=\"list-item-node\">Preserves original file format</li><li class=\"list-item-node\">Optimized quality settings</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input Image</strong>: Upload your image file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a resized image with the suffix <code class=\"inline\" spellcheck=\"false\">_resized_800x600</code> in the specified output directory.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Standardizing image dimensions for galleries</li><li class=\"list-item-node\">Reducing image size for web display</li><li class=\"list-item-node\">Creating consistent-sized images for presentations</li><li class=\"list-item-node\">Preparing images for specific platform requirements</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/image_resizer.py \"${inputFile}\" -o \"${outputDir}\" -w 800 -H 600",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input Image",
+      "description": "Upload the image file you want to resize",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the resized image will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

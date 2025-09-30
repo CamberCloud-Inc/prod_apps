@@ -1,0 +1,45 @@
+{
+  "name": "image-grayscale",
+  "title": "Image Grayscale Converter",
+  "description": "Convert color images to grayscale",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application converts color images to grayscale while preserving all other image properties. Built using <a class=\"link\" href=\"https://pillow.readthedocs.io/\" target=\"_blank\">Pillow</a>, it provides high-quality grayscale conversion using standard luminance formulas.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Convert any color image to grayscale</li><li class=\"list-item-node\">Preserves original dimensions</li><li class=\"list-item-node\">Maintains original file format</li><li class=\"list-item-node\">Optimized quality settings</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input Image</strong>: Upload your image file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a grayscale image with the suffix <code class=\"inline\" spellcheck=\"false\">_grayscale</code> in the specified output directory.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Creating black and white versions for artistic effect</li><li class=\"list-item-node\">Preparing images for document printing</li><li class=\"list-item-node\">Reducing file size by removing color information</li><li class=\"list-item-node\">Preprocessing images for computer vision tasks</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/image_grayscale.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input Image",
+      "description": "Upload the image file you want to convert to grayscale",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the grayscale image will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
