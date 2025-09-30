@@ -1,0 +1,74 @@
+{
+  "name": "audio-format-converter",
+  "title": "Audio Format Converter",
+  "description": "Convert audio files between MP3, WAV, FLAC, OGG, and AAC formats",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application converts audio files between different formats including MP3, WAV, FLAC, OGG, and AAC. Built using <a class=\"link\" href=\"https://github.com/jiaaro/pydub\" target=\"_blank\">pydub</a>, it provides high-quality audio format conversion with automatic handling of codecs and bitrates.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Convert between MP3, WAV, FLAC, OGG, and AAC formats</li><li class=\"list-item-node\">Automatic format detection from input file</li><li class=\"list-item-node\">High-quality output with optimized bitrates</li><li class=\"list-item-node\">Preserves original filename with new extension</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input Audio</strong>: Upload your audio file from stash</li><li class=\"list-item-node\"><strong>Output Format</strong>: Select MP3, WAV, FLAC, OGG, or AAC</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a converted audio file with the same base name but new extension in the specified output directory.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Converting WAV files to MP3 for smaller file sizes</li><li class=\"list-item-node\">Converting MP3 to FLAC for lossless quality</li><li class=\"list-item-node\">Standardizing audio formats across a project</li><li class=\"list-item-node\">Preparing audio for specific platform requirements</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/audio_format_converter.py \"${inputFile}\" -o \"${outputDir}\" -f \"${outputFormat}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input Audio",
+      "description": "Upload the audio file you want to convert",
+      "defaultValue": ""
+    },
+    {
+      "type": "Select",
+      "name": "outputFormat",
+      "label": "Output Format",
+      "description": "Select the output audio format",
+      "options": [
+        {
+          "label": "MP3",
+          "value": "mp3"
+        },
+        {
+          "label": "WAV",
+          "value": "wav"
+        },
+        {
+          "label": "FLAC",
+          "value": "flac"
+        },
+        {
+          "label": "OGG",
+          "value": "ogg"
+        },
+        {
+          "label": "AAC",
+          "value": "aac"
+        }
+      ],
+      "defaultValue": "mp3"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the converted audio will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
