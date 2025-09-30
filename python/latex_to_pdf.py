@@ -75,8 +75,15 @@ def main():
         pdf_output = os.path.join(args.output_dir, f"{base_name}.pdf")
 
         if os.path.exists(pdf_source):
-            shutil.copy2(pdf_source, pdf_output)
-            print(f"LaTeX to PDF compilation completed! Output: {pdf_output}")
+            # Only copy if source and destination are different
+            pdf_source_abs = os.path.abspath(pdf_source)
+            pdf_output_abs = os.path.abspath(pdf_output)
+
+            if pdf_source_abs != pdf_output_abs:
+                shutil.copy2(pdf_source, pdf_output)
+                print(f"LaTeX to PDF compilation completed! Output: {pdf_output}")
+            else:
+                print(f"LaTeX to PDF compilation completed! Output: {pdf_source}")
 
             # Clean up auxiliary files
             for ext in ['.aux', '.log', '.out']:
