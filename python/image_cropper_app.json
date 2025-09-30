@@ -1,0 +1,45 @@
+{
+  "name": "image-cropper",
+  "title": "Image Cropper",
+  "description": "Crop images to 800x600 dimensions from center",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application crops images to 800x600 dimensions from the center. Built using <a class=\"link\" href=\"https://pillow.readthedocs.io/\" target=\"_blank\">Pillow</a>, it extracts the central portion of your image for a focused view.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Crops to 800x600 pixels from center</li><li class=\"list-item-node\">Preserves original image quality</li><li class=\"list-item-node\">Automatically adjusts if image is smaller than target</li><li class=\"list-item-node\">Maintains original file format</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input Image</strong>: Upload your image file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a cropped image with the suffix <code class=\"inline\" spellcheck=\"false\">_cropped</code> in the specified output directory.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Extracting center portion of large images</li><li class=\"list-item-node\">Creating uniform thumbnail views</li><li class=\"list-item-node\">Removing unwanted edges or borders</li><li class=\"list-item-node\">Focusing on central subjects</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/image_cropper.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input Image",
+      "description": "Upload the image file you want to crop",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the cropped image will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
