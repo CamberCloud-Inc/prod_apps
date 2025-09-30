@@ -1,0 +1,106 @@
+{
+  "name": "audio-to-text-transcription",
+  "title": "Audio to Text Transcription",
+  "description": "Transcribe audio/video files to text using OpenAI Whisper",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application transcribes audio and video files to text using <a class=\"link\" href=\"https://github.com/openai/whisper\" target=\"_blank\">OpenAI Whisper</a>, a state-of-the-art speech recognition model. It supports multiple languages and output formats including plain text, SRT, VTT, and JSON.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Multiple Whisper model sizes (tiny to large)</li><li class=\"list-item-node\">Automatic language detection</li><li class=\"list-item-node\">Multiple output formats (TXT, SRT, VTT, JSON)</li><li class=\"list-item-node\">Supports audio and video files</li><li class=\"list-item-node\">Timestamp information for subtitle generation</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input File</strong>: Upload audio or video file from stash</li><li class=\"list-item-node\"><strong>Model Size</strong>: Choose from tiny (fastest), base, small, medium, or large (most accurate)</li><li class=\"list-item-node\"><strong>Language</strong>: Specify language or use auto-detect</li><li class=\"list-item-node\"><strong>Output Format</strong>: TXT (plain text), SRT (SubRip), VTT (WebVTT), or JSON (detailed)</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a transcription file with '_transcript' suffix and appropriate extension based on the selected format.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Transcribing podcasts and interviews</li><li class=\"list-item-node\">Creating subtitles for videos</li><li class=\"list-item-node\">Converting speech to searchable text</li><li class=\"list-item-node\">Meeting and lecture transcription</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && sudo apt-get update && sudo apt-get install -y ffmpeg && python prod_apps/python/audio_to_text_transcription.py \"${inputFile}\" -o \"${outputDir}\" -m \"${model}\" -l \"${language}\" -f \"${format}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Small CPU",
+          "value": "small_cpu",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "small_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Upload the audio or video file to transcribe",
+      "defaultValue": ""
+    },
+    {
+      "type": "Select",
+      "name": "model",
+      "label": "Model Size",
+      "description": "Larger models are more accurate but slower",
+      "options": [
+        {
+          "label": "Tiny (Fastest, ~1GB RAM)",
+          "value": "tiny"
+        },
+        {
+          "label": "Base (Balanced, ~1GB RAM)",
+          "value": "base"
+        },
+        {
+          "label": "Small (Good Quality, ~2GB RAM)",
+          "value": "small"
+        },
+        {
+          "label": "Medium (High Quality, ~5GB RAM)",
+          "value": "medium"
+        },
+        {
+          "label": "Large (Best Quality, ~10GB RAM)",
+          "value": "large"
+        }
+      ],
+      "defaultValue": "base"
+    },
+    {
+      "type": "Input",
+      "name": "language",
+      "label": "Language Code",
+      "description": "Language code (e.g., en, es, fr, de, zh) or 'auto' for auto-detect",
+      "defaultValue": "en"
+    },
+    {
+      "type": "Select",
+      "name": "format",
+      "label": "Output Format",
+      "description": "Select the output format for the transcription",
+      "options": [
+        {
+          "label": "Plain Text (TXT)",
+          "value": "txt"
+        },
+        {
+          "label": "SubRip Subtitles (SRT)",
+          "value": "srt"
+        },
+        {
+          "label": "WebVTT Subtitles (VTT)",
+          "value": "vtt"
+        },
+        {
+          "label": "JSON (Full Details)",
+          "value": "json"
+        }
+      ],
+      "defaultValue": "txt"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the transcription will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

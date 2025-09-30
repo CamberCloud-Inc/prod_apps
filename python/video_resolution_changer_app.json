@@ -1,0 +1,70 @@
+{
+  "name": "video-resolution-changer",
+  "title": "Video Resolution Changer",
+  "description": "Change video resolution to standard formats (480p/720p/1080p/4K)",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application changes video resolution to standard formats including 480p, 720p, 1080p, and 4K. Built using <a class=\"link\" href=\"https://zulko.github.io/moviepy/\" target=\"_blank\">MoviePy</a>, it maintains aspect ratio and provides high-quality output.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Support for standard resolutions: 480p, 720p, 1080p, 4K</li><li class=\"list-item-node\">Maintains 16:9 aspect ratio</li><li class=\"list-item-node\">High-quality H.264 encoding with AAC audio</li><li class=\"list-item-node\">Preserves frame rate and duration</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input Video</strong>: Upload your video file from stash</li><li class=\"list-item-node\"><strong>Target Resolution</strong>: Choose 480p (854x480), 720p (1280x720), 1080p (1920x1080), or 4K (3840x2160)</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a resized MP4 video file with the resolution suffix added to the original filename (e.g., video_720p.mp4).</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Standardizing video resolution across a project</li><li class=\"list-item-node\">Downscaling 4K videos for smaller file sizes</li><li class=\"list-item-node\">Upscaling lower resolution videos</li><li class=\"list-item-node\">Preparing videos for specific platform requirements</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/video_resolution_changer.py \"${videoFile}\" -o \"${outputDir}\" -r \"${resolution}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Small CPU",
+          "value": "xsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "videoFile",
+      "label": "Input Video",
+      "description": "Upload the video file to resize",
+      "defaultValue": ""
+    },
+    {
+      "type": "Select",
+      "name": "resolution",
+      "label": "Target Resolution",
+      "description": "Select the target resolution for the video",
+      "options": [
+        {
+          "label": "480p (854x480)",
+          "value": "480p"
+        },
+        {
+          "label": "720p (1280x720)",
+          "value": "720p"
+        },
+        {
+          "label": "1080p (1920x1080)",
+          "value": "1080p"
+        },
+        {
+          "label": "4K (3840x2160)",
+          "value": "4k"
+        }
+      ],
+      "defaultValue": "720p"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the resized video will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

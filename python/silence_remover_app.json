@@ -1,0 +1,95 @@
+{
+  "name": "silence-remover",
+  "title": "Silence Remover",
+  "description": "Remove silent parts from audio and video files",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application automatically removes silent parts from audio and video files, making recordings more concise. Built using <a class=\"link\" href=\"https://github.com/jiaaro/pydub\" target=\"_blank\">pydub</a> for audio detection and <a class=\"link\" href=\"https://zulko.github.io/moviepy/\" target=\"_blank\">MoviePy</a> for video processing.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Automatic silence detection and removal</li><li class=\"list-item-node\">Works with both audio and video files</li><li class=\"list-item-node\">Configurable silence threshold and duration</li><li class=\"list-item-node\">Shows time saved and compression percentage</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input File</strong>: Upload audio or video file from stash</li><li class=\"list-item-node\"><strong>Silence Threshold</strong>: Audio level in dBFS below which is considered silence</li><li class=\"list-item-node\"><strong>Minimum Silence Duration</strong>: Only remove silences longer than this duration</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a processed file with '_nosilence' suffix added to the original filename.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Removing pauses from podcast recordings</li><li class=\"list-item-node\">Compressing lecture or presentation videos</li><li class=\"list-item-node\">Cleaning up interview recordings</li><li class=\"list-item-node\">Reducing file size by removing dead air</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && sudo apt-get update && sudo apt-get install -y ffmpeg && python prod_apps/python/silence_remover.py \"${inputFile}\" -o \"${outputDir}\" -t \"${threshold}\" -m \"${minSilence}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Small CPU",
+          "value": "xsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Upload the audio or video file to process",
+      "defaultValue": ""
+    },
+    {
+      "type": "Select",
+      "name": "threshold",
+      "label": "Silence Threshold (dBFS)",
+      "description": "Audio level below which is considered silence (lower = more sensitive)",
+      "options": [
+        {
+          "label": "-30 dBFS (Less Sensitive)",
+          "value": "-30"
+        },
+        {
+          "label": "-40 dBFS (Balanced)",
+          "value": "-40"
+        },
+        {
+          "label": "-50 dBFS (More Sensitive)",
+          "value": "-50"
+        },
+        {
+          "label": "-60 dBFS (Very Sensitive)",
+          "value": "-60"
+        }
+      ],
+      "defaultValue": "-40"
+    },
+    {
+      "type": "Select",
+      "name": "minSilence",
+      "label": "Minimum Silence Duration (ms)",
+      "description": "Only remove silences longer than this duration",
+      "options": [
+        {
+          "label": "250ms",
+          "value": "250"
+        },
+        {
+          "label": "500ms (Balanced)",
+          "value": "500"
+        },
+        {
+          "label": "1000ms (1 second)",
+          "value": "1000"
+        },
+        {
+          "label": "2000ms (2 seconds)",
+          "value": "2000"
+        }
+      ],
+      "defaultValue": "500"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the processed file will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

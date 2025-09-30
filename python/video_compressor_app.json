@@ -1,0 +1,66 @@
+{
+  "name": "video-compressor",
+  "title": "Video Compressor",
+  "description": "Reduce video file size with quality control (low/medium/high)",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application compresses video files to reduce file size while maintaining quality. Built using <a class=\"link\" href=\"https://zulko.github.io/moviepy/\" target=\"_blank\">MoviePy</a>, it provides three quality levels to balance file size and video quality.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Three compression quality levels (low/medium/high)</li><li class=\"list-item-node\">Optimized bitrate settings for each quality level</li><li class=\"list-item-node\">H.264 video codec with AAC audio</li><li class=\"list-item-node\">Shows compression ratio and file size reduction</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input Video</strong>: Upload your video file from stash</li><li class=\"list-item-node\"><strong>Quality Level</strong>: Choose low (500k bitrate), medium (1000k bitrate), or high (2000k bitrate)</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a compressed MP4 video file with the suffix '_compressed' added to the original filename.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Reducing video file sizes for storage or sharing</li><li class=\"list-item-node\">Preparing videos for web upload</li><li class=\"list-item-node\">Batch compression of large video files</li><li class=\"list-item-node\">Optimizing videos for mobile devices</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/video_compressor.py \"${videoFile}\" -o \"${outputDir}\" -q \"${quality}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Small CPU",
+          "value": "xsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "videoFile",
+      "label": "Input Video",
+      "description": "Upload the video file to compress",
+      "defaultValue": ""
+    },
+    {
+      "type": "Select",
+      "name": "quality",
+      "label": "Quality Level",
+      "description": "Select compression quality (low=smaller file, high=better quality)",
+      "options": [
+        {
+          "label": "Low (500k bitrate)",
+          "value": "low"
+        },
+        {
+          "label": "Medium (1000k bitrate)",
+          "value": "medium"
+        },
+        {
+          "label": "High (2000k bitrate)",
+          "value": "high"
+        }
+      ],
+      "defaultValue": "medium"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the compressed video will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
