@@ -66,10 +66,16 @@ def main():
 
     print(f"\nConverting YAML to JSON...")
 
-    # Write JSON
+    # Write JSON with custom serializer for dates and other types
+    def json_serializer(obj):
+        """Convert non-serializable objects to strings"""
+        if hasattr(obj, 'isoformat'):  # datetime, date, time objects
+            return obj.isoformat()
+        return str(obj)
+
     try:
         with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
+            json.dump(data, f, indent=2, ensure_ascii=False, default=json_serializer)
         print(f"JSON file saved to: {output_path}")
 
     except Exception as e:
