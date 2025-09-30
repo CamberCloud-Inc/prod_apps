@@ -1,0 +1,45 @@
+{
+  "name": "csv-to-json",
+  "title": "CSV to JSON Converter",
+  "description": "Convert CSV rows into JSON objects with proper data structure",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application converts CSV files into JSON format, creating an array of objects where each row becomes a JSON object with column headers as keys. Perfect for converting spreadsheet data into API-ready JSON format.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Converts CSV rows to JSON objects</li><li class=\"list-item-node\">Uses column headers as JSON keys</li><li class=\"list-item-node\">Creates properly formatted JSON array</li><li class=\"list-item-node\">Preserves UTF-8 encoding and special characters</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input CSV File</strong>: Upload your CSV file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for the JSON output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a JSON file named <code class=\"inline\" spellcheck=\"false\">{original_name}.json</code> containing an array of objects, with one object per CSV row.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Converting Excel/spreadsheet data to JSON</li><li class=\"list-item-node\">Preparing CSV data for APIs</li><li class=\"list-item-node\">Transforming tabular data into structured JSON</li><li class=\"list-item-node\">Creating JSON datasets from CSV exports</li></ul>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && python prod_apps_clone/python/csv_to_json.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input CSV File",
+      "description": "Upload the CSV file you want to convert to JSON",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the JSON file will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
