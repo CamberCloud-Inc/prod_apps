@@ -1,0 +1,116 @@
+{
+  "name": "smrnaseq-novel-discovery",
+  "title": "Novel miRNA Discovery (nf-core/smrnaseq)",
+  "description": "Discover novel, previously unannotated microRNAs using the nf-core/smrnaseq pipeline with MIRDeep2. Identify species-specific, tumor-specific, or tissue-specific miRNAs in non-model organisms and specialized biological contexts. Deep sequencing recommended for robust novel miRNA prediction.",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/smrnaseq --input ${input} --outdir ${outdir} --genome ${genome} --mirtrace_species ${species} --skip_mirdeep false -r 2.4.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/smrnaseq/master/docs/images/nf-core-smrnaseq_logo_light.png",
+  "content": "<h2><strong>Novel miRNA Discovery</strong></h2><p>The <strong>nf-core/smrnaseq</strong> pipeline with <strong>MIRDeep2</strong> discovers novel, previously unannotated microRNAs from small RNA sequencing data. This app identifies species-specific miRNAs, tumor-specific miRNAs in cancer, or miRNAs in non-model organisms where annotation is incomplete.</p><h3><strong>What This Pipeline Does</strong></h3><ul><li><strong>Novel miRNA Prediction</strong>: MIRDeep2 identifies potential new miRNAs</li><li><strong>Hairpin Structure Analysis</strong>: Predicts characteristic miRNA precursor structures</li><li><strong>Expression Quantification</strong>: Counts both known and novel miRNAs</li><li><strong>Confidence Scoring</strong>: Statistical scores for novel predictions</li><li><strong>Known miRNA Profiling</strong>: Standard quantification alongside discovery</li><li><strong>Comprehensive QC</strong>: miRTrace and MultiQC reports</li></ul><h3><strong>Scientific Applications</strong></h3><blockquote><p><strong>Use Cases:</strong></p><ul><li><strong>Non-Model Organisms</strong>: Species without complete miRNA annotation</li><li><strong>Cancer Research</strong>: Tumor-specific or oncogenic miRNAs</li><li><strong>Evolutionary Studies</strong>: Species-specific miRNA evolution</li><li><strong>Tissue-Specific Discovery</strong>: Specialized cell type miRNAs</li><li><strong>Viral miRNAs</strong>: Virus-encoded miRNAs in infected cells</li><li><strong>Plant Biology</strong>: Plant-specific miRNA families</li></ul></blockquote><h3><strong>Input Requirements</strong></h3><p>Provide a CSV samplesheet:</p><ul><li><code>sample</code>: Unique sample identifier</li><li><code>fastq_1</code>: Path/URL to single-end FASTQ file</li></ul><p><strong>Sequencing Depth for Discovery:</strong></p><ul><li>Minimum: 10 million reads per sample</li><li>Recommended: 20-50 million reads per sample</li><li>Deep sequencing increases discovery sensitivity</li><li>Multiple samples improve validation</li></ul><h3><strong>MIRDeep2 Discovery Process</strong></h3><ol><li><strong>Mapping</strong>: Align reads to reference genome</li><li><strong>Hairpin Prediction</strong>: Identify genomic loci with characteristic miRNA hairpin structures</li><li><strong>Read Stacking</strong>: Analyze read coverage patterns (5p and 3p arms)</li><li><strong>Scoring</strong>: Statistical significance of predictions</li><li><strong>Filtering</strong>: Remove low-confidence predictions</li></ol><h3><strong>Key Outputs</strong></h3><ul><li><strong>Novel miRNAs</strong>: <code>mirdeep2/novel_mature.fa</code> - Predicted novel miRNA sequences</li><li><strong>Novel Hairpins</strong>: <code>mirdeep2/novel_precursors.fa</code> - Precursor structures</li><li><strong>Result Summary</strong>: <code>mirdeep2/result.html</code> - HTML report with predictions and confidence scores</li><li><strong>Expression Matrix</strong>: Combined known + novel miRNA counts</li><li><strong>Known miRNAs</strong>: <code>edger/counts.tsv</code> - Standard miRNA quantification</li><li><strong>QC Reports</strong>: MultiQC and miRTrace quality assessment</li></ul><h3><strong>Understanding MIRDeep2 Scores</strong></h3><p>Novel miRNA predictions include confidence scores:</p><ul><li><strong>Score >10</strong>: High confidence, likely genuine miRNA</li><li><strong>Score 5-10</strong>: Medium confidence, requires validation</li><li><strong>Score 0-5</strong>: Low confidence, likely false positive</li><li><strong>Negative scores</strong>: Very low confidence, exclude</li></ul><p><strong>Recommendation:</strong> Focus on predictions with score >5 for experimental validation.</p><h3><strong>Experimental Validation</strong></h3><p>Novel miRNAs require experimental confirmation:</p><ol><li><strong>Northern Blot</strong>: Gold standard for miRNA validation</li><li><strong>qPCR</strong>: Quantitative validation with specific primers</li><li><strong>RNA-seq in Independent Samples</strong>: Biological validation</li><li><strong>Functional Studies</strong>: Target identification and functional analysis</li></ol><h3><strong>Quality Metrics</strong></h3><blockquote><p><strong>Good Discovery Dataset:</strong></p><ul><li>✓ <strong>Deep sequencing</strong>: >10M reads per sample</li><li>✓ <strong>High miRNA content</strong>: >50% miRNA mapping</li><li>✓ <strong>Low contamination</strong>: <5% rRNA</li><li>✓ <strong>Multiple samples</strong>: Increases confidence in predictions</li><li>✓ <strong>Peak at 22nt</strong>: Characteristic miRNA length distribution</li></ul></blockquote><h3><strong>Species Considerations</strong></h3><ul><li><strong>Well-Annotated Species (human, mouse)</strong>: Fewer novel discoveries expected</li><li><strong>Non-Model Organisms</strong>: More novel discoveries, use closest related species code</li><li><strong>Tissue-Specific</strong>: Novel miRNAs may be tissue-restricted</li><li><strong>Cancer/Disease</strong>: Tumor-specific miRNAs can be discovered</li></ul><h3><strong>Computational Resources</strong></h3><p><strong>Important:</strong> Novel miRNA discovery is computationally intensive.</p><ul><li><strong>SMALL</strong>: Testing with limited samples</li><li><strong>MEDIUM</strong>: Recommended for discovery studies (5-20 samples)</li><li><strong>LARGE</strong>: Large-scale discovery (>20 samples)</li></ul><p>Runtime: 30-60 minutes per sample (longer than standard profiling)</p><h3><strong>Expected Discovery Rates</strong></h3><ul><li><strong>Human/Mouse</strong>: 0-10 novel miRNAs (most are already annotated)</li><li><strong>Non-Model Organisms</strong>: 10-100+ novel miRNAs</li><li><strong>Cancer Samples</strong>: 5-20 tumor-specific miRNAs</li><li><strong>Rare Tissues</strong>: 5-30 tissue-specific miRNAs</li></ul><h3><strong>Downstream Analysis</strong></h3><p>After discovering novel miRNAs:</p><ol><li><strong>Validate Expression</strong>: Confirm by qPCR or Northern blot</li><li><strong>Conservation Analysis</strong>: Check conservation across species</li><li><strong>Target Prediction</strong>: Identify mRNA targets (TargetScan, miRanda)</li><li><strong>Functional Studies</strong>: Overexpression or knockdown experiments</li><li><strong>Submit to miRBase</strong>: Contribute validated miRNAs to community database</li></ol><h3><strong>Important Notes</strong></h3><ul><li>MIRDeep2 requires reference genome (cannot use pre-built indices only)</li><li>Predictions are <em>computational</em> - experimental validation required</li><li>Multiple biological replicates strengthen confidence</li><li>Low-confidence predictions should be interpreted cautiously</li></ul><blockquote><p><strong>Perfect for:</strong> Non-model organism researchers • Cancer biologists • Plant scientists • Evolutionary biologists • Virology • Discovery research</p></blockquote><p>Built with <a href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a href=\"https://nf-co.re/smrnaseq/2.4.0/\" target=\"_blank\">nf-core/smrnaseq v2.4.0</a> • MIRDeep2 prediction • Publication-ready results</p>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV file with columns: sample, fastq_1. Deep sequencing recommended (>10M reads per sample) for robust novel miRNA discovery.",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory where all results will be saved, including novel miRNA predictions, hairpin structures, confidence scores, and validation data.",
+      "defaultValue": "./smrnaseq-novel-discovery-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome for your organism. Required for MIRDeep2 to identify genomic loci with miRNA hairpin structures.",
+      "defaultValue": "GRCh38",
+      "required": true,
+      "options": [
+        {"label": "Human GRCh38/hg38 (recommended)", "value": "GRCh38"},
+        {"label": "Human GRCh37/hg19 (legacy)", "value": "GRCh37"},
+        {"label": "Mouse GRCm39/mm39 (latest)", "value": "GRCm39"},
+        {"label": "Mouse GRCm38/mm10 (widely used)", "value": "GRCm38"},
+        {"label": "Rat Rnor_6.0", "value": "Rnor_6.0"},
+        {"label": "Zebrafish GRCz11", "value": "GRCz11"},
+        {"label": "C. elegans WBcel235", "value": "WBcel235"}
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Species Code (miRTrace)",
+      "name": "species",
+      "description": "Species code for quality control. For non-model organisms, use closest related species.",
+      "defaultValue": "hsa",
+      "required": true,
+      "options": [
+        {"label": "Human (hsa)", "value": "hsa"},
+        {"label": "Mouse (mmu)", "value": "mmu"},
+        {"label": "Rat (rno)", "value": "rno"},
+        {"label": "Zebrafish (dre)", "value": "dre"},
+        {"label": "C. elegans (cel)", "value": "cel"},
+        {"label": "Fruit Fly (dme)", "value": "dme"}
+      ]
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "description": "Select compute resources. MEDIUM recommended for novel miRNA discovery (computationally intensive). Larger datasets benefit from LARGE nodes.",
+      "options": [
+        {
+          "label": "SMALL (8 CPUs, 30GB RAM) - Testing/small datasets",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Recommended for discovery",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Large-scale discovery (>20 samples)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "medium"
+    }
+  ],
+  "tags": [
+    {"name": "genomics", "type": "subfield"},
+    {"name": "rna", "type": "task"},
+    {"name": "mirna", "type": "task"},
+    {"name": "discovery", "type": "task"},
+    {"name": "biology", "type": "field"}
+  ]
+}
