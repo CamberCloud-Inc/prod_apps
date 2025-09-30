@@ -1,0 +1,43 @@
+BEGIN:VCARD
+VERSION:3.0
+FN:John Doe
+N:Doe;John;Michael;;
+ORG:Tech Corporation;Engineering
+TITLE:Senior Software Engineer
+EMAIL;TYPE=WORK:john.doe@techcorp.com
+EMAIL;TYPE=HOME:john@personal.com
+TEL;TYPE=WORK:+1-555-0101
+TEL;TYPE=CELL:+1-555-0102
+ADR;TYPE=WORK:;;123 Tech Street;San Francisco;CA;94105;USA
+URL:https://johndoe.dev
+BDAY:1990-05-15
+NOTE:Key contact for backend systems
+UID:john.doe@techcorp.com
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Jane Smith
+N:Smith;Jane;Elizabeth;;Dr.
+ORG:Medical Center;Cardiology
+TITLE:Chief Cardiologist
+EMAIL;TYPE=WORK:jane.smith@medcenter.org
+TEL;TYPE=WORK:+1-555-0201
+TEL;TYPE=CELL:+1-555-0202
+ADR;TYPE=WORK:;;456 Health Ave;Boston;MA;02115;USA
+BDAY:1985-08-22
+NOTE:Specialist in heart disease
+UID:jane.smith@medcenter.org
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Bob Wilson
+N:Wilson;Bob;;;
+ORG:Marketing Agency
+TITLE:Creative Director
+EMAIL;TYPE=WORK:bob@marketing.com
+TEL;TYPE=CELL:+1-555-0301
+ADR;TYPE=WORK:;;789 Creative Blvd;New York;NY;10001;USA
+URL:https://bobwilson.com
+NOTE:Award-winning designer
+UID:bob@marketing.com
+END:VCARD

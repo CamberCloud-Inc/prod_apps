@@ -1,0 +1,69 @@
+{
+  "name": "database-table-dumper",
+  "title": "Database Table Dumper",
+  "description": "Export entire database tables to JSON or CSV format",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application exports entire database tables from SQLite databases to either JSON or CSV format. Perfect for backing up tables, migrating data, or creating exports for analysis.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Export entire tables to JSON or CSV</li><li class=\"list-item-node\">Automatic column detection</li><li class=\"list-item-node\">Support for SQLite databases</li><li class=\"list-item-node\">List available tables on error</li><li class=\"list-item-node\">Handle empty tables gracefully</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Database File</strong>: Upload your SQLite database file</li><li class=\"list-item-node\"><strong>Table Name</strong>: Enter the name of the table to export</li><li class=\"list-item-node\"><strong>Output Format</strong>: Choose between JSON or CSV format</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for the output file</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a file named <code class=\"inline\" spellcheck=\"false\">{table_name}.json</code> or <code class=\"inline\" spellcheck=\"false\">{table_name}.csv</code> containing all rows from the specified table.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Database table backups</li><li class=\"list-item-node\">Data migration between systems</li><li class=\"list-item-node\">Creating data exports for analysis</li><li class=\"list-item-node\">Archiving database contents</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python $REPO_DIR/python/database_table_dumper.py \"${dbPath}\" -t \"${tableName}\" -f \"${outputFormat}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "dbPath",
+      "label": "Database File",
+      "description": "Upload the SQLite database file (.db, .sqlite, .sqlite3)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Text",
+      "name": "tableName",
+      "label": "Table Name",
+      "description": "Enter the name of the table to export",
+      "defaultValue": ""
+    },
+    {
+      "type": "Select",
+      "name": "outputFormat",
+      "label": "Output Format",
+      "description": "Choose the output format for the exported data",
+      "options": [
+        {
+          "label": "JSON",
+          "value": "json"
+        },
+        {
+          "label": "CSV",
+          "value": "csv"
+        }
+      ],
+      "defaultValue": "json"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the output file will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

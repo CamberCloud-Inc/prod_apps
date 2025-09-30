@@ -1,0 +1,18 @@
+============================================================
+FILE TYPE DETECTION REPORT
+============================================================
+File: sample.txt
+Path: /Users/david/git/prod_apps/python/test_data/sample.txt
+Size: 868 bytes
+
+============================================================
+MIME Type: text/plain
+Description: Text file (UTF-8)
+Encoding: utf-8
+============================================================
+
+Additional Information:
+  - File extension: .txt
+  - Is readable: True
+  - Is writable: True
+  - Is executable: False

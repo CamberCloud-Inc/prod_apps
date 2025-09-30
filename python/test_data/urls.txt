@@ -1,0 +1,9 @@
+# Sample URL list for sitemap generation
+https://example.com/
+https://example.com/about
+https://example.com/products
+https://example.com/services
+https://example.com/contact
+https://example.com/blog
+https://example.com/blog/post1
+https://example.com/blog/post2

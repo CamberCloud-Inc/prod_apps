@@ -1,0 +1,96 @@
+{
+  "name": "sitemap-generator",
+  "title": "Sitemap Generator",
+  "description": "Create XML sitemaps from URL lists for search engine optimization",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application generates valid XML sitemaps from a list of URLs using Python's xml.etree module. Sitemaps help search engines discover and index your website pages more efficiently.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Generate sitemap.org protocol compliant XML</li><li class=\"list-item-node\">Configurable priority and change frequency</li><li class=\"list-item-node\">Automatic lastmod date stamping</li><li class=\"list-item-node\">Pretty-printed, readable XML output</li><li class=\"list-item-node\">Supports comments (lines starting with #) in URL list</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input URL List</strong>: Upload a text file with one URL per line</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li><li class=\"list-item-node\"><strong>Priority</strong>: Default priority for URLs (0.0-1.0)</li><li class=\"list-item-node\"><strong>Change Frequency</strong>: How often pages change (weekly, daily, etc.)</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates an XML sitemap file named <code class=\"inline\" spellcheck=\"false\">sitemap.xml</code> ready for submission to search engines.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">SEO optimization for websites</li><li class=\"list-item-node\">Submitting site structure to search engines</li><li class=\"list-item-node\">Improving site indexation</li><li class=\"list-item-node\">Creating dynamic sitemaps from URL databases</li></ul>",
+  "command": "rm -rf prod_apps || true; git clone https://github.com/CamberCloud-Inc/prod_apps.git && python $REPO_DIR/python/sitemap_generator.py \"${inputFile}\" -o \"${outputDir}\" -n \"${outputName}\" -p ${priority} -f \"${changeFreq}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input URL List",
+      "description": "Upload a text file containing one URL per line (lines starting with # are treated as comments)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the sitemap XML will be saved",
+      "defaultValue": "./"
+    },
+    {
+      "type": "Input",
+      "name": "outputName",
+      "label": "Output Filename",
+      "description": "Name for the sitemap file (without .xml extension)",
+      "defaultValue": "sitemap"
+    },
+    {
+      "type": "Number",
+      "name": "priority",
+      "label": "Default Priority",
+      "description": "Priority for URLs (0.0 = lowest, 1.0 = highest, 0.5 = medium)",
+      "defaultValue": "0.5"
+    },
+    {
+      "type": "Select",
+      "name": "changeFreq",
+      "label": "Change Frequency",
+      "description": "How often the pages typically change",
+      "options": [
+        {
+          "label": "Always",
+          "value": "always"
+        },
+        {
+          "label": "Hourly",
+          "value": "hourly"
+        },
+        {
+          "label": "Daily",
+          "value": "daily"
+        },
+        {
+          "label": "Weekly",
+          "value": "weekly"
+        },
+        {
+          "label": "Monthly",
+          "value": "monthly"
+        },
+        {
+          "label": "Yearly",
+          "value": "yearly"
+        },
+        {
+          "label": "Never",
+          "value": "never"
+        }
+      ],
+      "defaultValue": "weekly"
+    }
+  ]
+}

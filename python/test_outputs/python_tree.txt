@@ -1,0 +1,208 @@
+python/
+├── test_data/
+│   ├── merge_test/
+│   ├── feed_items.json
+│   ├── sample.csv
+│   ├── sample.docx
+│   ├── sample.log
+│   ├── sample.md
+│   ├── sample.txt
+│   ├── sample.xlsx
+│   ├── sample_calendar.ics
+│   ├── sample_contacts.vcf
+│   ├── sample_email.eml
+│   ├── sample_text.txt
+│   ├── test.csv
+│   ├── test.json
+│   ├── test.rtf
+│   ├── test.tex
+│   ├── test.xml
+│   ├── test.yaml
+│   └── urls.txt
+├── test_outputs/
+├── ML_LEARNING_PLATFORM_PLAN.md
+├── audio_format_converter.py
+├── audio_format_converter_app.json
+├── audio_merger.py
+├── audio_merger_app.json
+├── audio_metadata_extractor.py
+├── audio_metadata_extractor_app.json
+├── audio_normalizer.py
+├── audio_normalizer_app.json
+├── audio_to_text_transcription.py
+├── audio_to_text_transcription_app.json
+├── audio_trimmer.py
+├── audio_trimmer_app.json
+├── barcode_generator.py
+├── barcode_generator_app.json
+├── base64_decoder.py
+├── base64_decoder_app.json
+├── base64_encoder.py
+├── base64_encoder_app.json
+├── batch_image_renamer.py
+├── batch_image_renamer_app.json
+├── color_palette_extractor.py
+├── color_palette_extractor_app.json
+├── csv_column_extractor.py
+├── csv_column_extractor_app.json
+├── csv_to_excel.py
+├── csv_to_excel_app.json
+├── csv_to_json.py
+├── csv_to_json_app.json
+├── database_table_dumper.py
+├── database_table_dumper_app.json
+├── directory_tree_generator.py
+├── directory_tree_generator_app.json
+├── duplicate_line_remover.py
+├── duplicate_line_remover_app.json
+├── email_parser.py
+├── email_parser_app.json
+├── epub_to_pdf.py
+├── epub_to_pdf_app.json
+├── excel_to_csv.py
+├── excel_to_csv_app.json
+├── favicon_generator.py
+├── favicon_generator_app.json
+├── file_checksum_verifier.py
+├── file_checksum_verifier_app.json
+├── file_hash_generator.py
+├── file_hash_generator_app.json
+├── file_merger.py
+├── file_merger_app.json
+├── file_splitter.py
+├── file_splitter_app.json
+├── file_type_detector.py
+├── file_type_detector_app.json
+├── font_converter.py
+├── font_converter_app.json
+├── heic_to_jpg.py
+├── heic_to_jpg_app.json
+├── html_to_pdf.py
+├── html_to_pdf_app.json
+├── ical_to_csv.py
+├── ical_to_csv_app.json
+├── image_background_remover.py
+├── image_background_remover_app.json
+├── image_blur_tool.py
+├── image_blur_tool_app.json
+├── image_border_adder.py
+├── image_border_adder_app.json
+├── image_brightness_adjuster.py
+├── image_brightness_adjuster_app.json
+├── image_collage_maker.py
+├── image_collage_maker_app.json
+├── image_color_inverter.py
+├── image_color_inverter_app.json
+├── image_compressor.py
+├── image_compressor_app.json
+├── image_cropper.py
+├── image_cropper_app.json
+├── image_filter_applicator.py
+├── image_filter_applicator_app.json
+├── image_format_converter.py
+├── image_format_converter_app.json
+├── image_grayscale.py
+├── image_grayscale_app.json
+├── image_metadata_extractor.py
+├── image_metadata_extractor_app.json
+├── image_metadata_remover.py
+├── image_metadata_remover_app.json
+├── image_resizer.py
+├── image_resizer_app.json
+├── image_rotator.py
+├── image_rotator_app.json
+├── image_sharpener.py
+├── image_sharpener_app.json
+├── image_stacker.py
+├── image_stacker_app.json
+├── image_watermarker.py
+├── image_watermarker_app.json
+├── json_formatter.py
+├── json_formatter_app.json
+├── json_minifier.py
+├── json_minifier_app.json
+├── json_to_csv.py
+├── json_to_csv_app.json
+├── latex_to_pdf.py
+├── latex_to_pdf_app.json
+├── line_number_adder.py
+├── line_number_adder_app.json
+├── line_sorter.py
+├── line_sorter_app.json
+├── log_file_parser.py
+├── log_file_parser_app.json
+├── markdown_to_html.py
+├── markdown_to_html_app.json
+├── markdown_to_pdf.py
+├── markdown_to_pdf_app.json
+├── office_to_markdown.py
+├── office_to_markdown_app.json
+├── pdf_analyzer.py
+├── pdf_analyzer_app.json
+├── pdf_merger.py
+├── pdf_merger_app.json
+├── pdf_page_extractor.py
+├── pdf_page_extractor_app.json
+├── pdf_splitter.py
+├── pdf_splitter_app.json
+├── pdf_text_extractor.py
+├── pdf_text_extractor_app.json
+├── pdf_to_epub.py
+├── pdf_to_epub_app.json
+├── qr_code_generator.py
+├── qr_code_generator_app.json
+├── rss_feed_generator.py
+├── rss_feed_generator_app.json
+├── rtf_to_docx.py
+├── rtf_to_docx_app.json
+├── silence_remover.py
+├── silence_remover_app.json
+├── sitemap_generator.py
+├── sitemap_generator_app.json
+├── sql_to_csv_exporter.py
+├── sql_to_csv_exporter_app.json
+├── svg_to_png.py
+├── svg_to_png_app.json
+├── tar_gz_creator.py
+├── tar_gz_creator_app.json
+├── tar_gz_extractor.py
+├── tar_gz_extractor_app.json
+├── text_case_converter.py
+├── text_case_converter_app.json
+├── text_merger.py
+├── text_merger_app.json
+├── text_splitter.py
+├── text_splitter_app.json
+├── text_to_pdf.py
+├── text_to_pdf_app.json
+├── thumbnail_generator.py
+├── thumbnail_generator_app.json
+├── url_shortener_data.py
+├── url_shortener_data_app.json
+├── vcard_to_csv.py
+├── vcard_to_csv_app.json
+├── video_compressor.py
+├── video_compressor_app.json
+├── video_frame_extractor.py
+├── video_resolution_changer.py
+├── video_resolution_changer_app.json
+├── video_speed_changer.py
+├── video_speed_changer_app.json
+├── video_thumbnail_generator.py
+├── video_to_gif.py
+├── whitespace_trimmer.py
+├── whitespace_trimmer_app.json
+├── word_counter.py
+├── word_counter_app.json
+├── word_to_pdf.py
+├── word_to_pdf_app.json
+├── xml_to_json.py
+├── xml_to_json_app.json
+├── xml_validator.py
+├── xml_validator_app.json
+├── yaml_to_json.py
+├── yaml_to_json_app.json
+├── zip_compressor.py
+├── zip_compressor_app.json
+├── zip_extractor.py
+└── zip_extractor_app.json

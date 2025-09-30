@@ -1,0 +1,16 @@
+============================================================
+URL SHORTENER DATA GENERATION REPORT
+============================================================
+Input file: /Users/david/git/prod_apps/python/test_data/test_urls.json
+Total URLs processed: 5
+Short code length: 6
+
+============================================================
+MAPPINGS:
+============================================================
+4Um-E1 -> https://www.example.com
+rUqL84 -> https://www.github.com/cambercloud
+CObukn -> https://www.google.com/search?q=test
+BMw9mm -> https://stackoverflow.com/questions/tagged/python
+lyXD0t -> https://www.wikipedia.org/wiki/Python_(programming_language)
+============================================================

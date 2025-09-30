@@ -1,0 +1,66 @@
+{
+  "name": "pdf-to-epub",
+  "title": "PDF to EPUB Converter",
+  "description": "Convert PDF documents to EPUB ebook format with customizable metadata",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application converts PDF documents into EPUB ebook format. Built using <a class=\"link\" href=\"https://pymupdf.readthedocs.io/\" target=\"_blank\">PyMuPDF</a> and <a class=\"link\" href=\"https://github.com/aerkalov/ebooklib\" target=\"_blank\">ebooklib</a>, it extracts text from PDFs and creates properly formatted EPUB files with table of contents and metadata.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Convert PDF to EPUB format</li><li class=\"list-item-node\">Extract and preserve text content</li><li class=\"list-item-node\">Automatic chapter creation (one per page)</li><li class=\"list-item-node\">Customizable metadata (title, author, language)</li><li class=\"list-item-node\">Built-in table of contents</li><li class=\"list-item-node\">Professional styling and formatting</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>PDF File</strong>: Upload the PDF file to convert</li><li class=\"list-item-node\"><strong>Book Title</strong>: (Optional) Set the book title</li><li class=\"list-item-node\"><strong>Author</strong>: Set the author name (default: Unknown)</li><li class=\"list-item-node\"><strong>Language</strong>: Set the book language code (default: en)</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for the EPUB file</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates an EPUB file named <code class=\"inline\" spellcheck=\"false\">{original_name}.epub</code> containing the extracted PDF content formatted as an ebook.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Converting documents to ebook format</li><li class=\"list-item-node\">Making PDFs readable on e-readers</li><li class=\"list-item-node\">Creating ebook libraries from PDFs</li><li class=\"list-item-node\">Publishing content in EPUB format</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python $REPO_DIR/python/pdf_to_epub.py \"${pdfPath}\" -t \"${bookTitle}\" -a \"${author}\" -l \"${language}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "pdfPath",
+      "label": "PDF File",
+      "description": "Upload the PDF file you want to convert to EPUB",
+      "defaultValue": ""
+    },
+    {
+      "type": "Text",
+      "name": "bookTitle",
+      "label": "Book Title (Optional)",
+      "description": "Enter the book title (leave empty to use filename)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Text",
+      "name": "author",
+      "label": "Author",
+      "description": "Enter the author name",
+      "defaultValue": "Unknown"
+    },
+    {
+      "type": "Text",
+      "name": "language",
+      "label": "Language Code",
+      "description": "Enter the language code (e.g., en, es, fr, de)",
+      "defaultValue": "en"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the EPUB file will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "title": "Tech Blog",
+  "link": "https://techblog.example.com",
+  "description": "Latest technology news and articles",
+  "author": "Tech Writer",
+  "language": "en",
+  "items": [
+    {
+      "title": "Getting Started with Python",
+      "link": "https://techblog.example.com/python-guide",
+      "description": "A comprehensive guide to learning Python programming",
+      "content": "Python is a versatile programming language...",
+      "author": "John Developer",
+      "pubDate": "2025-01-15T10:00:00",
+      "category": ["Python", "Programming", "Tutorial"]
+    },
+    {
+      "title": "Web Development Best Practices",
+      "link": "https://techblog.example.com/web-dev-practices",
+      "description": "Essential practices for modern web development",
+      "content": "Modern web development requires...",
+      "author": "Jane Developer",
+      "pubDate": "2025-01-14T09:00:00",
+      "category": ["Web Development", "Best Practices"]
+    },
+    {
+      "title": "Cloud Computing in 2025",
+      "link": "https://techblog.example.com/cloud-2025",
+      "description": "Trends and predictions for cloud computing",
+      "content": "Cloud computing continues to evolve...",
+      "author": "Cloud Expert",
+      "pubDate": "2025-01-13T08:00:00",
+      "category": ["Cloud", "Technology"]
+    }
+  ]
+}

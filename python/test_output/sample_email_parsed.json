@@ -1,0 +1,19 @@
+{
+  "subject": "Test Email Message",
+  "from": "John Doe <john.doe@example.com>",
+  "to": "Jane Smith <jane.smith@example.com>",
+  "cc": "Bob Wilson <bob@example.com>",
+  "bcc": "",
+  "date": "Wed, 15 Jan 2025 10:30:00 -0500",
+  "message_id": "<abc123@example.com>",
+  "reply_to": "",
+  "all_addresses": [
+    "jane.smith@example.com",
+    "bob@example.com",
+    "john.doe@example.com"
+  ],
+  "body_preview": "This is a test email message body.\n\nIt contains multiple paragraphs to test the email parser.\n\nBest regards,\nJohn Doe",
+  "body_length": 117,
+  "attachments": [],
+  "attachment_count": 0
+}

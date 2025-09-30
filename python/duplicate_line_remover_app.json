@@ -3,7 +3,7 @@
   "title": "Duplicate Line Remover",
   "description": "Remove duplicate lines from text files while preserving order",
   "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application removes duplicate lines from text files, keeping only the first occurrence of each unique line.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Remove duplicate lines efficiently</li><li class=\"list-item-node\">Case-sensitive or case-insensitive comparison</li><li class=\"list-item-node\">Preserve original line order</li><li class=\"list-item-node\">Keep first occurrence of duplicates</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input File</strong>: Upload your text file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a cleaned text file with the suffix '_unique.txt' in the specified output directory.</p>",
-  "command": "rm -rf prod_apps && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/duplicate_line_remover.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git && python $REPO_DIR/python/duplicate_line_remover.py \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {

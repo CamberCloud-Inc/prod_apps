@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <id>https://techblog.example.com</id>
+  <title>Tech Blog</title>
+  <updated>2025-09-30T07:43:55.659661+00:00</updated>
+  <author>
+    <name>Tech Writer</name>
+  </author>
+  <link href="https://techblog.example.com" rel="alternate"/>
+  <generator uri="https://lkiesow.github.io/python-feedgen" version="1.0.0">python-feedgen</generator>
+  <subtitle>Latest technology news and articles</subtitle>
+  <entry>
+    <id>https://techblog.example.com/cloud-2025</id>
+    <title>Cloud Computing in 2025</title>
+    <updated>2025-09-30T07:43:55.659917+00:00</updated>
+    <author>
+      <name>Cloud Expert</name>
+    </author>
+    <content>Cloud computing continues to evolve...</content>
+    <link href="https://techblog.example.com/cloud-2025"/>
+    <category term="Cloud"/>
+    <category term="Technology"/>
+  </entry>
+  <entry>
+    <id>https://techblog.example.com/web-dev-practices</id>
+    <title>Web Development Best Practices</title>
+    <updated>2025-09-30T07:43:55.659904+00:00</updated>
+    <author>
+      <name>Jane Developer</name>
+    </author>
+    <content>Modern web development requires...</content>
+    <link href="https://techblog.example.com/web-dev-practices"/>
+    <category term="Web Development"/>
+    <category term="Best Practices"/>
+  </entry>
+  <entry>
+    <id>https://techblog.example.com/python-guide</id>
+    <title>Getting Started with Python</title>
+    <updated>2025-09-30T07:43:55.659882+00:00</updated>
+    <author>
+      <name>John Developer</name>
+    </author>
+    <content>Python is a versatile programming language...</content>
+    <link href="https://techblog.example.com/python-guide"/>
+    <category term="Python"/>
+    <category term="Programming"/>
+    <category term="Tutorial"/>
+  </entry>
+</feed>

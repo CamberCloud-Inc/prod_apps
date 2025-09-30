@@ -1,0 +1,62 @@
+{
+  "name": "email-parser",
+  "title": "Email Parser",
+  "description": "Extract addresses, subjects, and metadata from .eml email files",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application parses .eml email files and extracts structured information including email addresses, subject lines, headers, attachments, and body content. It uses Python's built-in email module for reliable parsing.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Extract all email addresses (From, To, Cc, Bcc, Reply-To)</li><li class=\"list-item-node\">Parse email headers (Subject, Date, Message-ID)</li><li class=\"list-item-node\">Extract attachment information</li><li class=\"list-item-node\">Get email body preview</li><li class=\"list-item-node\">Output in JSON or plain text format</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input Email File</strong>: Upload your .eml file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for the parsed output</li><li class=\"list-item-node\"><strong>Output Format</strong>: Choose JSON or text format</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a file named <code class=\"inline\" spellcheck=\"false\">{original_name}_parsed.json</code> or <code class=\"inline\" spellcheck=\"false\">{original_name}_parsed.txt</code> with all extracted email information.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Extract contact information from emails</li><li class=\"list-item-node\">Analyze email headers for troubleshooting</li><li class=\"list-item-node\">Archive email metadata</li><li class=\"list-item-node\">Bulk email processing</li></ul>",
+  "command": "rm -rf prod_apps || true; git clone https://github.com/CamberCloud-Inc/prod_apps.git && python $REPO_DIR/python/email_parser.py \"${inputFile}\" -o \"${outputDir}\" -f \"${outputFormat}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input Email File",
+      "description": "Upload the .eml email file you want to parse",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the parsed data will be saved",
+      "defaultValue": "./"
+    },
+    {
+      "type": "Select",
+      "name": "outputFormat",
+      "label": "Output Format",
+      "description": "Choose the output format for the parsed email data",
+      "options": [
+        {
+          "label": "JSON",
+          "value": "json"
+        },
+        {
+          "label": "Plain Text",
+          "value": "txt"
+        }
+      ],
+      "defaultValue": "json"
+    }
+  ]
+}

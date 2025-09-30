@@ -1,0 +1,59 @@
+{
+  "name": "sql-to-csv-exporter",
+  "title": "SQL to CSV Exporter",
+  "description": "Execute SQL queries and export results to CSV format",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application executes SQL queries against SQLite databases and exports the results to CSV format. Built using <a class=\"link\" href=\"https://www.sqlalchemy.org/\" target=\"_blank\">SQLAlchemy</a>, it provides a flexible way to extract data from databases into spreadsheet-friendly formats.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Execute custom SQL queries</li><li class=\"list-item-node\">Export query results to CSV</li><li class=\"list-item-node\">Support for SQLite databases</li><li class=\"list-item-node\">Custom output filename support</li><li class=\"list-item-node\">Automatic column header detection</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Database File</strong>: Upload your SQLite database file</li><li class=\"list-item-node\"><strong>SQL Query</strong>: Enter the SQL query to execute (e.g., SELECT * FROM users WHERE age > 18)</li><li class=\"list-item-node\"><strong>Output Name</strong>: Base name for the output CSV file (default: query_results)</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for the CSV output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a CSV file with the specified name containing the query results with column headers.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Extracting data for analysis</li><li class=\"list-item-node\">Creating data exports for reporting</li><li class=\"list-item-node\">Converting database queries to spreadsheets</li><li class=\"list-item-node\">Data migration and backup</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python $REPO_DIR/python/sql_to_csv_exporter.py \"${dbPath}\" -q \"${sqlQuery}\" -n \"${outputName}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "dbPath",
+      "label": "Database File",
+      "description": "Upload the SQLite database file (.db, .sqlite, .sqlite3)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Text",
+      "name": "sqlQuery",
+      "label": "SQL Query",
+      "description": "Enter the SQL query to execute (e.g., SELECT * FROM table_name)",
+      "defaultValue": "SELECT * FROM sqlite_master WHERE type='table'"
+    },
+    {
+      "type": "Text",
+      "name": "outputName",
+      "label": "Output Filename (without extension)",
+      "description": "Base name for the output CSV file",
+      "defaultValue": "query_results"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the CSV file will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
