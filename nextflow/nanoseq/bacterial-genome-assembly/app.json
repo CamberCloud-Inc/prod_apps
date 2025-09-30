@@ -1,5 +1,6 @@
 {
   "name": "bacterial_genome_assembly",
+  "title": "Nanoseq: Bacterial Genome Assembly",
   "description": "De novo bacterial genome assembly from Oxford Nanopore long reads using Flye assembler. Optimized for bacterial isolate sequencing with automatic quality control, assembly, polishing, and annotation. Returns complete genomes with quality metrics and annotations.",
   "content": "Assemble high-quality bacterial genomes from Oxford Nanopore sequencing data. This workflow uses the Flye assembler (via nf-core/bacass) optimized for bacterial isolates, with automatic read QC, assembly, and genome annotation. Ideal for microbiologists performing whole-genome sequencing of bacterial cultures.",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/bacass/master/docs/images/nf-core-bacass_logo_light.png",

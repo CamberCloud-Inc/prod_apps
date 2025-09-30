@@ -1,0 +1,84 @@
+STATUS: RUNNING - Test in Progress
+Date: 2025-09-30
+Tester: david40962
+
+TESTING SUMMARY:
+================
+App Name: cutandrun-low-input-tf
+Pipeline: nf-core/cutandrun v3.2.2
+
+TEST RESULTS:
+- Attempt 1 (Job 4477): RUNNING (started 2025-09-30 17:22:24Z)
+  * Duration: 5+ minutes and still processing
+  * Pipeline successfully initialized
+  * Genome preparation completed
+  * FASTQC and trimming in progress
+  * Alignment stages launched
+
+PIPELINE PROGRESS:
+✅ Samplesheet validation
+✅ Genome preparation (chromsizes, GTF to BED)
+✅ iGenomes reference data staging (s3://ngi-igenomes)
+✅ FASTQC process launched
+✅ TrimGalore trimming started
+⏳ Alignment and downstream analysis in progress
+
+WORKING CONFIGURATION:
+- Git clone approach: ✅ Working
+- Config file distribution: ✅ Successful
+- Remote URL samplesheet: ✅ Working correctly
+- iGenomes access: ✅ S3 staging successful
+- Resource allocation: ✅ XSMALL node handling test data
+
+TEST PARAMETERS:
+- Samplesheet: https://raw.githubusercontent.com/nf-core/test-datasets/cutandrun/samplesheet_2_0/test-GSE145187-small.csv
+- Genome: GRCh38
+- Samples: H3K27me3 + IgG control
+- Peak caller: SEACR only
+- IgG control: Enabled
+- Mitochondrial filtering: Enabled (chrM)
+- Duplicate removal: Enabled
+- Node size: XSMALL (4 CPUs, 15GB RAM)
+
+SUCCESS FACTORS:
+1. Git clone successfully fetches platform-constrained-config.config
+2. Working directory maintained at execution location
+3. Output directory created as subfolder (./cutandrun-lowinput-test-results)
+4. All pipeline dependencies accessible
+5. Config files properly loaded
+
+COMMAND STRUCTURE (WORKING):
+```bash
+mkdir -p ${outputDir} && cd ${outputDir} &&
+rm -rf prod_apps &&
+git clone https://github.com/CamberCloud-Inc/prod_apps.git &&
+cp prod_apps/nextflow/cutandrun/low-input-tf-mapping/platform-constrained-config.config ./ &&
+rm -rf prod_apps &&
+nextflow run nf-core/cutandrun -r 3.2.2 ...
+```
+
+NOTES:
+- This command structure works because nextflow is executed AFTER changing to output directory
+- The URL samplesheet is validated by nextflow before processing
+- Config file is present in execution directory when nextflow runs
+- This app can serve as template for fixing histone-modifications app
+
+RECOMMENDATION:
+- Wait for full completion to verify end-to-end success
+- If successful, use this pattern for other CUT&RUN apps
+- Document this working pattern for future app development
+
+ESTIMATED COMPLETION:
+- XSMALL node with test data: ~10-20 minutes total
+- Job still running after 5 minutes - normal for alignment steps
+
+NEXT STEPS:
+- Monitor job completion
+- Verify output files generated correctly
+- Check MultiQC report
+- Validate peak calling results
+- Update status to SUCCESS or document any issues
+
+FILES:
+- app.json: Working configuration
+- platform-constrained-config.config: Successfully loaded
