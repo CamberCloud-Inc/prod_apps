@@ -1,0 +1,116 @@
+{
+  "name": "smrnaseq-mirna-profiling",
+  "title": "miRNA Expression Profiling (nf-core/smrnaseq)",
+  "description": "Quantify microRNA expression from small RNA sequencing data using the nf-core/smrnaseq pipeline. Analyze known miRNA expression levels, perform quality control, and generate comprehensive reports for cancer research, developmental biology, and disease studies.",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/smrnaseq --input ${input} --outdir ${outdir} --genome ${genome} --mirtrace_species ${species} -r 2.4.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/smrnaseq/master/docs/images/nf-core-smrnaseq_logo_light.png",
+  "content": "<h2><strong>miRNA Expression Profiling</strong></h2><p>The <strong>nf-core/smrnaseq</strong> pipeline analyzes small RNA sequencing data to quantify expression levels of known microRNAs (miRNAs). MicroRNAs are small non-coding RNAs (~22 nucleotides) that regulate gene expression and play crucial roles in development, disease, and cellular function. The 2024 Nobel Prize in Physiology or Medicine was awarded for the discovery of miRNAs, highlighting their fundamental importance in biology.</p><h3><strong>What This Pipeline Does</strong></h3><ul><li><strong>Quality Control</strong>: Assess read quality and adapter content with FastQC</li><li><strong>Adapter Trimming</strong>: Remove adapter sequences and filter by size</li><li><strong>miRNA Quantification</strong>: Count reads mapping to known miRNAs</li><li><strong>Contamination Filtering</strong>: Remove rRNA, tRNA, and other contaminants</li><li><strong>miRTrace QC</strong>: Specialized quality control for small RNA data</li><li><strong>Expression Analysis</strong>: Generate normalized expression matrices</li><li><strong>Visualization</strong>: Interactive MultiQC report with comprehensive QC metrics</li></ul><h3><strong>Input Requirements</strong></h3><p>Provide a CSV samplesheet with the following columns:</p><ul><li><code>sample</code>: Unique sample identifier</li><li><code>fastq_1</code>: Path/URL to single-end FASTQ file (small RNA-seq is single-end)</li></ul><p><strong>Example samplesheet:</strong></p><pre>sample,fastq_1\nControl_Rep1,s3://bucket/control_1.fastq.gz\nControl_Rep2,s3://bucket/control_2.fastq.gz\nTreatment_Rep1,s3://bucket/treatment_1.fastq.gz\nTreatment_Rep2,s3://bucket/treatment_2.fastq.gz</pre><h3><strong>Species Codes (miRTrace)</strong></h3><p>Select the appropriate species code for miRTrace quality control:</p><ul><li><strong>hsa</strong>: Human (Homo sapiens)</li><li><strong>mmu</strong>: Mouse (Mus musculus)</li><li><strong>rno</strong>: Rat (Rattus norvegicus)</li><li><strong>dre</strong>: Zebrafish (Danio rerio)</li><li><strong>cel</strong>: C. elegans</li><li><strong>ath</strong>: Arabidopsis (plant model)</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Expression Matrix</strong>: <code>edger/counts.tsv</code> - Raw miRNA counts per sample</li><li><strong>Normalized Counts</strong>: <code>edger/normalized_counts.tsv</code> - Normalized expression values</li><li><strong>miRTrace Report</strong>: <code>mirtrace/mirtrace-report.html</code> - Small RNA-specific QC</li><li><strong>QC Report</strong>: <code>multiqc/multiqc_report.html</code> - Comprehensive quality metrics</li><li><strong>Alignment Stats</strong>: Read mapping statistics and coverage</li></ul><h3><strong>Biological Context</strong></h3><p>MicroRNAs are essential regulators of gene expression that control diverse biological processes. This pipeline quantifies known miRNA expression levels, enabling:</p><blockquote><p><strong>Research Applications:</strong></p><ul><li><strong>Cancer Biology</strong>: Identify dysregulated miRNAs in tumors vs. normal tissue</li><li><strong>Developmental Biology</strong>: Track miRNA expression changes during differentiation</li><li><strong>Disease Research</strong>: Compare miRNA profiles in healthy vs. diseased states</li><li><strong>Drug Response</strong>: Study miRNA changes after treatment</li><li><strong>Biomarker Discovery</strong>: Identify diagnostic or prognostic miRNA signatures</li></ul></blockquote><h3><strong>Experimental Design Tips</strong></h3><ul><li><strong>📊 Biological Replicates</strong>: Minimum 3 replicates per condition for statistical power</li><li><strong>📈 Sequencing Depth</strong>: 5-10 million reads per sample for miRNA profiling</li><li><strong>🔬 Library Quality</strong>: Adapter-ligated small RNA library prep (Illumina TruSeq, QIAseq, etc.)</li><li><strong>✓ Size Selection</strong>: 18-30 nt size selection during library prep captures miRNAs</li><li><strong>🧬 Controls</strong>: Include technical replicates for quality assessment</li></ul><h3><strong>Quality Metrics to Expect</strong></h3><ul><li><strong>Read Length Distribution</strong>: Peak at 22 nt indicates successful miRNA capture</li><li><strong>miRNA Content</strong>: >50% of reads mapping to miRNAs indicates good library</li><li><strong>Adapter Content</strong>: High adapter content is normal (small RNAs shorter than read length)</li><li><strong>Contamination</strong>: <5% rRNA/tRNA contamination preferred</li></ul><blockquote><p><strong>Perfect for:</strong> Cancer researchers • Developmental biologists • Disease researchers • RNA biologists • Clinical genomics • Biomarker discovery</p></blockquote><p>Built with <a href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a href=\"https://nf-co.re/smrnaseq/2.4.0/\" target=\"_blank\">nf-core/smrnaseq v2.4.0</a> • Containerized execution • Publication-ready results</p>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV file with columns: sample, fastq_1. Each row represents one sample with path or URL to single-end FASTQ file from small RNA sequencing.",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory where all pipeline results will be saved, including miRNA expression counts, quality control reports, and MultiQC summary.",
+      "defaultValue": "./smrnaseq-mirna-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome matching your experimental organism. Use GRCh38 for human, GRCm39 for mouse.",
+      "defaultValue": "GRCh38",
+      "required": true,
+      "options": [
+        {"label": "Human GRCh38/hg38 (latest, recommended)", "value": "GRCh38"},
+        {"label": "Human GRCh37/hg19 (legacy)", "value": "GRCh37"},
+        {"label": "Mouse GRCm39/mm39 (latest)", "value": "GRCm39"},
+        {"label": "Mouse GRCm38/mm10 (widely used)", "value": "GRCm38"},
+        {"label": "Rat Rnor_6.0", "value": "Rnor_6.0"},
+        {"label": "Zebrafish GRCz11", "value": "GRCz11"},
+        {"label": "C. elegans WBcel235", "value": "WBcel235"}
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Species Code (miRTrace)",
+      "name": "species",
+      "description": "Species code for miRTrace quality control. Must match your reference genome organism.",
+      "defaultValue": "hsa",
+      "required": true,
+      "options": [
+        {"label": "Human (hsa)", "value": "hsa"},
+        {"label": "Mouse (mmu)", "value": "mmu"},
+        {"label": "Rat (rno)", "value": "rno"},
+        {"label": "Zebrafish (dre)", "value": "dre"},
+        {"label": "C. elegans (cel)", "value": "cel"},
+        {"label": "Fruit Fly (dme)", "value": "dme"}
+      ]
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "description": "Select compute resources based on dataset size. SMALL is recommended for typical miRNA profiling studies (10-50 samples).",
+      "options": [
+        {
+          "label": "XSMALL (4 CPUs, 15GB RAM) - Testing/Demo datasets",
+          "value": "xsmall",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "SMALL (8 CPUs, 30GB RAM) - Recommended for typical studies",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Large studies (>50 samples)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xsmall"
+    }
+  ],
+  "tags": [
+    {"name": "genomics", "type": "subfield"},
+    {"name": "rna", "type": "task"},
+    {"name": "mirna", "type": "task"},
+    {"name": "small-rna", "type": "task"},
+    {"name": "biology", "type": "field"}
+  ]
+}
