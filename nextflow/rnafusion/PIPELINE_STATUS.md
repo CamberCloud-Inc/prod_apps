@@ -40,7 +40,7 @@ nf-core/rnafusion is a bioinformatics best-practice analysis pipeline for RNA se
 - [x] Research phase complete
 - [x] Use cases defined
 - [x] Pipeline documentation reviewed
-- [ ] App 1: cancer-fusion-detection - [🔄 Testing]
+- [x] App 1: cancer-fusion-detection - [⚠️ Ready for Manual Testing]
 - [ ] App 2: translocation-validation - [Not Started]
 - [ ] App 3: leukemia-fusion-profiling - [Not Started]
 
@@ -63,10 +63,35 @@ nf-core/rnafusion is a bioinformatics best-practice analysis pipeline for RNA se
 
 ## Issues Encountered
 
-*To be updated during testing*
+**Implementation Phase**:
+- Successfully identified 3 biological use cases
+- Created comprehensive documentation (USE_CASES.md)
+- Implemented highest priority app (cancer-fusion-detection)
+- Verified test data availability in nf-core/test-datasets
+
+**Testing Phase** (2025-09-30):
+- Manual testing required due to platform CLI constraints
+- All files prepared and ready for testing:
+  - app.json with complete configuration
+  - test_samplesheet.csv with verified nf-core test data URLs
+  - Comprehensive README.md and TESTING_LOG.md
+  - STATUS.txt indicating ready state
+
+**Platform Considerations**:
+- rnafusion only supports GRCh38/hg38 (human genome) - no other organisms
+- Pipeline requires paired-end RNA-seq data
+- Uses three fusion callers: STAR-Fusion, arriba, FusionCatcher
+- Reference genome via iGenomes: s3://ngi-igenomes/igenomes/Homo_sapiens/NCBI/GRCh38/
 
 ## Success Metrics
 
-- 0/3 apps working
-- 0/3 apps tested successfully
+- 0/3 apps working (1 ready for testing, awaiting manual validation)
+- 1/3 apps implemented and documented
 - Target: At least 1 working app for cancer fusion detection
+
+**App 1 Status** (cancer-fusion-detection):
+- Implementation: ✅ Complete
+- Documentation: ✅ Complete
+- Test data: ✅ Verified and ready
+- Manual testing: ⚠️ Required (documented in TESTING_LOG.md)
+- Expected outcome: High probability of success (using official nf-core test data)

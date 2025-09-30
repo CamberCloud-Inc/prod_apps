@@ -1,0 +1,67 @@
+{
+  "name": "fetchngs-sra-download",
+  "title": "Download Sequencing Data from Public Repositories (SRA/ENA/GEO)",
+  "description": "Download raw sequencing data and metadata from public databases including NCBI SRA, ENA, DDBJ, and GEO. Perfect for reproducing published studies, meta-analyses, and accessing reference datasets.",
+  "content": "<h1 class=\"heading-node\">📥 Download Sequencing Data from Public Repositories</h1><p class=\"text-node\"><strong>Access Publicly Available Sequencing Data in Minutes</strong></p><p class=\"text-node\">The nf-core/fetchngs pipeline automatically downloads sequencing data and metadata from major public databases, making it easy to reproduce published studies, perform meta-analyses, or access reference datasets for method validation.</p><img src=\"https://raw.githubusercontent.com/nf-core/fetchngs/master/docs/images/nf-core-fetchngs_logo_light.png\" alt=\"nf-core/fetchngs logo\" width=\"400\" height=\"300\"><h2 class=\"heading-node\">🎯 What This App Does</h2><p class=\"text-node\">This app downloads raw FastQ files from public sequencing databases using simple accession IDs. It handles all the complexity of data retrieval and generates analysis-ready samplesheets compatible with other nf-core pipelines.</p><h3 class=\"heading-node\">✨ Key Features</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🌍 Multiple Databases:</strong> Supports SRA, ENA, DDBJ, and GEO accessions</p></li><li><p class=\"text-node\"><strong>📊 Metadata Retrieval:</strong> Automatically fetches sample information via ENA API</p></li><li><p class=\"text-node\"><strong>✅ Quality Assurance:</strong> Verifies downloads with MD5 checksums</p></li><li><p class=\"text-node\"><strong>🔄 Pipeline Integration:</strong> Generates samplesheets for nf-core/rnaseq and other pipelines</p></li><li><p class=\"text-node\"><strong>⚡ Efficient Downloads:</strong> Uses reliable FTP protocol for data transfer</p></li></ul><h2 class=\"heading-node\">📚 Supported Accession Types</h2><p class=\"text-node\">You can download data using any of these identifier types:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>SRA:</strong> Sequence Read Archive IDs (e.g., SRR11605097)</p></li><li><p class=\"text-node\"><strong>ENA:</strong> European Nucleotide Archive IDs (e.g., ERR4007730)</p></li><li><p class=\"text-node\"><strong>DDBJ:</strong> DNA Data Bank of Japan IDs (e.g., DRR171822)</p></li><li><p class=\"text-node\"><strong>GEO:</strong> Gene Expression Omnibus IDs (e.g., GSM4432381, GSE214215)</p></li></ul><p class=\"text-node\">The pipeline automatically detects the ID type and retrieves data from the appropriate source.</p><h2 class=\"heading-node\">📋 Input File Format</h2><p class=\"text-node\">Create a simple CSV file with one accession ID per line:</p><pre class=\"block-node\"><code>SRR11605097\nSRR11605098\nGSM4432381\nERR4007730</code></pre><p class=\"text-node\"><strong>That's it!</strong> No need to specify columns or headers - just list the accession IDs you want to download.</p><h3 class=\"heading-node\">📝 Example Use Cases</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Reproduce Published Study:</strong> Download data from a paper's SRA accessions</p></li><li><p class=\"text-node\"><strong>Meta-Analysis:</strong> Combine datasets from multiple studies</p></li><li><p class=\"text-node\"><strong>Method Validation:</strong> Test your analysis on benchmark datasets</p></li><li><p class=\"text-node\"><strong>Reference Data:</strong> Access well-characterized samples for comparison</p></li></ul><h2 class=\"heading-node\">📊 Output Files</h2><p class=\"text-node\">After downloading, you'll receive:</p><h3 class=\"heading-node\">Downloaded Data</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📁 FastQ Files:</strong> Raw sequencing reads (single-end or paired-end)</p></li><li><p class=\"text-node\"><strong>✅ MD5 Checksums:</strong> Verification files to ensure data integrity</p></li></ul><h3 class=\"heading-node\">Analysis-Ready Files</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📄 samplesheet.csv:</strong> Ready to use with nf-core/rnaseq or other pipelines</p></li><li><p class=\"text-node\"><strong>🗺️ id_mappings.csv:</strong> Maps accession IDs to sample names with metadata</p></li><li><p class=\"text-node\"><strong>⚙️ multiqc_config.yml:</strong> Configuration for downstream quality control</p></li></ul><h3 class=\"heading-node\">Metadata</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📊 Sample Information:</strong> Experiment details, library prep, sequencing platform</p></li><li><p class=\"text-node\"><strong>🔬 Study Details:</strong> Publication info, organism, tissue type</p></li></ul><h2 class=\"heading-node\">🧬 Downstream Analysis Integration</h2><p class=\"text-node\">The generated samplesheet can be directly used with these nf-core pipelines:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>RNA-seq:</strong> Gene expression analysis (nf-core/rnaseq)</p></li><li><p class=\"text-node\"><strong>ATAC-seq:</strong> Chromatin accessibility (nf-core/atacseq)</p></li><li><p class=\"text-node\"><strong>ChIP-seq:</strong> Protein-DNA interactions (nf-core/chipseq)</p></li><li><p class=\"text-node\"><strong>Any NGS pipeline:</strong> Custom workflows accepting standard samplesheets</p></li></ul><h2 class=\"heading-node\">⚙️ Configuration Options</h2><h3 class=\"heading-node\">Output Format</h3><p class=\"text-node\">Choose which nf-core pipeline format to generate samplesheets for:</p><ul class=\"list-node\"><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">rnaseq</code> - For RNA sequencing analysis (most common)</p></li><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">atacseq</code> - For ATAC-seq chromatin accessibility</p></li><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">taxprofiler</code> - For metagenomic taxonomic profiling</p></li><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">viralrecon</code> - For viral genome reconstruction</p></li><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">none</code> - Generic download without pipeline-specific formatting</p></li></ul><h2 class=\"heading-node\">💡 Tips for Success</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Start Small:</strong> Test with 2-3 accessions first before large downloads</p></li><li><p class=\"text-node\"><strong>Check Metadata:</strong> Review the id_mappings.csv to verify sample information</p></li><li><p class=\"text-node\"><strong>Network Time:</strong> Download time depends on file sizes and network speed</p></li><li><p class=\"text-node\"><strong>Storage Space:</strong> Ensure sufficient space for downloaded FastQ files</p></li></ul><h2 class=\"heading-node\">🔬 Perfect For Research In</h2><p class=\"text-node\"><strong>Reproducibility Studies</strong> • <strong>Meta-Analyses</strong> • <strong>Method Development</strong> • <strong>Comparative Genomics</strong> • <strong>Data Reanalysis</strong> • <strong>Benchmark Testing</strong></p><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/fetchngs/1.12.0/\" target=\"_blank\">nf-core/fetchngs v1.12.0</a> • Containerized execution • Continuous integration tested</p>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/fetchngs/master/docs/images/nf-core-fetchngs_logo_light.png",
+  "command": "nextflow run nf-core/fetchngs -r 1.12.0 --input ${input} --outdir results --nf_core_pipeline ${pipeline_format} -profile singularity -c /etc/mpi/nextflow.camber.config",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select compute resources. XSMALL is sufficient for data downloads.",
+      "options": [
+        {
+          "label": "XSMALL (4 CPUs, 15GB RAM) - Default for downloads",
+          "value": "xsmall",
+          "mapValue": {"nodeSize": "XSMALL", "numNodes": 1, "withGpu": false}
+        },
+        {
+          "label": "SMALL (8 CPUs, 30GB RAM) - For large cohorts",
+          "value": "small",
+          "mapValue": {"nodeSize": "SMALL", "numNodes": 1, "withGpu": false}
+        }
+      ],
+      "defaultValue": "xsmall"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Accession ID List",
+      "name": "input",
+      "description": "CSV file with one accession ID per line (SRA/ENA/DDBJ/GEO). Example: SRR11605097 (one per line, no header needed).",
+      "required": true
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "output",
+      "description": "Directory where downloaded FastQ files and samplesheets will be saved.",
+      "defaultValue": "./fetchngs-results",
+      "required": true
+    },
+    {
+      "type": "Select",
+      "label": "Downstream Pipeline Format",
+      "name": "pipeline_format",
+      "description": "Format samplesheet for a specific nf-core pipeline (or 'none' for generic output).",
+      "defaultValue": "rnaseq",
+      "options": [
+        {"label": "RNA-seq (nf-core/rnaseq)", "value": "rnaseq"},
+        {"label": "ATAC-seq (nf-core/atacseq)", "value": "atacseq"},
+        {"label": "Taxonomic Profiling (nf-core/taxprofiler)", "value": "taxprofiler"},
+        {"label": "Viral Reconstruction (nf-core/viralrecon)", "value": "viralrecon"},
+        {"label": "Generic (no pipeline-specific formatting)", "value": "none"}
+      ]
+    }
+  ],
+  "tags": [
+    {"name": "genomics", "type": "subfield"},
+    {"name": "data-acquisition", "type": "task"},
+    {"name": "biology", "type": "field"}
+  ]
+}
