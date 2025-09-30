@@ -57,14 +57,11 @@ for app_file in app_files:
             updated = True
 
         # Now fix all references to use the variable properly
-        # Replace python prod_apps/python with python "$REPO_DIR/python"
-        new_command = re.sub(r'\bpython prod_apps/', 'python "$REPO_DIR/', new_command)
-        # Replace python $REPO_DIR/python (without quotes) with python "$REPO_DIR/python"
-        new_command = re.sub(r'\bpython \$REPO_DIR/', 'python "$REPO_DIR/', new_command)
-        # Ensure closing quote is added if not already present
-        if '"$REPO_DIR/' in new_command and not re.search(r'"\$REPO_DIR/[^"]*"', new_command):
-            # Find python "$REPO_DIR/... and add closing quote before next space or &&
-            new_command = re.sub(r'python "\$REPO_DIR/([^\s"]+)', r'python "$REPO_DIR/\1"', new_command)
+        # Replace python prod_apps/python/script.py with python "$REPO_DIR/python/script.py"
+        # This regex captures the python script path and properly quotes it
+        new_command = re.sub(r'\bpython prod_apps/(python/[^\s]+\.py)', r'python "$REPO_DIR/\1"', new_command)
+        # Also handle python $REPO_DIR/python (without proper quotes)
+        new_command = re.sub(r'\bpython \$REPO_DIR/(python/[^\s]+\.py)', r'python "$REPO_DIR/\1"', new_command)
 
         # If command changed, update it
         if new_command != old_command:
