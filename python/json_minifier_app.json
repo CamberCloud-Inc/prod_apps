@@ -1,0 +1,45 @@
+{
+  "name": "json-minifier",
+  "title": "JSON Minifier",
+  "description": "Minify JSON files by removing all unnecessary whitespace",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application minifies JSON files by removing all unnecessary whitespace, reducing file size while maintaining valid JSON structure. Perfect for optimizing JSON data for transmission or storage.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Validates JSON syntax before minification</li><li class=\"list-item-node\">Removes all whitespace and indentation</li><li class=\"list-item-node\">Preserves JSON data structure and values</li><li class=\"list-item-node\">Reports size reduction statistics</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input JSON File</strong>: Upload your JSON file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for the minified output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a file named <code class=\"inline\" spellcheck=\"false\">{original_name}_minified.json</code> with all whitespace removed.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Reducing JSON file size for faster transmission</li><li class=\"list-item-node\">Optimizing API responses</li><li class=\"list-item-node\">Preparing JSON for production environments</li><li class=\"list-item-node\">Minimizing storage requirements for JSON data</li></ul>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && python prod_apps_clone/python/json_minifier.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input JSON File",
+      "description": "Upload the JSON file you want to minify",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the minified JSON will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
