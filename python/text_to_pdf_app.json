@@ -1,0 +1,45 @@
+{
+  "name": "text-to-pdf",
+  "title": "Text to PDF Converter",
+  "description": "Convert plain text files to formatted PDF documents",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application converts plain text files into professionally formatted PDF documents. Built using <a class=\"link\" href=\"https://www.reportlab.com/\" target=\"_blank\">ReportLab</a>, it creates clean, readable PDFs with proper margins and typography.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Convert TXT files to formatted PDF</li><li class=\"list-item-node\">Professional typography and spacing</li><li class=\"list-item-node\">Preserves paragraph structure</li><li class=\"list-item-node\">Automatic page breaks</li><li class=\"list-item-node\">Clean, readable output</li><li class=\"list-item-node\">Automatic installation of dependencies</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input File</strong>: Upload your text file (.txt) from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for the PDF output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a PDF file with the same base name as your input file (e.g., <code class=\"inline\" spellcheck=\"false\">notes.txt</code> becomes <code class=\"inline\" spellcheck=\"false\">notes.pdf</code>). The PDF features professional formatting with proper margins, line spacing, and paragraph breaks.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Converting notes to printable format</li><li class=\"list-item-node\">Creating formatted documents from plain text</li><li class=\"list-item-node\">Archiving text files as PDFs</li><li class=\"list-item-node\">Preparing text for professional distribution</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/text_to_pdf.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Text File",
+      "description": "Upload the text file (.txt) you want to convert to PDF",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where PDF file will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

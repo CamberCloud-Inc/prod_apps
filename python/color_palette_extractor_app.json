@@ -1,0 +1,45 @@
+{
+  "name": "color-palette-extractor",
+  "title": "Color Palette Extractor",
+  "description": "Extract dominant colors from images and create visual palettes",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application extracts the dominant colors from an image and creates a visual color palette. Built using <a class=\"link\" href=\"https://pillow.readthedocs.io/\" target=\"_blank\">Pillow</a> and <a class=\"link\" href=\"https://github.com/fengsp/color-thief-py\" target=\"_blank\">ColorThief</a>, it identifies the most prominent colors and generates both visual and text-based outputs.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Extract 6 dominant colors from any image</li><li class=\"list-item-node\">Creates visual palette with color swatches</li><li class=\"list-item-node\">Provides RGB and hex color codes</li><li class=\"list-item-node\">Generates text file with color data</li><li class=\"list-item-node\">High-quality color analysis</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input Image</strong>: Upload your image from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates two files:</p><ul class=\"list-node\"><li class=\"list-item-node\"><code class=\"inline\" spellcheck=\"false\">[filename]_palette_6_colors.png</code> - Visual palette with color swatches</li><li class=\"list-item-node\"><code class=\"inline\" spellcheck=\"false\">[filename]_palette_6_colors.txt</code> - Text file with RGB and hex values</li></ul><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Web design color scheme creation</li><li class=\"list-item-node\">Brand color extraction from logos</li><li class=\"list-item-node\">Creating color palettes for artwork</li><li class=\"list-item-node\">Matching colors for design projects</li><li class=\"list-item-node\">Analyzing photo color compositions</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/color_palette_extractor.py \"${inputFile}\" -o \"${outputDir}\" -n 6",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input Image",
+      "description": "Upload the image file to extract colors from",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the palette will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

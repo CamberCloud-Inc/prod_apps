@@ -1,0 +1,45 @@
+{
+  "name": "markdown-to-pdf",
+  "title": "Markdown to PDF Converter",
+  "description": "Convert Markdown files to beautifully formatted PDF documents",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application converts Markdown files into beautifully formatted PDF documents. Built using <a class=\"link\" href=\"https://python-markdown.github.io/\" target=\"_blank\">Python-Markdown</a> and <a class=\"link\" href=\"https://weasyprint.org/\" target=\"_blank\">WeasyPrint</a>, it renders all standard Markdown syntax including tables, code blocks, and lists.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Convert Markdown (.md) files to PDF</li><li class=\"list-item-node\">Supports all standard Markdown syntax</li><li class=\"list-item-node\">Beautiful typography and formatting</li><li class=\"list-item-node\">Code syntax highlighting</li><li class=\"list-item-node\">Tables, lists, and blockquotes</li><li class=\"list-item-node\">Automatic installation of dependencies</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input File</strong>: Upload your Markdown file (.md) from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for the PDF output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a PDF file with the same base name as your input file (e.g., <code class=\"inline\" spellcheck=\"false\">README.md</code> becomes <code class=\"inline\" spellcheck=\"false\">README.pdf</code>). The PDF includes professional formatting with proper spacing, typography, and styling.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Converting README files to PDF</li><li class=\"list-item-node\">Creating printable documentation</li><li class=\"list-item-node\">Generating PDF reports from Markdown</li><li class=\"list-item-node\">Sharing formatted documents</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/markdown_to_pdf.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Markdown File",
+      "description": "Upload the Markdown file (.md) you want to convert to PDF",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where PDF file will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
