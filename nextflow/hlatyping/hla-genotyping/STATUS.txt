@@ -1,0 +1,4 @@
+Status: 📝 Ready
+App: hlatyping-optitype
+Version: 2.1.0
+Use Case: HLA genotyping for transplant/immunotherapy

@@ -1,0 +1,82 @@
+{
+  "name": "hlatyping-optitype",
+  "title": "HLA Genotyping from NGS (nf-core/hlatyping)",
+  "description": "Perform precision HLA (Human Leukocyte Antigen) typing from next-generation sequencing data using OptiType. Essential for transplant matching, immunotherapy response prediction, and personalized medicine applications.",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/hlatyping --input ${input} --outdir ${outdir} --seqtype ${seqtype} -r 2.1.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/hlatyping/master/docs/images/nf-core-hlatyping_logo_light.png",
+  "content": "<h2><strong>HLA Genotyping from NGS Data</strong></h2><p>The <strong>nf-core/hlatyping</strong> pipeline performs precision HLA (Human Leukocyte Antigen) typing from DNA or RNA sequencing data using OptiType. HLA typing is critical for transplant matching, immunotherapy, and personalized medicine.</p><h3><strong>Clinical Applications</strong></h3><blockquote><ul><li><strong>Transplant Medicine</strong>: Donor-recipient matching for organ/stem cell transplants</li><li><strong>Cancer Immunotherapy</strong>: Predict response to checkpoint inhibitors</li><li><strong>Pharmacogenomics</strong>: Drug hypersensitivity risk assessment</li><li><strong>Autoimmune Disease</strong>: HLA associations with disease risk</li><li><strong>Infectious Disease</strong>: HLA influence on infection outcomes</li><li><strong>Population Genetics</strong>: Study HLA diversity and evolution</li></ul></blockquote><h3><strong>What is HLA?</strong></h3><p>The HLA complex encodes proteins that present antigens to immune cells. HLA genes are the most polymorphic in the human genome, with thousands of alleles. Accurate HLA typing is essential for:</p><ul><li>Identifying perfect transplant matches (reduces rejection)</li><li>Predicting immunotherapy response</li><li>Assessing drug reaction risk (e.g., abacavir hypersensitivity)</li></ul><h3><strong>Pipeline Features</strong></h3><ul><li><strong>OptiType Algorithm</strong>: Gold-standard HLA typing using integer linear programming</li><li><strong>DNA or RNA Input</strong>: Supports both WGS/WES and RNA-seq data</li><li><strong>High Accuracy</strong>: 4-digit HLA typing resolution</li><li><strong>Quality Control</strong>: Comprehensive QC reports</li><li><strong>Fast Processing</strong>: Optimized for clinical turnaround times</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with columns:</p><ul><li><code>sample</code>: Sample identifier</li><li><code>fastq_1</code>: Forward reads (R1)</li><li><code>fastq_2</code>: Reverse reads (R2) - optional for single-end</li></ul><p><strong>Sequencing Type Selection:</strong></p><ul><li><strong>DNA</strong>: For whole genome or exome sequencing</li><li><strong>RNA</strong>: For RNA-seq data</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>HLA Types</strong>: 4-digit HLA-A, -B, -C allele calls</li><li><strong>Coverage Report</strong>: Read coverage across HLA loci</li><li><strong>Quality Metrics</strong>: Typing confidence scores</li><li><strong>MultiQC Report</strong>: Comprehensive QC summary</li></ul><h3><strong>Clinical Interpretation</strong></h3><p>HLA typing results show alleles for major HLA class I genes:</p><ul><li><strong>HLA-A</strong>: 2 alleles (maternal + paternal)</li><li><strong>HLA-B</strong>: 2 alleles</li><li><strong>HLA-C</strong>: 2 alleles</li></ul><p>Example result: HLA-A*02:01, HLA-B*07:02, HLA-C*07:01</p><h3><strong>Use Cases</strong></h3><blockquote><p><strong>Transplant Centers:</strong> Screen potential donors and recipients for transplant compatibility</p></blockquote><blockquote><p><strong>Cancer Centers:</strong> Predict which patients will respond to immunotherapy based on HLA-tumor antigen interactions</p></blockquote><blockquote><p><strong>Pharmacogenomics:</strong> Screen for HLA-B*57:01 before prescribing abacavir (prevents hypersensitivity)</p></blockquote><blockquote><p><strong>Research:</strong> Study HLA associations with autoimmune diseases, infections, and cancer outcomes</p></blockquote><blockquote><p><strong>Perfect for:</strong> Transplant centers • Cancer immunotherapy • Clinical genetics • Pharmacogenomics • Immunology research</p></blockquote><p>Built with <a href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a href=\"https://nf-co.re/hlatyping/2.1.0/\" target=\"_blank\">nf-core/hlatyping v2.1.0</a> • OptiType algorithm • Clinical-grade accuracy</p>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV file with columns: sample, fastq_1, fastq_2. Each row represents one sample with NGS data for HLA typing.",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv"]
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Sequencing Type",
+      "name": "seqtype",
+      "description": "Type of sequencing data. DNA for WGS/WES, RNA for RNA-seq.",
+      "defaultValue": "dna",
+      "required": true,
+      "options": [
+        {"label": "DNA (WGS/WES)", "value": "dna"},
+        {"label": "RNA (RNA-seq)", "value": "rna"}
+      ]
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory for HLA typing results and QC reports",
+      "defaultValue": "./hla-typing-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "description": "SMALL sufficient for most HLA typing. Fast processing for clinical applications.",
+      "options": [
+        {
+          "label": "XSMALL (4 CPUs, 15GB RAM) - Testing",
+          "value": "xsmall",
+          "mapValue": {"nodeSize": "XSMALL", "numNodes": 1, "withGpu": false}
+        },
+        {
+          "label": "SMALL (8 CPUs, 30GB RAM) - Recommended",
+          "value": "small",
+          "mapValue": {"nodeSize": "SMALL", "numNodes": 1, "withGpu": false}
+        },
+        {
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Many samples",
+          "value": "medium",
+          "mapValue": {"nodeSize": "MEDIUM", "numNodes": 1, "withGpu": false}
+        }
+      ],
+      "defaultValue": "small"
+    }
+  ],
+  "tags": [
+    {"name": "genomics", "type": "subfield"},
+    {"name": "hla", "type": "task"},
+    {"name": "clinical", "type": "task"},
+    {"name": "immunology", "type": "field"}
+  ]
+}
