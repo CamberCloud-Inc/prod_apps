@@ -1,0 +1,4 @@
+Status: 📝 Ready for Testing
+App: bacass-assembly
+Version: 2.4.0
+Use Case: Bacterial genome assembly and annotation
