@@ -1,0 +1,52 @@
+{
+  "name": "file-checksum-verifier",
+  "title": "File Checksum Verifier",
+  "description": "Verify file integrity by comparing checksums (MD5, SHA1, SHA256)",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application verifies file integrity by comparing calculated checksums against expected values. It automatically detects the hash algorithm (MD5, SHA1, or SHA256) based on the checksum length and provides detailed verification results.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Verify file integrity using checksums</li><li class=\"list-item-node\">Automatic hash algorithm detection (MD5, SHA1, SHA256)</li><li class=\"list-item-node\">Clear PASS/FAIL verification results</li><li class=\"list-item-node\">No external dependencies required (uses Python stdlib)</li><li class=\"list-item-node\">Detailed verification report saved to file</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input File</strong>: Upload the file you want to verify</li><li class=\"list-item-node\"><strong>Expected Checksum</strong>: Enter the expected hash value (32 chars for MD5, 40 for SHA1, 64 for SHA256)</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for verification results</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a verification report named <code class=\"inline\" spellcheck=\"false\">{filename}_verification.txt</code> containing the expected checksum, actual checksum, and verification status (PASSED or FAILED).</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Verify file integrity after downloads or transfers</li><li class=\"list-item-node\">Detect file corruption or unauthorized modifications</li><li class=\"list-item-node\">Validate software distributions against published checksums</li><li class=\"list-item-node\">Security auditing and forensic analysis</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/file_checksum_verifier.py \"${inputFile}\" \"${expectedChecksum}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Upload the file you want to verify",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "expectedChecksum",
+      "label": "Expected Checksum",
+      "description": "Enter the expected hash value (MD5, SHA1, or SHA256)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where verification results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
