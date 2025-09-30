@@ -1,0 +1,45 @@
+{
+  "name": "line-sorter",
+  "title": "Line Sorter",
+  "description": "Sort text lines alphabetically or numerically with optional duplicate removal",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application sorts lines in text files alphabetically or numerically, with options for reverse order and duplicate removal.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Sort lines alphabetically (case-insensitive)</li><li class=\"list-item-node\">Sort lines numerically by extracting numbers</li><li class=\"list-item-node\">Forward or reverse order sorting</li><li class=\"list-item-node\">Optional duplicate line removal</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input File</strong>: Upload your text file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a sorted text file with the suffix '_sorted.txt' in the specified output directory.</p>",
+  "command": "rm -rf prod_apps && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/line_sorter.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input Text File",
+      "description": "Upload the text file you want to sort",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where sorted text will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
