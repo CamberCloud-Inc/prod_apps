@@ -3,7 +3,7 @@
   "title": "Line Sorter",
   "description": "Sort text lines alphabetically or numerically with optional duplicate removal",
   "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application sorts lines in text files alphabetically or numerically, with options for reverse order and duplicate removal.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Sort lines alphabetically (case-insensitive)</li><li class=\"list-item-node\">Sort lines numerically by extracting numbers</li><li class=\"list-item-node\">Forward or reverse order sorting</li><li class=\"list-item-node\">Optional duplicate line removal</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input File</strong>: Upload your text file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a sorted text file with the suffix '_sorted.txt' in the specified output directory.</p>",
-  "command": "REPO_DIR=\"prod_apps_$(date +%s%N)\"; rm -rf \"$REPO_DIR\" 2>/dev/null || true; git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git \"$REPO_DIR\" && python \"$REPO_DIR/python/line_sorter.py\" \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "REPO_DIR=\"prod_apps\"; rm -rf \"$REPO_DIR\" 2>/dev/null || true; git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git \"$REPO_DIR\" && python \"$REPO_DIR/python/line_sorter.py\" \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
