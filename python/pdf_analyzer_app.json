@@ -1,0 +1,45 @@
+{
+  "name": "pdf-analyzer",
+  "title": "PDF to PNG Converter",
+  "description": "Convert PDF pages to high-quality PNG images using PyMuPDF",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application converts PDF documents into high-quality PNG images, with one image per page. Built using <a class=\"link\" href=\"https://pymupdf.readthedocs.io/\" target=\"_blank\">PyMuPDF</a>, it provides fast and accurate rendering of PDF content.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Convert each page of a PDF to a separate PNG image</li><li class=\"list-item-node\">High-quality 2x resolution output</li><li class=\"list-item-node\">Automatic installation of dependencies</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>PDF File</strong>: Upload your PDF file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output images</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates PNG files named <code class=\"inline\" spellcheck=\"false\">pdf_page_1.png</code>, <code class=\"inline\" spellcheck=\"false\">pdf_page_2.png</code>, etc. in the specified output directory. Each file corresponds to one page of the input PDF.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Creating image versions of PDF documents for web display</li><li class=\"list-item-node\">Extracting figures or diagrams from academic papers</li><li class=\"list-item-node\">Generating thumbnail previews of PDF content</li><li class=\"list-item-node\">Preparing PDF content for image processing workflows</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cd prod_apps/python && python pdf_analyzer.py \"${pdfPath}\" -o \"${outputDir}\" -z 2.0",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Small CPU",
+          "value": "small_cpu",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "small_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "pdfPath",
+      "label": "PDF File",
+      "description": "Upload the PDF file you want to convert to PNG images",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where PNG images will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

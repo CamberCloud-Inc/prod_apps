@@ -21,8 +21,18 @@ def main():
 
     args = parser.parse_args()
 
+    # Debug: print current working directory and its contents
+    print(f"Current working directory: {os.getcwd()}")
+    print(f"Contents of current directory:")
+    for item in os.listdir("."):
+        print(f"  {item}")
+
+    print(f"\nReceived pdf_path argument: {args.pdf_path}")
+
     # Expand user path if provided
     pdf_path = os.path.expanduser(args.pdf_path)
+    print(f"Expanded pdf_path: {pdf_path}")
+    print(f"Absolute pdf_path: {os.path.abspath(pdf_path)}")
 
     if not os.path.exists(pdf_path):
         print(f"Error: PDF file not found at: {pdf_path}")
