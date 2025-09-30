@@ -1,0 +1,71 @@
+{
+  "name": "image-background-remover",
+  "title": "Image Background Remover",
+  "description": "Remove backgrounds from images using AI-powered background removal",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application removes backgrounds from images using AI-powered background removal. Built using <a class=\"link\" href=\"https://github.com/danielgatis/rembg\" target=\"_blank\">rembg</a>, it provides high-quality background removal with transparent output.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">AI-powered background removal using deep learning</li><li class=\"list-item-node\">Optional alpha matting for better edge quality</li><li class=\"list-item-node\">Support for PNG and WebP output with transparency</li><li class=\"list-item-node\">Works with various image types (portraits, products, etc.)</li><li class=\"list-item-node\">Automatic handling of complex edges and hair</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input Image</strong>: Upload your image file from stash</li><li class=\"list-item-node\"><strong>Alpha Matting</strong>: Enable for better edge quality (slower but more accurate)</li><li class=\"list-item-node\"><strong>Output Format</strong>: Select PNG or WebP (both support transparency)</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates an image with transparent background, saved with '_no_bg' suffix.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Creating product images for e-commerce</li><li class=\"list-item-node\">Preparing images for graphic design</li><li class=\"list-item-node\">Removing backgrounds from profile pictures</li><li class=\"list-item-node\">Creating images with transparent backgrounds for overlays</li><li class=\"list-item-node\">Batch processing images for consistent backgrounds</li></ul>",
+  "command": "rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && python prod_apps/python/image_background_remover.py \"${inputFile}\" -o \"${outputDir}\" -f \"${outputFormat}\" ${alphaMattingFlag}",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Small CPU",
+          "value": "xsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input Image",
+      "description": "Upload the image file you want to remove background from",
+      "defaultValue": ""
+    },
+    {
+      "type": "Boolean",
+      "name": "alphaMattingFlag",
+      "label": "Alpha Matting",
+      "description": "Enable for better edge quality (slower but more accurate)",
+      "trueValue": "-a",
+      "falseValue": "",
+      "defaultValue": false
+    },
+    {
+      "type": "Select",
+      "name": "outputFormat",
+      "label": "Output Format",
+      "description": "Select the output image format",
+      "options": [
+        {
+          "label": "PNG",
+          "value": "PNG"
+        },
+        {
+          "label": "WebP",
+          "value": "WEBP"
+        }
+      ],
+      "defaultValue": "PNG"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the processed image will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
