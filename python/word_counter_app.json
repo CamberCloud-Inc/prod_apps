@@ -3,7 +3,7 @@
   "title": "Word Counter",
   "description": "Count words, characters, lines, sentences, and paragraphs in text documents",
   "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application analyzes text files and provides detailed statistics including word count, character count, line count, and more.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Count total and unique words</li><li class=\"list-item-node\">Count characters with and without spaces</li><li class=\"list-item-node\">Count lines (total and non-empty)</li><li class=\"list-item-node\">Count sentences and paragraphs</li><li class=\"list-item-node\">Calculate average word length</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input File</strong>: Upload your text file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a statistics report with the suffix '_stats.txt' containing comprehensive text analysis.</p>",
-  "command": "REPO_DIR=\"prod_apps\"; rm -rf \"$REPO_DIR\" 2>/dev/null || true; git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git \"$REPO_DIR\" && python \"$REPO_DIR/python/word_counter.py\" \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "REPO_DIR=\"prod_apps\"; rm -rf \"$REPO_DIR\" 2>/dev/null || true; git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git \"$REPO_DIR\" && python \"prod_apps/python/word_counter.py\" \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
