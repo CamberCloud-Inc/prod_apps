@@ -1,0 +1,24 @@
+2025-09-30 10:15:23,123 INFO Application started successfully
+2025-09-30 10:15:24,456 INFO Loading configuration from config.yaml
+2025-09-30 10:15:25,789 DEBUG Configuration loaded: {'port': 8080, 'host': '0.0.0.0'}
+2025-09-30 10:15:26,012 INFO Connecting to database at localhost:5432
+2025-09-30 10:15:27,345 INFO Database connection established
+2025-09-30 10:15:28,678 DEBUG Query executed: SELECT * FROM users LIMIT 10
+2025-09-30 10:15:29,901 WARNING Slow query detected: execution time 1.2s
+2025-09-30 10:15:30,234 INFO API server listening on port 8080
+2025-09-30 10:16:15,567 INFO Request received: GET /api/users
+2025-09-30 10:16:16,890 DEBUG Processing request with params: {'page': 1, 'limit': 20}
+2025-09-30 10:16:17,123 INFO Request completed: 200 OK
+2025-09-30 10:17:45,456 ERROR Database connection lost: timeout after 30s
+2025-09-30 10:17:46,789 WARNING Attempting to reconnect to database
+2025-09-30 10:17:48,012 INFO Database connection re-established
+2025-09-30 10:18:23,345 ERROR Failed to process request: invalid JSON payload
+2025-09-30 10:18:24,678 INFO Request received: POST /api/users
+2025-09-30 10:18:25,901 DEBUG Validating user data: {'name': 'John', 'email': 'john@example.com'}
+2025-09-30 10:18:26,234 INFO User created successfully with ID: 12345
+2025-09-30 10:19:12,567 WARNING High memory usage detected: 85% of available RAM
+2025-09-30 10:19:13,890 DEBUG Garbage collection triggered
+2025-09-30 10:19:14,123 INFO Memory usage reduced to 65%
+2025-09-30 10:20:00,456 INFO Application shutdown initiated
+2025-09-30 10:20:01,789 INFO Closing database connections
+2025-09-30 10:20:02,012 INFO Application stopped gracefully

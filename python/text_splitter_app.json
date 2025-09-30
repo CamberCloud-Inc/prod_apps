@@ -1,0 +1,45 @@
+{
+  "name": "text-splitter",
+  "title": "Text Splitter",
+  "description": "Split large text files into smaller chunks by line count or file size",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application splits large text files into smaller, manageable chunks. You can split by number of lines or by file size in KB.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Split files by line count (default: 1000 lines per file)</li><li class=\"list-item-node\">Split files by size in KB (default: 100 KB per file)</li><li class=\"list-item-node\">Automatically names output files with part numbers</li><li class=\"list-item-node\">Preserves file encoding and format</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input File</strong>: Upload your large text file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for split files</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates multiple files named <code class=\"inline\" spellcheck=\"false\">{original_name}_part001.txt</code>, <code class=\"inline\" spellcheck=\"false\">part002.txt</code>, etc.</p>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && python prod_apps_clone/python/text_splitter.py \"${inputFile}\" -o \"${outputDir}\" -m lines -l 1000",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input Text File",
+      "description": "Upload the large text file you want to split",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where split files will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "name": "text-merger",
+  "title": "Text Merger",
+  "description": "Combine multiple text files into a single merged file",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application combines multiple text files into a single merged file. It can process all .txt files in a directory and optionally add filename headers between files.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Merge all text files from a directory</li><li class=\"list-item-node\">Optional filename headers for each file section</li><li class=\"list-item-node\">Automatically sorts files for consistent ordering</li><li class=\"list-item-node\">Preserves file encoding and content</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input Directory</strong>: Select a stash folder containing text files to merge</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for the merged file</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a single file named <code class=\"inline\" spellcheck=\"false\">merged.txt</code> containing all input files concatenated together with optional headers.</p>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && python prod_apps_clone/python/text_merger.py \"${inputDir}\" -o \"${outputDir}\" -n merged.txt --headers",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputDir",
+      "label": "Input Directory",
+      "description": "Select a stash folder containing the text files you want to merge",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where the merged file will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "name": "csv-column-extractor",
+  "title": "CSV Column Extractor",
+  "description": "Extract specific columns from CSV files by name or index",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application extracts specific columns from CSV files. You can specify columns by their names or numeric indices.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Extract columns by name (e.g., 'Name,Age,Email')</li><li class=\"list-item-node\">Extract columns by index (e.g., '0,2,4')</li><li class=\"list-item-node\">Uses Python csv module for robust parsing</li><li class=\"list-item-node\">Preserves header row and data integrity</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input CSV File</strong>: Upload your CSV file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li><li class=\"list-item-node\"><strong>Columns</strong>: Comma-separated column names or indices (e.g., 'Name,Age' or '0,2')</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a new CSV file containing only the specified columns with suffix <code class=\"inline\" spellcheck=\"false\">_extracted.csv</code></p>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && python prod_apps_clone/python/csv_column_extractor.py \"${inputFile}\" -o \"${outputDir}\" -c \"${columns}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input CSV File",
+      "description": "Upload the CSV file you want to extract columns from",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where extracted CSV will be saved",
+      "defaultValue": "./"
+    },
+    {
+      "type": "Input",
+      "name": "columns",
+      "label": "Columns to Extract",
+      "description": "Comma-separated column names or indices (e.g., 'Name,Age' or '0,2,4')",
+      "defaultValue": "0,1"
+    }
+  ]
+}

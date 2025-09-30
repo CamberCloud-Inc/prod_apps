@@ -1,0 +1,3 @@
+This is file 3 content.
+Another line in file 3.
+Final line of file 3.

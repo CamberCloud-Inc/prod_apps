@@ -1,0 +1,45 @@
+{
+  "name": "line-number-adder",
+  "title": "Line Number Adder",
+  "description": "Add line numbers to text files with customizable formatting",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application adds line numbers to text files, making it easier to reference specific lines in documents, code files, or logs.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Automatically numbers all lines in a text file</li><li class=\"list-item-node\">Uses enumerate for efficient line processing</li><li class=\"list-item-node\">Auto-adjusts number width based on total lines</li><li class=\"list-item-node\">Preserves original text encoding</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input File</strong>: Upload your text file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a new text file with line numbers prepended to each line in the format: <code class=\"inline\" spellcheck=\"false\">001: line content</code></p>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && python prod_apps_clone/python/line_number_adder.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input Text File",
+      "description": "Upload the text file you want to add line numbers to",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where numbered text will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

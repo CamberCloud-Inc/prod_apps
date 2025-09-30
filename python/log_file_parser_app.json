@@ -1,0 +1,45 @@
+{
+  "name": "log-file-parser",
+  "title": "Log File Parser",
+  "description": "Parse and analyze log files with filtering, regex pattern matching, and statistics",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application parses and analyzes log files, extracting entries by log level, filtering with regex patterns, and generating statistics summaries.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Parse common log formats (timestamp, level, message)</li><li class=\"list-item-node\">Filter by log level (ERROR, WARNING, INFO, DEBUG)</li><li class=\"list-item-node\">Regex pattern matching for advanced filtering</li><li class=\"list-item-node\">Generate statistics summary (counts by level, timestamp range)</li><li class=\"list-item-node\">Uses Python re module for robust pattern matching</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Input Log File</strong>: Upload your log file from stash</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a parsed log file with optional statistics header showing log level distribution and timestamp range.</p>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && python prod_apps_clone/python/log_file_parser.py \"${inputFile}\" -o \"${outputDir}\" --stats",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input Log File",
+      "description": "Upload the log file you want to parse and analyze",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where parsed log will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
