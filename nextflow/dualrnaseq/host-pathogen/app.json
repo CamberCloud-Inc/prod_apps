@@ -1,5 +1,5 @@
 {
-  "name": "dualrnaseq-host-pathogen",
+  "name": "dualrnaseq-infection-transcriptomics",
   "title": "DualRNAseq: Host-Pathogen Interaction Transcriptomics",
   "description": "Simultaneous RNA-seq analysis of host and pathogen during infection. Quantifies both genomes from a single sample to study infection dynamics, immune response, and pathogen adaptation in real-time.",
   "version": "1.0.0",
