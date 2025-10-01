@@ -1,0 +1,16 @@
+{
+  "name": "genomeassembler-short-read-assembly",
+  "title": "Genome Assembler",
+  "description": " Short-read Assembly",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/genomeassembler --input ${input} --outdir ${outdir} -r  Illumina genome assembly:1.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/genomeassembler/master/docs/images/nf-core-genomeassembler_logo_light.png",
+  "content": "<h2><strong>Genome Assembler</strong></h2><p> Short-read Assembly</p>",
+  "spec": [
+    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
+    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./genomeassembler-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+  ],
+  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
+  "tags": [{"name": "genomeassembler", "type": "task"}]
+}
