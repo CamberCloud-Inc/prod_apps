@@ -1,56 +1,45 @@
 {
-  "name": "Analyze Bifurcation Diagram",
+  "name": "biomni-analyze-bifurcation-diagram",
+  "title": "Biomni: Analyze Bifurcation Diagram",
   "description": "Performs bifurcation analysis on a dynamical system and generates a bifurcation diagram",
-  "version": "1.0.0",
-  "author": "Biomni Synthetic Biology Tools",
-  "repository": "https://github.com/snap-stanford/Biomni",
-  "license": "MIT",
-  "runtime": {
-    "type": "python",
-    "version": "3.8+",
-    "entrypoint": "analyze_bifurcation_diagram.py"
-  },
-  "dependencies": {
-    "pip": [
-      "biomni",
-      "numpy",
-      "scipy",
-      "matplotlib"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Performs bifurcation analysis on a dynamical system and generates a bifurcation diagram</p><h3>Category</h3><p>synthetic_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/synthetic_biology/analyze_bifurcation_diagram.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "time_series_data",
-      "type": "array",
-      "description": "A 2D array where each row represents a time series for a specific parameter value. Shape should be (n_parameter_values, n_time_points)",
-      "required": true
-    },
-    {
-      "name": "parameter_values",
-      "type": "array",
-      "description": "1D array of parameter values corresponding to each time series. Shape should be (n_parameter_values,)",
-      "required": true
-    },
-    {
-      "name": "system_name",
-      "type": "string",
-      "description": "Name of the dynamical system being analyzed, used for plot titles",
-      "required": false,
-      "default": "Dynamical System"
-    },
-    {
-      "name": "output_dir",
-      "type": "string",
-      "description": "Directory to save the output files",
-      "required": false,
-      "default": "./"
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "outputs": [
+  "spec": [
     {
-      "name": "result",
-      "type": "string",
-      "description": "Research log summarizing the bifurcation analysis process and results"
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

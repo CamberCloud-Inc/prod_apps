@@ -1,54 +1,45 @@
 {
-  "name": "docking_autodock_vina",
+  "name": "biomni-docking-autodock-vina",
+  "title": "Biomni: Docking Autodock Vina",
   "description": "Performs docking using AutoDock Vina with specified parameters",
-  "version": "1.0.0",
-  "type": "python",
-  "entrypoint": "docking_autodock_vina.py",
-  "install": {
-    "pip": [
-      "biomni"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Performs docking using AutoDock Vina with specified parameters</p><h3>Category</h3><p>pharmacology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pharmacology/docking_autodock_vina.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "smiles_list",
-      "description": "List of SMILES strings for ligands to dock",
-      "type": "array",
-      "required": true
-    },
-    {
-      "name": "receptor_pdb_file",
-      "description": "Path to the receptor PDB file",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "box_center",
-      "description": "Center coordinates of the docking box [x, y, z]",
-      "type": "array",
-      "required": true
-    },
-    {
-      "name": "box_size",
-      "description": "Size of the docking box [x, y, z]",
-      "type": "array",
-      "required": true
-    },
-    {
-      "name": "ncpu",
-      "description": "Number of CPUs to use",
-      "type": "integer",
-      "required": false,
-      "default": 1
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "output": {
-    "type": "object",
-    "properties": {
-      "result": {
-        "type": "string",
-        "description": "Research log with docking scores"
-      }
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
-  }
+  ]
 }

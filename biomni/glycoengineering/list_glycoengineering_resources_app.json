@@ -1,23 +1,45 @@
 {
-  "name": "list_glycoengineering_resources",
+  "name": "biomni-list-glycoengineering-resources",
+  "title": "Biomni: List Glycoengineering Resources",
   "description": "Curate and summarize external glycoengineering tools and resources",
-  "version": "1.0.0",
-  "author": "Biomni Integration",
-  "license": "MIT",
-  "runtime": {
-    "type": "python",
-    "version": "3.8+",
-    "entrypoint": "list_glycoengineering_resources.py",
-    "requirements": [
-      "git+https://github.com/snap-stanford/Biomni.git"
-    ]
-  },
-  "inputs": [],
-  "outputs": [
+  "content": "<h3>Overview</h3><p>Curate and summarize external glycoengineering tools and resources</p><h3>Category</h3><p>glycoengineering</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/glycoengineering/list_glycoengineering_resources.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "result",
-      "type": "string",
-      "description": "Curated list of glycoengineering resources"
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

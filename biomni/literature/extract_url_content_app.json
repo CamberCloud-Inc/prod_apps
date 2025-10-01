@@ -1,41 +1,45 @@
 {
-  "name": "extract_url_content",
+  "name": "biomni-extract-url-content",
+  "title": "Biomni: Extract Url Content",
   "description": "Extract cleaned text content from a webpage using requests and BeautifulSoup. Removes scripts, styles, navigation, and other non-content elements.",
-  "version": "1.0.0",
-  "author": "Biomni Literature Tools",
-  "license": "MIT",
-  "input": {
-    "type": "object",
-    "properties": {
-      "url": {
-        "type": "string",
-        "description": "Webpage URL to extract content from"
-      }
-    },
-    "required": ["url"]
-  },
-  "output": {
-    "type": "object",
-    "properties": {
-      "success": {
-        "type": "boolean",
-        "description": "Whether the operation succeeded"
-      },
-      "result": {
-        "type": "string",
-        "description": "Cleaned text content of the webpage"
-      },
-      "error": {
-        "type": "string",
-        "description": "Error message if operation failed"
-      }
+  "content": "<h3>Overview</h3><p>Extract cleaned text content from a webpage using requests and BeautifulSoup. Removes scripts, styles, navigation, and other non-content elements.</p><h3>Category</h3><p>literature</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/literature/extract_url_content.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
-  },
-  "execution": {
-    "command": "python3",
-    "args": [
-      "extract_url_content.py",
-      "{{url}}"
-    ]
-  }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
+    }
+  ]
 }

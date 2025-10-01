@@ -1,26 +1,45 @@
 {
-  "name": "Biomni: Analyze DDR Network in Cancer",
+  "name": "biomni-analyze-ddr-network-in-cancer",
+  "title": "Biomni: Analyze Ddr Network In Cancer",
   "description": "Analyze DNA Damage Response (DDR) network alterations and dependencies in cancer samples. Reconstructs the DDR network from genomic data, identifies disruptions in the network, and analyzes dependencies between DDR pathway components in cancer.",
-  "input": {
-    "expression_data_path": {
-      "type": "string",
-      "description": "Path to gene expression data file (CSV format with genes as rows, samples as columns)"
-    },
-    "mutation_data_path": {
-      "type": "string",
-      "description": "Path to mutation data file (CSV format with genes as rows, samples as columns, values indicating mutation status)"
-    },
-    "output_dir": {
-      "type": "string",
-      "description": "Directory to save output files",
-      "default": "./results"
+  "content": "<h3>Overview</h3><p>Analyze DNA Damage Response (DDR) network alterations and dependencies in cancer samples. Reconstructs the DDR network from genomic data, identifies disruptions in the network, and analyzes dependencies between DDR pathway components in cancer.</p><h3>Category</h3><p>cancer_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/cancer_biology/analyze_ddr_network_in_cancer.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
-  },
-  "output": {
-    "type": "string",
-    "description": "Research log summarizing the DDR network analysis, findings about disruptions, and potential therapeutic vulnerabilities"
-  },
-  "tags": ["biomni", "cancer-biology", "dna-damage-response", "network-analysis", "genomics"],
-  "author": "Biomni",
-  "repository": "https://github.com/snap-stanford/Biomni"
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
+    }
+  ]
 }

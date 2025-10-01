@@ -1,44 +1,45 @@
 {
-  "name": "Optimize Anaerobic Digestion Process",
+  "name": "biomni-optimize-anaerobic-digestion-process",
+  "title": "Biomni: Optimize Anaerobic Digestion Process",
   "description": "Optimize anaerobic digestion process conditions to maximize VFA production or methane yield",
-  "image": "python:3.11-slim",
-  "run": [
-    "sh",
-    "-c",
-    "git clone --depth 1 https://github.com/snap-stanford/Biomni /tmp/biomni && pip install -q -e /tmp/biomni && python /mnt/code/optimize_anaerobic_digestion_process.py"
+  "content": "<h3>Overview</h3><p>Optimize anaerobic digestion process conditions to maximize VFA production or methane yield</p><h3>Category</h3><p>microbiology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/microbiology/optimize_anaerobic_digestion_process.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
   ],
-  "fields": [
+  "spec": [
     {
-      "name": "waste_characteristics",
-      "displayName": "Waste Characteristics",
-      "type": "json_object",
-      "description": "Dictionary containing waste characteristics (total_solids, volatile_solids, cod)",
-      "required": true
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "operational_parameters",
-      "displayName": "Operational Parameters",
-      "type": "json_object",
-      "description": "Dictionary containing operational parameters and their ranges (hrt, olr, if_ratio, temperature, ph)",
-      "required": true
-    },
-    {
-      "name": "target_output",
-      "displayName": "Target Output",
-      "type": "select",
-      "options": ["vfa_production", "methane_yield"],
-      "description": "Target output to maximize",
-      "required": false,
-      "default": "methane_yield"
-    },
-    {
-      "name": "optimization_method",
-      "displayName": "Optimization Method",
-      "type": "select",
-      "options": ["rsm", "genetic"],
-      "description": "Method used for optimization (rsm or genetic)",
-      "required": false,
-      "default": "rsm"
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

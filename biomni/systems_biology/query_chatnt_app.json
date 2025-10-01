@@ -1,27 +1,45 @@
 {
-  "name": "Query ChatNT",
+  "name": "biomni-query-chatnt",
+  "title": "Biomni: Query Chatnt",
   "description": "Call ChatNT to answer a question about a DNA sequence using transformer-based language model",
-  "install": "cd /tmp && git clone --depth 1 https://github.com/snap-stanford/Biomni.git biomni_repo && cd biomni_repo && pip install -e . && pip install transformers torch",
-  "run": "python3 /Users/david/git/prod_apps/biomni/systems_biology/query_chatnt.py \"$QUESTION\" \"$SEQUENCE\" \"$DEVICE\"",
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Call ChatNT to answer a question about a DNA sequence using transformer-based language model</p><h3>Category</h3><p>systems_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/systems_biology/query_chatnt.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "QUESTION",
-      "description": "Question to ask about the DNA sequence",
-      "type": "text",
-      "required": true
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "SEQUENCE",
-      "description": "DNA sequence to analyze",
-      "type": "text",
-      "required": true
-    },
-    {
-      "name": "DEVICE",
-      "description": "Device to use for the ChatNT model (-1 for CPU, 0+ for GPU)",
-      "type": "text",
-      "required": true,
-      "default": "-1"
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

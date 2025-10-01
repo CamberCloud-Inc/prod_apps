@@ -1,51 +1,45 @@
 {
-  "name": "analyze_ciliary_beat_frequency",
+  "name": "biomni-analyze-ciliary-beat-frequency",
+  "title": "Biomni: Analyze Ciliary Beat Frequency",
   "description": "Analyze ciliary beat frequency from high-speed video microscopy data using FFT analysis.",
-  "icon": "🔬",
-  "container": {
-    "image": "python:3.9-slim",
-    "setup_commands": [
-      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Analyze ciliary beat frequency from high-speed video microscopy data using FFT analysis.</p><h3>Category</h3><p>physiology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/analyze_ciliary_beat_frequency.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "video_path",
-      "description": "Path to the high-speed video microscopy file of ciliary beating",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "roi_count",
-      "description": "Number of regions of interest to analyze",
-      "type": "integer",
-      "required": false,
-      "default": 5
-    },
-    {
-      "name": "min_freq",
-      "description": "Minimum frequency to consider in Hz",
-      "type": "float",
-      "required": false,
-      "default": 0
-    },
-    {
-      "name": "max_freq",
-      "description": "Maximum frequency to consider in Hz",
-      "type": "float",
-      "required": false,
-      "default": 30
-    },
-    {
-      "name": "output_dir",
-      "description": "Directory to save output files",
-      "type": "string",
-      "required": false,
-      "default": "./"
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "output": {
-    "type": "string",
-    "description": "Research log summarizing the analysis steps and results"
-  }
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
+    }
+  ]
 }

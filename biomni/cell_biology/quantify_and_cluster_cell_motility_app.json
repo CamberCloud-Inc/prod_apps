@@ -1,21 +1,45 @@
 {
-  "name": "Quantify and Cluster Cell Motility",
+  "name": "biomni-quantify-and-cluster-cell-motility",
+  "title": "Biomni: Quantify And Cluster Cell Motility",
   "description": "Quantify cell motility features from time-lapse microscopy images and cluster cells based on motility patterns. Tracks cells across time frames, calculates speed, directionality, and mean squared displacement, then performs k-means clustering to identify distinct motility patterns.",
-  "spec": {
-    "image_sequence_path": {
-      "type": "string",
-      "description": "Path to directory containing time-lapse microscopy images in sequential order"
-    },
-    "output_dir": {
-      "type": "string",
-      "description": "Directory to save output files",
-      "default": "./results"
-    },
-    "num_clusters": {
-      "type": "integer",
-      "description": "Number of motility pattern clusters to identify",
-      "default": 3
+  "content": "<h3>Overview</h3><p>Quantify cell motility features from time-lapse microscopy images and cluster cells based on motility patterns. Tracks cells across time frames, calculates speed, directionality, and mean squared displacement, then performs k-means clustering to identify distinct motility patterns.</p><h3>Category</h3><p>cell_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/cell_biology/quantify_and_cluster_cell_motility.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
-  },
-  "instructions": "git clone https://github.com/snap-stanford/Biomni.git /tmp/Biomni && cd /tmp/Biomni && pip install -e . && cd /Users/david/git/prod_apps/biomni/cell_biology && python quantify_and_cluster_cell_motility.py"
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
+    }
+  ]
 }

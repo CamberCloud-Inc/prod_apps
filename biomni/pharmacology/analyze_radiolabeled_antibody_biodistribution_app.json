@@ -1,35 +1,45 @@
 {
-  "name": "analyze_radiolabeled_antibody_biodistribution",
+  "name": "biomni-analyze-radiolabeled-antibody-biodistribution",
+  "title": "Biomni: Analyze Radiolabeled Antibody Biodistribution",
   "description": "Analyzes radiolabeled antibody biodistribution across tissues",
-  "version": "1.0.0",
-  "type": "python",
-  "entrypoint": "analyze_radiolabeled_antibody_biodistribution.py",
-  "install": {
-    "pip": [
-      "biomni"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Analyzes radiolabeled antibody biodistribution across tissues</p><h3>Category</h3><p>pharmacology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pharmacology/analyze_radiolabeled_antibody_biodistribution.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "time_points",
-      "description": "Time points for biodistribution measurements",
-      "type": "array",
-      "required": true
-    },
-    {
-      "name": "tissue_data",
-      "description": "Tissue distribution data",
-      "type": "object",
-      "required": true
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "output": {
-    "type": "object",
-    "properties": {
-      "result": {
-        "type": "string",
-        "description": "Research log with biodistribution analysis"
-      }
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
-  }
+  ]
 }

@@ -1,35 +1,45 @@
 {
-  "name": "get_fda_drug_label_info",
+  "name": "biomni-get-fda-drug-label-info",
+  "title": "Biomni: Get Fda Drug Label Info",
   "description": "Retrieves FDA drug label information from the OpenFDA database",
-  "version": "1.0.0",
-  "type": "python",
-  "entrypoint": "get_fda_drug_label_info.py",
-  "install": {
-    "pip": [
-      "biomni"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Retrieves FDA drug label information from the OpenFDA database</p><h3>Category</h3><p>pharmacology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pharmacology/get_fda_drug_label_info.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "drug_name",
-      "description": "Name of the drug to query",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "sections",
-      "description": "Specific label sections to retrieve (optional)",
-      "type": "array",
-      "required": false
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "output": {
-    "type": "object",
-    "properties": {
-      "result": {
-        "type": "string",
-        "description": "Research log with FDA drug label information"
-      }
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
-  }
+  ]
 }

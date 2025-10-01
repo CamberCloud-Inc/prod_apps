@@ -1,40 +1,45 @@
 {
-  "name": "Optimize Codons for Heterologous Expression",
+  "name": "biomni-optimize-codons-for-heterologous-expression",
+  "title": "Biomni: Optimize Codons For Heterologous Expression",
   "description": "Analyzes and optimizes a DNA/RNA sequence for improved expression in a heterologous host organism",
-  "version": "1.0.0",
-  "author": "Biomni Synthetic Biology Tools",
-  "repository": "https://github.com/snap-stanford/Biomni",
-  "license": "MIT",
-  "runtime": {
-    "type": "python",
-    "version": "3.8+",
-    "entrypoint": "optimize_codons_for_heterologous_expression.py"
-  },
-  "dependencies": {
-    "pip": [
-      "biomni",
-      "biopython"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Analyzes and optimizes a DNA/RNA sequence for improved expression in a heterologous host organism</p><h3>Category</h3><p>synthetic_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/synthetic_biology/optimize_codons_for_heterologous_expression.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "target_sequence",
-      "type": "string",
-      "description": "The DNA or RNA sequence of the target gene to be optimized. Should contain complete codons (length divisible by 3)",
-      "required": true
-    },
-    {
-      "name": "host_codon_usage",
-      "type": "object",
-      "description": "Dictionary mapping codons to their usage frequency in the host organism. Format: {'AUG': 0.8, 'GCC': 0.6, ...}",
-      "required": true
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "outputs": [
+  "spec": [
     {
-      "name": "result",
-      "type": "string",
-      "description": "Research log summarizing the optimization process and results"
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

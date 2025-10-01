@@ -1,36 +1,45 @@
 {
-  "name": "analyze_bone_microct_morphometry",
+  "name": "biomni-analyze-bone-microct-morphometry",
+  "title": "Biomni: Analyze Bone Microct Morphometry",
   "description": "Analyze bone microarchitecture parameters from 3D micro-CT images including bone mineral density, bone volume, trabecular number/thickness/separation.",
-  "icon": "🦴",
-  "container": {
-    "image": "python:3.9-slim",
-    "setup_commands": [
-      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Analyze bone microarchitecture parameters from 3D micro-CT images including bone mineral density, bone volume, trabecular number/thickness/separation.</p><h3>Category</h3><p>pathology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pathology/analyze_bone_microct_morphometry.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "input_file_path",
-      "description": "Path to micro-CT scan data file",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "output_dir",
-      "description": "Directory for output files (default: ./results)",
-      "type": "string",
-      "required": false,
-      "default": "./results"
-    },
-    {
-      "name": "threshold_value",
-      "description": "Threshold for bone segmentation (defaults to Otsu's method if None)",
-      "type": "float",
-      "required": false
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "output": {
-    "type": "string",
-    "description": "Research log summarizing analysis steps and bone microarchitecture results"
-  }
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
+    }
+  ]
 }

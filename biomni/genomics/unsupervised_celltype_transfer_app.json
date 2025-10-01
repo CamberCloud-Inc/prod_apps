@@ -1,40 +1,44 @@
 {
   "name": "biomni-unsupervised-celltype-transfer",
-  "title": "Biomni: Unsupervised Cell Type Transfer",
+  "title": "Biomni: Unsupervised Celltype Transfer",
   "description": "Transfer cell type annotations between single-cell RNA-seq datasets using various methods via popV framework",
-  "content": "<h3>Overview</h3><p>Performs unsupervised cell type transfer between scRNA-seq datasets using the popV framework. Supports multiple annotation methods including SCANVI, CELLTYPIST, KNN-based approaches, and machine learning classifiers.</p><h3>Parameters</h3><ul><li><b>Annotated H5AD:</b> Reference dataset with cell type labels</li><li><b>Query H5AD:</b> Dataset to annotate</li><li><b>Reference Labels Key:</b> Column name containing cell type labels</li><li><b>Methods:</b> SCANVI_POPV (default), CELLTYPIST, KNN variants, Random Forest, XGBoost, etc.</li></ul><h3>Output</h3><p>Annotated predictions saved to popv_output/predictions.csv</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genomics/unsupervised_celltype_transfer.py \"${annotatedFile}\" \"${queryFile}\" --ref-labels-key \"${refLabelsKey}\" -o \"${outputDir}\" ${additionalParams}",
+  "content": "<h3>Overview</h3><p>Transfer cell type annotations between single-cell RNA-seq datasets using various methods via popV framework</p><h3>Category</h3><p>genomics</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genomics/unsupervised_celltype_transfer.py \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
-    {"nodeCount": "1", "coresPerNode": "8"}
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
   ],
   "spec": [
     {
       "type": "Stash File",
-      "name": "annotatedFile",
-      "label": "Reference Annotated H5AD File",
-      "description": "Upload reference dataset with cell type annotations",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
       "defaultValue": ""
-    },
-    {
-      "type": "Stash File",
-      "name": "queryFile",
-      "label": "Query H5AD File",
-      "description": "Upload query dataset to annotate",
-      "defaultValue": ""
-    },
-    {
-      "type": "String",
-      "name": "refLabelsKey",
-      "label": "Reference Labels Key",
-      "description": "Column name in reference dataset containing cell type labels",
-      "defaultValue": "cell_type"
     },
     {
       "type": "Stash File",
       "name": "outputDir",
       "label": "Output Directory",
-      "description": "Select output folder",
+      "description": "Output directory in stash",
       "defaultValue": "./"
     }
   ]

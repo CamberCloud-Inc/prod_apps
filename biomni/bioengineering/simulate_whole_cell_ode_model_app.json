@@ -1,9 +1,9 @@
 {
-  "name": "simulate-whole-cell-ode-model",
-  "title": "Simulate Whole-Cell ODE Model",
+  "name": "biomni-simulate-whole-cell-ode-model",
+  "title": "Biomni: Simulate Whole Cell Ode Model",
   "description": "Simulate a whole-cell model using ordinary differential equations (ODEs)",
-  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application simulates whole-cell models represented as systems of ordinary differential equations. Built using <a class=\"link\" href=\"https://github.com/snap-stanford/Biomni\" target=\"_blank\">Biomni</a>, it uses numerical integration to model cellular processes including transcription, translation, metabolism, and ATP dynamics.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Multiple numerical integration methods (RK45, LSODA, BDF, etc.)</li><li class=\"list-item-node\">Default whole-cell model with mRNA, protein, metabolite, and ATP</li><li class=\"list-item-node\">Customizable initial conditions and parameters</li><li class=\"list-item-node\">Detailed simulation statistics and final state</li><li class=\"list-item-node\">CSV export of time-series results</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Initial Conditions</strong>: JSON with initial values (e.g., {\"mRNA\":1.0,\"protein\":0.5,\"metabolite\":2.0,\"atp\":5.0})</li><li class=\"list-item-node\"><strong>Parameters</strong>: JSON with model parameters (e.g., {\"k_transcription\":0.5,\"k_translation\":0.1,\"k_mrna_deg\":0.2,\"k_protein_deg\":0.1,\"k_metabolism\":0.3,\"k_atp_production\":0.4,\"k_atp_consumption\":0.05})</li><li class=\"list-item-node\"><strong>Time Start</strong>: Simulation start time</li><li class=\"list-item-node\"><strong>Time End</strong>: Simulation end time</li><li class=\"list-item-node\"><strong>Time Points</strong>: Number of evaluation points</li><li class=\"list-item-node\"><strong>Method</strong>: Integration method (LSODA, RK45, BDF, etc.)</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a CSV file with complete time-series results and a detailed research log with simulation statistics.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Systems biology modeling</li><li class=\"list-item-node\">Metabolic pathway simulation</li><li class=\"list-item-node\">Gene expression dynamics</li><li class=\"list-item-node\">Whole-cell computational models</li></ul>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python \"prod_apps/biomni/bioengineering/simulate_whole_cell_ode_model.py\" '${initialConditions}' '${parameters}' --time-start ${timeStart} --time-end ${timeEnd} --time-points ${timePoints} --method ${method}",
+  "content": "<h3>Overview</h3><p>Simulate a whole-cell model using ordinary differential equations (ODEs)</p><h3>Category</h3><p>bioengineering</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/bioengineering/simulate_whole_cell_ode_model.py \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,72 +28,18 @@
   ],
   "spec": [
     {
-      "type": "Text",
-      "name": "initialConditions",
-      "label": "Initial Conditions (JSON)",
-      "description": "JSON object with initial values for state variables. Example: {\"mRNA\":1.0,\"protein\":0.5,\"metabolite\":2.0,\"atp\":5.0}",
-      "defaultValue": "{\"mRNA\":1.0,\"protein\":0.5,\"metabolite\":2.0,\"atp\":5.0}"
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "type": "Text",
-      "name": "parameters",
-      "label": "Model Parameters (JSON)",
-      "description": "JSON object with model parameters. Example: {\"k_transcription\":0.5,\"k_translation\":0.1,\"k_mrna_deg\":0.2,\"k_protein_deg\":0.1,\"k_metabolism\":0.3,\"k_atp_production\":0.4,\"k_atp_consumption\":0.05}",
-      "defaultValue": "{\"k_transcription\":0.5,\"k_translation\":0.1,\"k_mrna_deg\":0.2,\"k_protein_deg\":0.1,\"k_metabolism\":0.3,\"k_atp_production\":0.4,\"k_atp_consumption\":0.05}"
-    },
-    {
-      "type": "Number",
-      "name": "timeStart",
-      "label": "Time Start",
-      "description": "Start time for the simulation",
-      "defaultValue": 0
-    },
-    {
-      "type": "Number",
-      "name": "timeEnd",
-      "label": "Time End",
-      "description": "End time for the simulation",
-      "defaultValue": 100
-    },
-    {
-      "type": "Number",
-      "name": "timePoints",
-      "label": "Number of Time Points",
-      "description": "Number of time points to evaluate",
-      "defaultValue": 1000
-    },
-    {
-      "type": "Select",
-      "name": "method",
-      "label": "Integration Method",
-      "description": "Numerical integration method to use",
-      "options": [
-        {
-          "label": "LSODA (Automatic stiffness detection)",
-          "value": "LSODA"
-        },
-        {
-          "label": "RK45 (Runge-Kutta 4-5)",
-          "value": "RK45"
-        },
-        {
-          "label": "RK23 (Runge-Kutta 2-3)",
-          "value": "RK23"
-        },
-        {
-          "label": "DOP853 (Runge-Kutta 8)",
-          "value": "DOP853"
-        },
-        {
-          "label": "Radau (Implicit Runge-Kutta)",
-          "value": "Radau"
-        },
-        {
-          "label": "BDF (Backward differentiation)",
-          "value": "BDF"
-        }
-      ],
-      "defaultValue": "LSODA"
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

@@ -1,47 +1,45 @@
 {
-  "name": "fetch_supplementary_info_from_doi",
+  "name": "biomni-fetch-supplementary-info-from-doi",
+  "title": "Biomni: Fetch Supplementary Info From Doi",
   "description": "Fetches supplementary information for a research paper using its DOI. Downloads supplementary files and returns a research log of the process.",
-  "version": "1.0.0",
-  "author": "Biomni Literature Tools",
-  "license": "MIT",
-  "input": {
-    "type": "object",
-    "properties": {
-      "doi": {
-        "type": "string",
-        "description": "The paper DOI (e.g., '10.1000/xyz123')"
-      },
-      "output_dir": {
-        "type": "string",
-        "description": "Directory to save supplementary files",
-        "default": "supplementary_info"
-      }
-    },
-    "required": ["doi", "output_dir"]
-  },
-  "output": {
-    "type": "object",
-    "properties": {
-      "success": {
-        "type": "boolean",
-        "description": "Whether the operation succeeded"
-      },
-      "result": {
-        "type": "string",
-        "description": "Research log containing process details and downloaded file paths"
-      },
-      "error": {
-        "type": "string",
-        "description": "Error message if operation failed"
-      }
+  "content": "<h3>Overview</h3><p>Fetches supplementary information for a research paper using its DOI. Downloads supplementary files and returns a research log of the process.</p><h3>Category</h3><p>literature</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/literature/fetch_supplementary_info_from_doi.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
-  },
-  "execution": {
-    "command": "python3",
-    "args": [
-      "fetch_supplementary_info_from_doi.py",
-      "{{doi}}",
-      "{{output_dir}}"
-    ]
-  }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
+    }
+  ]
 }

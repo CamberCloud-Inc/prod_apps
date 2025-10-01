@@ -1,9 +1,9 @@
 {
-  "name": "find-restriction-sites",
-  "title": "Find Restriction Sites",
+  "name": "biomni-find-restriction-sites",
+  "title": "Biomni: Find Restriction Sites",
   "description": "Identify restriction enzyme recognition sites in DNA sequences",
-  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application identifies restriction enzyme recognition sites in a DNA sequence for specified enzymes.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Searches for multiple enzymes simultaneously</li><li class=\"list-item-node\">Reports recognition sequences</li><li class=\"list-item-node\">Provides cut position details</li><li class=\"list-item-node\">Indicates overhang types (sticky/blunt)</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>DNA Sequence</strong>: Sequence to search</li><li class=\"list-item-node\"><strong>Enzymes</strong>: Space-separated enzyme names</li><li class=\"list-item-node\"><strong>Topology</strong>: Specify if linear</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">Returns a JSON file with detailed information about each restriction site including positions, recognition sequences, and cut patterns.</p>",
-  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && pip install -q biopython biomni && python prod_apps_clone/biomni/molecular_biology/find_restriction_sites.py \"${dnaSequence}\" ${enzymes} ${linear} -o \"${outputDir}\"",
+  "content": "<h3>Overview</h3><p>Identify restriction enzyme recognition sites in DNA sequences</p><h3>Category</h3><p>molecular_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/find_restriction_sites.py \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,31 +28,17 @@
   ],
   "spec": [
     {
-      "type": "String",
-      "name": "dnaSequence",
-      "label": "DNA Sequence",
-      "description": "DNA sequence to search for restriction sites",
-      "defaultValue": ""
-    },
-    {
-      "type": "String",
-      "name": "enzymes",
-      "label": "Restriction Enzymes",
-      "description": "Space-separated enzyme names (e.g., EcoRI BamHI NotI)",
-      "defaultValue": ""
-    },
-    {
-      "type": "String",
-      "name": "linear",
-      "label": "Linear DNA",
-      "description": "Enter '--linear' if sequence is linear (leave empty for circular)",
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
       "defaultValue": ""
     },
     {
       "type": "Stash File",
       "name": "outputDir",
       "label": "Output Directory",
-      "description": "Select or create a stash folder where results will be saved",
+      "description": "Output directory in stash",
       "defaultValue": "./"
     }
   ]

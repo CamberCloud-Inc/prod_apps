@@ -1,34 +1,45 @@
 {
-  "name": "Analyze Bacterial Growth Curve",
+  "name": "biomni-analyze-bacterial-growth-curve",
+  "title": "Biomni: Analyze Bacterial Growth Curve",
   "description": "Analyze bacterial growth curve data to determine growth parameters including doubling time and lag phase",
-  "category": "Immunology",
-  "subcategory": "Microbiology",
-  "image": "davethesoftwaredev/biomni:latest",
-  "command": "python /app/biomni/immunology/analyze_bacterial_growth_curve.py",
-  "params": [
+  "content": "<h3>Overview</h3><p>Analyze bacterial growth curve data to determine growth parameters including doubling time and lag phase</p><h3>Category</h3><p>immunology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/immunology/analyze_bacterial_growth_curve.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "time_points_json",
-      "type": "string",
-      "description": "Time points of measurements in hours (JSON array, e.g., '[0, 1, 2, 3, 4]')",
-      "required": true
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "od_values_json",
-      "type": "string",
-      "description": "Optical density measurements corresponding to each time point (JSON array, e.g., '[0.1, 0.2, 0.4, 0.8, 1.2]')",
-      "required": true
-    },
-    {
-      "name": "strain_name",
-      "type": "string",
-      "description": "Name of the bacterial strain being analyzed",
-      "required": true
-    },
-    {
-      "name": "output_dir",
-      "type": "string",
-      "description": "Directory where output files will be saved",
-      "default": "."
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

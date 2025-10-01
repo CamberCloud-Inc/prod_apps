@@ -1,22 +1,45 @@
 {
-  "name": "Analyze Cytokine Production in CD4+ T Cells",
+  "name": "biomni-analyze-cytokine-production-in-cd4-tcells",
+  "title": "Biomni: Analyze Cytokine Production In Cd4 Tcells",
   "description": "Analyze cytokine production in CD4+ T cells after antigen stimulation using intracellular flow cytometry",
-  "category": "Immunology",
-  "subcategory": "Flow Cytometry",
-  "image": "davethesoftwaredev/biomni:latest",
-  "command": "python /app/biomni/immunology/analyze_cytokine_production_in_cd4_tcells.py",
-  "params": [
+  "content": "<h3>Overview</h3><p>Analyze cytokine production in CD4+ T cells after antigen stimulation using intracellular flow cytometry</p><h3>Category</h3><p>immunology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/immunology/analyze_cytokine_production_in_cd4_tcells.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "fcs_files_dict_json",
-      "type": "string",
-      "description": "Dictionary mapping condition names to FCS file paths (JSON object, e.g., '{\"control\": \"/path/to/control.fcs\", \"stimulated\": \"/path/to/stimulated.fcs\"}')",
-      "required": true
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "output_dir",
-      "type": "string",
-      "description": "Directory to save output files",
-      "default": "./results"
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

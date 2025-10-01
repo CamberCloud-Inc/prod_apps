@@ -1,55 +1,45 @@
 {
-  "name": "analyze_protease_kinetics",
+  "name": "biomni-analyze-protease-kinetics",
+  "title": "Biomni: Analyze Protease Kinetics",
   "description": "Analyze protease kinetics data from fluorogenic peptide cleavage assays.",
-  "icon": "⚗️",
-  "container": {
-    "image": "python:3.9-slim",
-    "setup_commands": [
-      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Analyze protease kinetics data from fluorogenic peptide cleavage assays.</p><h3>Category</h3><p>biochemistry</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/biochemistry/analyze_protease_kinetics.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "time_points",
-      "description": "Array of time points (in seconds) at which measurements were taken",
-      "type": "array",
-      "required": true
-    },
-    {
-      "name": "fluorescence_data",
-      "description": "2D array of fluorescence measurements where each row corresponds to a different substrate concentration",
-      "type": "array",
-      "required": true
-    },
-    {
-      "name": "substrate_concentrations",
-      "description": "Array of substrate concentrations (in μM) corresponding to each row in fluorescence_data",
-      "type": "array",
-      "required": true
-    },
-    {
-      "name": "enzyme_concentration",
-      "description": "Concentration of the protease enzyme (in μM)",
-      "type": "float",
-      "required": true
-    },
-    {
-      "name": "output_prefix",
-      "description": "Prefix for output files (default: protease_kinetics)",
-      "type": "string",
-      "required": false,
-      "default": "protease_kinetics"
-    },
-    {
-      "name": "output_dir",
-      "description": "Directory to save output files (default: ./)",
-      "type": "string",
-      "required": false,
-      "default": "./"
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "output": {
-    "type": "string",
-    "description": "Research log summarizing the analysis steps and results"
-  }
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
+    }
+  ]
 }

@@ -1,35 +1,45 @@
 {
-  "name": "Create Segmentation Visualization",
+  "name": "biomni-create-segmentation-visualization",
+  "title": "Biomni: Create Segmentation Visualization",
   "description": "Create and save visualization of segmentation results using nilearn",
-  "class": "bioimaging",
-  "entrypoint": "create_segmentation_visualization.py",
-  "parameters": {
-    "original_mri": {
-      "type": "file",
-      "description": "Path to original MRI file",
-      "required": true
-    },
-    "segmentation": {
-      "type": "file",
-      "description": "Path to segmentation file",
-      "required": true
-    },
-    "output_dir": {
-      "type": "string",
-      "description": "Directory to save visualization images (default: ./visualization_output)",
-      "required": false,
-      "default": "./visualization_output"
+  "content": "<h3>Overview</h3><p>Create and save visualization of segmentation results using nilearn</p><h3>Category</h3><p>bioimaging</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/bioimaging/create_segmentation_visualization.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
-  },
-  "returns": {
-    "visualization_files": {
-      "type": "array",
-      "description": "List of saved image file paths"
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
-  },
-  "setup_commands": [
-    "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni 2>/dev/null || (cd /tmp/biomni && git pull)",
-    "pip install -e /tmp/biomni",
-    "pip install nibabel numpy SimpleITK torch matplotlib requests nilearn"
   ]
 }

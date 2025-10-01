@@ -1,9 +1,9 @@
 {
-  "name": "bayesian-finemapping-deep-vi",
-  "title": "Bayesian Fine-mapping with Deep Variational Inference",
+  "name": "biomni-bayesian-finemapping-with-deep-vi",
+  "title": "Biomni: Bayesian Finemapping With Deep Vi",
   "description": "Perform Bayesian fine-mapping from GWAS summary statistics using deep variational inference",
-  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application implements a deep neural network-based variational inference approach to compute posterior inclusion probabilities (PIPs) and credible sets for putative causal variants from GWAS summary statistics and linkage disequilibrium (LD) information.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Deep variational inference for Bayesian fine-mapping</li><li class=\"list-item-node\">Posterior inclusion probability (PIP) calculation</li><li class=\"list-item-node\">Credible set identification</li><li class=\"list-item-node\">Visualization of posterior distributions</li><li class=\"list-item-node\">Support for custom training parameters</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>GWAS Summary</strong>: CSV/TSV file with variant_id, effect_size, pvalue, se columns</li><li class=\"list-item-node\"><strong>LD Matrix</strong>: Linkage disequilibrium matrix (.npy format)</li><li class=\"list-item-node\"><strong>Iterations</strong>: Number of training iterations (default: 5000)</li><li class=\"list-item-node\"><strong>Learning Rate</strong>: Optimization learning rate (default: 0.01)</li><li class=\"list-item-node\"><strong>Hidden Dimension</strong>: Neural network hidden layer size (default: 64)</li><li class=\"list-item-node\"><strong>Credible Threshold</strong>: Threshold for credible set (default: 0.95)</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates multiple output files including fine-mapping results CSV, credible set CSV, PIP visualization plot, and a detailed analysis log.</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python \"prod_apps/biomni/genetics/bayesian_finemapping_with_deep_vi.py\" \"${gwasSummary}\" \"${ldMatrix}\" -n ${nIterations} -lr ${learningRate} -hd ${hiddenDim} -ct ${credibleThreshold} -o \"${outputDir}\"",
+  "content": "<h3>Overview</h3><p>Perform Bayesian fine-mapping from GWAS summary statistics using deep variational inference</p><h3>Category</h3><p>genetics</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genetics/bayesian_finemapping_with_deep_vi.py \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -14,66 +14,31 @@
       "description": "Select the configuration for the job",
       "options": [
         {
-          "label": "Small CPU",
-          "value": "small_cpu",
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
           "mapValue": {
-            "nodeSize": "SMALL",
+            "nodeSize": "XXSMALL",
             "numNodes": 1,
             "withGpu": false
           }
         }
       ],
-      "defaultValue": "small_cpu"
+      "defaultValue": "xxsmall_cpu"
     }
   ],
   "spec": [
     {
       "type": "Stash File",
-      "name": "gwasSummary",
-      "label": "GWAS Summary File",
-      "description": "Upload GWAS summary statistics file (CSV or TSV with variant_id, effect_size, pvalue columns)",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
       "defaultValue": ""
-    },
-    {
-      "type": "Stash File",
-      "name": "ldMatrix",
-      "label": "LD Matrix File",
-      "description": "Upload LD matrix file (.npy format)",
-      "defaultValue": ""
-    },
-    {
-      "type": "Number",
-      "name": "nIterations",
-      "label": "Number of Iterations",
-      "description": "Number of training iterations for variational inference",
-      "defaultValue": 5000
-    },
-    {
-      "type": "Number",
-      "name": "learningRate",
-      "label": "Learning Rate",
-      "description": "Learning rate for optimization algorithm",
-      "defaultValue": 0.01
-    },
-    {
-      "type": "Number",
-      "name": "hiddenDim",
-      "label": "Hidden Dimension",
-      "description": "Hidden dimension size for neural network",
-      "defaultValue": 64
-    },
-    {
-      "type": "Number",
-      "name": "credibleThreshold",
-      "label": "Credible Threshold",
-      "description": "Threshold for defining credible set (e.g., 0.95 for 95% credible set)",
-      "defaultValue": 0.95
     },
     {
       "type": "Stash File",
       "name": "outputDir",
       "label": "Output Directory",
-      "description": "Select or create a stash folder where results will be saved",
+      "description": "Output directory in stash",
       "defaultValue": "./"
     }
   ]

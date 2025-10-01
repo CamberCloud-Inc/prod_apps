@@ -1,9 +1,9 @@
 {
-  "name": "align-sequences",
-  "title": "Align Sequences (Primer Alignment)",
+  "name": "biomni-align-sequences",
+  "title": "Biomni: Align Sequences",
   "description": "Align short sequences (primers) to a longer target sequence allowing for one mismatch",
-  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application aligns short DNA sequences (such as primers) to a longer target sequence, checking both forward and reverse complement strands. Allows up to one mismatch.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Checks forward and reverse complement</li><li class=\"list-item-node\">Allows up to one mismatch</li><li class=\"list-item-node\">Reports all alignment positions</li><li class=\"list-item-node\">Identifies mismatch locations</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Target Sequence</strong>: Long DNA sequence to search</li><li class=\"list-item-node\"><strong>Short Sequences</strong>: Space-separated primer sequences to align</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">Returns a JSON file with alignment positions, strands, and mismatches for each primer.</p>",
-  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && pip install -q biopython biomni && python prod_apps_clone/biomni/molecular_biology/align_sequences.py \"${longSeq}\" ${shortSeqs} -o \"${outputDir}\"",
+  "content": "<h3>Overview</h3><p>Align short sequences (primers) to a longer target sequence allowing for one mismatch</p><h3>Category</h3><p>molecular_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/align_sequences.py \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,24 +28,17 @@
   ],
   "spec": [
     {
-      "type": "String",
-      "name": "longSeq",
-      "label": "Target DNA Sequence",
-      "description": "Long DNA sequence to search for primer binding sites",
-      "defaultValue": ""
-    },
-    {
-      "type": "String",
-      "name": "shortSeqs",
-      "label": "Primer Sequences",
-      "description": "Space-separated primer sequences to align (e.g., ATGCATGC GCTAGCTA)",
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
       "defaultValue": ""
     },
     {
       "type": "Stash File",
       "name": "outputDir",
       "label": "Output Directory",
-      "description": "Select or create a stash folder where results will be saved",
+      "description": "Output directory in stash",
       "defaultValue": "./"
     }
   ]

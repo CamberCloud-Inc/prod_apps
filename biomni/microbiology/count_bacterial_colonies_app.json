@@ -1,43 +1,45 @@
 {
-  "name": "Count Bacterial Colonies",
+  "name": "biomni-count-bacterial-colonies",
+  "title": "Biomni: Count Bacterial Colonies",
   "description": "Count bacterial colonies from an image of agar plate using computer vision techniques",
-  "image": "python:3.11-slim",
-  "run": [
-    "sh",
-    "-c",
-    "git clone --depth 1 https://github.com/snap-stanford/Biomni /tmp/biomni && pip install -q -e /tmp/biomni && python /mnt/code/count_bacterial_colonies.py"
+  "content": "<h3>Overview</h3><p>Count bacterial colonies from an image of agar plate using computer vision techniques</p><h3>Category</h3><p>microbiology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/microbiology/count_bacterial_colonies.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
   ],
-  "fields": [
+  "spec": [
     {
-      "name": "image_path",
-      "displayName": "Image Path",
-      "type": "short_text",
-      "description": "Path to the image file containing bacterial colonies on agar plate",
-      "required": true
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "dilution_factor",
-      "displayName": "Dilution Factor",
-      "type": "number",
-      "description": "Dilution factor of the plated sample",
-      "required": false,
-      "default": 1
-    },
-    {
-      "name": "plate_area_cm2",
-      "displayName": "Plate Area (cm²)",
-      "type": "number",
-      "description": "Area of the agar plate in square centimeters",
-      "required": false,
-      "default": 65.0
-    },
-    {
-      "name": "output_dir",
-      "displayName": "Output Directory",
-      "type": "short_text",
-      "description": "Directory to save output images and results",
-      "required": false,
-      "default": "./output"
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

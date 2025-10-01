@@ -1,26 +1,45 @@
 {
-  "name": "Model Protein Dimerization Network",
+  "name": "biomni-model-protein-dimerization-network",
+  "title": "Biomni: Model Protein Dimerization Network",
   "description": "Model protein dimerization networks to find equilibrium concentrations of dimers using ODE-based simulation",
-  "install": "cd /tmp && git clone --depth 1 https://github.com/snap-stanford/Biomni.git biomni_repo && cd biomni_repo && pip install -e . && pip install numpy scipy",
-  "run": "python3 /Users/david/git/prod_apps/biomni/systems_biology/model_protein_dimerization_network.py \"$MONOMER_CONCENTRATIONS\" \"$DIMERIZATION_AFFINITIES\" \"$NETWORK_TOPOLOGY\"",
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Model protein dimerization networks to find equilibrium concentrations of dimers using ODE-based simulation</p><h3>Category</h3><p>systems_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/systems_biology/model_protein_dimerization_network.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "MONOMER_CONCENTRATIONS",
-      "description": "JSON dictionary mapping monomer names to their initial concentrations (format: {\"A\": 1.0, \"B\": 2.0})",
-      "type": "text",
-      "required": true
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "DIMERIZATION_AFFINITIES",
-      "description": "JSON dictionary mapping dimer names to their association constants Ka (format: {\"A-B\": 1000000.0})",
-      "type": "text",
-      "required": true
-    },
-    {
-      "name": "NETWORK_TOPOLOGY",
-      "description": "JSON list of monomer pairs that can form dimers (format: [[\"A\", \"B\"], [\"B\", \"C\"]])",
-      "type": "text",
-      "required": true
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

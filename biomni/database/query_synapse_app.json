@@ -1,69 +1,45 @@
 {
-  "name": "query_synapse",
-  "title": "Query Synapse",
+  "name": "biomni-query-synapse",
+  "title": "Biomni: Query Synapse",
   "description": "Query Synapse REST API for biomedical datasets and files.\n\n    Synapse is a platform for sharing and analyzing biomedical data, particularly\n    genomics and clinical research datasets. Supports optio",
-  "category": "Biomni Database Tools",
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Query Synapse REST API for biomedical datasets and files.\n\n    Synapse is a platform for sharing and analyzing biomedical data, particularly\n    genomics and clinical research datasets. Supports optio</p><h3>Category</h3><p>database</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_synapse.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "prompt",
-      "type": "string",
-      "required": false,
-      "description": "Parameter: prompt"
-    },
-    {
-      "name": "query_term",
-      "type": "array",
-      "required": false,
-      "description": "Parameter: query_term"
-    },
-    {
-      "name": "return_fields",
-      "type": "array",
-      "required": false,
-      "description": "Parameter: return_fields"
-    },
-    {
-      "name": "max_results",
-      "type": "integer",
-      "required": false,
-      "description": "Parameter: max_results"
-    },
-    {
-      "name": "query_type",
-      "type": "string",
-      "required": false,
-      "description": "Parameter: query_type"
-    },
-    {
-      "name": "verbose",
-      "type": "boolean",
-      "required": false,
-      "description": "Parameter: verbose"
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "outputs": [
+  "spec": [
     {
-      "name": "result",
-      "type": "object",
-      "description": "Query results"
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
-  ],
-  "command": {
-    "type": "python",
-    "script": "query_synapse.py",
-    "args": [
-      "--prompt",
-      "${prompt}",
-      "--query_term",
-      "${query_term}",
-      "--return_fields",
-      "${return_fields}",
-      "--max_results",
-      "${max_results}",
-      "--query_type",
-      "${query_type}",
-      "--verbose",
-      "${verbose}"
-    ]
-  }
+  ]
 }

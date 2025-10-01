@@ -1,54 +1,45 @@
 {
-  "name": "query_fda_adverse_events",
+  "name": "biomni-query-fda-adverse-events",
+  "title": "Biomni: Query Fda Adverse Events",
   "description": "Queries FDA adverse events database (FAERS) for drug safety information",
-  "version": "1.0.0",
-  "type": "python",
-  "entrypoint": "query_fda_adverse_events.py",
-  "install": {
-    "pip": [
-      "biomni"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Queries FDA adverse events database (FAERS) for drug safety information</p><h3>Category</h3><p>pharmacology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pharmacology/query_fda_adverse_events.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "drug_name",
-      "description": "Name of the drug to query",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "date_range",
-      "description": "Date range for the query as [start_date, end_date]",
-      "type": "array",
-      "required": false
-    },
-    {
-      "name": "severity_filter",
-      "description": "Filter by severity levels",
-      "type": "array",
-      "required": false
-    },
-    {
-      "name": "outcome_filter",
-      "description": "Filter by outcome types",
-      "type": "array",
-      "required": false
-    },
-    {
-      "name": "limit",
-      "description": "Maximum number of results to return",
-      "type": "integer",
-      "required": false,
-      "default": 100
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "output": {
-    "type": "object",
-    "properties": {
-      "result": {
-        "type": "string",
-        "description": "Research log with FDA adverse events data"
-      }
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
-  }
+  ]
 }

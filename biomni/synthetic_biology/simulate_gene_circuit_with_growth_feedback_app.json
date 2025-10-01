@@ -1,61 +1,45 @@
 {
-  "name": "Simulate Gene Circuit with Growth Feedback",
+  "name": "biomni-simulate-gene-circuit-with-growth-feedback",
+  "title": "Biomni: Simulate Gene Circuit With Growth Feedback",
   "description": "Simulate gene regulatory circuit dynamics with growth feedback",
-  "version": "1.0.0",
-  "author": "Biomni Synthetic Biology Tools",
-  "repository": "https://github.com/snap-stanford/Biomni",
-  "license": "MIT",
-  "runtime": {
-    "type": "python",
-    "version": "3.8+",
-    "entrypoint": "simulate_gene_circuit_with_growth_feedback.py"
-  },
-  "dependencies": {
-    "pip": [
-      "biomni",
-      "numpy",
-      "scipy"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Simulate gene regulatory circuit dynamics with growth feedback</p><h3>Category</h3><p>synthetic_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/synthetic_biology/simulate_gene_circuit_with_growth_feedback.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "circuit_topology",
-      "type": "array",
-      "description": "Adjacency matrix representing the gene circuit topology. Positive values indicate activation, negative values indicate repression. Shape should be (n_genes, n_genes)",
-      "required": true
-    },
-    {
-      "name": "kinetic_params",
-      "type": "object",
-      "description": "Dictionary containing kinetic parameters: basal_rates, degradation_rates, hill_coefficients, threshold_constants",
-      "required": true
-    },
-    {
-      "name": "growth_params",
-      "type": "object",
-      "description": "Dictionary containing growth-related parameters: max_growth_rate, growth_inhibition, gene_growth_weights",
-      "required": true
-    },
-    {
-      "name": "simulation_time",
-      "type": "number",
-      "description": "Total simulation time",
-      "required": false,
-      "default": 100
-    },
-    {
-      "name": "time_points",
-      "type": "integer",
-      "description": "Number of time points to sample",
-      "required": false,
-      "default": 1000
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "outputs": [
+  "spec": [
     {
-      "name": "result",
-      "type": "string",
-      "description": "Research log summarizing the simulation and results with file names of saved data"
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

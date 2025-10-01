@@ -1,42 +1,45 @@
 {
-  "name": "Simulate Microbial Population Dynamics",
+  "name": "biomni-simulate-microbial-population-dynamics",
+  "title": "Biomni: Simulate Microbial Population Dynamics",
   "description": "Simulate microbial population dynamics with multiple interacting species",
-  "image": "python:3.11-slim",
-  "run": [
-    "sh",
-    "-c",
-    "git clone --depth 1 https://github.com/snap-stanford/Biomni /tmp/biomni && pip install -q -e /tmp/biomni && python /mnt/code/simulate_microbial_population_dynamics.py"
+  "content": "<h3>Overview</h3><p>Simulate microbial population dynamics with multiple interacting species</p><h3>Category</h3><p>microbiology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/microbiology/simulate_microbial_population_dynamics.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
   ],
-  "fields": [
+  "spec": [
     {
-      "name": "species_params",
-      "displayName": "Species Parameters",
-      "type": "json_array",
-      "description": "List of dictionaries containing parameters for each species",
-      "required": true
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "interactions",
-      "displayName": "Interactions",
-      "type": "json_array",
-      "description": "List of dictionaries describing interactions between species",
-      "required": true
-    },
-    {
-      "name": "simulation_time",
-      "displayName": "Simulation Time",
-      "type": "number",
-      "description": "Total simulation time",
-      "required": false,
-      "default": 100
-    },
-    {
-      "name": "time_step",
-      "displayName": "Time Step",
-      "type": "number",
-      "description": "Time step for simulation output",
-      "required": false,
-      "default": 0.1
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

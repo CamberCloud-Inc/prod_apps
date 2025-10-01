@@ -1,53 +1,45 @@
 {
-  "name": "advanced_web_search_claude",
+  "name": "biomni-advanced-web-search-claude",
+  "title": "Biomni: Advanced Web Search Claude",
   "description": "Conduct advanced web search using Claude AI to collect relevant information with citations through multiple rounds of web searches. Requires ANTHROPIC_API_KEY.",
-  "version": "1.0.0",
-  "author": "Biomni Literature Tools",
-  "license": "MIT",
-  "input": {
-    "type": "object",
-    "properties": {
-      "query": {
-        "type": "string",
-        "description": "The search phrase for Claude to look up. Craft carefully for best results."
-      },
-      "max_searches": {
-        "type": "integer",
-        "description": "Upper-bound on searches Claude may issue inside this request",
-        "default": 1
-      },
-      "max_retries": {
-        "type": "integer",
-        "description": "Maximum number of retry attempts with exponential backoff",
-        "default": 3
-      }
-    },
-    "required": ["query", "max_searches", "max_retries"]
-  },
-  "output": {
-    "type": "object",
-    "properties": {
-      "success": {
-        "type": "boolean",
-        "description": "Whether the operation succeeded"
-      },
-      "result": {
-        "type": "string",
-        "description": "Formatted response from Claude with full text and citations"
-      },
-      "error": {
-        "type": "string",
-        "description": "Error message if operation failed"
-      }
+  "content": "<h3>Overview</h3><p>Conduct advanced web search using Claude AI to collect relevant information with citations through multiple rounds of web searches. Requires ANTHROPIC_API_KEY.</p><h3>Category</h3><p>literature</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/literature/advanced_web_search_claude.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
-  },
-  "execution": {
-    "command": "python3",
-    "args": [
-      "advanced_web_search_claude.py",
-      "{{query}}",
-      "{{max_searches}}",
-      "{{max_retries}}"
-    ]
-  }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
+    }
+  ]
 }

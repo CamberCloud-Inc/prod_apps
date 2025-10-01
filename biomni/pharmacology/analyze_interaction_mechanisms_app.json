@@ -1,42 +1,45 @@
 {
-  "name": "analyze_interaction_mechanisms",
+  "name": "biomni-analyze-interaction-mechanisms",
+  "title": "Biomni: Analyze Interaction Mechanisms",
   "description": "Analyzes drug-drug interaction mechanisms for a specific drug pair",
-  "version": "1.0.0",
-  "type": "python",
-  "entrypoint": "analyze_interaction_mechanisms.py",
-  "install": {
-    "pip": [
-      "biomni"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Analyzes drug-drug interaction mechanisms for a specific drug pair</p><h3>Category</h3><p>pharmacology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pharmacology/analyze_interaction_mechanisms.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "drug_pair",
-      "description": "Pair of drugs to analyze (array with 2 drug names)",
-      "type": "array",
-      "required": true
-    },
-    {
-      "name": "detailed_analysis",
-      "description": "Include detailed mechanism analysis",
-      "type": "boolean",
-      "required": false,
-      "default": true
-    },
-    {
-      "name": "data_lake_path",
-      "description": "Path to data lake directory (optional)",
-      "type": "string",
-      "required": false
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "output": {
-    "type": "object",
-    "properties": {
-      "result": {
-        "type": "string",
-        "description": "Research log with interaction mechanism analysis"
-      }
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
-  }
+  ]
 }

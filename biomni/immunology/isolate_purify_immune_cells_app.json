@@ -1,40 +1,45 @@
 {
-  "name": "Isolate and Purify Immune Cells",
+  "name": "biomni-isolate-purify-immune-cells",
+  "title": "Biomni: Isolate Purify Immune Cells",
   "description": "Simulate isolation and purification of immune cells from tissue samples using enzymatic digestion and MACS",
-  "category": "Immunology",
-  "subcategory": "Cell Biology",
-  "image": "davethesoftwaredev/biomni:latest",
-  "command": "python /app/biomni/immunology/isolate_purify_immune_cells.py",
-  "params": [
+  "content": "<h3>Overview</h3><p>Simulate isolation and purification of immune cells from tissue samples using enzymatic digestion and MACS</p><h3>Category</h3><p>immunology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/immunology/isolate_purify_immune_cells.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "tissue_type",
-      "type": "string",
-      "description": "Type of tissue sample (e.g., 'adipose', 'kidney', 'liver', 'lung', 'spleen')",
-      "required": true
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "target_cell_type",
-      "type": "string",
-      "description": "Immune cell population to isolate (e.g., 'macrophages', 'leukocytes', 'T cells', 'B cells')",
-      "required": true
-    },
-    {
-      "name": "enzyme_type",
-      "type": "string",
-      "description": "Enzyme used for tissue digestion",
-      "default": "collagenase"
-    },
-    {
-      "name": "macs_antibody",
-      "type": "string",
-      "description": "Specific antibody for magnetic-assisted cell sorting (leave blank for auto-selection based on cell type)",
-      "default": "None"
-    },
-    {
-      "name": "digestion_time_min",
-      "type": "number",
-      "description": "Digestion time in minutes",
-      "default": 45
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

@@ -1,49 +1,45 @@
 {
-  "name": "region_to_ccre_screen",
-  "title": "Region To Ccre Screen",
+  "name": "biomni-region-to-ccre-screen",
+  "title": "Biomni: Region To Ccre Screen",
   "description": "Wrapper for region_to_ccre_screen from biomni.tool.database",
-  "category": "Biomni Database Tools",
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Wrapper for region_to_ccre_screen from biomni.tool.database</p><h3>Category</h3><p>database</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/region_to_ccre_screen.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "coord_chrom",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "coord_start",
-      "type": "integer",
-      "required": true
-    },
-    {
-      "name": "coord_end",
-      "type": "integer",
-      "required": true
-    },
-    {
-      "name": "assembly",
-      "type": "string",
-      "required": false
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "outputs": [
+  "spec": [
     {
-      "name": "result",
-      "type": "object",
-      "description": "Query results"
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
-  ],
-  "command": {
-    "type": "python",
-    "script": "region_to_ccre_screen.py",
-    "args": [
-      "--coord_chrom",
-      "${coord_chrom}",
-      "--coord_start",
-      "${coord_start}",
-      "--coord_end",
-      "${coord_end}",
-      "--assembly",
-      "${assembly}"
-    ]
-  }
+  ]
 }

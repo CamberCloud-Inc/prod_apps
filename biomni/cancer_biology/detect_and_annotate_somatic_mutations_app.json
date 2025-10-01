@@ -1,34 +1,45 @@
 {
-  "name": "Biomni: Detect and Annotate Somatic Mutations",
+  "name": "biomni-detect-and-annotate-somatic-mutations",
+  "title": "Biomni: Detect And Annotate Somatic Mutations",
   "description": "Detects and annotates somatic mutations in tumor samples compared to matched normal samples. Uses GATK Mutect2 for variant calling, GATK FilterMutectCalls for filtering, and SnpEff for functional annotation of somatic mutations.",
-  "input": {
-    "tumor_bam": {
-      "type": "string",
-      "description": "Path to the tumor sample BAM file"
-    },
-    "normal_bam": {
-      "type": "string",
-      "description": "Path to the matched normal sample BAM file"
-    },
-    "reference_genome": {
-      "type": "string",
-      "description": "Path to the reference genome FASTA file"
-    },
-    "output_prefix": {
-      "type": "string",
-      "description": "Prefix for output files"
-    },
-    "snpeff_database": {
-      "type": "string",
-      "description": "SnpEff database to use for annotation",
-      "default": "GRCh38.105"
+  "content": "<h3>Overview</h3><p>Detects and annotates somatic mutations in tumor samples compared to matched normal samples. Uses GATK Mutect2 for variant calling, GATK FilterMutectCalls for filtering, and SnpEff for functional annotation of somatic mutations.</p><h3>Category</h3><p>cancer_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/cancer_biology/detect_and_annotate_somatic_mutations.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
-  },
-  "output": {
-    "type": "string",
-    "description": "Research log summarizing the steps performed and results obtained"
-  },
-  "tags": ["biomni", "cancer-biology", "somatic-mutations", "variant-calling", "gatk", "snpeff", "genomics"],
-  "author": "Biomni",
-  "repository": "https://github.com/snap-stanford/Biomni"
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
+    }
+  ]
 }

@@ -1,47 +1,45 @@
 {
-  "name": "find_alternative_drugs_ddinter",
+  "name": "biomni-find-alternative-drugs-ddinter",
+  "title": "Biomni: Find Alternative Drugs Ddinter",
   "description": "Finds alternative drugs to avoid contraindicated drug-drug interactions",
-  "version": "1.0.0",
-  "type": "python",
-  "entrypoint": "find_alternative_drugs_ddinter.py",
-  "install": {
-    "pip": [
-      "biomni"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Finds alternative drugs to avoid contraindicated drug-drug interactions</p><h3>Category</h3><p>pharmacology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pharmacology/find_alternative_drugs_ddinter.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "target_drug",
-      "description": "The drug for which to find alternatives",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "contraindicated_drugs",
-      "description": "List of drugs that have contraindicated interactions",
-      "type": "array",
-      "required": true
-    },
-    {
-      "name": "therapeutic_class",
-      "description": "Therapeutic class to filter alternatives (optional)",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "data_lake_path",
-      "description": "Path to data lake directory (optional)",
-      "type": "string",
-      "required": false
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "output": {
-    "type": "object",
-    "properties": {
-      "result": {
-        "type": "string",
-        "description": "Research log with alternative drug recommendations"
-      }
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
-  }
+  ]
 }

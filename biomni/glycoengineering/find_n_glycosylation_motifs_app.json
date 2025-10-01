@@ -1,37 +1,45 @@
 {
-  "name": "find_n_glycosylation_motifs",
+  "name": "biomni-find-n-glycosylation-motifs",
+  "title": "Biomni: Find N Glycosylation Motifs",
   "description": "Scan a protein sequence for N-linked glycosylation sequons (N-X-[S/T])",
-  "version": "1.0.0",
-  "author": "Biomni Integration",
-  "license": "MIT",
-  "runtime": {
-    "type": "python",
-    "version": "3.8+",
-    "entrypoint": "find_n_glycosylation_motifs.py",
-    "requirements": [
-      "git+https://github.com/snap-stanford/Biomni.git"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Scan a protein sequence for N-linked glycosylation sequons (N-X-[S/T])</p><h3>Category</h3><p>glycoengineering</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/glycoengineering/find_n_glycosylation_motifs.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "sequence",
-      "type": "string",
-      "required": true,
-      "description": "Protein sequence to scan for N-glycosylation motifs"
-    },
-    {
-      "name": "allow_overlap",
-      "type": "boolean",
-      "required": false,
-      "default": false,
-      "description": "Allow overlapping motifs"
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "outputs": [
+  "spec": [
     {
-      "name": "result",
-      "type": "string",
-      "description": "Glycosylation motif analysis results"
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

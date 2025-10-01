@@ -1,42 +1,45 @@
 {
-  "name": "retrieve_topk_repurposing_drugs_from_disease_txgnn",
+  "name": "biomni-retrieve-topk-repurposing-drugs-from-disease-txgnn",
+  "title": "Biomni: Retrieve Topk Repurposing Drugs From Disease Txgnn",
   "description": "Predicts top K drug repurposing candidates for a given disease using TxGNN",
-  "version": "1.0.0",
-  "type": "python",
-  "entrypoint": "retrieve_topk_repurposing_drugs_from_disease_txgnn.py",
-  "install": {
-    "pip": [
-      "biomni"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Predicts top K drug repurposing candidates for a given disease using TxGNN</p><h3>Category</h3><p>pharmacology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pharmacology/retrieve_topk_repurposing_drugs_from_disease_txgnn.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "disease_name",
-      "description": "Name of the disease to find drug candidates for",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "data_lake_path",
-      "description": "Path to the data lake directory",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "k",
-      "description": "Number of top drug candidates to return",
-      "type": "integer",
-      "required": false,
-      "default": 5
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "output": {
-    "type": "object",
-    "properties": {
-      "result": {
-        "type": "string",
-        "description": "Research log with drug predictions"
-      }
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
-  }
+  ]
 }

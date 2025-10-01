@@ -1,56 +1,45 @@
 {
-  "name": "Model Bacterial Growth Dynamics",
+  "name": "biomni-model-bacterial-growth-dynamics",
+  "title": "Biomni: Model Bacterial Growth Dynamics",
   "description": "Model bacterial population dynamics over time using ordinary differential equations",
-  "image": "python:3.11-slim",
-  "run": [
-    "sh",
-    "-c",
-    "git clone --depth 1 https://github.com/snap-stanford/Biomni /tmp/biomni && pip install -q -e /tmp/biomni && python /mnt/code/model_bacterial_growth_dynamics.py"
+  "content": "<h3>Overview</h3><p>Model bacterial population dynamics over time using ordinary differential equations</p><h3>Category</h3><p>microbiology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/microbiology/model_bacterial_growth_dynamics.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
   ],
-  "fields": [
+  "spec": [
     {
-      "name": "initial_population",
-      "displayName": "Initial Population",
-      "type": "number",
-      "description": "Initial bacterial population size (CFU/ml or cells)",
-      "required": true
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "growth_rate",
-      "displayName": "Growth Rate",
-      "type": "number",
-      "description": "Bacterial growth rate (per hour)",
-      "required": true
-    },
-    {
-      "name": "clearance_rate",
-      "displayName": "Clearance Rate",
-      "type": "number",
-      "description": "Rate at which bacteria are cleared from the system (per hour)",
-      "required": true
-    },
-    {
-      "name": "niche_size",
-      "displayName": "Niche Size",
-      "type": "number",
-      "description": "Maximum carrying capacity of the environment (CFU/ml or cells)",
-      "required": true
-    },
-    {
-      "name": "simulation_time",
-      "displayName": "Simulation Time (hours)",
-      "type": "number",
-      "description": "Total simulation time in hours",
-      "required": false,
-      "default": 24
-    },
-    {
-      "name": "time_step",
-      "displayName": "Time Step",
-      "type": "number",
-      "description": "Time step for simulation output",
-      "required": false,
-      "default": 0.1
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

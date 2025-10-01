@@ -1,42 +1,45 @@
 {
-  "name": "run_autosite",
+  "name": "biomni-run-autosite",
+  "title": "Biomni: Run Autosite",
   "description": "Runs AutoSite to identify potential binding sites in a protein",
-  "version": "1.0.0",
-  "type": "python",
-  "entrypoint": "run_autosite.py",
-  "install": {
-    "pip": [
-      "biomni"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Runs AutoSite to identify potential binding sites in a protein</p><h3>Category</h3><p>pharmacology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pharmacology/run_autosite.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "pdb_file",
-      "description": "Path to the protein PDB file",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "output_dir",
-      "description": "Directory to save output files",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "spacing",
-      "description": "Grid spacing for AutoSite",
-      "type": "number",
-      "required": false,
-      "default": 1.0
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "output": {
-    "type": "object",
-    "properties": {
-      "result": {
-        "type": "string",
-        "description": "Research log with binding site details"
-      }
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
-  }
+  ]
 }

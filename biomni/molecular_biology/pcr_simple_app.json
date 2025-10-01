@@ -1,9 +1,9 @@
 {
-  "name": "pcr-simple",
-  "title": "PCR Simulation",
+  "name": "biomni-pcr-simple",
+  "title": "Biomni: Pcr Simple",
   "description": "Simulate PCR amplification with given primers on a DNA template",
-  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application simulates PCR (Polymerase Chain Reaction) amplification by finding primer binding sites and predicting PCR products.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Identifies primer binding sites</li><li class=\"list-item-node\">Supports circular templates</li><li class=\"list-item-node\">Predicts product sizes</li><li class=\"list-item-node\">Reports primer mismatches</li><li class=\"list-item-node\">Handles multiple binding sites</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Template Sequence</strong>: DNA template for PCR</li><li class=\"list-item-node\"><strong>Forward Primer</strong>: Forward primer (5' to 3')</li><li class=\"list-item-node\"><strong>Reverse Primer</strong>: Reverse primer (5' to 3')</li><li class=\"list-item-node\"><strong>Circular</strong>: Specify if template is circular</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">Returns a JSON file with predicted PCR products including sequences, sizes, and primer binding positions.</p>",
-  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && pip install -q biopython biomni && python prod_apps_clone/biomni/molecular_biology/pcr_simple.py \"${sequence}\" \"${forwardPrimer}\" \"${reversePrimer}\" ${circular} -o \"${outputDir}\"",
+  "content": "<h3>Overview</h3><p>Simulate PCR amplification with given primers on a DNA template</p><h3>Category</h3><p>molecular_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/pcr_simple.py \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,38 +28,17 @@
   ],
   "spec": [
     {
-      "type": "String",
-      "name": "sequence",
-      "label": "Template DNA Sequence",
-      "description": "DNA template for PCR amplification",
-      "defaultValue": ""
-    },
-    {
-      "type": "String",
-      "name": "forwardPrimer",
-      "label": "Forward Primer",
-      "description": "Forward primer sequence (5' to 3')",
-      "defaultValue": ""
-    },
-    {
-      "type": "String",
-      "name": "reversePrimer",
-      "label": "Reverse Primer",
-      "description": "Reverse primer sequence (5' to 3')",
-      "defaultValue": ""
-    },
-    {
-      "type": "String",
-      "name": "circular",
-      "label": "Circular Template",
-      "description": "Enter '--circular' if template is circular (leave empty for linear)",
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
       "defaultValue": ""
     },
     {
       "type": "Stash File",
       "name": "outputDir",
       "label": "Output Directory",
-      "description": "Select or create a stash folder where results will be saved",
+      "description": "Output directory in stash",
       "defaultValue": "./"
     }
   ]

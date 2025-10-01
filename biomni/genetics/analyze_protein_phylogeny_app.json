@@ -1,9 +1,9 @@
 {
-  "name": "analyze-protein-phylogeny",
-  "title": "Analyze Protein Phylogeny",
+  "name": "biomni-analyze-protein-phylogeny",
+  "title": "Biomni: Analyze Protein Phylogeny",
   "description": "Perform phylogenetic analysis on protein sequences with alignment and tree construction",
-  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application performs comprehensive phylogenetic analysis on protein sequences. It takes sequences in FASTA format, performs multiple sequence alignment, constructs phylogenetic trees, and generates visualizations showing evolutionary relationships.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Multiple sequence alignment (ClustalW, MUSCLE, or pre-aligned)</li><li class=\"list-item-node\">Phylogenetic tree construction (IQ-TREE or neighbor-joining)</li><li class=\"list-item-node\">Tree visualization with matplotlib</li><li class=\"list-item-node\">Support for various alignment formats</li><li class=\"list-item-node\">Newick tree output format</li><li class=\"list-item-node\">Automatic fallback methods for robustness</li></ul><h3 class=\"heading-node\">Analysis Steps</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Step 1</strong>: Multiple sequence alignment using selected method</li><li class=\"list-item-node\"><strong>Step 2</strong>: Phylogenetic tree construction</li><li class=\"list-item-node\"><strong>Step 3</strong>: Tree visualization and export</li></ul><h3 class=\"heading-node\">Alignment Methods</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>ClustalW</strong>: Classic progressive alignment algorithm</li><li class=\"list-item-node\"><strong>MUSCLE</strong>: Fast multiple sequence alignment</li><li class=\"list-item-node\"><strong>Pre-aligned</strong>: Use sequences that are already aligned</li></ul><h3 class=\"heading-node\">Tree Methods</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>IQ-TREE</strong>: Maximum likelihood phylogenetic inference with bootstrap support</li><li class=\"list-item-node\"><strong>Neighbor-Joining</strong>: Fast distance-based tree construction (used as fallback)</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>FASTA Sequences</strong>: Input file with protein sequences in FASTA format</li><li class=\"list-item-node\"><strong>Alignment Method</strong>: Method for sequence alignment</li><li class=\"list-item-node\"><strong>Tree Method</strong>: Method for phylogenetic tree construction</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates an alignment file, phylogenetic tree in Newick format, tree visualization image (PNG), and a comprehensive analysis log documenting the entire process.</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python \"prod_apps/biomni/genetics/analyze_protein_phylogeny.py\" \"${fastaSequences}\" -a \"${alignmentMethod}\" -t \"${treeMethod}\" -o \"${outputDir}\"",
+  "content": "<h3>Overview</h3><p>Perform phylogenetic analysis on protein sequences with alignment and tree construction</p><h3>Category</h3><p>genetics</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genetics/analyze_protein_phylogeny.py \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -14,54 +14,31 @@
       "description": "Select the configuration for the job",
       "options": [
         {
-          "label": "Small CPU",
-          "value": "small_cpu",
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
           "mapValue": {
-            "nodeSize": "SMALL",
+            "nodeSize": "XXSMALL",
             "numNodes": 1,
             "withGpu": false
           }
         }
       ],
-      "defaultValue": "small_cpu"
+      "defaultValue": "xxsmall_cpu"
     }
   ],
   "spec": [
     {
       "type": "Stash File",
-      "name": "fastaSequences",
-      "label": "FASTA Sequences",
-      "description": "Upload protein sequences file in FASTA format",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
       "defaultValue": ""
-    },
-    {
-      "type": "Select",
-      "name": "alignmentMethod",
-      "label": "Alignment Method",
-      "description": "Method for sequence alignment",
-      "options": [
-        {"label": "ClustalW", "value": "clustalw"},
-        {"label": "MUSCLE", "value": "muscle"},
-        {"label": "Pre-aligned", "value": "pre-aligned"}
-      ],
-      "defaultValue": "clustalw"
-    },
-    {
-      "type": "Select",
-      "name": "treeMethod",
-      "label": "Tree Method",
-      "description": "Method for phylogenetic tree construction",
-      "options": [
-        {"label": "IQ-TREE", "value": "iqtree"},
-        {"label": "FastTree", "value": "fasttree"}
-      ],
-      "defaultValue": "iqtree"
     },
     {
       "type": "Stash File",
       "name": "outputDir",
       "label": "Output Directory",
-      "description": "Select or create a stash folder where results will be saved",
+      "description": "Output directory in stash",
       "defaultValue": "./"
     }
   ]

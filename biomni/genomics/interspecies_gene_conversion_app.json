@@ -2,39 +2,43 @@
   "name": "biomni-interspecies-gene-conversion",
   "title": "Biomni: Interspecies Gene Conversion",
   "description": "Convert ENSEMBL gene IDs between different species using BioMart homology mapping",
-  "content": "<h3>Overview</h3><p>Converts ENSEMBL gene IDs from one species to their homologous counterparts in another species using the Ensembl BioMart database. The conversion is based on one-to-one ortholog mappings.</p><h3>Supported Species</h3><ul><li>human, mouse, rat, zebrafish</li><li>fly/drosophila, worm, yeast</li><li>chicken, pig, cow, dog, macaque</li></ul><h3>Input Format</h3><p>Upload a JSON file containing an array of ENSEMBL gene IDs, e.g., [\"ENSG00000007372\", \"ENSG00000181449\"]</p><h3>Output</h3><p>CSV file with source and target gene mappings</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genomics/interspecies_gene_conversion.py \"${geneListFile}\" --source-species \"${sourceSpecies}\" --target-species \"${targetSpecies}\" -o \"${outputDir}\"",
+  "content": "<h3>Overview</h3><p>Convert ENSEMBL gene IDs between different species using BioMart homology mapping</p><h3>Category</h3><p>genomics</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genomics/interspecies_gene_conversion.py \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
-    {"nodeCount": "1", "coresPerNode": "2"}
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
   ],
   "spec": [
     {
       "type": "Stash File",
-      "name": "geneListFile",
-      "label": "Gene List JSON File",
-      "description": "Upload JSON file with array of ENSEMBL gene IDs",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
       "defaultValue": ""
-    },
-    {
-      "type": "String",
-      "name": "sourceSpecies",
-      "label": "Source Species",
-      "description": "Source species name (e.g., human, mouse, rat)",
-      "defaultValue": "human"
-    },
-    {
-      "type": "String",
-      "name": "targetSpecies",
-      "label": "Target Species",
-      "description": "Target species name (e.g., human, mouse, rat)",
-      "defaultValue": "mouse"
     },
     {
       "type": "Stash File",
       "name": "outputDir",
       "label": "Output Directory",
-      "description": "Select output folder",
+      "description": "Output directory in stash",
       "defaultValue": "./"
     }
   ]

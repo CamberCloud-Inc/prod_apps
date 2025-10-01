@@ -1,55 +1,45 @@
 {
-  "name": "perform_mwas_cyp2c19_metabolizer_status",
+  "name": "biomni-perform-mwas-cyp2c19-metabolizer-status",
+  "title": "Biomni: Perform Mwas Cyp2C19 Metabolizer Status",
   "description": "Performs methylation-wide association study (MWAS) for CYP2C19 metabolizer status",
-  "version": "1.0.0",
-  "type": "python",
-  "entrypoint": "perform_mwas_cyp2c19_metabolizer_status.py",
-  "install": {
-    "pip": [
-      "biomni"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Performs methylation-wide association study (MWAS) for CYP2C19 metabolizer status</p><h3>Category</h3><p>pharmacology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pharmacology/perform_mwas_cyp2c19_metabolizer_status.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "methylation_data_path",
-      "description": "Path to methylation data file",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "metabolizer_status_path",
-      "description": "Path to metabolizer status data file",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "covariates_path",
-      "description": "Path to covariates data file (optional)",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "pvalue_threshold",
-      "description": "P-value threshold for significance",
-      "type": "number",
-      "required": false,
-      "default": 0.05
-    },
-    {
-      "name": "output_file",
-      "description": "Output file path for significant CpG sites",
-      "type": "string",
-      "required": false,
-      "default": "significant_cpg_sites.csv"
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "output": {
-    "type": "object",
-    "properties": {
-      "result": {
-        "type": "string",
-        "description": "Research log with MWAS results"
-      }
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
-  }
+  ]
 }

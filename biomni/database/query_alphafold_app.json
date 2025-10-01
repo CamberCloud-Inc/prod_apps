@@ -1,85 +1,45 @@
 {
-  "name": "query_alphafold",
-  "title": "Query Alphafold",
+  "name": "biomni-query-alphafold",
+  "title": "Biomni: Query Alphafold",
   "description": "Query the AlphaFold Database API for protein structure predictions.\n\n    Parameters\n    ----------\n    uniprot_id (str): UniProt accession ID (e.g., \"P12345\")\n    endpoint (str, optional): Specific Al",
-  "category": "Biomni Database Tools",
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Query the AlphaFold Database API for protein structure predictions.\n\n    Parameters\n    ----------\n    uniprot_id (str): UniProt accession ID (e.g., \"P12345\")\n    endpoint (str, optional): Specific Al</p><h3>Category</h3><p>database</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_alphafold.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "uniprot_id",
-      "type": "string",
-      "required": true,
-      "description": "Parameter: uniprot_id"
-    },
-    {
-      "name": "endpoint",
-      "type": "string",
-      "required": false,
-      "description": "Parameter: endpoint"
-    },
-    {
-      "name": "residue_range",
-      "type": "string",
-      "required": false,
-      "description": "Parameter: residue_range"
-    },
-    {
-      "name": "download",
-      "type": "boolean",
-      "required": false,
-      "description": "Parameter: download"
-    },
-    {
-      "name": "output_dir",
-      "type": "string",
-      "required": false,
-      "description": "Parameter: output_dir"
-    },
-    {
-      "name": "file_format",
-      "type": "string",
-      "required": false,
-      "description": "Parameter: file_format"
-    },
-    {
-      "name": "model_version",
-      "type": "string",
-      "required": false,
-      "description": "Parameter: model_version"
-    },
-    {
-      "name": "model_number",
-      "type": "integer",
-      "required": false,
-      "description": "Parameter: model_number"
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "outputs": [
+  "spec": [
     {
-      "name": "result",
-      "type": "object",
-      "description": "Query results"
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
-  ],
-  "command": {
-    "type": "python",
-    "script": "query_alphafold.py",
-    "args": [
-      "--uniprot_id",
-      "${uniprot_id}",
-      "--endpoint",
-      "${endpoint}",
-      "--residue_range",
-      "${residue_range}",
-      "--download",
-      "${download}",
-      "--output_dir",
-      "${output_dir}",
-      "--file_format",
-      "${file_format}",
-      "--model_version",
-      "${model_version}",
-      "--model_number",
-      "${model_number}"
-    ]
-  }
+  ]
 }

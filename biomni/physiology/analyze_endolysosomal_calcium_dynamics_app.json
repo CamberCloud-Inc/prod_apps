@@ -1,56 +1,45 @@
 {
-  "name": "analyze_endolysosomal_calcium_dynamics",
+  "name": "biomni-analyze-endolysosomal-calcium-dynamics",
+  "title": "Biomni: Analyze Endolysosomal Calcium Dynamics",
   "description": "Analyze calcium dynamics in endo-lysosomal compartments using ELGA/ELGA1 probe data.",
-  "icon": "🔬",
-  "container": {
-    "image": "python:3.9-slim",
-    "setup_commands": [
-      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Analyze calcium dynamics in endo-lysosomal compartments using ELGA/ELGA1 probe data.</p><h3>Category</h3><p>physiology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/analyze_endolysosomal_calcium_dynamics.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "time_points",
-      "description": "Time points of the measurements in seconds",
-      "type": "array",
-      "required": true
-    },
-    {
-      "name": "luminescence_values",
-      "description": "Luminescence intensity values from ELGA/ELGA1 probes corresponding to Ca2+ levels",
-      "type": "array",
-      "required": true
-    },
-    {
-      "name": "treatment_time",
-      "description": "Time point (in seconds) when treatment/stimulus was applied (optional)",
-      "type": "float",
-      "required": false
-    },
-    {
-      "name": "cell_type",
-      "description": "Type of cells used in the experiment (optional)",
-      "type": "string",
-      "required": false,
-      "default": ""
-    },
-    {
-      "name": "treatment_name",
-      "description": "Name of the treatment or stimulus applied (optional)",
-      "type": "string",
-      "required": false,
-      "default": ""
-    },
-    {
-      "name": "output_file",
-      "description": "Name of the file to save detailed analysis results",
-      "type": "string",
-      "required": false,
-      "default": "calcium_analysis_results.txt"
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "output": {
-    "type": "string",
-    "description": "A research log summarizing the calcium dynamics analysis and key findings"
-  }
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
+    }
+  ]
 }

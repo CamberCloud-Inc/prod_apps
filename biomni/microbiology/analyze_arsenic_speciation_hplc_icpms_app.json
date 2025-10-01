@@ -1,34 +1,45 @@
 {
-  "name": "Analyze Arsenic Speciation HPLC-ICP-MS",
+  "name": "biomni-analyze-arsenic-speciation-hplc-icpms",
+  "title": "Biomni: Analyze Arsenic Speciation Hplc Icpms",
   "description": "Analyzes arsenic speciation in liquid samples using HPLC-ICP-MS technique",
-  "image": "python:3.11-slim",
-  "run": [
-    "sh",
-    "-c",
-    "git clone --depth 1 https://github.com/snap-stanford/Biomni /tmp/biomni && pip install -q -e /tmp/biomni && python /mnt/code/analyze_arsenic_speciation_hplc_icpms.py"
+  "content": "<h3>Overview</h3><p>Analyzes arsenic speciation in liquid samples using HPLC-ICP-MS technique</p><h3>Category</h3><p>microbiology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/microbiology/analyze_arsenic_speciation_hplc_icpms.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
   ],
-  "fields": [
+  "spec": [
     {
-      "name": "sample_data",
-      "displayName": "Sample Data",
-      "type": "json_object",
-      "description": "Dictionary containing sample data with retention times and signal intensities",
-      "required": true
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "sample_name",
-      "displayName": "Sample Name",
-      "type": "short_text",
-      "description": "Name of the sample being analyzed",
-      "required": false,
-      "default": "Unknown Sample"
-    },
-    {
-      "name": "calibration_data",
-      "displayName": "Calibration Data",
-      "type": "json_object",
-      "description": "Dictionary containing calibration standards data",
-      "required": false
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

@@ -1,33 +1,44 @@
 {
   "name": "biomni-analyze-comparative-genomics",
-  "title": "Biomni: Comparative Genomics and Haplotypes",
+  "title": "Biomni: Analyze Comparative Genomics",
   "description": "Perform comparative genomics and haplotype analysis on multiple genome samples",
-  "content": "<h3>Overview</h3><p>Aligns multiple genome samples to a reference genome, identifies variants (SNPs, indels), analyzes shared and unique genomic regions, and determines haplotype structure across samples.</p><h3>Features</h3><ul><li>Multi-sample genome alignment</li><li>Variant calling and annotation</li><li>Shared/unique region identification</li><li>Haplotype block analysis</li><li>Phylogenetic relationship inference</li></ul><h3>Input Format</h3><ul><li>JSON array of sample FASTA file paths, e.g., [\"/path/sample1.fa\", \"/path/sample2.fa\"]</li><li>Reference genome FASTA file</li></ul><h3>Output</h3><p>Variant calls, alignment statistics, haplotype blocks, and comparative analysis</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genomics/analyze_comparative_genomics.py \"${sampleFilesJson}\" \"${referenceGenome}\" -o \"${outputDir}\"",
+  "content": "<h3>Overview</h3><p>Perform comparative genomics and haplotype analysis on multiple genome samples</p><h3>Category</h3><p>genomics</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genomics/analyze_comparative_genomics.py \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
-    {"nodeCount": "1", "coresPerNode": "8"}
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
   ],
   "spec": [
     {
       "type": "Stash File",
-      "name": "sampleFilesJson",
-      "label": "Sample Files JSON",
-      "description": "Upload JSON with array of sample FASTA file paths",
-      "defaultValue": ""
-    },
-    {
-      "type": "Stash File",
-      "name": "referenceGenome",
-      "label": "Reference Genome FASTA",
-      "description": "Upload reference genome file",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
       "defaultValue": ""
     },
     {
       "type": "Stash File",
       "name": "outputDir",
       "label": "Output Directory",
-      "description": "Select output folder",
+      "description": "Output directory in stash",
       "defaultValue": "./"
     }
   ]

@@ -1,42 +1,45 @@
 {
-  "name": "calculate_brain_adc_map",
+  "name": "biomni-calculate-brain-adc-map",
+  "title": "Biomni: Calculate Brain Adc Map",
   "description": "Calculate Apparent Diffusion Coefficient (ADC) map from diffusion-weighted MRI data.",
-  "icon": "🧠",
-  "container": {
-    "image": "python:3.9-slim",
-    "setup_commands": [
-      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Calculate Apparent Diffusion Coefficient (ADC) map from diffusion-weighted MRI data.</p><h3>Category</h3><p>physiology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/calculate_brain_adc_map.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "dwi_file_path",
-      "description": "Path to the 4D NIfTI file containing diffusion-weighted MRI data, where the 4th dimension corresponds to different b-values",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "b_values",
-      "description": "List of b-values corresponding to each volume in the 4D DWI data",
-      "type": "array",
-      "required": true
-    },
-    {
-      "name": "output_path",
-      "description": "Path where the output ADC map will be saved",
-      "type": "string",
-      "required": false,
-      "default": "adc_map.nii.gz"
-    },
-    {
-      "name": "mask_file_path",
-      "description": "Path to a binary mask file to limit ADC calculation to brain regions (optional)",
-      "type": "string",
-      "required": false
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "output": {
-    "type": "string",
-    "description": "Research log summarizing the ADC mapping process and results"
-  }
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
+    }
+  ]
 }

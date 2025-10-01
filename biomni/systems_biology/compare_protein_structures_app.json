@@ -1,41 +1,45 @@
 {
-  "name": "Compare Protein Structures",
+  "name": "biomni-compare-protein-structures",
+  "title": "Biomni: Compare Protein Structures",
   "description": "Compare two protein structures to identify structural differences and conformational changes using RMSD and per-residue distance analysis",
-  "install": "cd /tmp && git clone --depth 1 https://github.com/snap-stanford/Biomni.git biomni_repo && cd biomni_repo && pip install -e . && pip install biopython numpy",
-  "run": "python3 /Users/david/git/prod_apps/biomni/systems_biology/compare_protein_structures.py \"$PDB_FILE1\" \"$PDB_FILE2\" \"$CHAIN_ID1\" \"$CHAIN_ID2\" \"$OUTPUT_PREFIX\"",
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Compare two protein structures to identify structural differences and conformational changes using RMSD and per-residue distance analysis</p><h3>Category</h3><p>systems_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/systems_biology/compare_protein_structures.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "PDB_FILE1",
-      "description": "Path to the first PDB file",
-      "type": "text",
-      "required": true
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "PDB_FILE2",
-      "description": "Path to the second PDB file",
-      "type": "text",
-      "required": true
-    },
-    {
-      "name": "CHAIN_ID1",
-      "description": "Chain ID to analyze in the first structure",
-      "type": "text",
-      "required": false,
-      "default": "A"
-    },
-    {
-      "name": "CHAIN_ID2",
-      "description": "Chain ID to analyze in the second structure",
-      "type": "text",
-      "required": false,
-      "default": "A"
-    },
-    {
-      "name": "OUTPUT_PREFIX",
-      "description": "Prefix for output files",
-      "type": "text",
-      "required": false,
-      "default": "protein_comparison"
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

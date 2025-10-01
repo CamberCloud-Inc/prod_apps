@@ -1,36 +1,45 @@
 {
-  "name": "Segment Cells with Deep Learning",
+  "name": "biomni-segment-cells-with-deep-learning",
+  "title": "Biomni: Segment Cells With Deep Learning",
   "description": "Segment cells in microscopy images using deep learning models",
-  "image": "python:3.11-slim",
-  "run": [
-    "sh",
-    "-c",
-    "git clone --depth 1 https://github.com/snap-stanford/Biomni /tmp/biomni && pip install -q -e /tmp/biomni && python /mnt/code/segment_cells_with_deep_learning.py"
+  "content": "<h3>Overview</h3><p>Segment cells in microscopy images using deep learning models</p><h3>Category</h3><p>microbiology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/microbiology/segment_cells_with_deep_learning.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
   ],
-  "fields": [
+  "spec": [
     {
-      "name": "image_path",
-      "displayName": "Image Path",
-      "type": "short_text",
-      "description": "Path to the microscopy image file",
-      "required": true
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "model_type",
-      "displayName": "Model Type",
-      "type": "select",
-      "options": ["cellpose", "stardist"],
-      "description": "Deep learning model to use for segmentation",
-      "required": false,
-      "default": "cellpose"
-    },
-    {
-      "name": "output_dir",
-      "displayName": "Output Directory",
-      "type": "short_text",
-      "description": "Directory to save output images and results",
-      "required": false,
-      "default": "./output"
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

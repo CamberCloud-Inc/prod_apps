@@ -1,22 +1,45 @@
 {
-  "name": "Analyze EBV Antibody Titers",
+  "name": "biomni-analyze-ebv-antibody-titers",
+  "title": "Biomni: Analyze Ebv Antibody Titers",
   "description": "Quantify Epstein-Barr Virus (EBV) antibody titers in plasma/serum samples using ELISA optical density values",
-  "category": "Immunology",
-  "subcategory": "Serology",
-  "image": "davethesoftwaredev/biomni:latest",
-  "command": "python /app/biomni/immunology/analyze_ebv_antibody_titers.py",
-  "params": [
+  "content": "<h3>Overview</h3><p>Quantify Epstein-Barr Virus (EBV) antibody titers in plasma/serum samples using ELISA optical density values</p><h3>Category</h3><p>immunology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/immunology/analyze_ebv_antibody_titers.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "sample_data_json",
-      "type": "string",
-      "description": "Sample data containing EBV antibody optical density values (JSON array of objects with keys: sample_id, vca_igg_od, ea_igg_od, ebna_igg_od)",
-      "required": true
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "output_dir",
-      "type": "string",
-      "description": "Directory where output files will be saved",
-      "default": "."
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

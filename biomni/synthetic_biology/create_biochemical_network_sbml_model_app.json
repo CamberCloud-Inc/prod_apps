@@ -1,47 +1,45 @@
 {
-  "name": "Create Biochemical Network SBML Model",
+  "name": "biomni-create-biochemical-network-sbml-model",
+  "title": "Biomni: Create Biochemical Network Sbml Model",
   "description": "Generate a mathematical model of a biochemical network in SBML format",
-  "version": "1.0.0",
-  "author": "Biomni Synthetic Biology Tools",
-  "repository": "https://github.com/snap-stanford/Biomni",
-  "license": "MIT",
-  "runtime": {
-    "type": "python",
-    "version": "3.8+",
-    "entrypoint": "create_biochemical_network_sbml_model.py"
-  },
-  "dependencies": {
-    "pip": [
-      "biomni",
-      "python-libsbml"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Generate a mathematical model of a biochemical network in SBML format</p><h3>Category</h3><p>synthetic_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/synthetic_biology/create_biochemical_network_sbml_model.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "reaction_network",
-      "type": "array",
-      "description": "List of dictionaries, each representing a reaction with keys: id, name, reactants, products, reversible",
-      "required": true
-    },
-    {
-      "name": "kinetic_parameters",
-      "type": "object",
-      "description": "Dictionary mapping reaction IDs to their kinetic law parameters (law_type, parameters)",
-      "required": true
-    },
-    {
-      "name": "output_file",
-      "type": "string",
-      "description": "File path to save the SBML model",
-      "required": false,
-      "default": "biochemical_model.xml"
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "outputs": [
+  "spec": [
     {
-      "name": "result",
-      "type": "string",
-      "description": "Research log summarizing the model creation process"
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

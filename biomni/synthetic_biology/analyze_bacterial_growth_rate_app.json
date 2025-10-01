@@ -1,56 +1,45 @@
 {
-  "name": "Analyze Bacterial Growth Rate",
+  "name": "biomni-analyze-bacterial-growth-rate",
+  "title": "Biomni: Analyze Bacterial Growth Rate",
   "description": "Analyze bacterial growth data and extract growth parameters from OD600 measurements",
-  "version": "1.0.0",
-  "author": "Biomni Synthetic Biology Tools",
-  "repository": "https://github.com/snap-stanford/Biomni",
-  "license": "MIT",
-  "runtime": {
-    "type": "python",
-    "version": "3.8+",
-    "entrypoint": "analyze_bacterial_growth_rate.py"
-  },
-  "dependencies": {
-    "pip": [
-      "biomni",
-      "numpy",
-      "scipy",
-      "matplotlib"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Analyze bacterial growth data and extract growth parameters from OD600 measurements</p><h3>Category</h3><p>synthetic_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/synthetic_biology/analyze_bacterial_growth_rate.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "time_points",
-      "type": "array",
-      "description": "Time points at which OD600 measurements were taken (in hours)",
-      "required": true
-    },
-    {
-      "name": "od_measurements",
-      "type": "array",
-      "description": "Optical density (OD600) measurements corresponding to each time point",
-      "required": true
-    },
-    {
-      "name": "strain_name",
-      "type": "string",
-      "description": "Name of the bacterial strain being analyzed",
-      "required": false,
-      "default": "Unknown strain"
-    },
-    {
-      "name": "output_dir",
-      "type": "string",
-      "description": "Directory where to save the output files",
-      "required": false,
-      "default": "./"
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "outputs": [
+  "spec": [
     {
-      "name": "result",
-      "type": "string",
-      "description": "Research log summarizing the analysis steps, fitted parameters, and results"
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

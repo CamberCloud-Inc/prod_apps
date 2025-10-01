@@ -1,40 +1,45 @@
 {
-  "name": "Simulate Metabolic Network Perturbation",
+  "name": "biomni-simulate-metabolic-network-perturbation",
+  "title": "Biomni: Simulate Metabolic Network Perturbation",
   "description": "Construct and simulate kinetic models of metabolic networks and analyze their responses to perturbations",
-  "install": "cd /tmp && git clone --depth 1 https://github.com/snap-stanford/Biomni.git biomni_repo && cd biomni_repo && pip install -e . && pip install cobra numpy scipy pandas",
-  "run": "python3 /Users/david/git/prod_apps/biomni/systems_biology/simulate_metabolic_network_perturbation.py \"$MODEL_FILE\" \"$INITIAL_CONCENTRATIONS\" \"$PERTURBATION_PARAMS\" \"$SIMULATION_TIME\" \"$TIME_POINTS\"",
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Construct and simulate kinetic models of metabolic networks and analyze their responses to perturbations</p><h3>Category</h3><p>systems_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/systems_biology/simulate_metabolic_network_perturbation.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "MODEL_FILE",
-      "description": "Path to the COBRA model file (SBML format)",
-      "type": "text",
-      "required": true
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "INITIAL_CONCENTRATIONS",
-      "description": "JSON dictionary mapping metabolite IDs to their initial concentrations (format: {\"glc__D_e\": 10.0})",
-      "type": "text",
-      "required": true
-    },
-    {
-      "name": "PERTURBATION_PARAMS",
-      "description": "JSON dictionary with perturbation parameters: time, metabolite, and factor (format: {\"time\": 50, \"metabolite\": \"glc__D_e\", \"factor\": 2.0})",
-      "type": "text",
-      "required": true
-    },
-    {
-      "name": "SIMULATION_TIME",
-      "description": "Total simulation time",
-      "type": "text",
-      "required": false,
-      "default": "100"
-    },
-    {
-      "name": "TIME_POINTS",
-      "description": "Number of time points to simulate",
-      "type": "text",
-      "required": false,
-      "default": "1000"
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

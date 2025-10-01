@@ -1,49 +1,45 @@
 {
-  "name": "Identify FAS Functional Domains",
+  "name": "biomni-identify-fas-functional-domains",
+  "title": "Biomni: Identify Fas Functional Domains",
   "description": "Identifies functional domains within a Fatty Acid Synthase (FAS) sequence and predicts their roles",
-  "version": "1.0.0",
-  "author": "Biomni Synthetic Biology Tools",
-  "repository": "https://github.com/snap-stanford/Biomni",
-  "license": "MIT",
-  "runtime": {
-    "type": "python",
-    "version": "3.8+",
-    "entrypoint": "identify_fas_functional_domains.py"
-  },
-  "dependencies": {
-    "pip": [
-      "biomni",
-      "biopython",
-      "requests"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Identifies functional domains within a Fatty Acid Synthase (FAS) sequence and predicts their roles</p><h3>Category</h3><p>synthetic_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/synthetic_biology/identify_fas_functional_domains.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "sequence",
-      "type": "string",
-      "description": "The nucleotide or protein sequence of a FAS gene",
-      "required": true
-    },
-    {
-      "name": "sequence_type",
-      "type": "string",
-      "description": "Type of sequence provided - 'protein' or 'nucleotide'",
-      "required": false,
-      "default": "protein"
-    },
-    {
-      "name": "output_file",
-      "type": "string",
-      "description": "Name of the output file to save the detailed domain report",
-      "required": false,
-      "default": "fas_domains_report.txt"
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "outputs": [
+  "spec": [
     {
-      "name": "result",
-      "type": "string",
-      "description": "Research log summarizing the steps taken and results of the domain analysis"
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

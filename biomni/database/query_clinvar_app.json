@@ -1,45 +1,45 @@
 {
-  "name": "query_clinvar",
-  "title": "Query Clinvar",
+  "name": "biomni-query-clinvar",
+  "title": "Biomni: Query Clinvar",
   "description": "Take a natural language prompt and convert it to a structured ClinVar query.\n\n    Parameters\n    ----------\n    prompt (str): Natural language query about genetic variants (e.g., \"Find pathogenic BRCA",
-  "category": "Biomni Database Tools",
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Take a natural language prompt and convert it to a structured ClinVar query.\n\n    Parameters\n    ----------\n    prompt (str): Natural language query about genetic variants (e.g., \"Find pathogenic BRCA</p><h3>Category</h3><p>database</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_clinvar.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "prompt",
-      "type": "string",
-      "required": false,
-      "description": "Parameter: prompt"
-    },
-    {
-      "name": "search_term",
-      "type": "string",
-      "required": false,
-      "description": "Parameter: search_term"
-    },
-    {
-      "name": "max_results",
-      "type": "integer",
-      "required": false,
-      "description": "Parameter: max_results"
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "outputs": [
+  "spec": [
     {
-      "name": "result",
-      "type": "object",
-      "description": "Query results"
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
-  ],
-  "command": {
-    "type": "python",
-    "script": "query_clinvar.py",
-    "args": [
-      "--prompt",
-      "${prompt}",
-      "--search_term",
-      "${search_term}",
-      "--max_results",
-      "${max_results}"
-    ]
-  }
+  ]
 }

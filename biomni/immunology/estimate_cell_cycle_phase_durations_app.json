@@ -1,22 +1,45 @@
 {
-  "name": "Estimate Cell Cycle Phase Durations",
+  "name": "biomni-estimate-cell-cycle-phase-durations",
+  "title": "Biomni: Estimate Cell Cycle Phase Durations",
   "description": "Estimate cell cycle phase durations using dual-nucleoside pulse labeling data and mathematical modeling",
-  "category": "Immunology",
-  "subcategory": "Cell Biology",
-  "image": "davethesoftwaredev/biomni:latest",
-  "command": "python /app/biomni/immunology/estimate_cell_cycle_phase_durations.py",
-  "params": [
+  "content": "<h3>Overview</h3><p>Estimate cell cycle phase durations using dual-nucleoside pulse labeling data and mathematical modeling</p><h3>Category</h3><p>immunology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/immunology/estimate_cell_cycle_phase_durations.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "flow_cytometry_data_json",
-      "type": "string",
-      "description": "Flow cytometry data with EdU and BrdU labeling (JSON object with keys: time_points, edu_positive, brdu_positive, double_positive)",
-      "required": true
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "initial_estimates_json",
-      "type": "string",
-      "description": "Initial estimates for cell cycle phases (JSON object with keys: g1_duration, s_duration, g2m_duration, death_rate)",
-      "required": true
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

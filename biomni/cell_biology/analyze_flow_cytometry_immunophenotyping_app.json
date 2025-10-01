@@ -1,30 +1,45 @@
 {
-  "name": "Analyze Flow Cytometry Immunophenotyping",
+  "name": "biomni-analyze-flow-cytometry-immunophenotyping",
+  "title": "Biomni: Analyze Flow Cytometry Immunophenotyping",
   "description": "Analyze flow cytometry data to identify and quantify specific cell populations based on surface markers. Applies sequential gating strategies to identify cell populations, with optional compensation for fluorescence spillover.",
-  "spec": {
-    "fcs_file_path": {
-      "type": "string",
-      "description": "Path to the FCS file containing flow cytometry data"
-    },
-    "gating_strategy": {
-      "type": "object",
-      "description": "Dictionary defining the gating strategy. Each key is a population name, and each value is a list of tuples (marker, operator, threshold). For example: {'HSCs': [['Lin', '<', 100], ['Sca1', '>', 1000]]}"
-    },
-    "compensation_matrix": {
-      "type": "array",
-      "items": {
-        "type": "array",
-        "items": {
-          "type": "number"
+  "content": "<h3>Overview</h3><p>Analyze flow cytometry data to identify and quantify specific cell populations based on surface markers. Applies sequential gating strategies to identify cell populations, with optional compensation for fluorescence spillover.</p><h3>Category</h3><p>cell_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/cell_biology/analyze_flow_cytometry_immunophenotyping.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
         }
-      },
-      "description": "Spillover/compensation matrix to correct for fluorescence overlap (optional)"
-    },
-    "output_dir": {
-      "type": "string",
-      "description": "Directory to save the results",
-      "default": "./results"
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
-  },
-  "instructions": "git clone https://github.com/snap-stanford/Biomni.git /tmp/Biomni && cd /tmp/Biomni && pip install -e . && cd /Users/david/git/prod_apps/biomni/cell_biology && python analyze_flow_cytometry_immunophenotyping.py"
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
+    }
+  ]
 }

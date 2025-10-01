@@ -1,36 +1,45 @@
 {
-  "name": "perform_cosinor_analysis",
+  "name": "biomni-perform-cosinor-analysis",
+  "title": "Biomni: Perform Cosinor Analysis",
   "description": "Performs cosinor analysis on physiological time series data to characterize circadian rhythms.",
-  "icon": "🌙",
-  "container": {
-    "image": "python:3.9-slim",
-    "setup_commands": [
-      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Performs cosinor analysis on physiological time series data to characterize circadian rhythms.</p><h3>Category</h3><p>physiology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/perform_cosinor_analysis.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "time_data",
-      "description": "Time points of the measurements in hours",
-      "type": "array",
-      "required": true
-    },
-    {
-      "name": "physiological_data",
-      "description": "Physiological measurements corresponding to each time point",
-      "type": "array",
-      "required": true
-    },
-    {
-      "name": "period",
-      "description": "Period of the rhythm in hours, default is 24 hours for circadian rhythms",
-      "type": "float",
-      "required": false,
-      "default": 24.0
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "output": {
-    "type": "string",
-    "description": "A research log summarizing the cosinor analysis process and results"
-  }
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
+    }
+  ]
 }

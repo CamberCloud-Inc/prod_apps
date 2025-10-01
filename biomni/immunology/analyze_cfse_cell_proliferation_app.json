@@ -1,28 +1,45 @@
 {
-  "name": "Analyze CFSE Cell Proliferation",
+  "name": "biomni-analyze-cfse-cell-proliferation",
+  "title": "Biomni: Analyze Cfse Cell Proliferation",
   "description": "Analyze CFSE-labeled cell samples to quantify cell division and proliferation using flow cytometry data",
-  "category": "Immunology",
-  "subcategory": "Flow Cytometry",
-  "image": "davethesoftwaredev/biomni:latest",
-  "command": "python /app/biomni/immunology/analyze_cfse_cell_proliferation.py",
-  "params": [
+  "content": "<h3>Overview</h3><p>Analyze CFSE-labeled cell samples to quantify cell division and proliferation using flow cytometry data</p><h3>Category</h3><p>immunology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/immunology/analyze_cfse_cell_proliferation.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "fcs_file_path",
-      "type": "file",
-      "description": "Path to the FCS file containing CFSE-labeled cell data",
-      "required": true
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "cfse_channel",
-      "type": "string",
-      "description": "Flow cytometry channel name for CFSE fluorescence",
-      "default": "FL1-A"
-    },
-    {
-      "name": "lymphocyte_gate_json",
-      "type": "string",
-      "description": "Optional gating parameters for lymphocyte population (JSON object with 'fsc' and 'ssc' keys, leave blank for automatic gating)",
-      "default": "None"
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

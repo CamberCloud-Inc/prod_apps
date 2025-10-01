@@ -1,9 +1,9 @@
 {
-  "name": "design-primer",
-  "title": "Design Primer",
+  "name": "biomni-design-primer",
+  "title": "Biomni: Design Primer",
   "description": "Design a single optimized primer for PCR or sequencing",
-  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application designs a single optimized primer within specified GC content and melting temperature ranges.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Customizable primer parameters</li><li class=\"list-item-node\">GC content optimization</li><li class=\"list-item-node\">Tm calculation</li><li class=\"list-item-node\">Flexible search window</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Sequence</strong>: Target DNA sequence</li><li class=\"list-item-node\"><strong>Start Position</strong>: Where to begin searching</li><li class=\"list-item-node\"><strong>Primer Length</strong>: Desired primer length</li><li class=\"list-item-node\"><strong>GC Range</strong>: Min/max GC content</li><li class=\"list-item-node\"><strong>Tm Range</strong>: Min/max melting temperature</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">Returns primer sequence with position, GC content, and Tm.</p>",
-  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && pip install -q biopython biomni && python prod_apps_clone/biomni/molecular_biology/design_primer.py \"${sequence}\" ${startPos} --primer-length ${primerLength} --min-gc ${minGc} --max-gc ${maxGc} --min-tm ${minTm} --max-tm ${maxTm} --search-window ${searchWindow} -o \"${outputDir}\"",
+  "content": "<h3>Overview</h3><p>Design a single optimized primer for PCR or sequencing</p><h3>Category</h3><p>molecular_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/design_primer.py \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -11,6 +11,7 @@
       "label": "System Size",
       "name": "system_size",
       "hidden": true,
+      "description": "Select the configuration for the job",
       "options": [
         {
           "label": "Extra Extra Small CPU",
@@ -27,66 +28,17 @@
   ],
   "spec": [
     {
-      "type": "String",
-      "name": "sequence",
-      "label": "Target DNA Sequence",
-      "description": "DNA sequence for primer design",
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
       "defaultValue": ""
-    },
-    {
-      "type": "Number",
-      "name": "startPos",
-      "label": "Start Position",
-      "description": "Position to begin primer search (0-based)",
-      "defaultValue": 0
-    },
-    {
-      "type": "Number",
-      "name": "primerLength",
-      "label": "Primer Length",
-      "description": "Desired primer length in nucleotides",
-      "defaultValue": 20
-    },
-    {
-      "type": "Number",
-      "name": "minGc",
-      "label": "Minimum GC Content",
-      "description": "Minimum GC content (0.0-1.0)",
-      "defaultValue": 0.4
-    },
-    {
-      "type": "Number",
-      "name": "maxGc",
-      "label": "Maximum GC Content",
-      "description": "Maximum GC content (0.0-1.0)",
-      "defaultValue": 0.6
-    },
-    {
-      "type": "Number",
-      "name": "minTm",
-      "label": "Minimum Tm (°C)",
-      "description": "Minimum melting temperature",
-      "defaultValue": 55.0
-    },
-    {
-      "type": "Number",
-      "name": "maxTm",
-      "label": "Maximum Tm (°C)",
-      "description": "Maximum melting temperature",
-      "defaultValue": 65.0
-    },
-    {
-      "type": "Number",
-      "name": "searchWindow",
-      "label": "Search Window",
-      "description": "Size of search window in bp",
-      "defaultValue": 100
     },
     {
       "type": "Stash File",
       "name": "outputDir",
       "label": "Output Directory",
-      "description": "Select or create a stash folder where results will be saved",
+      "description": "Output directory in stash",
       "defaultValue": "./"
     }
   ]

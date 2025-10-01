@@ -1,44 +1,45 @@
 {
-  "name": "reconstruct_3d_face_from_mri",
+  "name": "biomni-reconstruct-3d-face-from-mri",
+  "title": "Biomni: Reconstruct 3D Face From Mri",
   "description": "Generate a 3D model of facial anatomy from MRI scans of the head and neck.",
-  "icon": "🧠",
-  "container": {
-    "image": "python:3.9-slim",
-    "setup_commands": [
-      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Generate a 3D model of facial anatomy from MRI scans of the head and neck.</p><h3>Category</h3><p>physiology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/reconstruct_3d_face_from_mri.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "mri_file_path",
-      "description": "Path to the MRI scan file (NIfTI format: .nii or .nii.gz)",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "output_dir",
-      "description": "Directory where output files will be saved",
-      "type": "string",
-      "required": false,
-      "default": "./output"
-    },
-    {
-      "name": "subject_id",
-      "description": "Identifier for the subject, used in output filenames",
-      "type": "string",
-      "required": false,
-      "default": "subject"
-    },
-    {
-      "name": "threshold_value",
-      "description": "Threshold value for initial segmentation of facial tissues",
-      "type": "integer",
-      "required": false,
-      "default": 300
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "output": {
-    "type": "string",
-    "description": "Research log detailing the reconstruction process and output file locations"
-  }
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
+    }
+  ]
 }

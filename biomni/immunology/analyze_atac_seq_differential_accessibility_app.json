@@ -1,46 +1,45 @@
 {
-  "name": "Analyze ATAC-seq Differential Accessibility",
+  "name": "biomni-analyze-atac-seq-differential-accessibility",
+  "title": "Biomni: Analyze Atac Seq Differential Accessibility",
   "description": "Perform ATAC-seq peak calling and differential accessibility analysis using MACS2",
-  "category": "Immunology",
-  "subcategory": "Genomics",
-  "image": "davethesoftwaredev/biomni:latest",
-  "command": "python /app/biomni/immunology/analyze_atac_seq_differential_accessibility.py",
-  "params": [
+  "content": "<h3>Overview</h3><p>Perform ATAC-seq peak calling and differential accessibility analysis using MACS2</p><h3>Category</h3><p>immunology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/immunology/analyze_atac_seq_differential_accessibility.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "treatment_bam",
-      "type": "file",
-      "description": "Path to the treatment condition BAM file with aligned ATAC-seq reads",
-      "required": true
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "control_bam",
-      "type": "file",
-      "description": "Path to the control condition BAM file with aligned ATAC-seq reads",
-      "required": true
-    },
-    {
-      "name": "output_dir",
-      "type": "string",
-      "description": "Directory to save output files",
-      "default": "./atac_results"
-    },
-    {
-      "name": "genome_size",
-      "type": "string",
-      "description": "Genome size parameter for MACS2 (e.g., 'hs' for human, 'mm' for mouse)",
-      "default": "hs"
-    },
-    {
-      "name": "q_value",
-      "type": "number",
-      "description": "q-value cutoff for peak detection",
-      "default": 0.05
-    },
-    {
-      "name": "name_prefix",
-      "type": "string",
-      "description": "Prefix for output file names",
-      "default": "atac"
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

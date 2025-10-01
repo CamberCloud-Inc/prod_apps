@@ -1,40 +1,45 @@
 {
-  "name": "Track Immune Cells Under Flow",
+  "name": "biomni-track-immune-cells-under-flow",
+  "title": "Biomni: Track Immune Cells Under Flow",
   "description": "Track immune cells under flow conditions and classify their behaviors (rolling, firm adhesion, detachment)",
-  "category": "Immunology",
-  "subcategory": "Microscopy",
-  "image": "davethesoftwaredev/biomni:latest",
-  "command": "python /app/biomni/immunology/track_immune_cells_under_flow.py",
-  "params": [
+  "content": "<h3>Overview</h3><p>Track immune cells under flow conditions and classify their behaviors (rolling, firm adhesion, detachment)</p><h3>Category</h3><p>immunology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/immunology/track_immune_cells_under_flow.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "image_sequence_path",
-      "type": "file",
-      "description": "Path to image sequence directory or video file",
-      "required": true
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "output_dir",
-      "type": "string",
-      "description": "Directory to save output files",
-      "default": "./output"
-    },
-    {
-      "name": "pixel_size_um",
-      "type": "number",
-      "description": "Pixel size in micrometers",
-      "default": 1.0
-    },
-    {
-      "name": "time_interval_sec",
-      "type": "number",
-      "description": "Time interval between frames in seconds",
-      "default": 1.0
-    },
-    {
-      "name": "flow_direction",
-      "type": "string",
-      "description": "Direction of flow (right, left, up, down)",
-      "default": "right"
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

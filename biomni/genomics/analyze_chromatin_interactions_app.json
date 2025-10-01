@@ -2,32 +2,43 @@
   "name": "biomni-analyze-chromatin-interactions",
   "title": "Biomni: Analyze Chromatin Interactions",
   "description": "Analyze Hi-C data to identify enhancer-promoter interactions and topologically associating domains (TADs)",
-  "content": "<h3>Overview</h3><p>Analyzes chromatin interactions from Hi-C data to identify enhancer-promoter interactions, CTCF binding sites, and topologically associating domains (TADs). Uses cooler format for efficient Hi-C matrix operations.</p><h3>Features</h3><ul><li>Hi-C contact matrix analysis</li><li>Enhancer-promoter interaction detection</li><li>TAD boundary identification</li><li>Regulatory element enrichment analysis</li></ul><h3>Input</h3><ul><li>Hi-C file in .cool or .hic format</li><li>BED file with regulatory elements (enhancers, promoters, CTCF sites)</li></ul><h3>Output</h3><p>Interaction maps, TAD boundaries, and enrichment statistics</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genomics/analyze_chromatin_interactions.py \"${hicFile}\" \"${regulatoryBed}\" -o \"${outputDir}\"",
+  "content": "<h3>Overview</h3><p>Analyze Hi-C data to identify enhancer-promoter interactions and topologically associating domains (TADs)</p><h3>Category</h3><p>genomics</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genomics/analyze_chromatin_interactions.py \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
-    {"nodeCount": "1", "coresPerNode": "4"}
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
   ],
   "spec": [
     {
       "type": "Stash File",
-      "name": "hicFile",
-      "label": "Hi-C Data File",
-      "description": "Upload Hi-C file in .cool or .hic format",
-      "defaultValue": ""
-    },
-    {
-      "type": "Stash File",
-      "name": "regulatoryBed",
-      "label": "Regulatory Elements BED",
-      "description": "Upload BED file with regulatory element coordinates",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
       "defaultValue": ""
     },
     {
       "type": "Stash File",
       "name": "outputDir",
       "label": "Output Directory",
-      "description": "Select output folder",
+      "description": "Output directory in stash",
       "defaultValue": "./"
     }
   ]

@@ -1,51 +1,45 @@
 {
-  "name": "predict_o_glycosylation_hotspots",
+  "name": "biomni-predict-o-glycosylation-hotspots",
+  "title": "Biomni: Predict O Glycosylation Hotspots",
   "description": "Heuristic O-glycosylation hotspot scoring",
-  "version": "1.0.0",
-  "author": "Biomni Integration",
-  "license": "MIT",
-  "runtime": {
-    "type": "python",
-    "version": "3.8+",
-    "entrypoint": "predict_o_glycosylation_hotspots.py",
-    "requirements": [
-      "git+https://github.com/snap-stanford/Biomni.git"
-    ]
-  },
-  "inputs": [
+  "content": "<h3>Overview</h3><p>Heuristic O-glycosylation hotspot scoring</p><h3>Category</h3><p>glycoengineering</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/glycoengineering/predict_o_glycosylation_hotspots.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "sequence",
-      "type": "string",
-      "required": true,
-      "description": "Protein sequence to analyze for O-glycosylation hotspots"
-    },
-    {
-      "name": "window",
-      "type": "integer",
-      "required": false,
-      "default": 7,
-      "description": "Window size for scanning"
-    },
-    {
-      "name": "min_st_fraction",
-      "type": "number",
-      "required": false,
-      "default": 0.4,
-      "description": "Minimum fraction of serine/threonine residues in window"
-    },
-    {
-      "name": "disallow_proline_next",
-      "type": "boolean",
-      "required": false,
-      "default": true,
-      "description": "Disallow proline in next position"
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
   ],
-  "outputs": [
+  "spec": [
     {
-      "name": "result",
-      "type": "string",
-      "description": "O-glycosylation hotspot prediction results"
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

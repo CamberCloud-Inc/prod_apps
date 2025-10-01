@@ -1,9 +1,9 @@
 {
-  "name": "get-oligo-annealing-protocol",
-  "title": "Oligo Annealing Protocol",
+  "name": "biomni-get-oligo-annealing-protocol",
+  "title": "Biomni: Get Oligo Annealing Protocol",
   "description": "Get standard protocol for annealing complementary oligonucleotides",
-  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application provides a detailed, step-by-step protocol for annealing complementary oligonucleotides without phosphorylation.</p><h3 class=\"heading-node\">Protocol Includes</h3><ul class=\"list-node\"><li class=\"list-item-node\">Reaction mixture preparation</li><li class=\"list-item-node\">Thermocycler program settings</li><li class=\"list-item-node\">Dilution instructions</li><li class=\"list-item-node\">Storage recommendations</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">Returns a JSON file with complete protocol including steps, components, and notes.</p>",
-  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && pip install -q biopython biomni && python prod_apps_clone/biomni/molecular_biology/get_oligo_annealing_protocol.py -o \"${outputDir}\"",
+  "content": "<h3>Overview</h3><p>Get standard protocol for annealing complementary oligonucleotides</p><h3>Category</h3><p>molecular_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/get_oligo_annealing_protocol.py \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -11,6 +11,7 @@
       "label": "System Size",
       "name": "system_size",
       "hidden": true,
+      "description": "Select the configuration for the job",
       "options": [
         {
           "label": "Extra Extra Small CPU",
@@ -28,9 +29,16 @@
   "spec": [
     {
       "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
       "name": "outputDir",
       "label": "Output Directory",
-      "description": "Select or create a stash folder where protocol will be saved",
+      "description": "Output directory in stash",
       "defaultValue": "./"
     }
   ]

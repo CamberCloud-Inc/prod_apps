@@ -1,71 +1,45 @@
 {
-  "name": "download_synapse_data",
+  "name": "biomni-download-synapse-data",
+  "title": "Biomni: Download Synapse Data",
   "description": "Download data from Synapse using entity IDs. Uses the synapse CLI to download files, folders, or projects from Synapse. Requires SYNAPSE_AUTH_TOKEN environment variable for authentication.",
-  "version": "1.0.0",
-  "author": "Biomni Support Tools",
-  "license": "MIT",
-  "input": {
-    "type": "object",
-    "properties": {
-      "entity_ids": {
-        "type": "string",
-        "description": "Synapse entity ID(s) to download. For files: can be a single ID or JSON array of IDs. For datasets/folders/projects: must be a single ID only"
-      },
-      "download_location": {
-        "type": "string",
-        "description": "Directory where files will be downloaded",
-        "default": "."
-      },
-      "follow_link": {
-        "type": "boolean",
-        "description": "Whether to follow links to download the linked entity",
-        "default": false
-      },
-      "recursive": {
-        "type": "boolean",
-        "description": "Whether to recursively download folders and their contents (ONLY valid for entity_type='folder')",
-        "default": false
-      },
-      "timeout": {
-        "type": "integer",
-        "description": "Timeout in seconds for each download operation",
-        "default": 300
-      },
-      "entity_type": {
-        "type": "string",
-        "description": "Type of Synapse entity: 'dataset', 'file', 'folder', or 'project'. MUST match the actual entity type from search results!",
-        "default": "dataset"
-      }
-    },
-    "required": ["entity_ids", "download_location", "follow_link", "recursive", "timeout", "entity_type"]
-  },
-  "output": {
-    "type": "object",
-    "properties": {
-      "success": {
-        "type": "boolean",
-        "description": "Whether the operation succeeded"
-      },
-      "result": {
-        "type": "object",
-        "description": "Dictionary containing download results with success/failure counts and details"
-      },
-      "error": {
-        "type": "string",
-        "description": "Error message if operation failed"
-      }
+  "content": "<h3>Overview</h3><p>Download data from Synapse using entity IDs. Uses the synapse CLI to download files, folders, or projects from Synapse. Requires SYNAPSE_AUTH_TOKEN environment variable for authentication.</p><h3>Category</h3><p>support_tools</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/support_tools/download_synapse_data.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
-  },
-  "execution": {
-    "command": "python3",
-    "args": [
-      "download_synapse_data.py",
-      "{{entity_ids}}",
-      "{{download_location}}",
-      "{{follow_link}}",
-      "{{recursive}}",
-      "{{timeout}}",
-      "{{entity_type}}"
-    ]
-  }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
+    }
+  ]
 }

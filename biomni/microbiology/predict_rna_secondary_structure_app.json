@@ -1,36 +1,45 @@
 {
-  "name": "Predict RNA Secondary Structure",
+  "name": "biomni-predict-rna-secondary-structure",
+  "title": "Biomni: Predict Rna Secondary Structure",
   "description": "Predict RNA secondary structure from sequence using thermodynamic models",
-  "image": "python:3.11-slim",
-  "run": [
-    "sh",
-    "-c",
-    "git clone --depth 1 https://github.com/snap-stanford/Biomni /tmp/biomni && pip install -q -e /tmp/biomni && python /mnt/code/predict_rna_secondary_structure.py"
+  "content": "<h3>Overview</h3><p>Predict RNA secondary structure from sequence using thermodynamic models</p><h3>Category</h3><p>microbiology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/microbiology/predict_rna_secondary_structure.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
   ],
-  "fields": [
+  "spec": [
     {
-      "name": "rna_sequence",
-      "displayName": "RNA Sequence",
-      "type": "long_text",
-      "description": "RNA sequence to predict structure for",
-      "required": true
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "output_format",
-      "displayName": "Output Format",
-      "type": "select",
-      "options": ["dot_bracket", "ct", "bpseq"],
-      "description": "Output format for the predicted structure",
-      "required": false,
-      "default": "dot_bracket"
-    },
-    {
-      "name": "temperature",
-      "displayName": "Temperature (°C)",
-      "type": "number",
-      "description": "Temperature in Celsius for folding calculations",
-      "required": false,
-      "default": 37.0
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

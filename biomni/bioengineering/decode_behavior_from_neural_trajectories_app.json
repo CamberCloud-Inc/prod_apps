@@ -1,9 +1,9 @@
 {
-  "name": "decode-behavior-from-neural-trajectories",
-  "title": "Decode Behavior from Neural Trajectories",
+  "name": "biomni-decode-behavior-from-neural-trajectories",
+  "title": "Biomni: Decode Behavior From Neural Trajectories",
   "description": "Model neural activity trajectories and decode behavioral variables using PCA and Kalman filtering",
-  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application models neural activity trajectories and decodes behavioral variables. Built using <a class=\"link\" href=\"https://github.com/snap-stanford/Biomni\" target=\"_blank\">Biomni</a>, it uses PCA for dimensionality reduction and Kalman filtering to predict behavior from neural data.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Dimensionality reduction using Principal Component Analysis</li><li class=\"list-item-node\">Kalman filter-based behavioral decoding</li><li class=\"list-item-node\">Train/test split for model validation</li><li class=\"list-item-node\">Mean squared error performance metrics</li><li class=\"list-item-node\">Visualization of decoded trajectories</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Neural Data File</strong>: CSV file with neural spiking activity (rows=timepoints, cols=neurons)</li><li class=\"list-item-node\"><strong>Behavioral Data File</strong>: CSV file with behavioral variables (rows=timepoints, cols=variables)</li><li class=\"list-item-node\"><strong>N Components</strong>: Number of PCA components for dimensionality reduction</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates PNG plots of explained variance and decoded trajectories, CSV sample results, and a pickle file with full results.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Brain-computer interfaces</li><li class=\"list-item-node\">Neural prosthetics development</li><li class=\"list-item-node\">Understanding neural coding</li><li class=\"list-item-node\">Predicting movement from neural signals</li></ul>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python \"prod_apps/biomni/bioengineering/decode_behavior_from_neural_trajectories.py\" \"${neuralDataFile}\" \"${behavioralDataFile}\" --n-components ${nComponents} -o \"${outputDir}\"",
+  "content": "<h3>Overview</h3><p>Model neural activity trajectories and decode behavioral variables using PCA and Kalman filtering</p><h3>Category</h3><p>bioengineering</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/bioengineering/decode_behavior_from_neural_trajectories.py \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -14,45 +14,31 @@
       "description": "Select the configuration for the job",
       "options": [
         {
-          "label": "Small CPU",
-          "value": "small_cpu",
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
           "mapValue": {
-            "nodeSize": "SMALL",
+            "nodeSize": "XXSMALL",
             "numNodes": 1,
             "withGpu": false
           }
         }
       ],
-      "defaultValue": "small_cpu"
+      "defaultValue": "xxsmall_cpu"
     }
   ],
   "spec": [
     {
       "type": "Stash File",
-      "name": "neuralDataFile",
-      "label": "Neural Data File (CSV)",
-      "description": "CSV file containing neural spiking activity (rows=timepoints, columns=neurons)",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
       "defaultValue": ""
-    },
-    {
-      "type": "Stash File",
-      "name": "behavioralDataFile",
-      "label": "Behavioral Data File (CSV)",
-      "description": "CSV file containing behavioral variables (rows=timepoints, columns=variables)",
-      "defaultValue": ""
-    },
-    {
-      "type": "Number",
-      "name": "nComponents",
-      "label": "Number of PCA Components",
-      "description": "Number of principal components for dimensionality reduction",
-      "defaultValue": 10
     },
     {
       "type": "Stash File",
       "name": "outputDir",
       "label": "Output Directory",
-      "description": "Select or create a stash folder where results will be saved",
+      "description": "Output directory in stash",
       "defaultValue": "./"
     }
   ]

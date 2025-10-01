@@ -1,34 +1,45 @@
 {
-  "name": "Analyze CNS Lesion Histology",
+  "name": "biomni-analyze-cns-lesion-histology",
+  "title": "Biomni: Analyze Cns Lesion Histology",
   "description": "Analyze histological images of CNS lesions to quantify immune cell infiltration and tissue damage",
-  "category": "Immunology",
-  "subcategory": "Histology",
-  "image": "davethesoftwaredev/biomni:latest",
-  "command": "python /app/biomni/immunology/analyze_cns_lesion_histology.py",
-  "params": [
+  "content": "<h3>Overview</h3><p>Analyze histological images of CNS lesions to quantify immune cell infiltration and tissue damage</p><h3>Category</h3><p>immunology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/immunology/analyze_cns_lesion_histology.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
     {
-      "name": "image_path",
-      "type": "file",
-      "description": "Path to the histological image file (supports common formats like PNG, JPEG, TIFF)",
-      "required": true
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
     },
     {
-      "name": "output_dir",
-      "type": "string",
-      "description": "Directory to save output files and analysis results",
-      "default": "./histology_results"
-    },
-    {
-      "name": "cell_markers_json",
-      "type": "string",
-      "description": "Optional list of cell markers to analyze (JSON array, e.g., '[\"CD3\", \"CD8\", \"GFAP\"]', leave blank for default markers)",
-      "default": "None"
-    },
-    {
-      "name": "pixel_size_um",
-      "type": "number",
-      "description": "Pixel size in micrometers for spatial measurements",
-      "default": 0.5
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
   ]
 }

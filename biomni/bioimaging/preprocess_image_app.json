@@ -1,41 +1,45 @@
 {
-  "name": "Preprocess Image",
+  "name": "biomni-preprocess-image",
+  "title": "Biomni: Preprocess Image",
   "description": "Preprocess medical images with denoising and normalization",
-  "class": "bioimaging",
-  "entrypoint": "preprocess_image.py",
-  "parameters": {
-    "image_path": {
-      "type": "file",
-      "description": "Path to input image",
-      "required": true
-    },
-    "output_path": {
-      "type": "string",
-      "description": "Path to save preprocessed image",
-      "required": true
-    },
-    "denoise": {
-      "type": "boolean",
-      "description": "Whether to apply denoising (default: true)",
-      "required": false,
-      "default": true
-    },
-    "normalize": {
-      "type": "boolean",
-      "description": "Whether to apply normalization (default: true)",
-      "required": false,
-      "default": true
+  "content": "<h3>Overview</h3><p>Preprocess medical images with denoising and normalization</p><h3>Category</h3><p>bioimaging</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/bioimaging/preprocess_image.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
     }
-  },
-  "returns": {
-    "output_path": {
-      "type": "string",
-      "description": "Path to the saved preprocessed image"
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
     }
-  },
-  "setup_commands": [
-    "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni 2>/dev/null || (cd /tmp/biomni && git pull)",
-    "pip install -e /tmp/biomni",
-    "pip install nibabel numpy SimpleITK torch matplotlib requests"
   ]
 }

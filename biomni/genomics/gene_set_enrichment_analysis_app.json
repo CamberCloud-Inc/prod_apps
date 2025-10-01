@@ -1,40 +1,44 @@
 {
-  "name": "biomni-gene-set-enrichment",
+  "name": "biomni-gene-set-enrichment-analysis",
   "title": "Biomni: Gene Set Enrichment Analysis",
   "description": "Perform enrichment analysis for gene lists against multiple biological databases",
-  "content": "<h3>Overview</h3><p>Performs gene set enrichment analysis to identify pathways, biological processes, diseases, cell types, and other annotations enriched in your gene list.</p><h3>Databases</h3><ul><li><b>pathway:</b> KEGG pathways</li><li><b>transcription:</b> Transcription factors (ChEA)</li><li><b>ontology:</b> GO Biological Process</li><li><b>diseases_drugs:</b> GWAS Catalog</li><li><b>celltypes:</b> PanglaoDB cell type markers</li><li><b>kinase_interactions:</b> Kinase-substrate interactions</li></ul><h3>Input Format</h3><p>JSON array of gene symbols, e.g., [\"TP53\", \"BRCA1\", \"EGFR\"]</p><h3>Output</h3><p>Ranked list of enriched terms with p-values and overlapping genes</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genomics/gene_set_enrichment_analysis.py \"${genesFile}\" --database \"${database}\" --top-k ${topK} -o \"${outputDir}\" ${additionalParams}",
+  "content": "<h3>Overview</h3><p>Perform enrichment analysis for gene lists against multiple biological databases</p><h3>Category</h3><p>genomics</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genomics/gene_set_enrichment_analysis.py \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
-    {"nodeCount": "1", "coresPerNode": "2"}
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
   ],
   "spec": [
     {
       "type": "Stash File",
-      "name": "genesFile",
-      "label": "Genes JSON File",
-      "description": "Upload JSON file with array of gene symbols",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
       "defaultValue": ""
-    },
-    {
-      "type": "String",
-      "name": "database",
-      "label": "Database",
-      "description": "Database to use: pathway, transcription, ontology, diseases_drugs, celltypes, kinase_interactions",
-      "defaultValue": "ontology"
-    },
-    {
-      "type": "Integer",
-      "name": "topK",
-      "label": "Top K Results",
-      "description": "Number of top enrichment results to return",
-      "defaultValue": "10"
     },
     {
       "type": "Stash File",
       "name": "outputDir",
       "label": "Output Directory",
-      "description": "Select output folder",
+      "description": "Output directory in stash",
       "defaultValue": "./"
     }
   ]
