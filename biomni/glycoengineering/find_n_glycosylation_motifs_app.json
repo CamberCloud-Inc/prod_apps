@@ -36,7 +36,7 @@
       "required": true
     },
     {
-      "type": "Boolean",
+      "type": "Checkbox",
       "name": "allowOverlap",
       "label": "Allow Overlapping Motifs",
       "description": "Allow overlapping N-X-S/T patterns to be reported",

@@ -35,21 +35,21 @@
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "constraints",
       "label": "Constraints",
       "description": "JSON string with flux constraints (e.g., {\"EX_glc__D_e\": {\"lower\": -10.0, \"upper\": 0.0}})",
       "defaultValue": "{}"
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "objectiveReaction",
       "label": "Objective Reaction",
       "description": "Reaction ID to optimize (e.g., BIOMASS_Ecoli_core_w_GAM)",
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "outputFilename",
       "label": "Output Filename",
       "description": "Name for output CSV file",

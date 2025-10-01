@@ -42,7 +42,7 @@
       "defaultValue": "./"
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "thresholdMethod",
       "label": "Threshold Method",
       "description": "Segmentation threshold method (otsu, adaptive, or manual)",

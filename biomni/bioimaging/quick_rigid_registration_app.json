@@ -95,21 +95,21 @@
       "defaultValue": "true"
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "learning_rate",
       "label": "Learning Rate",
       "description": "Step size for gradient descent optimizer",
       "defaultValue": "0.01"
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "number_of_iterations",
       "label": "Number of Iterations",
       "description": "Maximum number of optimization iterations",
       "defaultValue": "100"
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "gradient_convergence_tolerance",
       "label": "Gradient Convergence Tolerance",
       "description": "Convergence threshold for stopping optimization",

@@ -28,35 +28,35 @@
   ],
   "spec": [
     {
-      "type": "String",
+      "type": "Input",
       "name": "networkStructure",
       "label": "Network Structure",
       "description": "JSON string with network topology (e.g., {\"nodes\": [...], \"edges\": [...]})",
       "defaultValue": "{}"
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "reactionParams",
       "label": "Reaction Parameters",
       "description": "JSON string with kinetic parameters (e.g., {\"Receptor_activation\": {\"k_on\": 0.1}})",
       "defaultValue": "{}"
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "speciesParams",
       "label": "Species Parameters",
       "description": "JSON string with species parameters (e.g., {\"Receptor\": {\"initial\": 1.0}})",
       "defaultValue": "{}"
     },
     {
-      "type": "Number",
+      "type": "Input",
       "name": "simulationTime",
       "label": "Simulation Time",
       "description": "Total simulation time",
       "defaultValue": 100
     },
     {
-      "type": "Number",
+      "type": "Input",
       "name": "timePoints",
       "label": "Time Points",
       "description": "Number of time points to record",

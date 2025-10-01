@@ -42,7 +42,7 @@
       "defaultValue": ""
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "case_name",
       "label": "Case Name",
       "description": "Identifier prefix for naming output files (e.g., 'BRAT' results in BRAT_0000.nii.gz)",

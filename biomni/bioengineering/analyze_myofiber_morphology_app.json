@@ -35,21 +35,21 @@
       "defaultValue": ""
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "nuclei_channel",
       "label": "Nuclei Channel",
       "description": "Channel index containing nuclei staining (default: 2)",
       "defaultValue": "2"
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "myofiber_channel",
       "label": "Myofiber Channel",
       "description": "Channel index containing myofiber membrane staining (default: 1)",
       "defaultValue": "1"
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "threshold_method",
       "label": "Threshold Method",
       "description": "Segmentation threshold algorithm (default: otsu)",

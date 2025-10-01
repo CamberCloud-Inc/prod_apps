@@ -28,7 +28,7 @@
   ],
   "spec": [
     {
-      "type": "Text",
+      "type": "Input",
       "name": "smilesString",
       "label": "SMILES String",
       "description": "SMILES representation of the molecule (e.g., CC(=O)Oc1ccccc1C(=O)O for Aspirin)",

@@ -28,21 +28,21 @@
   ],
   "spec": [
     {
-      "type": "Text",
+      "type": "Input",
       "name": "drugList",
       "label": "Drug List",
       "description": "List of drug names to analyze (JSON array, e.g., [\"Aspirin\", \"Ibuprofen\"])",
       "defaultValue": ""
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "comparisonPeriod",
       "label": "Comparison Period (Optional)",
       "description": "Analysis period as two dates (JSON array, e.g., [\"2020-01-01\", \"2023-12-31\"])",
       "defaultValue": ""
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "signalThreshold",
       "label": "Signal Threshold",
       "description": "Statistical threshold for signal detection",

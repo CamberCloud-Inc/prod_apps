@@ -28,21 +28,21 @@
   ],
   "spec": [
     {
-      "type": "String",
+      "type": "Input",
       "name": "monomerConcentrations",
       "label": "Monomer Concentrations",
       "description": "JSON string with monomer concentrations (e.g., {\"ProteinA\": 10.0, \"ProteinB\": 5.0})",
       "defaultValue": "{}"
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "dimerizationAffinities",
       "label": "Dimerization Affinities",
       "description": "JSON string with binding affinities (e.g., {\"A-B\": 0.1, \"A-C\": 0.5})",
       "defaultValue": "{}"
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "networkTopology",
       "label": "Network Topology",
       "description": "JSON string with network structure (e.g., {\"dimers\": [[\"ProteinA\", \"ProteinB\"]]})",

@@ -35,7 +35,7 @@
       "defaultValue": ""
     },
     {
-      "type": "Number",
+      "type": "Input",
       "name": "nComponents",
       "label": "Number of NMF Components",
       "description": "Number of NMF components/signatures to extract",
@@ -44,7 +44,7 @@
       "max": 100
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "outputDirInternal",
       "label": "Output Directory Name",
       "description": "Directory name for output files",

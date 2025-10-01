@@ -35,7 +35,7 @@
       "defaultValue": ""
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "output_dir",
       "label": "Output Directory",
       "description": "Directory where analysis results will be saved (default: ./output)",

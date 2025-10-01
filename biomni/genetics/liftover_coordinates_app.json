@@ -28,28 +28,28 @@
   ],
   "spec": [
     {
-      "type": "String",
+      "type": "Input",
       "name": "chromosome",
       "label": "Chromosome",
       "description": "Chromosome number (e.g., '1', 'X')",
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "position",
       "label": "Position",
       "description": "Genomic position (integer)",
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "input_format",
       "label": "Input Format",
       "description": "Input genome build (hg19 or hg38)",
       "defaultValue": "hg19"
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "output_format",
       "label": "Output Format",
       "description": "Output genome build (hg19 or hg38)",

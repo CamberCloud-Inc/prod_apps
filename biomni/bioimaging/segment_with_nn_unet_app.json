@@ -42,7 +42,7 @@
       "defaultValue": ""
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "task_id",
       "label": "Task ID",
       "description": "nnUNet task identifier (e.g., 'Task001_BrainTumour', 'Task002_Heart')",
@@ -62,7 +62,7 @@
       "defaultValue": "3d_fullres"
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "folds",
       "label": "Folds",
       "description": "Cross-validation folds to ensemble (comma-separated, e.g., '0,1,2,3,4')",
@@ -80,7 +80,7 @@
       "defaultValue": "false"
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "num_threads",
       "label": "Number of Threads",
       "description": "Number of CPU threads for preprocessing and inference",
@@ -120,7 +120,7 @@
       "defaultValue": "true"
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "results_folder",
       "label": "Results Folder",
       "description": "Path to custom nnUNet results folder (leave empty to use standard model zoo)",

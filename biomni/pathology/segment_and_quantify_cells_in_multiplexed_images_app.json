@@ -35,21 +35,21 @@
       "defaultValue": ""
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "markers_list",
       "label": "Markers List",
       "description": "JSON string or file path defining list of protein markers/antibodies used in each channel (e.g., [\"DAPI\", \"CD3\", \"CD8\", \"CD45\", \"PD-L1\"])",
       "defaultValue": ""
     },
     {
-      "type": "Number",
+      "type": "Input",
       "name": "nuclear_channel_index",
       "label": "Nuclear Channel Index",
       "description": "Index of the nuclear staining channel for cell segmentation (default: 0)",
       "defaultValue": "0"
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "output_dir",
       "label": "Output Directory",
       "description": "Directory where analysis results will be saved (default: ./output)",

@@ -28,7 +28,7 @@
   ],
   "spec": [
     {
-      "type": "Text",
+      "type": "Input",
       "name": "drugPair",
       "label": "Drug Pair",
       "description": "Pair of drug names to analyze (JSON array, e.g., [\"Warfarin\", \"Aspirin\"])",
@@ -52,7 +52,7 @@
       "defaultValue": "true"
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "dataLakePath",
       "label": "Data Lake Path (Optional)",
       "description": "Path to custom interaction database",

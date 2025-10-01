@@ -49,14 +49,14 @@
       "defaultValue": ""
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "outputPrefix",
       "label": "Output Prefix",
       "description": "Prefix for output files (e.g., patient_001)",
       "defaultValue": "sample"
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "snpeffDatabase",
       "label": "SnpEff Database",
       "description": "SnpEff annotation database version",

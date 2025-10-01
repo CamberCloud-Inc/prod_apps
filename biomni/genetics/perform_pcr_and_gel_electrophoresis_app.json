@@ -35,56 +35,56 @@
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "forward_primer",
       "label": "Forward Primer (Optional)",
       "description": "Forward primer sequence",
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "reverse_primer",
       "label": "Reverse Primer (Optional)",
       "description": "Reverse primer sequence",
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "target_region",
       "label": "Target Region (Optional)",
       "description": "Target region as 'start,end' (e.g., '100,500')",
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "annealing_temp",
       "label": "Annealing Temperature (Optional)",
       "description": "Annealing temperature in °C (default: 58)",
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "extension_time",
       "label": "Extension Time (Optional)",
       "description": "Extension time in seconds (default: 30)",
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "cycles",
       "label": "Cycles (Optional)",
       "description": "Number of PCR cycles (default: 35)",
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "gel_percentage",
       "label": "Gel Percentage (Optional)",
       "description": "Agarose gel percentage (default: 2.0)",
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "output_prefix",
       "label": "Output Prefix (Optional)",
       "description": "Prefix for output files (default: 'pcr_result')",

@@ -28,35 +28,35 @@
   ],
   "spec": [
     {
-      "type": "String",
+      "type": "Input",
       "name": "initialConcentrations",
       "label": "Initial Concentrations",
       "description": "JSON string with initial RAS component concentrations (e.g., {\"angiotensinogen\": 1000.0, \"renin\": 10.0})",
       "defaultValue": "{}"
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "rateConstants",
       "label": "Rate Constants",
       "description": "JSON string with kinetic rate constants (e.g., {\"renin_kcat\": 0.5, \"renin_Km\": 100.0})",
       "defaultValue": "{}"
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "feedbackParams",
       "label": "Feedback Parameters",
       "description": "JSON string with feedback parameters (e.g., {\"ang_II_inhibition_strength\": 0.8})",
       "defaultValue": "{}"
     },
     {
-      "type": "Number",
+      "type": "Input",
       "name": "simulationTime",
       "label": "Simulation Time",
       "description": "Total simulation time in hours",
       "defaultValue": 48
     },
     {
-      "type": "Number",
+      "type": "Input",
       "name": "timePoints",
       "label": "Time Points",
       "description": "Number of time points to record",

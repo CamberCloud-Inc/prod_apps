@@ -28,21 +28,21 @@
   ],
   "spec": [
     {
-      "type": "Text",
+      "type": "Input",
       "name": "formulations",
       "label": "Formulations",
       "description": "List of pharmaceutical formulations to test (JSON array, e.g., [\"Formulation A\", \"Formulation B\"])",
       "defaultValue": ""
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "storageConditions",
       "label": "Storage Conditions",
       "description": "Storage conditions (JSON object, e.g., {\"temperature\": \"40C\", \"humidity\": \"75%RH\"})",
       "defaultValue": ""
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "timePoints",
       "label": "Time Points",
       "description": "Time intervals for stability measurements (JSON array, e.g., [0, 3, 6, 9, 12])",

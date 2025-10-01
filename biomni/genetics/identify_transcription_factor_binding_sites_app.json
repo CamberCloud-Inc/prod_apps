@@ -35,21 +35,21 @@
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "tf_name",
       "label": "Transcription Factor Name",
       "description": "Name of transcription factor (e.g., 'Hsf1', 'GATA1')",
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "threshold",
       "label": "Threshold (Optional)",
       "description": "Minimum score threshold for binding sites (0.0-1.0, default: 0.8)",
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "output_file",
       "label": "Output File (Optional)",
       "description": "Path to save results (optional)",

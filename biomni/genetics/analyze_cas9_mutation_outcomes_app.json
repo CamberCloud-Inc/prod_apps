@@ -49,7 +49,7 @@
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "output_prefix",
       "label": "Output Prefix (Optional)",
       "description": "Prefix for output files (default: cas9_mutation_analysis)",

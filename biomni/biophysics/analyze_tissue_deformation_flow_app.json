@@ -28,7 +28,7 @@
   ],
   "spec": [
     {
-      "type": "String",
+      "type": "Input",
       "name": "imageSequence",
       "label": "Image Sequence Pattern",
       "description": "Path to time-lapse microscopy images (glob pattern like '/path/to/images/*.tif')",
@@ -42,7 +42,7 @@
       "defaultValue": "./"
     },
     {
-      "type": "Float",
+      "type": "Input",
       "name": "pixelScale",
       "label": "Pixel Scale",
       "description": "Physical size per pixel in micrometers (μm/pixel)",

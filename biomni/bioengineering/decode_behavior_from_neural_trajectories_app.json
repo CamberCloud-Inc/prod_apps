@@ -42,7 +42,7 @@
       "defaultValue": ""
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "n_components",
       "label": "Number of Components",
       "description": "Number of principal components to extract (default: 10)",

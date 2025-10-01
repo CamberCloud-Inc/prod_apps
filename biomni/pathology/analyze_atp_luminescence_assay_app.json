@@ -42,14 +42,14 @@
       "defaultValue": ""
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "normalization_method",
       "label": "Normalization Method",
       "description": "Method for normalizing ATP values - options include cell_count, protein, or none (default: cell_count)",
       "defaultValue": "cell_count"
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "normalization_data",
       "label": "Normalization Data",
       "description": "JSON string or file path for normalization factors or metadata for sample-specific corrections (optional)",

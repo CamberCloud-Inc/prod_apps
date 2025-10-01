@@ -28,14 +28,14 @@
   ],
   "spec": [
     {
-      "type": "TextArea",
+      "type": "Input",
       "name": "dot_bracket_structure",
       "label": "Dot-Bracket Structure",
       "description": "RNA secondary structure in dot-bracket notation",
       "defaultValue": ""
     },
     {
-      "type": "TextArea",
+      "type": "Input",
       "name": "sequence",
       "label": "RNA Sequence (Optional)",
       "description": "RNA nucleotide sequence (A, U, G, C) corresponding to the structure",

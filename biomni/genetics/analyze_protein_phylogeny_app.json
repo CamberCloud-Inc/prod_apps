@@ -35,14 +35,14 @@
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "alignment_method",
       "label": "Alignment Method (Optional)",
       "description": "Method for sequence alignment: clustalw, muscle, pre-aligned (default: clustalw)",
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "tree_method",
       "label": "Tree Method (Optional)",
       "description": "Method for tree construction: iqtree or fasttree (default: iqtree)",

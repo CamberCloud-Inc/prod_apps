@@ -28,14 +28,14 @@
   ],
   "spec": [
     {
-      "type": "Text",
+      "type": "Input",
       "name": "drugName",
       "label": "Drug Name",
       "description": "Name of drug to retrieve label information (e.g., Metformin)",
       "defaultValue": ""
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "sections",
       "label": "Sections (Optional)",
       "description": "Specific label sections to retrieve (JSON array, e.g., [\"indications_and_usage\", \"warnings\"])",

@@ -42,7 +42,7 @@
       "defaultValue": ""
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "outputDirInternal",
       "label": "Output Directory Name",
       "description": "Directory name for output files",

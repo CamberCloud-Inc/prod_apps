@@ -42,7 +42,7 @@
       "defaultValue": ""
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "case_name",
       "label": "Case Name",
       "description": "Identifier prefix for the case (e.g., 'BRAT' for BraTS dataset)",

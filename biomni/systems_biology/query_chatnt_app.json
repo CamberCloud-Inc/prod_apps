@@ -28,21 +28,21 @@
   ],
   "spec": [
     {
-      "type": "String",
+      "type": "Input",
       "name": "question",
       "label": "Question",
       "description": "Question to ask about the DNA sequence",
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "sequence",
       "label": "Sequence",
       "description": "DNA nucleotide sequence to analyze (A, T, G, C)",
       "defaultValue": ""
     },
     {
-      "type": "Number",
+      "type": "Input",
       "name": "device",
       "label": "Device",
       "description": "GPU device ID (0 for GPU, -1 for CPU)",

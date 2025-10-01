@@ -42,14 +42,14 @@
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "guide_rna",
       "label": "Guide RNA",
       "description": "CRISPR guide RNA (crRNA) sequence",
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "repair_template",
       "label": "Repair Template (Optional)",
       "description": "Homology-directed repair template sequence (optional)",

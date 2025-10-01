@@ -35,14 +35,14 @@
       "defaultValue": ""
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "output_dir",
       "label": "Output Directory",
       "description": "Directory for saving analysis results (default: ./results)",
       "defaultValue": "./results"
     },
     {
-      "type": "Number",
+      "type": "Input",
       "name": "threshold_value",
       "label": "Threshold Value",
       "description": "Custom threshold for bone segmentation; if not provided, automatic thresholding is applied (optional)",

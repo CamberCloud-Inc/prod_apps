@@ -35,28 +35,28 @@
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "initialConcentrations",
       "label": "Initial Concentrations",
       "description": "JSON string with initial metabolite concentrations (e.g., {\"Glucose\": 10.0, \"ATP\": 4.0})",
       "defaultValue": "{}"
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "perturbationParams",
       "label": "Perturbation Parameters",
       "description": "JSON string with perturbation parameters (e.g., {\"enzyme_inhibition\": {\"PFK\": 0.5}})",
       "defaultValue": "{}"
     },
     {
-      "type": "Number",
+      "type": "Input",
       "name": "simulationTime",
       "label": "Simulation Time",
       "description": "Total simulation time",
       "defaultValue": 100
     },
     {
-      "type": "Number",
+      "type": "Input",
       "name": "timePoints",
       "label": "Time Points",
       "description": "Number of time points to record",

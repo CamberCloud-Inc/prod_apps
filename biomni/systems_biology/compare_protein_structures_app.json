@@ -42,21 +42,21 @@
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "chainId1",
       "label": "Chain ID 1",
       "description": "Chain identifier for first structure",
       "defaultValue": "A"
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "chainId2",
       "label": "Chain ID 2",
       "description": "Chain identifier for second structure",
       "defaultValue": "A"
     },
     {
-      "type": "String",
+      "type": "Input",
       "name": "outputPrefix",
       "label": "Output Prefix",
       "description": "Prefix for output files",

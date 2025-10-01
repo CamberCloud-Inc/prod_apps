@@ -28,14 +28,14 @@
   ],
   "spec": [
     {
-      "type": "Text",
+      "type": "Input",
       "name": "timePoints",
       "label": "Time Points",
       "description": "List of time points for biodistribution measurements (JSON array, e.g., [1, 4, 24, 48, 72])",
       "defaultValue": ""
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "tissueData",
       "label": "Tissue Data",
       "description": "Dictionary of tissue types with radioactivity measurements (JSON object, e.g., {\"tumor\": [2.5, 5.8], \"liver\": [8.2, 6.5]})",

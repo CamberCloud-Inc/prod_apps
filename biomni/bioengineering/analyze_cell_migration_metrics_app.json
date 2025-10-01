@@ -35,21 +35,21 @@
       "defaultValue": ""
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "pixel_size_um",
       "label": "Pixel Size (um)",
       "description": "Physical size of each pixel in micrometers (default: 1.0)",
       "defaultValue": "1.0"
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "time_interval_min",
       "label": "Time Interval (min)",
       "description": "Time interval between consecutive frames in minutes (default: 1.0)",
       "defaultValue": "1.0"
     },
     {
-      "type": "Text",
+      "type": "Input",
       "name": "min_track_length",
       "label": "Min Track Length",
       "description": "Minimum number of frames a cell must be tracked (default: 10)",
