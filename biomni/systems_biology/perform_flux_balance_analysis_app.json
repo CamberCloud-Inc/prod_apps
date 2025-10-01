@@ -40,7 +40,7 @@
       "label": "Constraints",
       "description": "JSON string with flux constraints (e.g., {\"EX_glc__D_e\": {\"lower\": -10.0, \"upper\": 0.0}})",
       "defaultValue": "{}",
-      "required": true
+      "required": false
     },
     {
       "type": "Input",

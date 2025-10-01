@@ -33,7 +33,7 @@
       "label": "Original MRI",
       "description": "Path to the original MRI image file in NIfTI format",
       "defaultValue": "",
-      "required": true
+      "required": false
     },
     {
       "type": "Stash File",
@@ -49,7 +49,7 @@
       "label": "Output Directory",
       "description": "Directory where visualization images will be saved",
       "defaultValue": "./visualization_output",
-      "required": false
+      "required": true
     },
     {
       "type": "Stash File",

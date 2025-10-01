@@ -33,7 +33,7 @@
       "label": "UniProt ID",
       "description": "UniProt protein identifier",
       "defaultValue": "",
-      "required": true
+      "required": false
     },
     {
       "type": "Input",
@@ -41,7 +41,7 @@
       "label": "Endpoint",
       "description": "API endpoint (default: prediction)",
       "defaultValue": "prediction",
-      "required": false
+      "required": true
     },
     {
       "type": "Input",

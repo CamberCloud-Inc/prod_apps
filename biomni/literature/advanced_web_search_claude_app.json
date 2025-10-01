@@ -33,7 +33,7 @@
       "label": "Query",
       "description": "The search query or research question",
       "defaultValue": "",
-      "required": true
+      "required": false
     },
     {
       "type": "Input",
@@ -41,7 +41,7 @@
       "label": "Max Searches",
       "description": "Maximum number of search iterations to perform (default: 5)",
       "defaultValue": "5",
-      "required": false
+      "required": true
     },
     {
       "type": "Input",

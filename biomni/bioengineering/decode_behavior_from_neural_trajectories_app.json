@@ -33,7 +33,7 @@
       "label": "Neural Data File",
       "description": "Path to CSV file containing neural activity data",
       "defaultValue": "",
-      "required": true
+      "required": false
     },
     {
       "type": "Stash File",
@@ -49,7 +49,7 @@
       "label": "Number of Components",
       "description": "Number of principal components to extract (default: 10)",
       "defaultValue": "10",
-      "required": false
+      "required": true
     },
     {
       "type": "Stash File",

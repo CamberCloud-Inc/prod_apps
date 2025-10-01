@@ -33,7 +33,7 @@
       "label": "HPO Terms",
       "description": "Comma-separated list of HPO term IDs",
       "defaultValue": "",
-      "required": true
+      "required": false
     },
     {
       "type": "Input",
@@ -41,7 +41,7 @@
       "label": "Data Lake Path",
       "description": "Path to data lake (optional)",
       "defaultValue": "",
-      "required": false
+      "required": true
     },
     {
       "type": "Stash File",

@@ -33,7 +33,7 @@
       "label": "Chromosome",
       "description": "Chromosome name",
       "defaultValue": "",
-      "required": true
+      "required": false
     },
     {
       "type": "Input",
@@ -57,7 +57,7 @@
       "label": "Assembly",
       "description": "Genome assembly (default: GRCh38)",
       "defaultValue": "GRCh38",
-      "required": false
+      "required": true
     },
     {
       "type": "Stash File",

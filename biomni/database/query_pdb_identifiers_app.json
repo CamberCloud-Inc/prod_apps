@@ -33,7 +33,7 @@
       "label": "Identifiers",
       "description": "Comma-separated PDB identifiers",
       "defaultValue": "",
-      "required": true
+      "required": false
     },
     {
       "type": "Input",

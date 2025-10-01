@@ -40,7 +40,7 @@
       "label": "Sections (Optional)",
       "description": "Specific label sections to retrieve (JSON array, e.g., [\"indications_and_usage\", \"warnings\"])",
       "defaultValue": "",
-      "required": false
+      "required": true
     },
     {
       "type": "Stash File",

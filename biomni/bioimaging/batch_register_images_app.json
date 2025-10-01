@@ -33,7 +33,7 @@
       "label": "Fixed Image Path",
       "description": "Path to the reference/fixed image file in NIfTI format",
       "defaultValue": "",
-      "required": true
+      "required": false
     },
     {
       "type": "Stash File",
@@ -71,7 +71,7 @@
         }
       ],
       "defaultValue": "rigid",
-      "required": false
+      "required": true
     },
     {
       "type": "Select",

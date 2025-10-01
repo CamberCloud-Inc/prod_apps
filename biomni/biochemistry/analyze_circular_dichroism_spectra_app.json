@@ -65,7 +65,7 @@
       "label": "Temperature Data (Optional)",
       "description": "Temperature values in Kelvin for thermal denaturation (comma-separated)",
       "defaultValue": "",
-      "required": false
+      "required": true
     },
     {
       "type": "Input",

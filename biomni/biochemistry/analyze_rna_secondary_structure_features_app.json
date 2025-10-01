@@ -41,7 +41,7 @@
       "label": "RNA Sequence (Optional)",
       "description": "RNA nucleotide sequence (A, U, G, C) corresponding to the structure",
       "defaultValue": "",
-      "required": false
+      "required": true
     },
     {
       "type": "Stash File",

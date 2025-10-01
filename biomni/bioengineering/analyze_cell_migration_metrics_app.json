@@ -33,7 +33,7 @@
       "label": "Image Sequence Path",
       "description": "Path to directory containing time-lapse microscopy images or path to a multi-frame TIFF file",
       "defaultValue": "",
-      "required": true
+      "required": false
     },
     {
       "type": "Input",
@@ -41,7 +41,7 @@
       "label": "Pixel Size (um)",
       "description": "Physical size of each pixel in micrometers (default: 1.0)",
       "defaultValue": "1.0",
-      "required": false
+      "required": true
     },
     {
       "type": "Input",

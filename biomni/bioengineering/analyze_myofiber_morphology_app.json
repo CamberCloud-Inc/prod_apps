@@ -33,7 +33,7 @@
       "label": "Image Path",
       "description": "Path to the multichannel fluorescence microscopy image file",
       "defaultValue": "",
-      "required": true
+      "required": false
     },
     {
       "type": "Input",
@@ -41,7 +41,7 @@
       "label": "Nuclei Channel",
       "description": "Channel index containing nuclei staining (default: 2)",
       "defaultValue": "2",
-      "required": false
+      "required": true
     },
     {
       "type": "Input",

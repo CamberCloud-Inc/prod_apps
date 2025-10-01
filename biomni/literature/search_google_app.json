@@ -33,7 +33,7 @@
       "label": "Query",
       "description": "Search query string",
       "defaultValue": "",
-      "required": true
+      "required": false
     },
     {
       "type": "Input",
@@ -41,7 +41,7 @@
       "label": "Number of Results",
       "description": "Number of search results to return (default: 10)",
       "defaultValue": "10",
-      "required": false
+      "required": true
     },
     {
       "type": "Input",

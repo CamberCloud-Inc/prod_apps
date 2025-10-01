@@ -33,7 +33,7 @@
       "label": "Image Path",
       "description": "Path to the input medical image file in NIfTI format",
       "defaultValue": "",
-      "required": true
+      "required": false
     },
     {
       "type": "Stash File",
@@ -59,7 +59,7 @@
         }
       ],
       "defaultValue": "true",
-      "required": false
+      "required": true
     },
     {
       "type": "Select",

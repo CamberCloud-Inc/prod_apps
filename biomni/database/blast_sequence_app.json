@@ -33,7 +33,7 @@
       "label": "Sequence",
       "description": "The nucleotide or protein sequence to search",
       "defaultValue": "",
-      "required": true
+      "required": false
     },
     {
       "type": "Input",

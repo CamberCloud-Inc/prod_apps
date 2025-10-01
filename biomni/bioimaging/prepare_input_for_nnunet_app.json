@@ -33,7 +33,7 @@
       "label": "Input Path",
       "description": "Path to the input image file (4D NIfTI) or directory",
       "defaultValue": "",
-      "required": true
+      "required": false
     },
     {
       "type": "Stash File",
@@ -49,7 +49,7 @@
       "label": "Case Name",
       "description": "Identifier prefix for the case (e.g., 'BRAT' for BraTS dataset)",
       "defaultValue": "BRAT",
-      "required": false
+      "required": true
     },
     {
       "type": "Stash File",

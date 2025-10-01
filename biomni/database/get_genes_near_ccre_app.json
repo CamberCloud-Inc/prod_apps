@@ -33,7 +33,7 @@
       "label": "Accession",
       "description": "cCRE accession ID",
       "defaultValue": "",
-      "required": true
+      "required": false
     },
     {
       "type": "Input",
@@ -57,7 +57,7 @@
       "label": "K Nearest",
       "description": "Number of nearest genes to return (default: 10)",
       "defaultValue": "10",
-      "required": false
+      "required": true
     },
     {
       "type": "Stash File",
