@@ -1,3 +1,5 @@
+.DS_Store
+
 # Nextflow logs and computational files
 **/.nextflow
 **/.nextflow.log
