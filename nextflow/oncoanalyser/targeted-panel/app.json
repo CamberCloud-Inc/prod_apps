@@ -1,0 +1,65 @@
+{
+  "name": "oncoanalyser-targeted-panel",
+  "title": "Targeted Panel Cancer Analysis",
+  "description": "Somatic variant calling from targeted cancer gene panels. Optimized for hotspot mutations, small panels, and clinical diagnostic assays.",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/oncoanalyser --input ${input} --outdir ${outdir} --genome ${genome} --mode targeted -r 2.2.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/oncoanalyser/master/docs/images/nf-core-oncoanalyser_logo_light.png",
+  "content": "<h2><strong>Targeted Panel Somatic Variant Calling</strong></h2><p>Analyze cancer gene panels (50-500 genes) with clinical-grade somatic variant calling. Optimized for hotspot mutation detection in FFPE samples and clinical diagnostics.</p><h3><strong>Why Targeted Panels?</strong></h3><blockquote><ul><li><strong>Cost-Effective</strong>: Sequence only cancer-relevant genes</li><li><strong>High Coverage</strong>: 1000-5000X depth for low-frequency variants</li><li><strong>FFPE Compatible</strong>: Works with degraded clinical samples</li><li><strong>Fast Turnaround</strong>: Results in hours, not days</li><li><strong>Low DNA Input</strong>: 10-50ng sufficient for most panels</li><li><strong>Clinical Validation</strong>: Easier to validate than WGS</li></ul></blockquote><h3><strong>Common Cancer Panels</strong></h3><ul><li><strong>Foundation Medicine</strong>: FoundationOne CDx (324 genes)</li><li><strong>MSK-IMPACT</strong>: 468 cancer genes</li><li><strong>Tempus xT</strong>: 648 genes</li><li><strong>Guardant360</strong>: 74-83 genes (liquid biopsy)</li><li><strong>Oncomine</strong>: Comprehensive Cancer Panel</li><li><strong>Custom Panels</strong>: Institution-specific gene sets</li></ul><h3><strong>Optimized Detection</strong></h3><ul><li><strong>Hotspot Mutations</strong>: EGFR, KRAS, BRAF, PIK3CA</li><li><strong>Low VAF Detection</strong>: Detect 1-5% allele fractions</li><li><strong>Small Indels</strong>: EGFR exon 19 deletions, etc.</li><li><strong>Gene Amplifications</strong>: ERBB2, MET, FGFR</li><li><strong>Gene Fusions</strong>: ALK, ROS1, RET, NTRK (if RNA included)</li></ul><h3><strong>Clinical Use Cases</strong></h3><ul><li><strong>Treatment Selection</strong>: Match mutations to targeted therapies</li><li><strong>Resistance Testing</strong>: Acquired resistance mutations</li><li><strong>Liquid Biopsy</strong>: ctDNA monitoring</li><li><strong>Minimal Residual Disease</strong>: Post-treatment monitoring</li><li><strong>Clinical Trial Eligibility</strong>: Biomarker screening</li><li><strong>Companion Diagnostics</strong>: FDA-approved drug matching</li></ul><h3><strong>Advantages Over WGS</strong></h3><blockquote><p><strong>Depth</strong>: 1000-5000X vs 30-60X in WGS</p><p><strong>Sensitivity</strong>: Detect variants down to 1-2% VAF</p><p><strong>Cost</strong>: $300-800 vs $1000-2000 for WGS</p><p><strong>Speed</strong>: 1-2 days vs 1-2 weeks</p><p><strong>Simplicity</strong>: Easier interpretation, focused on actionable genes</p></blockquote><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with tumor-normal pairs or tumor-only samples. Supports FASTQ or BAM input.</p><h3><strong>Key Outputs</strong></h3><ul><li><strong>Somatic SNVs/Indels</strong>: All detected variants</li><li><strong>Actionable Mutations</strong>: Therapy-matched variants</li><li><strong>Gene Amplifications</strong>: CNV for panel genes</li><li><strong>Variant Annotations</strong>: ClinVar, COSMIC, OncoKB</li><li><strong>Clinical Report</strong>: Therapy recommendations</li></ul><blockquote><p><strong>Perfect for:</strong> Clinical diagnostics • Hotspot screening • FFPE samples • Liquid biopsy • Treatment selection</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV with panel sequencing data",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv"]
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Hartwig Medical Foundation genome",
+      "defaultValue": "GRCh38_hmf",
+      "required": true,
+      "options": [
+        {"label": "Human GRCh38 (HMF)", "value": "GRCh38_hmf"},
+        {"label": "Human GRCh37 (HMF)", "value": "GRCh37_hmf"}
+      ]
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory",
+      "defaultValue": "./oncoanalyser-targeted-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "options": [
+        {"label": "LARGE (Recommended for panels)", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {"name": "genomics", "type": "subfield"},
+    {"name": "cancer", "type": "task"},
+    {"name": "targeted-sequencing", "type": "task"}
+  ]
+}
