@@ -1,0 +1,92 @@
+{
+  "name": "rnaseq-differential-expression",
+  "title": "RNA-seq Differential Expression Analysis",
+  "description": "Complete RNA-seq workflow from raw reads to differential expression. Includes alignment, QC, quantification, and gene-level counts ready for downstream analysis.",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/rnaseq --input ${input} --outdir ${outdir} --fasta ${fasta} --gtf ${gtf} --aligner ${aligner} -r 3.21.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/rnaseq/master/docs/images/nf-core-rnaseq_logo_light.png",
+  "content": "<h2><strong>RNA-seq Differential Expression</strong></h2><p>Complete end-to-end RNA-seq analysis pipeline for gene expression quantification and differential expression studies. From raw FASTQ files to publication-ready count matrices and QC reports.</p><h3><strong>What is RNA-seq?</strong></h3><blockquote><p><strong>RNA sequencing</strong> measures gene expression genome-wide by sequencing all RNA molecules in a sample. The most common application is differential expression analysis: comparing gene expression between conditions (disease vs healthy, treated vs untreated, etc.).</p></blockquote><h3><strong>Why RNA-seq?</strong></h3><ul><li><strong>Transcriptome-Wide</strong>: Measure all ~20K genes simultaneously</li><li><strong>Quantitative</strong>: Digital counting of molecules (no saturation)</li><li><strong>Dynamic Range</strong>: Detect low and high abundance transcripts</li><li><strong>Novel Discovery</strong>: Find unannotated genes, isoforms</li><li><strong>Reproducible</strong>: Technical replicates highly correlated</li><li><strong>Cost-Effective</strong>: ~$100-200 per sample</li></ul><h3><strong>Pipeline Workflow</strong></h3><ol><li><strong>Quality Control</strong>: FastQC checks read quality, adapter content</li><li><strong>Trimming</strong>: Remove adapters, low-quality bases (Trim Galore)</li><li><strong>Alignment</strong>: Map reads to genome (STAR, HISAT2, or Salmon pseudo-alignment)</li><li><strong>Quantification</strong>: Count reads per gene (RSEM, featureCounts, Salmon)</li><li><strong>Quality Metrics</strong>: RSeQC, Picard, QualiMap assess alignment quality</li><li><strong>MultiQC</strong>: Comprehensive HTML report with all QC metrics</li></ol><h3><strong>Aligner Options</strong></h3><p><strong>STAR</strong> (default):</p><ul><li>Gold standard splice-aware aligner</li><li>Fast, accurate for mammalian genomes</li><li>Detects novel splice junctions</li><li>Requires ~30GB RAM for human genome</li></ul><p><strong>HISAT2</strong>:</p><ul><li>Memory-efficient alternative (8GB for human)</li><li><strong>Good for resource-limited systems</strong></li><li>Slightly slower than STAR</li></ul><p><strong>Salmon</strong>:</p><ul><li>Ultra-fast pseudo-alignment (no BAM files)</li><li>Transcript-level quantification</li><li>Ideal for quick exploratory analysis</li><li>Less resource-intensive</li></ul><h3><strong>Scientific Applications</strong></h3><p><strong>Disease vs Healthy</strong>:</p><ul><li>Identify genes dysregulated in cancer, diabetes, neurodegeneration</li><li>Discover disease biomarkers</li><li>Understand disease mechanisms</li></ul><p><strong>Drug Response</strong>:</p><ul><li>Transcriptional changes after treatment</li><li>Mechanism of action studies</li><li>Drug resistance mechanisms</li></ul><p><strong>Development & Differentiation</strong>:</p><ul><li>Temporal gene expression during embryogenesis</li><li>Stem cell differentiation programs</li><li>Tissue maturation</li></ul><p><strong>Stimulus Response</strong>:</p><ul><li>Immune activation (LPS, IFN, cytokines)</li><li>Stress response (heat shock, hypoxia)</li><li>Hormone signaling</li></ul><h3><strong>Experimental Design</strong></h3><blockquote><p><strong>Replicates</strong>:</p><ul><li><strong>Minimum</strong>: 3 biological replicates per condition</li><li><strong>Recommended</strong>: 5-6 replicates for robust statistics</li><li><strong>Power</strong>: More replicates > more samples (better power)</li></ul><p><strong>Depth</strong>:</p><ul><li><strong>Human/Mouse</strong>: 20-40M reads per sample</li><li><strong>Bacteria</strong>: 5-10M reads</li><li><strong>Pilot Study</strong>: 10-15M reads</li><li><strong>Deep Profiling</strong>: 50-100M reads (low abundance transcripts)</li></ul></blockquote><h3><strong>Key Outputs</strong></h3><p><strong>Count Matrices</strong>:</p><ul><li><strong>Gene-level counts</strong>: Genes × Samples matrix (for DESeq2, edgeR)</li><li><strong>TPM/FPKM</strong>: Normalized expression values</li><li><strong>Raw counts</strong>: For differential expression</li></ul><p><strong>Quality Control</strong>:</p><ul><li><strong>FastQC reports</strong>: Read quality before/after trimming</li><li><strong>Alignment metrics</strong>: % mapped, % unique, duplication rates</li><li><strong>RSeQC</strong>: Gene body coverage, read distribution, strand specificity</li><li><strong>MultiQC</strong>: Aggregated HTML report</li></ul><p><strong>Alignment Files</strong>:</p><ul><li><strong>BAM files</strong>: Aligned reads (for IGV visualization)</li><li><strong>BigWig tracks</strong>: Genome browser visualization</li></ul><h3><strong>Downstream Analysis</strong></h3><p>After this pipeline, use:</p><ul><li><strong>DESeq2 (R)</strong>: Differential expression with negative binomial model</li><li><strong>edgeR (R)</strong>: Alternative DE method</li><li><strong>nf-core/differentialabundance</strong>: Automated DE pipeline</li><li><strong>GSEA</strong>: Gene set enrichment analysis</li><li><strong>IPA/Ingenuity</strong>: Pathway analysis</li></ul><h3><strong>Common Comparisons</strong></h3><table><tr><th>Comparison</th><th>Example</th><th>Typical DEGs</th></tr><tr><td><strong>Disease vs Healthy</strong></td><td>Cancer vs normal tissue</td><td>500-5000</td></tr><tr><td><strong>Treatment vs Control</strong></td><td>Drug vs vehicle</td><td>100-2000</td></tr><tr><td><strong>Time Course</strong></td><td>0h, 6h, 24h, 48h</td><td>Varies</td></tr><tr><td><strong>Cell Type</strong></td><td>T cells vs B cells</td><td>1000-5000</td></tr></table><h3><strong>Quality Metrics</strong></h3><ul><li><strong>% Mapped</strong>: Should be >70-80% for good samples</li><li><strong>% Unique</strong>: >60% (high duplication indicates low complexity)</li><li><strong>Gene Detection</strong>: 10-15K genes in human/mouse samples</li><li><strong>Correlation</strong>: Biological replicates should have r > 0.9</li><li><strong>rRNA %</strong>: Should be <5% (high rRNA = poor sample quality)</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with columns:</p><ul><li><strong>sample</strong>: Sample name</li><li><strong>fastq_1</strong>: Path to R1 FASTQ</li><li><strong>fastq_2</strong>: Path to R2 FASTQ (for paired-end)</li><li><strong>strandedness</strong>: forward/reverse/unstranded</li></ul><p>Reference files:</p><ul><li><strong>FASTA</strong>: Genome sequence</li><li><strong>GTF</strong>: Gene annotations</li></ul><h3><strong>Output Directory Structure</strong></h3><ul><li><strong>counts/</strong>: Gene count matrices</li><li><strong>star/</strong> or <strong>hisat2/</strong>: Alignment files (BAM, BigWig)</li><li><strong>fastqc/</strong>: Quality control reports</li><li><strong>multiqc/</strong>: Aggregated QC HTML report</li><li><strong>pipeline_info/</strong>: Execution logs</li></ul><blockquote><p><strong>Perfect for:</strong> Gene expression • Differential expression • Biomarker discovery • Drug response • Disease mechanisms • Pathway analysis</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV with RNA-seq samples",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Reference Genome (FASTA)",
+      "name": "fasta",
+      "description": "Genome sequence FASTA file",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".fa", ".fasta", ".fa.gz", ".fasta.gz"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Gene Annotations (GTF)",
+      "name": "gtf",
+      "description": "Gene annotation GTF file",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".gtf", ".gtf.gz"]
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Aligner",
+      "name": "aligner",
+      "description": "Read alignment algorithm",
+      "defaultValue": "star_salmon",
+      "required": true,
+      "options": [
+        {"label": "STAR + Salmon (Recommended)", "value": "star_salmon"},
+        {"label": "STAR + RSEM", "value": "star_rsem"},
+        {"label": "HISAT2 (Low Memory)", "value": "hisat2"},
+        {"label": "Salmon Only (Fastest)", "value": "salmon"}
+      ]
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory",
+      "defaultValue": "./rnaseq-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "options": [
+        {"label": "LARGE (Recommended for STAR)", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}},
+        {"label": "MEDIUM (For HISAT2/Salmon)", "value": "medium", "mapValue": {"nodeSize": "MEDIUM", "numNodes": 1, "withGpu": false}}
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {"name": "rna-seq", "type": "field"},
+    {"name": "differential-expression", "type": "task"},
+    {"name": "transcriptomics", "type": "task"}
+  ]
+}
