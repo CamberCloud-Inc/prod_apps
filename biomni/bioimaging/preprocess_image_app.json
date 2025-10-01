@@ -2,7 +2,7 @@
   "name": "biomni-preprocess-image",
   "title": "Biomni: Preprocess Image",
   "description": "Preprocess medical images with denoising and normalization",
-  "content": "<h3>Overview</h3><p>Raw medical images often contain noise and intensity variations that can negatively impact analysis and segmentation quality. This preprocessing tool applies advanced denoising algorithms to reduce noise while preserving anatomical details, and performs intensity normalization to standardize image intensities across different scanners and acquisition protocols. These preprocessing steps are essential for improving downstream analysis reliability, enabling robust inter-subject comparisons, and enhancing machine learning model performance.</p><h3>Input Parameters</h3><ul><li><strong>image_path</strong> (string, required): Path to the input medical image file in NIfTI format (.nii or .nii.gz) to be preprocessed</li><li><strong>output_path</strong> (string, required): Path where the preprocessed image will be saved in NIfTI format</li><li><strong>denoise</strong> (boolean, optional): Enable non-local means denoising to reduce noise while preserving edges and fine structures. Default: true</li><li><strong>normalize</strong> (boolean, optional): Enable intensity normalization to standardize voxel intensities (z-score normalization). Default: true</li></ul><h3>Input Format</h3><pre>{\n  \"image_path\": \"/path/to/raw_image.nii.gz\",\n  \"output_path\": \"/path/to/preprocessed_image.nii.gz\",\n  \"denoise\": true,\n  \"normalize\": true\n}</pre><h3>Biological Use Case</h3><p>Preprocessing is critical for multi-center neuroimaging studies where MRI scans from different hospitals use varying protocols and scanner manufacturers, requiring intensity normalization for pooled analysis. In longitudinal studies tracking disease progression, preprocessing ensures that changes detected reflect true biological variation rather than scanner differences. For deep learning applications in medical imaging, normalized and denoised images improve model training convergence and generalization. In diffusion MRI and functional MRI, denoising enhances signal-to-noise ratio enabling detection of subtle brain connectivity patterns. Clinical applications benefit from preprocessing by improving visualization quality and reducing artifacts that could lead to diagnostic errors.</p><h3>Output</h3><p>Returns a JSON file (preprocessing_results.json) containing the path to the preprocessed image. The output image maintains the original spatial dimensions, orientation, and metadata while featuring reduced noise and standardized intensities. Denoising preserves anatomical boundaries and fine structures, while normalization typically scales intensities to zero mean and unit variance, making the image suitable for quantitative analysis and machine learning applications.</p><h3>Category</h3><p>bioimaging</p>",
+  "content": "<h3>Overview</h3><p>Raw medical images often contain noise and intensity variations that can negatively impact analysis and segmentation quality. This preprocessing tool applies advanced denoising algorithms to reduce noise while preserving anatomical details, and performs intensity normalization to standardize image intensities across different scanners and acquisition protocols. These preprocessing steps are essential for improving downstream analysis reliability, enabling robust inter-subject comparisons, and enhancing machine learning model performance.</p><h3>Input Parameters</h3><ul><li><strong>image_path</strong> (string, required): Path to the input medical image file in NIfTI format (.nii or .nii.gz) to be preprocessed</li><li><strong>output_path</strong> (string, required): Path where the preprocessed image will be saved in NIfTI format</li><li><strong>denoise</strong> (boolean, optional): Enable non-local means denoising to reduce noise while preserving edges and fine structures. Default: true</li><li><strong>normalize</strong> (boolean, optional): Enable intensity normalization to standardize voxel intensities (z-score normalization). Default: true</li></ul><h3>Biological Use Case</h3><p>Preprocessing is critical for multi-center neuroimaging studies where MRI scans from different hospitals use varying protocols and scanner manufacturers, requiring intensity normalization for pooled analysis. In longitudinal studies tracking disease progression, preprocessing ensures that changes detected reflect true biological variation rather than scanner differences. For deep learning applications in medical imaging, normalized and denoised images improve model training convergence and generalization. In diffusion MRI and functional MRI, denoising enhances signal-to-noise ratio enabling detection of subtle brain connectivity patterns. Clinical applications benefit from preprocessing by improving visualization quality and reducing artifacts that could lead to diagnostic errors.</p><h3>Output</h3><p>Returns a parameters (preprocessing_results.json) containing the path to the preprocessed image. The output image maintains the original spatial dimensions, orientation, and metadata while featuring reduced noise and standardized intensities. Denoising preserves anatomical boundaries and fine structures, while normalization typically scales intensities to zero mean and unit variance, making the image suitable for quantitative analysis and machine learning applications.</p><h3>Category</h3><p>bioimaging</p>",
   "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/bioimaging/preprocess_image.py --image_path \"${image_path}\" --output_path \"${output_path}\" --denoise \"${denoise}\" --normalize \"${normalize}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
@@ -47,8 +47,14 @@
       "label": "Denoise",
       "description": "Enable non-local means denoising",
       "options": [
-        {"label": "True", "value": "true"},
-        {"label": "False", "value": "false"}
+        {
+          "label": "True",
+          "value": "true"
+        },
+        {
+          "label": "False",
+          "value": "false"
+        }
       ],
       "defaultValue": "true"
     },
@@ -58,8 +64,14 @@
       "label": "Normalize",
       "description": "Enable intensity normalization (z-score)",
       "options": [
-        {"label": "True", "value": "true"},
-        {"label": "False", "value": "false"}
+        {
+          "label": "True",
+          "value": "true"
+        },
+        {
+          "label": "False",
+          "value": "false"
+        }
       ],
       "defaultValue": "true"
     },
