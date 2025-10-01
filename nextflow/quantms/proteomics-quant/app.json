@@ -1,0 +1,61 @@
+{
+  "name": "quantms-proteomics-quantification",
+  "title": "QuantMS: Quantitative Mass Spectrometry Proteomics",
+  "description": "Quantitative proteomics analysis from DDA/DIA mass spectrometry. Protein identification, quantification (LFQ, TMT, SILAC), and differential expression with MaxQuant/OpenMS.",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/quantms --input ${input} --outdir ${outdir} --database ${fasta} --quantification_method ${quant_method} -r 1.3.1 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/quantms/master/docs/images/nf-core-quantms_logo_light.png",
+  "content": "<h2><strong>QuantMS: Proteomics Quantification</strong></h2><p>Comprehensive quantitative proteomics from LC-MS/MS data. Supports label-free (LFQ), TMT/iTRAQ isobaric labeling, and SILAC with OpenMS/MaxQuant workflows.</p><h3><strong>Applications</strong></h3><ul><li><strong>Differential Proteomics</strong>: Disease vs control protein changes</li><li><strong>Drug Response</strong>: Proteomic changes after treatment</li><li><strong>Biomarker Discovery</strong>: Identify disease-associated proteins</li><li><strong>PTM Analysis</strong>: Phosphoproteomics, ubiquitination</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Protein Quantification</strong>: Intensity matrices</li><li><strong>Peptide IDs</strong>: FDR-filtered identifications</li><li><strong>DE Analysis</strong>: Differential expression results</li><li><strong>QC Metrics</strong>: Identifications, coverage, missing values</li></ul><blockquote><p><strong>Perfect for:</strong> Proteomics quantification • TMT/LFQ • Differential protein expression • Biomarker discovery</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "SDRF (mzTab format) with mass spec files",
+      "required": true,
+      "restrictions": {"allow_files": true, "allow_folders": false, "allowed_file_types": [".tsv", ".sdrf"]}
+    },
+    {
+      "type": "Stash File",
+      "label": "Protein Database",
+      "name": "fasta",
+      "description": "FASTA database for peptide search",
+      "required": true,
+      "restrictions": {"allow_files": true, "allow_folders": false, "allowed_file_types": [".fasta", ".fa"]}
+    },
+    {
+      "type": "Select",
+      "label": "Quantification Method",
+      "name": "quant_method",
+      "description": "Quantification strategy",
+      "defaultValue": "lfq",
+      "required": true,
+      "options": [
+        {"label": "Label-Free (LFQ)", "value": "lfq"},
+        {"label": "TMT (isobaric)", "value": "tmt"},
+        {"label": "SILAC", "value": "silac"}
+      ]
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory",
+      "defaultValue": "./quantms-results",
+      "required": true,
+      "restrictions": {"allow_files": false, "allow_folders": true}
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "options": [{"label": "XLARGE (Recommended for proteomics)", "value": "xlarge", "mapValue": {"nodeSize": "XLARGE", "numNodes": 1, "withGpu": false}}],
+      "defaultValue": "xlarge"
+    }
+  ],
+  "tags": [{"name": "proteomics", "type": "field"}, {"name": "mass-spectrometry", "type": "task"}, {"name": "quantification", "type": "task"}]
+}

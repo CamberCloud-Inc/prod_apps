@@ -1,0 +1,56 @@
+{
+  "name": "phyloplace-placement-analysis",
+  "title": "Phyloplace: Phylogenetic Placement & EPA",
+  "description": "Place query sequences onto reference phylogenies using EPA-ng. Rapid phylogenetic placement for metabarcoding, metagenomics, and evolutionary analysis without de novo tree building.",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/phyloplace --input ${input} --outdir ${outdir} --reference_tree ${tree} --reference_msa ${msa} -r 1.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/phyloplace/master/docs/images/nf-core-phyloplace_logo_light.png",
+  "content": "<h2><strong>Phyloplace: Phylogenetic Placement</strong></h2><p>Phylogenetic placement positions query sequences onto pre-computed reference trees using maximum likelihood. Much faster than de novo phylogenetic inference for large-scale studies.</p><h3><strong>Applications</strong></h3><ul><li><strong>Metabarcoding</strong>: Place 16S/18S/ITS sequences on taxonomic trees</li><li><strong>Metagenomics</strong>: Phylogenetic binning of contigs</li><li><strong>Evolution Studies</strong>: Rapid placement of new sequences</li><li><strong>Environmental Monitoring</strong>: Track species/strains phylogenetically</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Placement Files</strong>: jplace format with ML placements</li><li><strong>Visualizations</strong>: Phylogenetic trees with placed queries</li><li><strong>Taxonomic Assignment</strong>: Based on phylogenetic position</li><li><strong>Confidence Metrics</strong>: LWR (likelihood weight ratio)</li></ul><blockquote><p><strong>Perfect for:</strong> Metabarcoding • Phylogenetic binning • Rapid taxonomy • Evolutionary placement</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Query Sequences",
+      "name": "input",
+      "description": "FASTA with query sequences to place",
+      "required": true,
+      "restrictions": {"allow_files": true, "allow_folders": false, "allowed_file_types": [".fasta", ".fa", ".fna"]}
+    },
+    {
+      "type": "Stash File",
+      "label": "Reference Tree",
+      "name": "tree",
+      "description": "Newick reference phylogeny",
+      "required": true,
+      "restrictions": {"allow_files": true, "allow_folders": false, "allowed_file_types": [".tree", ".nwk", ".newick"]}
+    },
+    {
+      "type": "Stash File",
+      "label": "Reference MSA",
+      "name": "msa",
+      "description": "Reference multiple sequence alignment (FASTA)",
+      "required": true,
+      "restrictions": {"allow_files": true, "allow_folders": false, "allowed_file_types": [".fasta", ".fa", ".aln"]}
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory",
+      "defaultValue": "./phyloplace-results",
+      "required": true,
+      "restrictions": {"allow_files": false, "allow_folders": true}
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "options": [{"label": "MEDIUM (Recommended)", "value": "medium", "mapValue": {"nodeSize": "MEDIUM", "numNodes": 1, "withGpu": false}}],
+      "defaultValue": "medium"
+    }
+  ],
+  "tags": [{"name": "phylogenetics", "type": "field"}, {"name": "epa", "type": "task"}, {"name": "metabarcoding", "type": "task"}]
+}

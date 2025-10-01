@@ -1,0 +1,65 @@
+{
+  "name": "cageseq-tss-annotation",
+  "title": "CAGE-seq: Transcription Start Site Annotation",
+  "description": "CAGE-seq maps 5' transcript ends to identify transcription start sites, promoters, and enhancers with single-nucleotide resolution. Ideal for promoter annotation, alternative TSS discovery, and regulatory element mapping.",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/cageseq --input ${input} --outdir ${outdir} --genome ${genome} -r 1.0.2 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/cageseq/master/docs/images/nf-core-cageseq_logo_light.png",
+  "content": "<h2><strong>CAGE-seq: Transcription Start Site Mapping</strong></h2><p><strong>CAGE</strong> (Cap Analysis of Gene Expression) captures the 5' cap of mRNAs, mapping transcription start sites at single-nucleotide resolution. Essential for promoter annotation, regulatory element discovery, and understanding transcriptional regulation.</p><h3><strong>Why CAGE-seq?</strong></h3><ul><li><strong>Precise TSS Mapping</strong>: Single-nucleotide resolution (vs RNA-seq)</li><li><strong>Promoter Identification</strong>: Find core promoters, alternative promoters</li><li><strong>Enhancer RNA Discovery</strong>: Bidirectional eRNAs from active enhancers</li><li><strong>Regulatory Analysis</strong>: Promoter activity across conditions</li><li><strong>Transcription Initiation</strong>: Direct measurement of Pol II recruitment</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>CTSS (CAGE Tag Start Sites)</strong>: Single-nucleotide TSS positions</li><li><strong>TC (Tag Clusters)</strong>: Grouped TSSs (promoter regions)</li><li><strong>Promoter Atlas</strong>: Annotated promoter catalog</li><li><strong>Alternative TSS</strong>: Gene-specific TSS usage patterns</li><li><strong>BigWig Tracks</strong>: Genome browser visualization</li></ul><blockquote><p><strong>Perfect for:</strong> TSS annotation • Promoter discovery • Alternative promoters • Enhancer mapping • Regulatory genomics</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV with CAGE-seq samples",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv"]
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome",
+      "defaultValue": "GRCh38",
+      "required": true,
+      "options": [
+        {"label": "Human GRCh38", "value": "GRCh38"},
+        {"label": "Mouse GRCm39", "value": "GRCm39"}
+      ]
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory",
+      "defaultValue": "./cageseq-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "options": [
+        {"label": "MEDIUM (Recommended)", "value": "medium", "mapValue": {"nodeSize": "MEDIUM", "numNodes": 1, "withGpu": false}}
+      ],
+      "defaultValue": "medium"
+    }
+  ],
+  "tags": [
+    {"name": "tss-mapping", "type": "field"},
+    {"name": "promoter-analysis", "type": "task"},
+    {"name": "regulatory-genomics", "type": "task"}
+  ]
+}
