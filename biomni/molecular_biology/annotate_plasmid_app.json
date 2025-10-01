@@ -32,14 +32,16 @@
       "name": "sequence",
       "label": "DNA Sequence",
       "description": "DNA sequence to annotate",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "linear",
       "label": "Linear Sequence",
       "description": "Sequence is linear (leave empty for circular, add --linear for linear)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Stash File",
