@@ -1,0 +1,16 @@
+{
+  "name": "hicar-enhancer-promoter-analysis",
+  "title": "HiCAR",
+  "description": " Enhancer-Promoter Loop Analysis",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/hicar --input ${input} --outdir ${outdir} -r  Chromatin accessibility with Hi-C contacts:1.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/hicar/master/docs/images/nf-core-hicar_logo_light.png",
+  "content": "<h2><strong>HiCAR</strong></h2><p> Enhancer-Promoter Loop Analysis</p>",
+  "spec": [
+    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
+    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./hicar-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+  ],
+  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
+  "tags": [{"name": "hicar", "type": "task"}]
+}
