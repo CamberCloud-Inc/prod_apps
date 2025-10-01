@@ -1,0 +1,16 @@
+{
+  "name": "clipseq-rna-binding-proteins",
+  "title": "CLIPseq",
+  "description": " RNA-Protein Interaction Mapping",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/clipseq --input ${input} --outdir ${outdir} -r CLIP-seq analysis for RNA-binding protein targets.:1.0.4 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/clipseq/master/docs/images/nf-core-clipseq_logo_light.png",
+  "content": "<h2><strong>CLIPseq</strong></h2><p> RNA-Protein Interaction Mapping</p>",
+  "spec": [
+    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv"]}},
+    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./clipseq-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+  ],
+  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
+  "tags": [{"name": "clipseq", "type": "task"}]
+}

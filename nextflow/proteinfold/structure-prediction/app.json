@@ -1,0 +1,16 @@
+{
+  "name": "proteinfold-alphafold2-prediction",
+  "title": "Proteinfold: AlphaFold2 Protein Structure Prediction",
+  "description": "AI-powered protein structure prediction using AlphaFold2. Predicts 3D structures from sequences with atomic accuracy for structural biology and drug discovery.",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/proteinfold --input ${input} --outdir ${outdir} --mode alphafold2 -r 1.1.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/proteinfold/master/docs/images/nf-core-proteinfold_logo_light.png",
+  "content": "<h2><strong>Proteinfold</strong></h2><p>AlphaFold2/ColabFold protein structure prediction.</p>",
+  "spec": [
+    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".fasta"]}},
+    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./proteinfold-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+  ],
+  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "XLARGE", "value": "xlarge", "mapValue": {"nodeSize": "XLARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "xlarge"}],
+  "tags": [{"name": "structure-prediction", "type": "task"}]
+}

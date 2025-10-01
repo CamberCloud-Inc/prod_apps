@@ -1,0 +1,16 @@
+{
+  "name": "slamseq-rna-metabolism",
+  "title": "SLAMseq",
+  "description": " RNA Stability & Turnover",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/slamseq --input ${input} --outdir ${outdir} -r Metabolic RNA labeling to measure RNA synthesis/degradation.:1.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/slamseq/master/docs/images/nf-core-slamseq_logo_light.png",
+  "content": "<h2><strong>SLAMseq</strong></h2><p> RNA Stability & Turnover</p>",
+  "spec": [
+    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv"]}},
+    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./slamseq-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+  ],
+  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
+  "tags": [{"name": "slamseq", "type": "task"}]
+}
