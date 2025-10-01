@@ -1,6 +1,6 @@
 # nf-core Pipeline Implementation Progress
 
-**Last Updated**: 2025-10-01 00:50
+**Last Updated**: 2025-10-01 01:35
 
 ---
 
@@ -9,8 +9,8 @@
 Systematic implementation of nf-core Nextflow pipelines with biological use-case variants for the Camber platform.
 
 **Goal**: Implement 290-340 apps from 139 nf-core pipelines
-**Current Status**: 71 apps from 35 pipelines
-**Progress**: 20-25% complete
+**Current Status**: 75 apps from 38 pipelines
+**Progress**: 21-26% complete
 
 ---
 
@@ -118,7 +118,39 @@ Systematic implementation of nf-core Nextflow pipelines with biological use-case
 
 ---
 
-### 📝 Batch 5: Metagenomics & Viromics (Planned)
+### ⚠️ Batch 5: Metagenomics & Viromics (TESTED - Platform Limitations)
+
+**Status**: 0 apps created - memory constraints identified
+
+**Testing Results**:
+- mag (3.1.0): ❌ Failed - requires 6GB per process, platform limits 3.9GB
+- viralrecon (2.6.0): ❌ Failed - same memory constraint
+- See BATCH_5_TESTING_LOG.md for details
+
+**Workarounds Needed**:
+- Custom configs to reduce memory
+- Skip memory-heavy processes
+- Platform support for higher per-process memory limits
+
+---
+
+### ✅ Batch 6: RNA-seq & Variant Calling (COMPLETED)
+
+**Status**: 3 apps created successfully
+
+| App | Pipeline | Version | Status |
+|-----|----------|---------|--------|
+| rnaseq-differential-expression | nf-core/rnaseq | 3.21.0 | ✅ DEPLOYED |
+| sarek-germline-variants | nf-core/sarek | 3.5.1 | ✅ DEPLOYED |
+| sarek-somatic-variants | nf-core/sarek | 3.5.1 | ✅ DEPLOYED |
+
+**Pipelines Verified**:
+- ✅ nf-core/rnaseq: DSL2, STAR/HISAT2/Salmon aligners
+- ✅ nf-core/sarek: DSL2, germline & somatic variant calling
+
+---
+
+### 📝 Batch 7: Next Pipelines (Planned)
 
 **Target**: 10-12 apps
 
@@ -135,13 +167,15 @@ Systematic implementation of nf-core Nextflow pipelines with biological use-case
 | **Batch 2** | 7 | 0 | TBD (90% confidence) |
 | **Batch 3** | 9 | 0 | TBD |
 | **Batch 4** | 10 | 0 | TBD (95% confidence) |
-| **Total** | **71** | **6** | **3+** |
+| **Batch 5** | 0 | 2 | 0 ❌ (memory limits) |
+| **Batch 6** | 4 | 0 | TBD (high confidence) |
+| **Total** | **75** | **8** | **3+** |
 
 ### Pipeline Coverage
 
 **Total nf-core pipelines**: 139
-**Implemented**: 35 (~25%)
-**With variants**: 71 apps
+**Implemented**: 38 (~27%)
+**With variants**: 75 apps
 
 ### Account Issues
 
