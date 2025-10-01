@@ -9,7 +9,7 @@ def install_dependencies():
     """Install required dependencies"""
     import subprocess
     import sys
-    deps = ['biomni', 'biopython']
+    deps = ['biomni', 'biopython', 'beautifulsoup4']
     print("Installing dependencies...")
     for dep in deps:
         subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
