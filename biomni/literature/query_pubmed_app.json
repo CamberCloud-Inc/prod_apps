@@ -32,21 +32,24 @@
       "name": "query",
       "label": "Query",
       "description": "Search query string using PubMed syntax or natural language",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "max_papers",
       "label": "Max Papers",
       "description": "Maximum number of papers to return (default: 10)",
-      "defaultValue": "10"
+      "defaultValue": "10",
+      "required": false
     },
     {
       "type": "Input",
       "name": "max_retries",
       "label": "Max Retries",
       "description": "Maximum number of retry attempts with simplified queries (default: 3)",
-      "defaultValue": "3"
+      "defaultValue": "3",
+      "required": false
     },
     {
       "type": "Stash File",

@@ -32,7 +32,8 @@
       "name": "sample_data",
       "label": "Sample Data",
       "description": "Dictionary with sample IDs and ELISA OD readings (JSON dict)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",

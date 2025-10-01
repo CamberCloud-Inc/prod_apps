@@ -32,35 +32,40 @@
       "name": "tissue_type",
       "label": "Tissue Type",
       "description": "Type of tissue source (e.g., spleen, lymph_node, blood)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "target_cell_type",
       "label": "Target Cell Type",
       "description": "Specific immune cell population to isolate",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "enzyme_type",
       "label": "Enzyme Type",
       "description": "Enzyme for tissue digestion (default: collagenase)",
-      "defaultValue": "collagenase"
+      "defaultValue": "collagenase",
+      "required": false
     },
     {
       "type": "Input",
       "name": "macs_antibody",
       "label": "MACS Antibody",
       "description": "Specific antibody for MACS selection (optional)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "digestion_time_min",
       "label": "Digestion Time (minutes)",
       "description": "Duration of enzymatic digestion (default: 45)",
-      "defaultValue": "45"
+      "defaultValue": "45",
+      "required": false
     },
     {
       "type": "Stash File",

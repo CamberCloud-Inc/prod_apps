@@ -32,7 +32,8 @@
       "name": "query",
       "label": "Query",
       "description": "Search query string for scholarly literature",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",

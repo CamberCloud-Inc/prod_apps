@@ -32,21 +32,24 @@
       "name": "fcs_file_path",
       "label": "FCS File Path",
       "description": "Path to FCS file containing CFSE-labeled cell data",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "cfse_channel",
       "label": "CFSE Channel",
       "description": "Fluorescence channel measuring CFSE (default: FL1-A)",
-      "defaultValue": "FL1-A"
+      "defaultValue": "FL1-A",
+      "required": false
     },
     {
       "type": "Input",
       "name": "lymphocyte_gate",
       "label": "Lymphocyte Gate",
       "description": "Gating parameters for lymphocytes (JSON dict, optional)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Stash File",

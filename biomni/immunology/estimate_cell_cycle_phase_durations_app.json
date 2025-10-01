@@ -32,14 +32,16 @@
       "name": "flow_cytometry_data",
       "label": "Flow Cytometry Data",
       "description": "Flow cytometry measurements from dual-pulse labeling (JSON dict)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "initial_estimates",
       "label": "Initial Estimates",
       "description": "Initial parameter estimates for G1, S, G2M phases (JSON dict)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",

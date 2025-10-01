@@ -46,14 +46,16 @@
       "name": "threshold",
       "label": "Threshold (Optional)",
       "description": "Minimum score threshold for binding sites (0.0-1.0, default: 0.8)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "output_file",
       "label": "Output File (Optional)",
       "description": "Path to save results (optional)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Stash File",

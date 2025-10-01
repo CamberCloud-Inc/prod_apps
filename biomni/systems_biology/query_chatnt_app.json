@@ -32,21 +32,24 @@
       "name": "question",
       "label": "Question",
       "description": "Question to ask about the DNA sequence",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "sequence",
       "label": "Sequence",
       "description": "DNA nucleotide sequence to analyze (A, T, G, C)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "device",
       "label": "Device",
       "description": "GPU device ID (0 for GPU, -1 for CPU)",
-      "defaultValue": 0
+      "defaultValue": 0,
+      "required": false
     },
     {
       "type": "Stash File",

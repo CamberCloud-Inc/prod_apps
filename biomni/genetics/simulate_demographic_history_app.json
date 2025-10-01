@@ -32,70 +32,80 @@
       "name": "num_samples",
       "label": "Number of Samples (Optional)",
       "description": "Number of sample sequences to simulate (default: 10)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "sequence_length",
       "label": "Sequence Length (Optional)",
       "description": "Length of simulated sequence in base pairs (default: 100000)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "recombination_rate",
       "label": "Recombination Rate (Optional)",
       "description": "Per-base recombination rate (default: 1e-8)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "mutation_rate",
       "label": "Mutation Rate (Optional)",
       "description": "Per-base mutation rate (default: 1e-8)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "demographic_model",
       "label": "Demographic Model (Optional)",
       "description": "Type of demographic model: constant, bottleneck, expansion, contraction, sawtooth (default: constant)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Stash File",
       "name": "demographic_params",
       "label": "Demographic Parameters (Optional)",
       "description": "Path to JSON file with demographic parameters (optional)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "coalescent_model",
       "label": "Coalescent Model (Optional)",
       "description": "Type of coalescent model: kingman or beta (default: kingman)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "beta_param",
       "label": "Beta Parameter (Optional)",
       "description": "Beta-coalescent parameter (required if coalescent-model=beta)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "random_seed",
       "label": "Random Seed (Optional)",
       "description": "Random seed for reproducibility (optional)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "output_file",
       "label": "Output File (Optional)",
       "description": "Output filename for VCF (default: simulated_sequences.vcf)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Stash File",

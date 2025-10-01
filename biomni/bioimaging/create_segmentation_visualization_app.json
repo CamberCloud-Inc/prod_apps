@@ -32,21 +32,24 @@
       "name": "original_mri",
       "label": "Original MRI",
       "description": "Path to the original MRI image file in NIfTI format",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",
       "name": "segmentation",
       "label": "Segmentation",
       "description": "Path to the segmentation mask file in NIfTI format",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",
       "name": "output_dir",
       "label": "Output Directory",
       "description": "Directory where visualization images will be saved",
-      "defaultValue": "./visualization_output"
+      "defaultValue": "./visualization_output",
+      "required": false
     },
     {
       "type": "Stash File",

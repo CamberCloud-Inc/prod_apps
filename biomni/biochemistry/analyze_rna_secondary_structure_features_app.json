@@ -32,14 +32,16 @@
       "name": "dot_bracket_structure",
       "label": "Dot-Bracket Structure",
       "description": "RNA secondary structure in dot-bracket notation",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "sequence",
       "label": "RNA Sequence (Optional)",
       "description": "RNA nucleotide sequence (A, U, G, C) corresponding to the structure",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Stash File",

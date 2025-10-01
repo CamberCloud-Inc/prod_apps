@@ -39,7 +39,8 @@
       "name": "sections",
       "label": "Sections (Optional)",
       "description": "Specific label sections to retrieve (JSON array, e.g., [\"indications_and_usage\", \"warnings\"])",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Stash File",

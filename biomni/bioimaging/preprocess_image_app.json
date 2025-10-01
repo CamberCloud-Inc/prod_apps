@@ -32,14 +32,16 @@
       "name": "image_path",
       "label": "Image Path",
       "description": "Path to the input medical image file in NIfTI format",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",
       "name": "output_path",
       "label": "Output Path",
       "description": "Path where the preprocessed image will be saved in NIfTI format",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Select",
@@ -56,7 +58,8 @@
           "value": "false"
         }
       ],
-      "defaultValue": "true"
+      "defaultValue": "true",
+      "required": false
     },
     {
       "type": "Select",
@@ -73,7 +76,8 @@
           "value": "false"
         }
       ],
-      "defaultValue": "true"
+      "defaultValue": "true",
+      "required": false
     },
     {
       "type": "Stash File",

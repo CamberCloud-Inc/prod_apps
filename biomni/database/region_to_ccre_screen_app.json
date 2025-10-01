@@ -32,28 +32,32 @@
       "name": "coord_chrom",
       "label": "Chromosome",
       "description": "Chromosome name",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "coord_start",
       "label": "Start Position",
       "description": "Start genomic coordinate",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "coord_end",
       "label": "End Position",
       "description": "End genomic coordinate",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "assembly",
       "label": "Assembly",
       "description": "Genome assembly (default: GRCh38)",
-      "defaultValue": "GRCh38"
+      "defaultValue": "GRCh38",
+      "required": false
     },
     {
       "type": "Stash File",

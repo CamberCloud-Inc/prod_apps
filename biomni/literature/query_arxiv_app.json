@@ -32,14 +32,16 @@
       "name": "query",
       "label": "Query",
       "description": "Search query string (e.g., \"deep learning protein structure prediction\")",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "max_papers",
       "label": "Max Papers",
       "description": "Maximum number of papers to return (default: 10)",
-      "defaultValue": "10"
+      "defaultValue": "10",
+      "required": false
     },
     {
       "type": "Stash File",

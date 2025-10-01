@@ -32,21 +32,24 @@
       "name": "fixed_image_path",
       "label": "Fixed Image Path",
       "description": "Path to the reference/fixed image file in NIfTI format",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",
       "name": "moving_image_path",
       "label": "Moving Image Path",
       "description": "Path to the moving image file in NIfTI format",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",
       "name": "output_dir",
       "label": "Output Directory",
       "description": "Directory where registered images will be saved",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Select",
@@ -67,7 +70,8 @@
           "value": "correlation"
         }
       ],
-      "defaultValue": "mutual_information"
+      "defaultValue": "mutual_information",
+      "required": false
     },
     {
       "type": "Select",
@@ -88,7 +92,8 @@
           "value": "amoeba"
         }
       ],
-      "defaultValue": "gradient_descent"
+      "defaultValue": "gradient_descent",
+      "required": false
     },
     {
       "type": "Select",
@@ -105,7 +110,8 @@
           "value": "false"
         }
       ],
-      "defaultValue": "true"
+      "defaultValue": "true",
+      "required": false
     },
     {
       "type": "Select",
@@ -122,35 +128,40 @@
           "value": "false"
         }
       ],
-      "defaultValue": "true"
+      "defaultValue": "true",
+      "required": false
     },
     {
       "type": "Input",
       "name": "learning_rate",
       "label": "Learning Rate",
       "description": "Step size for gradient descent optimizer",
-      "defaultValue": "0.01"
+      "defaultValue": "0.01",
+      "required": false
     },
     {
       "type": "Input",
       "name": "number_of_iterations",
       "label": "Number of Iterations",
       "description": "Maximum number of optimization iterations",
-      "defaultValue": "100"
+      "defaultValue": "100",
+      "required": false
     },
     {
       "type": "Input",
       "name": "gradient_convergence_tolerance",
       "label": "Gradient Convergence Tolerance",
       "description": "Convergence threshold for stopping optimization",
-      "defaultValue": "1e-6"
+      "defaultValue": "1e-6",
+      "required": false
     },
     {
       "type": "Input",
       "name": "number_of_control_points",
       "label": "Number of Control Points",
       "description": "Grid density for B-spline control points (higher = more flexible)",
-      "defaultValue": "4"
+      "defaultValue": "4",
+      "required": false
     },
     {
       "type": "Stash File",

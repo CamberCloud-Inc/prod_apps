@@ -46,14 +46,16 @@
       "name": "cell_line_info",
       "label": "Cell Line Info (Optional)",
       "description": "Path to JSON file with cell line information (optional)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "output_prefix",
       "label": "Output Prefix (Optional)",
       "description": "Prefix for output files (default: cas9_mutation_analysis)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Stash File",

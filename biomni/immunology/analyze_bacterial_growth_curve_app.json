@@ -32,21 +32,24 @@
       "name": "time_points",
       "label": "Time Points",
       "description": "Array of time measurements in hours or minutes (JSON array)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "od_values",
       "label": "OD Values",
       "description": "Array of optical density measurements (JSON array)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "strain_name",
       "label": "Strain Name",
       "description": "Name or identifier of the bacterial strain",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",

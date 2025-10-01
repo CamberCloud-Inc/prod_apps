@@ -32,28 +32,32 @@
       "name": "image_path",
       "label": "Image Path",
       "description": "Path to the multichannel fluorescence microscopy image file",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "nuclei_channel",
       "label": "Nuclei Channel",
       "description": "Channel index containing nuclei staining (default: 2)",
-      "defaultValue": "2"
+      "defaultValue": "2",
+      "required": false
     },
     {
       "type": "Input",
       "name": "myofiber_channel",
       "label": "Myofiber Channel",
       "description": "Channel index containing myofiber membrane staining (default: 1)",
-      "defaultValue": "1"
+      "defaultValue": "1",
+      "required": false
     },
     {
       "type": "Input",
       "name": "threshold_method",
       "label": "Threshold Method",
       "description": "Segmentation threshold algorithm (default: otsu)",
-      "defaultValue": "otsu"
+      "defaultValue": "otsu",
+      "required": false
     },
     {
       "type": "Stash File",

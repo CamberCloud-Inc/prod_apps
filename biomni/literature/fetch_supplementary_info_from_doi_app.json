@@ -32,7 +32,8 @@
       "name": "doi",
       "label": "DOI",
       "description": "Digital Object Identifier of the research paper (e.g., \"10.1038/s41586-021-03819-2\")",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",

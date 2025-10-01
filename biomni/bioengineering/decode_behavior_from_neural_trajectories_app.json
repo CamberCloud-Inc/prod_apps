@@ -32,21 +32,24 @@
       "name": "neural_data_file",
       "label": "Neural Data File",
       "description": "Path to CSV file containing neural activity data",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",
       "name": "behavioral_data_file",
       "label": "Behavioral Data File",
       "description": "Path to CSV file containing behavioral measurements",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "n_components",
       "label": "Number of Components",
       "description": "Number of principal components to extract (default: 10)",
-      "defaultValue": "10"
+      "defaultValue": "10",
+      "required": false
     },
     {
       "type": "Stash File",

@@ -32,28 +32,32 @@
       "name": "image_path",
       "label": "Image Path",
       "description": "Path to the multiplexed multichannel tissue image file",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "markers_list",
       "label": "Markers List",
       "description": "JSON string or file path defining list of protein markers/antibodies used in each channel (e.g., [\"DAPI\", \"CD3\", \"CD8\", \"CD45\", \"PD-L1\"])",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "nuclear_channel_index",
       "label": "Nuclear Channel Index",
       "description": "Index of the nuclear staining channel for cell segmentation (default: 0)",
-      "defaultValue": "0"
+      "defaultValue": "0",
+      "required": false
     },
     {
       "type": "Input",
       "name": "output_dir",
       "label": "Output Directory",
       "description": "Directory where analysis results will be saved (default: ./output)",
-      "defaultValue": "./output"
+      "defaultValue": "./output",
+      "required": false
     },
     {
       "type": "Stash File",

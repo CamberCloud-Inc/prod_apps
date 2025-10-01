@@ -46,7 +46,8 @@
       "name": "threshold",
       "label": "Disorder Threshold",
       "description": "Disorder probability threshold for classification (0.0 to 1.0)",
-      "defaultValue": "0.5"
+      "defaultValue": "0.5",
+      "required": false
     }
   ]
 }

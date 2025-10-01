@@ -32,42 +32,48 @@
       "name": "sample_name",
       "label": "Sample Name",
       "description": "Identifier for the protein or sample being analyzed",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "sample_type",
       "label": "Sample Type",
       "description": "Type of sample (e.g., protein, peptide, DNA, RNA)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "wavelength_data",
       "label": "Wavelength Data",
       "description": "Wavelength values in nanometers (comma-separated)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "cd_signal_data",
       "label": "CD Signal Data",
       "description": "CD signal values corresponding to each wavelength (comma-separated)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "temperature_data",
       "label": "Temperature Data (Optional)",
       "description": "Temperature values in Kelvin for thermal denaturation (comma-separated)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "thermal_cd_data",
       "label": "Thermal CD Data (Optional)",
       "description": "CD signal values at specific wavelength across temperatures (comma-separated)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Stash File",

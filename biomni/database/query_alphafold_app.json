@@ -32,56 +32,64 @@
       "name": "uniprot_id",
       "label": "UniProt ID",
       "description": "UniProt protein identifier",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "endpoint",
       "label": "Endpoint",
       "description": "API endpoint (default: prediction)",
-      "defaultValue": "prediction"
+      "defaultValue": "prediction",
+      "required": false
     },
     {
       "type": "Input",
       "name": "residue_range",
       "label": "Residue Range",
       "description": "Residue range (optional)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "download",
       "label": "Download",
       "description": "Download files (true/false, default: false)",
-      "defaultValue": "false"
+      "defaultValue": "false",
+      "required": false
     },
     {
       "type": "Input",
       "name": "output_dir",
       "label": "Output Directory",
       "description": "Output directory for downloads (optional)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "file_format",
       "label": "File Format",
       "description": "File format (pdb/cif, default: pdb)",
-      "defaultValue": "pdb"
+      "defaultValue": "pdb",
+      "required": false
     },
     {
       "type": "Input",
       "name": "model_version",
       "label": "Model Version",
       "description": "Model version (default: v4)",
-      "defaultValue": "v4"
+      "defaultValue": "v4",
+      "required": false
     },
     {
       "type": "Input",
       "name": "model_number",
       "label": "Model Number",
       "description": "Model number (default: 1)",
-      "defaultValue": "1"
+      "defaultValue": "1",
+      "required": false
     },
     {
       "type": "Stash File",

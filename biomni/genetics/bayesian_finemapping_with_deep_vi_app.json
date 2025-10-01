@@ -46,28 +46,32 @@
       "name": "n_iterations",
       "label": "Number of Iterations (Optional)",
       "description": "Number of training iterations (default: 5000)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "learning_rate",
       "label": "Learning Rate (Optional)",
       "description": "Learning rate for optimization (default: 0.01)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "hidden_dim",
       "label": "Hidden Dimension (Optional)",
       "description": "Hidden dimension size for neural network (default: 64)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "credible_threshold",
       "label": "Credible Threshold (Optional)",
       "description": "Threshold for credible set (default: 0.95)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Stash File",

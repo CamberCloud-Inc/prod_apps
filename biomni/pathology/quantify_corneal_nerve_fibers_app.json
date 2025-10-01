@@ -32,28 +32,32 @@
       "name": "image_path",
       "label": "Image Path",
       "description": "Path to the immunofluorescence image of corneal nerve fibers",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "marker_type",
       "label": "Marker Type",
       "description": "Type of neuronal marker used (e.g., beta-III-tubulin, PGP9.5, Thy1)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "output_dir",
       "label": "Output Directory",
       "description": "Directory where analysis results will be saved (default: ./output)",
-      "defaultValue": "./output"
+      "defaultValue": "./output",
+      "required": false
     },
     {
       "type": "Input",
       "name": "threshold_method",
       "label": "Threshold Method",
       "description": "Segmentation threshold method - options include otsu, adaptive, or manual (default: otsu)",
-      "defaultValue": "otsu"
+      "defaultValue": "otsu",
+      "required": false
     },
     {
       "type": "Stash File",

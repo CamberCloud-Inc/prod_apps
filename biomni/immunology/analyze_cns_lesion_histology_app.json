@@ -32,21 +32,24 @@
       "name": "image_path",
       "label": "Image Path",
       "description": "Path to histology image file",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "cell_markers",
       "label": "Cell Markers",
       "description": "Cell markers and color/intensity thresholds (JSON dict, optional)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "pixel_size_um",
       "label": "Pixel Size (um)",
       "description": "Physical size of each pixel in micrometers (default: 0.5)",
-      "defaultValue": "0.5"
+      "defaultValue": "0.5",
+      "required": false
     },
     {
       "type": "Stash File",

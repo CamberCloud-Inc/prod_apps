@@ -32,21 +32,24 @@
       "name": "input_file",
       "label": "Input File",
       "description": "Path to the input 4D NIfTI file (.nii or .nii.gz)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",
       "name": "output_dir",
       "label": "Output Directory",
       "description": "Directory where separated modality files will be saved",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "case_name",
       "label": "Case Name",
       "description": "Identifier prefix for naming output files (e.g., 'BRAT' results in BRAT_0000.nii.gz)",
-      "defaultValue": "BRAT"
+      "defaultValue": "BRAT",
+      "required": false
     },
     {
       "type": "Stash File",

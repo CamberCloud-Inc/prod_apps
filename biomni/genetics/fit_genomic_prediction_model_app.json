@@ -46,21 +46,24 @@
       "name": "fixed_effects",
       "label": "Fixed Effects (Optional)",
       "description": "Path to fixed effects file (numpy .npy format, optional)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "model_type",
       "label": "Model Type (Optional)",
       "description": "Type of genetic model: 'additive' or 'additive_dominance' (default: additive)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "output_file",
       "label": "Output File (Optional)",
       "description": "Output filename for results (default: genomic_prediction_results.csv)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Stash File",

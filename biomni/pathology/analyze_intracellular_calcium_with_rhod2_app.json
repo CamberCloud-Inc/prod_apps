@@ -32,28 +32,32 @@
       "name": "background_image_path",
       "label": "Background Image Path",
       "description": "Path to the background fluorescence image (no cells/dye)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",
       "name": "control_image_path",
       "label": "Control Image Path",
       "description": "Path to the control sample image (baseline calcium levels)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",
       "name": "sample_image_path",
       "label": "Sample Image Path",
       "description": "Path to the experimental sample fluorescence image",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "output_dir",
       "label": "Output Directory",
       "description": "Directory where analysis results will be saved (default: ./output)",
-      "defaultValue": "./output"
+      "defaultValue": "./output",
+      "required": false
     },
     {
       "type": "Stash File",

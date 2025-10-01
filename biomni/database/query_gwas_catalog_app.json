@@ -32,21 +32,24 @@
       "name": "prompt",
       "label": "Prompt",
       "description": "Query prompt/description",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "endpoint",
       "label": "Endpoint",
       "description": "API endpoint path",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "max_results",
       "label": "Max Results",
       "description": "Maximum number of results (default: 3)",
-      "defaultValue": "3"
+      "defaultValue": "3",
+      "required": false
     },
     {
       "type": "Stash File",

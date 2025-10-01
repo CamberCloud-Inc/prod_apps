@@ -32,28 +32,32 @@
       "name": "accession",
       "label": "Accession",
       "description": "cCRE accession ID",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "assembly",
       "label": "Assembly",
       "description": "Genome assembly (e.g., 'GRCh38')",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "chromosome",
       "label": "Chromosome",
       "description": "Chromosome name",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "k",
       "label": "K Nearest",
       "description": "Number of nearest genes to return (default: 10)",
-      "defaultValue": "10"
+      "defaultValue": "10",
+      "required": false
     },
     {
       "type": "Stash File",

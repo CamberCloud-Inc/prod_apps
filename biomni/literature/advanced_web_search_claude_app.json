@@ -32,21 +32,24 @@
       "name": "query",
       "label": "Query",
       "description": "The search query or research question",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "max_searches",
       "label": "Max Searches",
       "description": "Maximum number of search iterations to perform (default: 5)",
-      "defaultValue": "5"
+      "defaultValue": "5",
+      "required": false
     },
     {
       "type": "Input",
       "name": "max_retries",
       "label": "Max Retries",
       "description": "Maximum number of retry attempts for failed searches (default: 3)",
-      "defaultValue": "3"
+      "defaultValue": "3",
+      "required": false
     },
     {
       "type": "Stash File",

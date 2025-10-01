@@ -32,7 +32,8 @@
       "name": "fcs_files_dict",
       "label": "FCS Files Dictionary",
       "description": "Dictionary mapping sample IDs to FCS file paths (JSON dict)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",

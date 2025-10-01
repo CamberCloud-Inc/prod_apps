@@ -53,7 +53,8 @@
       "name": "repair_template",
       "label": "Repair Template (Optional)",
       "description": "Homology-directed repair template sequence (optional)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Stash File",

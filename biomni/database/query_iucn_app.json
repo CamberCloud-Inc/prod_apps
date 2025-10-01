@@ -32,28 +32,32 @@
       "name": "prompt",
       "label": "Prompt",
       "description": "Query prompt/description",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "endpoint",
       "label": "Endpoint",
       "description": "API endpoint path",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "token",
       "label": "API Token",
       "description": "IUCN API token",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "verbose",
       "label": "Verbose",
       "description": "Enable verbose output (true/false)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Stash File",

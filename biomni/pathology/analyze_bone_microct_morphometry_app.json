@@ -32,21 +32,24 @@
       "name": "input_file_path",
       "label": "Input File Path",
       "description": "Path to the 3D micro-CT image file (DICOM, TIFF stack, or NIfTI format)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "output_dir",
       "label": "Output Directory",
       "description": "Directory for saving analysis results (default: ./results)",
-      "defaultValue": "./results"
+      "defaultValue": "./results",
+      "required": false
     },
     {
       "type": "Input",
       "name": "threshold_value",
       "label": "Threshold Value",
       "description": "Custom threshold for bone segmentation; if not provided, automatic thresholding is applied (optional)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Stash File",

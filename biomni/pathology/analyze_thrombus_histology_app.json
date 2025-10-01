@@ -32,14 +32,16 @@
       "name": "image_path",
       "label": "Image Path",
       "description": "Path to the histological image file (H&E, Masson's trichrome, or immunohistochemistry)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "output_dir",
       "label": "Output Directory",
       "description": "Directory where analysis results will be saved (default: ./output)",
-      "defaultValue": "./output"
+      "defaultValue": "./output",
+      "required": false
     },
     {
       "type": "Stash File",

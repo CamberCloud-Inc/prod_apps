@@ -32,28 +32,32 @@
       "name": "image_sequence_path",
       "label": "Image Sequence Path",
       "description": "Path to directory containing time-lapse microscopy images or path to a multi-frame TIFF file",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "pixel_size_um",
       "label": "Pixel Size (um)",
       "description": "Physical size of each pixel in micrometers (default: 1.0)",
-      "defaultValue": "1.0"
+      "defaultValue": "1.0",
+      "required": false
     },
     {
       "type": "Input",
       "name": "time_interval_min",
       "label": "Time Interval (min)",
       "description": "Time interval between consecutive frames in minutes (default: 1.0)",
-      "defaultValue": "1.0"
+      "defaultValue": "1.0",
+      "required": false
     },
     {
       "type": "Input",
       "name": "min_track_length",
       "label": "Min Track Length",
       "description": "Minimum number of frames a cell must be tracked (default: 10)",
-      "defaultValue": "10"
+      "defaultValue": "10",
+      "required": false
     },
     {
       "type": "Stash File",

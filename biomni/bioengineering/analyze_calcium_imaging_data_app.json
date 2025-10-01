@@ -32,7 +32,8 @@
       "name": "image_stack_path",
       "label": "Image Stack Path",
       "description": "Path to the calcium imaging data file (TIFF stack or video file)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",

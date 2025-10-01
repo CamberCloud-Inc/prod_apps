@@ -32,14 +32,16 @@
       "name": "image1_path",
       "label": "Image 1 Path",
       "description": "Path to the first medical image file in NIfTI format",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",
       "name": "image2_path",
       "label": "Image 2 Path",
       "description": "Path to the second medical image file in NIfTI format",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",

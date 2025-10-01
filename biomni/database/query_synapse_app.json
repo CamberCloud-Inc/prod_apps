@@ -32,42 +32,48 @@
       "name": "prompt",
       "label": "Prompt",
       "description": "Query prompt/description",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "query_term",
       "label": "Query Term",
       "description": "Search term",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "return_fields",
       "label": "Return Fields",
       "description": "Fields to return",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "max_results",
       "label": "Max Results",
       "description": "Maximum number of results",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "query_type",
       "label": "Query Type",
       "description": "Query type",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "verbose",
       "label": "Verbose",
       "description": "Enable verbose output (true/false)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Stash File",

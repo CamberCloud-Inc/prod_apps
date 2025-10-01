@@ -42,7 +42,8 @@
       "description": "Sliding window size for calculating local S/T enrichment (typical: 5-11)",
       "defaultValue": 7,
       "min": 3,
-      "max": 20
+      "max": 20,
+      "required": false
     },
     {
       "type": "Input",

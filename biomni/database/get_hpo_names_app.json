@@ -32,14 +32,16 @@
       "name": "hpo_terms",
       "label": "HPO Terms",
       "description": "Comma-separated list of HPO term IDs",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "data_lake_path",
       "label": "Data Lake Path",
       "description": "Path to data lake (optional)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Stash File",

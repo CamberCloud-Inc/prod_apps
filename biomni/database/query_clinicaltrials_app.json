@@ -32,84 +32,96 @@
       "name": "prompt",
       "label": "Prompt",
       "description": "Query prompt/description",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "endpoint",
       "label": "Endpoint",
       "description": "API endpoint path",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "term",
       "label": "Search Term",
       "description": "Search term",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "status",
       "label": "Status",
       "description": "Trial status filter",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "condition",
       "label": "Condition",
       "description": "Condition/disease filter",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "intervention",
       "label": "Intervention",
       "description": "Intervention filter",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "location",
       "label": "Location",
       "description": "Location filter",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "phase",
       "label": "Phase",
       "description": "Trial phase filter",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "page_size",
       "label": "Page Size",
       "description": "Results per page (default: 10)",
-      "defaultValue": "10"
+      "defaultValue": "10",
+      "required": false
     },
     {
       "type": "Input",
       "name": "max_pages",
       "label": "Max Pages",
       "description": "Maximum pages to retrieve (default: 1)",
-      "defaultValue": "1"
+      "defaultValue": "1",
+      "required": false
     },
     {
       "type": "Input",
       "name": "page_token",
       "label": "Page Token",
       "description": "Page token for pagination",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "verbose",
       "label": "Verbose",
       "description": "Enable verbose output (true/false, default: true)",
-      "defaultValue": "true"
+      "defaultValue": "true",
+      "required": false
     },
     {
       "type": "Stash File",

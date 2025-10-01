@@ -46,7 +46,8 @@
       "name": "period",
       "label": "Period",
       "description": "Expected period in hours",
-      "defaultValue": "24.0"
+      "defaultValue": "24.0",
+      "required": false
     },
     {
       "type": "Stash File",

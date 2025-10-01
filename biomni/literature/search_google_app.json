@@ -32,21 +32,24 @@
       "name": "query",
       "label": "Query",
       "description": "Search query string",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "num_results",
       "label": "Number of Results",
       "description": "Number of search results to return (default: 10)",
-      "defaultValue": "10"
+      "defaultValue": "10",
+      "required": false
     },
     {
       "type": "Input",
       "name": "language",
       "label": "Language",
       "description": "Language code for search results (default: \"en\" for English)",
-      "defaultValue": "en"
+      "defaultValue": "en",
+      "required": false
     },
     {
       "type": "Stash File",

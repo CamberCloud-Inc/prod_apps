@@ -32,21 +32,24 @@
       "name": "sequence",
       "label": "Sequence",
       "description": "The nucleotide or protein sequence to search",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "database",
       "label": "Database",
       "description": "Target NCBI database (e.g., 'nt', 'nr')",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "program",
       "label": "Program",
       "description": "BLAST program type (blastn, blastp, blastx, tblastn, tblastx)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",

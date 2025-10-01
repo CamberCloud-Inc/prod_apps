@@ -32,28 +32,32 @@
       "name": "prompt",
       "label": "Prompt",
       "description": "Query prompt/description",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "query",
       "label": "GraphQL Query",
       "description": "GraphQL query string",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "variables",
       "label": "Query Variables",
       "description": "GraphQL query variables (JSON)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Input",
       "name": "verbose",
       "label": "Verbose",
       "description": "Enable verbose output (true/false)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Stash File",

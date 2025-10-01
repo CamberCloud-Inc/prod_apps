@@ -32,7 +32,8 @@
       "name": "url",
       "label": "URL",
       "description": "URL pointing to a PDF file or a webpage containing a PDF link",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",

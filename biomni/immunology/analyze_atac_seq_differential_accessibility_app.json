@@ -32,35 +32,40 @@
       "name": "treatment_bam",
       "label": "Treatment BAM",
       "description": "Path to treatment BAM file with aligned ATAC-seq reads",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",
       "name": "control_bam",
       "label": "Control BAM",
       "description": "Path to control BAM file with aligned ATAC-seq reads",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "genome_size",
       "label": "Genome Size",
       "description": "Effective genome size: hs (human), mm (mouse), ce, dm (default: hs)",
-      "defaultValue": "hs"
+      "defaultValue": "hs",
+      "required": false
     },
     {
       "type": "Input",
       "name": "q_value",
       "label": "Q-value",
       "description": "Q-value cutoff for peak detection (default: 0.05)",
-      "defaultValue": "0.05"
+      "defaultValue": "0.05",
+      "required": false
     },
     {
       "type": "Input",
       "name": "name_prefix",
       "label": "Name Prefix",
       "description": "Prefix for output file names (default: atac)",
-      "defaultValue": "atac"
+      "defaultValue": "atac",
+      "required": false
     },
     {
       "type": "Stash File",

@@ -32,28 +32,32 @@
       "name": "image_sequence_path",
       "label": "Image Sequence Path",
       "description": "Path to time-lapse microscopy images or multi-frame TIFF",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "pixel_size_um",
       "label": "Pixel Size (um)",
       "description": "Physical size of each pixel in micrometers (default: 1.0)",
-      "defaultValue": "1.0"
+      "defaultValue": "1.0",
+      "required": false
     },
     {
       "type": "Input",
       "name": "time_interval_sec",
       "label": "Time Interval (seconds)",
       "description": "Time interval between consecutive frames (default: 1.0)",
-      "defaultValue": "1.0"
+      "defaultValue": "1.0",
+      "required": false
     },
     {
       "type": "Input",
       "name": "flow_direction",
       "label": "Flow Direction",
       "description": "Direction of flow (left, right, up, down) (default: right)",
-      "defaultValue": "right"
+      "defaultValue": "right",
+      "required": false
     },
     {
       "type": "Stash File",

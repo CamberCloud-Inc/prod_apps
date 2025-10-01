@@ -32,21 +32,24 @@
       "name": "image_path",
       "label": "Image Path",
       "description": "Path to the input medical image file or directory for segmentation",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Stash File",
       "name": "output_dir",
       "label": "Output Directory",
       "description": "Directory where segmentation results will be saved",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": true
     },
     {
       "type": "Input",
       "name": "task_id",
       "label": "Task ID",
       "description": "nnUNet task identifier (e.g., 'Task001_BrainTumour', 'Task002_Heart')",
-      "defaultValue": "Task001_BrainTumour"
+      "defaultValue": "Task001_BrainTumour",
+      "required": true
     },
     {
       "type": "Select",
@@ -71,14 +74,16 @@
           "value": "3d_cascade_fullres"
         }
       ],
-      "defaultValue": "3d_fullres"
+      "defaultValue": "3d_fullres",
+      "required": false
     },
     {
       "type": "Input",
       "name": "folds",
       "label": "Folds",
       "description": "Cross-validation folds to ensemble (comma-separated, e.g., '0,1,2,3,4')",
-      "defaultValue": "0,1,2,3,4"
+      "defaultValue": "0,1,2,3,4",
+      "required": false
     },
     {
       "type": "Select",
@@ -95,14 +100,16 @@
           "value": "false"
         }
       ],
-      "defaultValue": "false"
+      "defaultValue": "false",
+      "required": false
     },
     {
       "type": "Input",
       "name": "num_threads",
       "label": "Number of Threads",
       "description": "Number of CPU threads for preprocessing and inference",
-      "defaultValue": "1"
+      "defaultValue": "1",
+      "required": false
     },
     {
       "type": "Select",
@@ -119,7 +126,8 @@
           "value": "false"
         }
       ],
-      "defaultValue": "true"
+      "defaultValue": "true",
+      "required": false
     },
     {
       "type": "Select",
@@ -136,7 +144,8 @@
           "value": "false"
         }
       ],
-      "defaultValue": "true"
+      "defaultValue": "true",
+      "required": false
     },
     {
       "type": "Select",
@@ -153,14 +162,16 @@
           "value": "false"
         }
       ],
-      "defaultValue": "true"
+      "defaultValue": "true",
+      "required": false
     },
     {
       "type": "Input",
       "name": "results_folder",
       "label": "Results Folder",
       "description": "Path to custom nnUNet results folder (leave empty to use standard model zoo)",
-      "defaultValue": ""
+      "defaultValue": "",
+      "required": false
     },
     {
       "type": "Stash File",
