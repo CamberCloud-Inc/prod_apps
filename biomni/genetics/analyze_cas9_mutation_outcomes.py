@@ -18,7 +18,7 @@ def install_dependencies():
     """Install required dependencies"""
     import subprocess
     import sys
-    deps = ['biomni', 'biopython']
+    deps = ['biomni', 'biopython', 'torch']
     print("Installing dependencies...")
     for dep in deps:
         subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
