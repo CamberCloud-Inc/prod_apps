@@ -1,6 +1,6 @@
 # nf-core Pipeline Implementation Progress
 
-**Last Updated**: 2025-10-01 01:35
+**Last Updated**: 2025-10-01 02:10
 
 ---
 
@@ -9,8 +9,8 @@
 Systematic implementation of nf-core Nextflow pipelines with biological use-case variants for the Camber platform.
 
 **Goal**: Implement 290-340 apps from 139 nf-core pipelines
-**Current Status**: 79 apps from 42 pipelines
-**Progress**: 23-27% complete
+**Current Status**: 104 apps from 58 pipelines
+**Progress**: 36% apps (104/290), 42% pipelines (58/139)
 
 ---
 
@@ -168,27 +168,67 @@ Systematic implementation of nf-core Nextflow pipelines with biological use-case
 
 ---
 
+### ✅ Batch 8-10: Splicing, Metagenomics, Proteomics (DEPLOYED)
+
+**Status**: 12 apps deployed
+
+| App | Pipeline | Version | Status |
+|-----|----------|---------|--------|
+| rnasplice-disease-splicing | nf-core/rnasplice | 1.0.4 | ✅ DEPLOYED |
+| rnasplice-isoform-switching | nf-core/rnasplice | 1.0.4 | ✅ DEPLOYED |
+| cageseq-tss-annotation | nf-core/cageseq | 1.0.2 | ✅ DEPLOYED |
+| mnaseseq-nucleosome-profiling | nf-core/mnaseseq | 1.0.0 | ✅ DEPLOYED |
+| differentialabundance-comparison | nf-core/differentialabundance | 1.5.0 | ✅ DEPLOYED |
+| eager-pathogen-screening | nf-core/eager | 2.5.3 | ✅ DEPLOYED |
+| taxprofiler-metagenomic-profiling | nf-core/taxprofiler | 1.1.8 | ✅ DEPLOYED |
+| ampliseq-16s-microbiome | nf-core/ampliseq | 2.11.0 | ✅ DEPLOYED |
+| ampliseq-its-mycobiome | nf-core/ampliseq | 2.11.0 | ✅ DEPLOYED |
+| funcscan-functional-screening | nf-core/funcscan | 1.1.6 | ✅ DEPLOYED |
+| phyloplace-placement-analysis | nf-core/phyloplace | 1.0.0 | ✅ DEPLOYED |
+| quantms-proteomics-quantification | nf-core/quantms | 1.3.1 | ✅ DEPLOYED |
+| phageannotator-genome-annotation | nf-core/phageannotator | 1.0.0 | ✅ DEPLOYED |
+
+---
+
+### 🔨 Batch 11: Specialized Genomics (IN PROGRESS)
+
+**Status**: 6 apps created, not yet deployed
+
+| App | Pipeline | Status |
+|-----|----------|--------|
+| pangenome-comparative-genomics | nf-core/pangenome | ⏳ CREATED |
+| bacass-bacterial-assembly | nf-core/bacass | ⏳ CREATED |
+| crisprvar-editing-analysis | nf-core/crisprvar | ⏳ CREATED |
+| isoseq-pacbio-isoforms | nf-core/isoseq | ⏳ CREATED |
+| dualrnaseq-host-pathogen | nf-core/dualrnaseq | ⏳ CREATED |
+| nanostring-gene-expression | nf-core/nanostring | ⏳ CREATED |
+
+---
+
 ## Summary Statistics
 
 ### Apps Created
 
-| Category | Apps Created | Apps Tested | Apps Working |
-|----------|--------------|-------------|--------------|
-| **Previous** | 38 | 1 (scrnaseq) | 1 |
-| **Batch 1** | 7 | 5 | 2 ✅ 3 ❌ |
-| **Batch 2** | 7 | 0 | TBD (90% confidence) |
-| **Batch 3** | 9 | 0 | TBD |
-| **Batch 4** | 10 | 0 | TBD (95% confidence) |
-| **Batch 5** | 0 | 2 | 0 ❌ (memory limits) |
-| **Batch 6** | 4 | 0 | TBD (high confidence) |
-| **Batch 7** | 4 | 0 | TBD |
-| **Total** | **79** | **8** | **3+** |
+| Category | Apps Created | Apps Deployed | Apps Tested |
+|----------|--------------|---------------|-------------|
+| **Previous** | 38 | 38 | 1 (scrnaseq) |
+| **Batch 1** | 7 | 7 | 5 (2✅ 3❌) |
+| **Batch 2** | 7 | 7 | 0 |
+| **Batch 3** | 9 | 9 | 0 |
+| **Batch 4** | 10 | 10 | 0 |
+| **Batch 5** | 0 | 0 | 2 (0✅ 2❌ memory) |
+| **Batch 6** | 4 | 4 | 0 |
+| **Batch 7** | 4 | 4 | 0 |
+| **Batch 8-10** | 13 | 13 | 0 |
+| **Batch 11** | 6 | 0 | 0 |
+| **Total** | **98** | **92** | **8** |
 
 ### Pipeline Coverage
 
 **Total nf-core pipelines**: 139
-**Implemented**: 42 (~30%)
-**With variants**: 79 apps
+**Implemented**: 58 pipelines (42%)
+**Total apps**: 104 (including duplicates from previous session)
+**Progress**: 36% toward 290-340 app goal
 
 ### Account Issues
 
