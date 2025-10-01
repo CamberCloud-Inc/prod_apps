@@ -8,9 +8,9 @@ Production-ready Nextflow pipeline configurations optimized for the Camber cloud
 
 ## 📊 Current Status
 
-**Total Apps:** 114 (108 deployed + 6 duplicates)
-**Unique Pipelines:** 64 nf-core pipelines
-**Progress:** 46% of target (139 pipelines)
+**Total Apps:** 125 (119 deployed + 6 duplicates)
+**Unique Pipelines:** 75 nf-core pipelines
+**Progress:** 54% pipelines (75/139), 41% apps (119/290)
 
 [**→ View Detailed Implementation Progress**](IMPLEMENTATION_PROGRESS.md)
 
@@ -72,7 +72,8 @@ Production-ready Nextflow pipeline configurations optimized for the Camber cloud
 | Batch 8-10 | 9 | 13 | ✅ Deployed |
 | Batch 11 | 6 | 6 | ✅ Deployed |
 | Batch 12 | 10 | 10 | ✅ Deployed |
-| **Total** | **64** | **114** | **108 deployed** |
+| Batch 13 | 11 | 11 | ✅ Deployed |
+| **Total** | **75** | **125** | **119 deployed** |
 
 ---
 

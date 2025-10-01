@@ -1,6 +1,6 @@
 # nf-core Pipeline Implementation Progress
 
-**Last Updated**: 2025-10-01 02:10
+**Last Updated**: 2025-10-01 02:45
 
 ---
 
@@ -9,8 +9,9 @@
 Systematic implementation of nf-core Nextflow pipelines with biological use-case variants for the Camber platform.
 
 **Goal**: Implement 290-340 apps from 139 nf-core pipelines
-**Current Status**: 104 apps from 58 pipelines
-**Progress**: 36% apps (104/290), 42% pipelines (58/139)
+**Current Status**: 125 apps from 75 pipelines (incl. 6 duplicates from previous session)
+**Deployed**: 119 apps
+**Progress**: 41% apps (119/290), 54% pipelines (75/139)
 
 ---
 
@@ -190,18 +191,57 @@ Systematic implementation of nf-core Nextflow pipelines with biological use-case
 
 ---
 
-### 🔨 Batch 11: Specialized Genomics (IN PROGRESS)
+### ✅ Batch 11: Specialized Genomics (DEPLOYED)
 
-**Status**: 6 apps created, not yet deployed
+**Status**: 6 apps deployed
 
 | App | Pipeline | Status |
 |-----|----------|--------|
-| pangenome-comparative-genomics | nf-core/pangenome | ⏳ CREATED |
-| bacass-bacterial-assembly | nf-core/bacass | ⏳ CREATED |
-| crisprvar-editing-analysis | nf-core/crisprvar | ⏳ CREATED |
-| isoseq-pacbio-isoforms | nf-core/isoseq | ⏳ CREATED |
-| dualrnaseq-host-pathogen | nf-core/dualrnaseq | ⏳ CREATED |
-| nanostring-gene-expression | nf-core/nanostring | ⏳ CREATED |
+| pangenome-comparative-genomics | nf-core/pangenome | ✅ DEPLOYED |
+| bacass-bacterial-assembly | nf-core/bacass | ✅ DEPLOYED |
+| crisprvar-editing-analysis | nf-core/crisprvar | ✅ DEPLOYED |
+| isoseq-pacbio-isoforms | nf-core/isoseq | ✅ DEPLOYED |
+| dualrnaseq-infection-transcriptomics | nf-core/dualrnaseq | ✅ DEPLOYED |
+| nanostring-gene-expression | nf-core/nanostring | ✅ DEPLOYED |
+
+---
+
+### ✅ Batch 12: Specialized Applications (DEPLOYED)
+
+**Status**: 10 apps deployed
+
+| App | Pipeline | Status |
+|-----|----------|--------|
+| rnafusion-cancer-fusion-calling | nf-core/rnafusion | ✅ DEPLOYED |
+| rnavar-rna-variant-detection | nf-core/rnavar | ✅ DEPLOYED |
+| hlatyping-hla-genotyping-ngs | nf-core/hlatyping | ✅ DEPLOYED |
+| proteinfold-alphafold2-prediction | nf-core/proteinfold | ✅ DEPLOYED |
+| airrflow-bcr-tcr-repertoire | nf-core/airrflow | ✅ DEPLOYED |
+| demultiplex-ngs-samples | nf-core/demultiplex | ✅ DEPLOYED |
+| clipseq-rna-binding-proteins | nf-core/clipseq | ✅ DEPLOYED |
+| slamseq-rna-metabolism | nf-core/slamseq | ✅ DEPLOYED |
+| metatdenovo-metatranscriptome-assembly | nf-core/metatdenovo | ✅ DEPLOYED |
+| circdna-ecdna-detection | nf-core/circdna | ✅ DEPLOYED |
+
+---
+
+### ✅ Batch 13: GWAS, Viromics, Imaging (DEPLOYED)
+
+**Status**: 11 apps deployed
+
+| App | Pipeline | Status |
+|-----|----------|--------|
+| gwas-genome-association | nf-core/gwas | ✅ DEPLOYED |
+| bactmap-variant-mapping | nf-core/bactmap | ✅ DEPLOYED |
+| crisprseq-pooled-screening | nf-core/crisprseq | ✅ DEPLOYED |
+| mcmicro-multiplex-imaging | nf-core/mcmicro | ✅ DEPLOYED |
+| nanostring-geomx-spatial | nf-core/nanostring | ✅ DEPLOYED |
+| proteomicslfq-lfq-quant | nf-core/proteomicslfq | ✅ DEPLOYED |
+| viralrecon-covid-surveillance | nf-core/viralrecon | ✅ DEPLOYED |
+| viralrecon-viral-genomes | nf-core/viralrecon | ✅ DEPLOYED |
+| pgdb-prokaryote-database | nf-core/pgdb | ✅ DEPLOYED |
+| detaxizer-contamination-removal | nf-core/detaxizer | ✅ DEPLOYED |
+| metaboigniter-metabolome-analysis | nf-core/metaboigniter | ✅ DEPLOYED |
 
 ---
 
@@ -220,15 +260,18 @@ Systematic implementation of nf-core Nextflow pipelines with biological use-case
 | **Batch 6** | 4 | 4 | 0 |
 | **Batch 7** | 4 | 4 | 0 |
 | **Batch 8-10** | 13 | 13 | 0 |
-| **Batch 11** | 6 | 0 | 0 |
-| **Total** | **98** | **92** | **8** |
+| **Batch 11** | 6 | 6 | 0 |
+| **Batch 12** | 10 | 10 | 0 |
+| **Batch 13** | 11 | 11 | 0 |
+| **Total** | **125** | **119** | **8** |
 
 ### Pipeline Coverage
 
 **Total nf-core pipelines**: 139
-**Implemented**: 58 pipelines (42%)
-**Total apps**: 104 (including duplicates from previous session)
-**Progress**: 36% toward 290-340 app goal
+**Implemented**: 75 pipelines (54%)
+**Total apps**: 125 (including 6 duplicates from previous session)
+**Deployed apps**: 119
+**Progress**: 41% apps toward 290 goal, 54% pipelines
 
 ### Account Issues
 
