@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Biomni Tool: Region to cCRE Screen
+Biomni Tool: Region To Ccre Screen
 Wraps: biomni.tool.database.region_to_ccre_screen
 """
 import argparse
@@ -18,25 +18,24 @@ def install_dependencies():
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Get cCREs intersecting with a genomic region'
+        description='Region To Ccre Screen'
     )
-    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('--coord_chrom', required=True, help='Chromosome name')
+    parser.add_argument('--coord_start', required=True, help='Start genomic coordinate')
+    parser.add_argument('--coord_end', required=True, help='End genomic coordinate')
+    parser.add_argument('--assembly', default='GRCh38', help='Genome assembly (default: GRCh38)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
     from biomni.tool.database import region_to_ccre_screen
 
     result = region_to_ccre_screen(
-        coord_chrom=input_data.get('coord_chrom'),
-        coord_start=input_data.get('coord_start'),
-        coord_end=input_data.get('coord_end'),
-        assembly=input_data.get('assembly', 'GRCh38')
+        coord_chrom=args.coord_chrom,
+        coord_start=args.coord_start,
+        coord_end=args.coord_end,
+        assembly=args.assembly
     )
 
     os.makedirs(args.output, exist_ok=True)

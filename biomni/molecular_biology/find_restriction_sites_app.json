@@ -3,7 +3,7 @@
   "title": "Biomni: Find Restriction Sites",
   "description": "Identify restriction enzyme recognition sites in DNA sequences",
   "content": "<h3>Overview</h3><p>This tool identifies the positions of specific restriction enzyme recognition sites in DNA sequences. Unlike the general enzyme finder, this tool focuses on user-specified enzymes and reports the exact positions and sequences of their recognition sites. It's useful when you already know which enzymes you want to use and need precise location information.</p><h3>Input Parameters</h3><ul><li><strong>dna_sequence</strong>: DNA sequence to analyze (string)</li><li><strong>enzymes</strong>: One or more specific restriction enzyme names to search for (e.g., EcoRI, BamHI)</li><li><strong>--linear</strong>: Optional flag indicating sequence is linear (default: circular)</li></ul><h3>Input Format</h3><p>Command-line arguments format:</p><pre>python find_restriction_sites.py \"ATGCGAATTCGAT...\" EcoRI BamHI HindIII --linear -o output/</pre><p>Provide the DNA sequence followed by the specific enzyme names to search for.</p><h3>Biological Use Case</h3><p>Precise mapping of restriction sites for cloning design:</p><ul><li>Map exact positions of restriction sites for cloning strategy planning</li><li>Verify presence/absence of specific sites in synthetic constructs</li><li>Identify sites near genes of interest for subcloning</li><li>Check for unwanted sites that might interfere with cloning</li><li>Plan positioning of inserts relative to enzyme sites</li><li>Validate sequence data by confirming expected restriction sites</li></ul><h3>Output</h3><p>Returns a JSON file (restriction_sites.json) with detailed information about each enzyme's recognition sites including positions, recognition sequences, and cut site locations.</p><h3>Category</h3><p>molecular_biology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/find_restriction_sites.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/find_restriction_sites.py \"${dna_sequence}\" ${enzymes} ${linear} -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,24 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "dna_sequence",
+      "label": "DNA Sequence",
+      "description": "DNA sequence to analyze",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "enzymes",
+      "label": "Enzymes",
+      "description": "One or more restriction enzyme names (space-separated)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "linear",
+      "label": "Linear Sequence",
+      "description": "Sequence is linear (leave empty for circular, add --linear for linear)",
       "defaultValue": ""
     },
     {

@@ -3,7 +3,7 @@
   "title": "Biomni: Quantify Corneal Nerve Fibers",
   "description": "Quantify immunofluorescence-labeled corneal nerve fibers.",
   "content": "<h3>Overview</h3><p>This pathology analysis tool quantifies corneal nerve fiber density, length, and branching patterns from immunofluorescence-labeled images. The tool performs automated detection and tracing of nerve fibers in the corneal subbasal plexus, calculating clinically relevant metrics such as nerve fiber density (NFD), nerve branch density (NBD), nerve fiber length (NFL), and tortuosity coefficient.</p><h3>Input Parameters</h3><ul><li><strong>image_path</strong> (required): Path to the immunofluorescence image of corneal nerve fibers</li><li><strong>marker_type</strong> (required): Type of neuronal marker used (e.g., 'beta-III-tubulin', 'PGP9.5', 'Thy1')</li><li><strong>output_dir</strong> (optional): Directory where analysis results will be saved (default: './output')</li><li><strong>threshold_method</strong> (optional): Segmentation threshold method - options include 'otsu', 'adaptive', or 'manual' (default: 'otsu')</li></ul><h3>Input Format</h3><pre><code>{\n  \"image_path\": \"/path/to/corneal_nerves.tif\",\n  \"marker_type\": \"beta-III-tubulin\",\n  \"output_dir\": \"./nerve_quantification\",\n  \"threshold_method\": \"otsu\"\n}</code></pre><h3>Biological Use Case</h3><p>Corneal nerve fiber analysis is essential for diagnosing and monitoring diabetic peripheral neuropathy, where corneal nerve loss correlates with systemic neuropathy severity. This tool is valuable for early detection of small fiber neuropathy in diabetes, monitoring neuropathy progression, assessing treatment efficacy in clinical trials, and studying corneal reinnervation after refractive surgery or injury. Research applications include investigating neurotrophic factors, evaluating nerve regeneration therapies, and studying corneal innervation in autoimmune and neurodegenerative diseases.</p><h3>Output</h3><p>The analysis produces comprehensive nerve morphometry including nerve fiber density (mm/mm²), total nerve length, branch point density, nerve fiber width, tortuosity measurements, and fractal dimension. Results include annotated images with traced nerve fibers, statistical summaries, and comparison to normative databases for clinical interpretation.</p><h3>Category</h3><p>pathology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pathology/quantify_corneal_nerve_fibers.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pathology/quantify_corneal_nerve_fibers.py \"${image_path}\" \"${marker_type}\" --output-dir \"${output_dir}\" --threshold-method \"${threshold_method}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,10 +29,31 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "name": "image_path",
+      "label": "Image Path",
+      "description": "Path to the immunofluorescence image of corneal nerve fibers",
       "defaultValue": ""
+    },
+    {
+      "type": "Text",
+      "name": "marker_type",
+      "label": "Marker Type",
+      "description": "Type of neuronal marker used (e.g., beta-III-tubulin, PGP9.5, Thy1)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Text",
+      "name": "output_dir",
+      "label": "Output Directory",
+      "description": "Directory where analysis results will be saved (default: ./output)",
+      "defaultValue": "./output"
+    },
+    {
+      "type": "Text",
+      "name": "threshold_method",
+      "label": "Threshold Method",
+      "description": "Segmentation threshold method - options include otsu, adaptive, or manual (default: otsu)",
+      "defaultValue": "otsu"
     },
     {
       "type": "Stash File",

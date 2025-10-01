@@ -3,7 +3,7 @@
   "title": "Biomni: Analyze Hemodynamic Data",
   "description": "Analyzes raw blood pressure data to calculate key hemodynamic parameters.",
   "content": "<h3>Overview</h3><p>Analyzes raw blood pressure data to calculate key hemodynamic parameters. This tool processes continuous arterial pressure waveforms to extract clinically relevant cardiovascular metrics including systolic, diastolic, and mean arterial pressures, heart rate, and pulse pressure, which are essential for cardiovascular physiology research and clinical assessment.</p><h3>Input Parameters</h3><ul><li><strong>pressure_data</strong> (required): Array of blood pressure values in mmHg (continuous waveform)</li><li><strong>sampling_rate</strong> (required): Sampling frequency of the pressure recording in Hz</li><li><strong>output_file</strong> (optional, default='hemodynamic_results.csv'): Name for output file</li></ul><h3>Input Format</h3><pre>{\n  \"pressure_data\": [120, 118, 115, 110, 105, 100, 95, 90, 88, 87, ...],\n  \"sampling_rate\": 1000,\n  \"output_file\": \"hemodynamic_results.csv\"\n}</pre><h3>Biological Use Case</h3><p>This analysis is critical for:</p><ul><li>Cardiovascular disease research and clinical trials</li><li>Hypertension and hypotension studies</li><li>Pharmacological testing of cardiovascular drugs</li><li>Animal model characterization in cardiovascular research</li><li>Assessing autonomic nervous system function</li><li>Monitoring hemodynamic stability during surgical procedures</li><li>Studying baroreflex sensitivity and blood pressure regulation</li></ul><h3>Output</h3><p>Returns comprehensive hemodynamic analysis including:</p><ul><li>Systolic blood pressure (SBP)</li><li>Diastolic blood pressure (DBP)</li><li>Mean arterial pressure (MAP)</li><li>Pulse pressure (PP)</li><li>Heart rate (HR) and inter-beat intervals</li><li>Blood pressure variability metrics</li><li>Statistical summaries (mean, SD, min, max)</li></ul><h3>Category</h3><p>physiology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/analyze_hemodynamic_data.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/analyze_hemodynamic_data.py --pressure-data-file \"${pressureDataFile}\" --sampling-rate \"${samplingRate}\" --output-file \"${outputFileName}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,10 +29,24 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "name": "pressureDataFile",
+      "label": "Pressure Data File",
+      "description": "File containing blood pressure values in mmHg (JSON array or CSV)",
       "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "samplingRate",
+      "label": "Sampling Rate",
+      "description": "Sampling frequency of the pressure recording in Hz",
+      "defaultValue": "1000"
+    },
+    {
+      "type": "Input",
+      "name": "outputFileName",
+      "label": "Output File Name",
+      "description": "Name for output file",
+      "defaultValue": "hemodynamic_results.csv"
     },
     {
       "type": "Stash File",

@@ -24,7 +24,12 @@ def main():
     parser = argparse.ArgumentParser(
         description='Model bacterial population dynamics over time using ordinary differential equations.'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('--initial-population', type=float, required=True, help='Initial bacterial population size')
+    parser.add_argument('--growth-rate', type=float, required=True, help='Bacterial growth rate (per hour)')
+    parser.add_argument('--clearance-rate', type=float, required=True, help='Bacterial clearance/death rate (per hour)')
+    parser.add_argument('--niche-size', type=float, required=True, help='Maximum carrying capacity of the niche')
+    parser.add_argument('--simulation-time', type=float, default=24, help='Total simulation time in hours')
+    parser.add_argument('--time-step', type=float, default=0.1, help='Time step for numerical integration')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
     args = parser.parse_args()
 
@@ -33,26 +38,14 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.microbiology import model_bacterial_growth_dynamics
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    # Extract parameters
-    initial_population = input_data.get('initial_population')
-    growth_rate = input_data.get('growth_rate')
-    clearance_rate = input_data.get('clearance_rate')
-    niche_size = input_data.get('niche_size')
-    simulation_time = input_data.get('simulation_time', 24)
-    time_step = input_data.get('time_step', 0.1)
-
     # Call the function
     result = model_bacterial_growth_dynamics(
-        initial_population=initial_population,
-        growth_rate=growth_rate,
-        clearance_rate=clearance_rate,
-        niche_size=niche_size,
-        simulation_time=simulation_time,
-        time_step=time_step
+        initial_population=args.initial_population,
+        growth_rate=args.growth_rate,
+        clearance_rate=args.clearance_rate,
+        niche_size=args.niche_size,
+        simulation_time=args.simulation_time,
+        time_step=args.time_step
     )
 
     # Write result to output file

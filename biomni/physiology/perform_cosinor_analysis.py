@@ -24,7 +24,9 @@ def main():
     parser = argparse.ArgumentParser(
         description='Perform Cosinor Analysis'
     )
-    parser.add_argument('input_file', help='Input JSON file with time_data, physiological_data and optional period')
+    parser.add_argument('--time-data-file', required=True, help='File containing time points (JSON array or CSV)')
+    parser.add_argument('--physiological-data-file', required=True, help='File containing physiological measurements (JSON array or CSV)')
+    parser.add_argument('--period', type=float, default=24.0, help='Expected period in hours (default: 24.0)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -33,17 +35,24 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.physiology import perform_cosinor_analysis
 
-    with open(args.input_file, 'r') as f:
-        inputs = json.load(f)
+    # Load time_data from file
+    with open(args.time_data_file, 'r') as f:
+        if args.time_data_file.endswith('.json'):
+            time_data = json.load(f)
+        else:  # Assume CSV
+            time_data = [float(line.strip()) for line in f if line.strip()]
 
-    time_data = inputs['time_data']
-    physiological_data = inputs['physiological_data']
-    period = inputs.get('period', 24.0)
+    # Load physiological_data from file
+    with open(args.physiological_data_file, 'r') as f:
+        if args.physiological_data_file.endswith('.json'):
+            physiological_data = json.load(f)
+        else:  # Assume CSV
+            physiological_data = [float(line.strip()) for line in f if line.strip()]
 
     result = perform_cosinor_analysis(
         time_data=time_data,
         physiological_data=physiological_data,
-        period=period
+        period=args.period
     )
 
     os.makedirs(args.output, exist_ok=True)

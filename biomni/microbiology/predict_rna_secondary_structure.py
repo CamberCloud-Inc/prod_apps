@@ -24,7 +24,9 @@ def main():
     parser = argparse.ArgumentParser(
         description='Predict RNA secondary structure from sequence using thermodynamic models.'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('--rna-sequence', type=str, required=True, help='RNA sequence to analyze')
+    parser.add_argument('--output-format', type=str, default='dot_bracket', help='Output format (dot_bracket, ct, etc.)')
+    parser.add_argument('--temperature', type=float, default=37.0, help='Temperature in Celsius for thermodynamic calculations')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
     args = parser.parse_args()
 
@@ -33,20 +35,11 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.microbiology import predict_rna_secondary_structure
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    # Extract parameters
-    rna_sequence = input_data.get('rna_sequence')
-    output_format = input_data.get('output_format', 'dot_bracket')
-    temperature = input_data.get('temperature', 37.0)
-
     # Call the function
     result = predict_rna_secondary_structure(
-        rna_sequence=rna_sequence,
-        output_format=output_format,
-        temperature=temperature
+        rna_sequence=args.rna_sequence,
+        output_format=args.output_format,
+        temperature=args.temperature
     )
 
     # Write result to output file

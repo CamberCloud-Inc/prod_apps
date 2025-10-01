@@ -3,7 +3,7 @@
   "title": "Biomni: Reconstruct 3D Face From Mri",
   "description": "Generate a 3D model of facial anatomy from MRI scans of the head and neck.",
   "content": "<h3>Overview</h3><p>Generate a 3D model of facial anatomy from MRI scans of the head and neck. This tool processes structural MRI data to reconstruct three-dimensional facial surfaces using segmentation and surface rendering techniques, creating anatomically accurate 3D models for clinical, forensic, and research applications.</p><h3>Input Parameters</h3><ul><li><strong>mri_file_path</strong> (required): Path to MRI scan file (NIfTI format, .nii or .nii.gz)</li><li><strong>output_dir</strong> (optional, default='./output'): Directory for output 3D models and visualizations</li><li><strong>subject_id</strong> (optional, default='subject'): Identifier for the subject/patient</li><li><strong>threshold_value</strong> (optional, default=300): Intensity threshold for tissue segmentation</li></ul><h3>Input Format</h3><pre>{\n  \"mri_file_path\": \"/path/to/head_mri_scan.nii.gz\",\n  \"output_dir\": \"./output\",\n  \"subject_id\": \"subject_001\",\n  \"threshold_value\": 300\n}</pre><h3>Biological Use Case</h3><p>This analysis is valuable for:</p><ul><li>Craniofacial surgery planning and surgical simulation</li><li>Forensic facial reconstruction for identification</li><li>Orthodontic and maxillofacial treatment planning</li><li>Studying craniofacial development and growth</li><li>Virtual autopsy and post-mortem analysis</li><li>Creating patient-specific models for prosthetics</li><li>Investigating craniofacial anomalies and syndromes</li><li>Educational anatomy visualization</li></ul><h3>Output</h3><p>Returns 3D facial reconstruction including:</p><ul><li>3D surface mesh in standard formats (STL, OBJ, VTK)</li><li>Volume rendering of facial soft tissues</li><li>Anatomical landmark coordinates</li><li>Cross-sectional views (axial, sagittal, coronal)</li><li>Surface area and volume measurements</li><li>Quality metrics for reconstruction accuracy</li><li>Visualization images from multiple angles</li></ul><h3>Category</h3><p>physiology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/reconstruct_3d_face_from_mri.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/reconstruct_3d_face_from_mri.py --mri-file-path \"${mriFilePath}\" --output-dir \"${outputDirParam}\" --subject-id \"${subjectId}\" --threshold-value \"${thresholdValue}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,10 +29,31 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "name": "mriFilePath",
+      "label": "MRI File Path",
+      "description": "Path to MRI NIfTI file of head and neck",
       "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "outputDirParam",
+      "label": "Output Directory (for tool)",
+      "description": "Directory for output files",
+      "defaultValue": "./output"
+    },
+    {
+      "type": "Input",
+      "name": "subjectId",
+      "label": "Subject ID",
+      "description": "Subject identifier",
+      "defaultValue": "subject"
+    },
+    {
+      "type": "Input",
+      "name": "thresholdValue",
+      "label": "Threshold Value",
+      "description": "Threshold value for segmentation",
+      "defaultValue": "300"
     },
     {
       "type": "Stash File",

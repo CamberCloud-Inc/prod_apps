@@ -6,7 +6,6 @@ import argparse
 import sys
 import subprocess
 import os
-import json
 
 def install_dependencies():
     """Install required dependencies"""
@@ -20,28 +19,20 @@ def main():
     parser = argparse.ArgumentParser(
         description='Read the source code of a biomni function'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters (must contain "function_name")')
-    parser.add_argument('-o', '--output', required=True, help='Output directory')
+    parser.add_argument('function_name', help='Fully qualified function name (e.g., biomni.tool.support_tools.run_python_repl)')
+    parser.add_argument('-o', '--output-dir', default='./',
+                        help='Output directory for source code file (default: ./)')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Read input file with parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    # Extract function_name from input data
-    function_name = input_data.get('function_name')
-    if not function_name:
-        raise ValueError("Input file must contain 'function_name' field")
-
     # Import after dependencies are installed
     from biomni.tool.support_tools import read_function_source_code
 
-    result = read_function_source_code(function_name=function_name)
+    result = read_function_source_code(function_name=args.function_name)
 
-    os.makedirs(args.output, exist_ok=True)
-    output_file = os.path.join(args.output, 'source_code.txt')
+    os.makedirs(args.output_dir, exist_ok=True)
+    output_file = os.path.join(args.output_dir, 'source_code.txt')
     with open(output_file, 'w') as f:
         f.write(result)
     print(f"Complete! Results: {output_file}")

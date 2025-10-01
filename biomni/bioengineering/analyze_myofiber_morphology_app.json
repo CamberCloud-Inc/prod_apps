@@ -3,7 +3,7 @@
   "title": "Biomni: Analyze Myofiber Morphology",
   "description": "Quantify morphological properties of myofibers in microscopy images",
   "content": "<h3>Overview</h3><p>This tool performs quantitative morphological analysis of skeletal muscle myofibers from fluorescence microscopy images. Myofiber morphology is a critical indicator of muscle health, disease state, and regenerative capacity. The analysis segments individual myofibers, identifies nuclei, and calculates key morphometric parameters including cross-sectional area, perimeter, circularity, aspect ratio, Feret diameter, and nuclei-to-fiber associations. These measurements are essential for assessing muscle fiber type distribution, hypertrophy, atrophy, and regeneration.</p><h3>Input Parameters</h3><ul><li><strong>image_path</strong> (string, required): Path to the multichannel fluorescence microscopy image file containing muscle tissue sections. Supports TIFF, PNG, or other standard microscopy formats with separate channels for myofiber membrane and nuclei staining.</li><li><strong>nuclei_channel</strong> (integer, optional): Channel index containing nuclei staining (typically DAPI or Hoechst). Zero-indexed (0 = first channel). Default: 2.</li><li><strong>myofiber_channel</strong> (integer, optional): Channel index containing myofiber membrane staining (typically laminin, dystrophin, or wheat germ agglutinin). Zero-indexed. Default: 1.</li><li><strong>threshold_method</strong> (string, optional): Segmentation threshold algorithm. Options include \"otsu\" (automatic Otsu thresholding), \"li\" (Li's minimum cross entropy), \"triangle\", or \"manual\". Default: \"otsu\".</li></ul><h3>Input Format</h3><p>Create a JSON file with the following structure:</p><pre>{\n  \"image_path\": \"/path/to/muscle_section.tif\",\n  \"nuclei_channel\": 0,\n  \"myofiber_channel\": 1,\n  \"threshold_method\": \"otsu\"\n}</pre><h3>Biological Use Case</h3><p>Myofiber morphometry is fundamental in muscle biology research and clinical diagnostics. In muscular dystrophy studies, it quantifies progressive muscle fiber degeneration, measures centrally nucleated fibers as indicators of regeneration, and assesses fiber size variability characteristic of disease. In aging research (sarcopenia), it tracks age-related muscle atrophy and fiber type transitions. In exercise physiology, it evaluates training-induced hypertrophy and determines optimal exercise regimens. In regenerative medicine, it assesses the efficacy of cell-based therapies, biomaterial scaffolds, and gene therapy for muscle repair. The tool is also valuable for drug development, enabling high-throughput screening of compounds that promote muscle growth or prevent atrophy in conditions like cachexia, denervation injury, or prolonged immobilization.</p><h3>Output</h3><p>The analysis produces myofiber_morphology_results.txt containing: (1) total fiber count and spatial distribution statistics, (2) comprehensive morphometric data for each fiber including area (um^2), minimum and maximum Feret diameters, perimeter, circularity (0-1 score), aspect ratio, and solidity, (3) population-level statistics with mean, median, standard deviation, and size distribution histograms, (4) nuclei counts per fiber and percentage of centrally nucleated fibers, (5) fiber size distribution analysis identifying atrophic and hypertrophic populations, and (6) annotated microscopy images with segmentation overlays and size-coded visualizations saved as PNG files.</p><h3>Category</h3><p>bioengineering</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/bioengineering/analyze_myofiber_morphology.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/bioengineering/analyze_myofiber_morphology.py --image_path \"${image_path}\" --nuclei_channel \"${nuclei_channel}\" --myofiber_channel \"${myofiber_channel}\" --threshold_method \"${threshold_method}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,10 +29,31 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "name": "image_path",
+      "label": "Image Path",
+      "description": "Path to the multichannel fluorescence microscopy image file",
       "defaultValue": ""
+    },
+    {
+      "type": "Text",
+      "name": "nuclei_channel",
+      "label": "Nuclei Channel",
+      "description": "Channel index containing nuclei staining (default: 2)",
+      "defaultValue": "2"
+    },
+    {
+      "type": "Text",
+      "name": "myofiber_channel",
+      "label": "Myofiber Channel",
+      "description": "Channel index containing myofiber membrane staining (default: 1)",
+      "defaultValue": "1"
+    },
+    {
+      "type": "Text",
+      "name": "threshold_method",
+      "label": "Threshold Method",
+      "description": "Segmentation threshold algorithm (default: otsu)",
+      "defaultValue": "otsu"
     },
     {
       "type": "Stash File",

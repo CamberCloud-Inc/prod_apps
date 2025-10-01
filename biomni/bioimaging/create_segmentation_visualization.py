@@ -24,7 +24,9 @@ def main():
     parser = argparse.ArgumentParser(
         description='Create visualization of segmentation results'
     )
-    parser.add_argument('input_file', help='JSON config file from stash')
+    parser.add_argument('--original_mri', required=True, help='Path to the original MRI image file')
+    parser.add_argument('--segmentation', required=True, help='Path to the segmentation mask file')
+    parser.add_argument('--output_dir', default='./visualization_output', help='Directory for visualization output')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -33,17 +35,10 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.bioimaging import create_segmentation_visualization
 
-    with open(args.input_file, 'r') as f:
-        config = json.load(f)
-
-    original_mri = config['original_mri']
-    segmentation = config['segmentation']
-    output_dir = config.get('output_dir', './visualization_output')
-
     result = create_segmentation_visualization(
-        original_mri=original_mri,
-        segmentation=segmentation,
-        output_dir=output_dir
+        original_mri=args.original_mri,
+        segmentation=args.segmentation,
+        output_dir=args.output_dir
     )
 
     os.makedirs(args.output, exist_ok=True)

@@ -3,7 +3,7 @@
   "title": "Biomni: Query Opentarget",
   "description": "Query Open Targets Platform for systematic target identification integrating genetics and genomics data.",
   "content": "<h3>Overview</h3><p>Searches Open Targets Platform integrating data sources to provide evidence for target-disease associations. Combines GWAS, somatic mutations, expression, pathways, animal models, and drug data.</p><h3>Input Parameters</h3><ul><li><strong>prompt</strong> (string, optional): Natural language query</li><li><strong>query</strong> (string, optional): GraphQL query</li><li><strong>variables</strong> (dict, optional): GraphQL variables</li><li><strong>verbose</strong> (boolean, optional): Enable logging</li></ul><h3>Input Format</h3><p>Create JSON:</p><pre>{\n  \"prompt\": \"Find targets for rheumatoid arthritis\"\n}</pre><h3>Biological Use Case</h3><p>Essential for drug discovery and target prioritization. Researchers use Open Targets to identify targets, assess genetic evidence, discover repurposing opportunities, understand safety risks, and prioritize drug development programs.</p><h3>Output</h3><p>Returns JSON (opentarget_results.json) with target-disease associations, evidence scores, genetic support, tractability, known drugs, pathways, safety information, and supporting data.</p><h3>Category</h3><p>database</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_opentarget.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_opentarget.py --prompt \"${prompt}\" --query \"${query}\" --variables \"${variables}\" --verbose \"${verbose}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,31 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "prompt",
+      "label": "Prompt",
+      "description": "Query prompt/description",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "query",
+      "label": "GraphQL Query",
+      "description": "GraphQL query string",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "variables",
+      "label": "Query Variables",
+      "description": "GraphQL query variables (JSON)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "verbose",
+      "label": "Verbose",
+      "description": "Enable verbose output (true/false)",
       "defaultValue": ""
     },
     {

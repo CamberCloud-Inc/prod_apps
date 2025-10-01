@@ -26,7 +26,12 @@ def main():
     parser = argparse.ArgumentParser(
         description='Analyze circular dichroism (CD) spectroscopy data'
     )
-    parser.add_argument('input_file', help='JSON file with CD spectroscopy data')
+    parser.add_argument('--sample_name', required=True, help='Identifier for the protein or sample being analyzed')
+    parser.add_argument('--sample_type', required=True, help='Type of sample (e.g., "protein", "peptide", "DNA", "RNA")')
+    parser.add_argument('--wavelength_data', required=True, help='Wavelength values in nanometers (comma-separated)')
+    parser.add_argument('--cd_signal_data', required=True, help='CD signal values corresponding to each wavelength (comma-separated)')
+    parser.add_argument('--temperature_data', help='Temperature values in Kelvin for thermal denaturation (comma-separated, optional)')
+    parser.add_argument('--thermal_cd_data', help='CD signal values at specific wavelength across temperatures (comma-separated, optional)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -35,25 +40,26 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.biochemistry import analyze_circular_dichroism_spectra
 
-    with open(args.input_file, 'r') as f:
-        inputs = json.load(f)
+    # Convert comma-separated strings to arrays of numbers
+    wavelength_data = [float(x.strip()) for x in args.wavelength_data.split(',')]
+    cd_signal_data = [float(x.strip()) for x in args.cd_signal_data.split(',')]
 
-    sample_name = inputs['sample_name']
-    sample_type = inputs['sample_type']
-    wavelength_data = inputs['wavelength_data']
-    cd_signal_data = inputs['cd_signal_data']
-    temperature_data = inputs.get('temperature_data')
-    thermal_cd_data = inputs.get('thermal_cd_data')
-    output_dir = inputs.get('output_dir', './')
+    temperature_data = None
+    if args.temperature_data:
+        temperature_data = [float(x.strip()) for x in args.temperature_data.split(',')]
+
+    thermal_cd_data = None
+    if args.thermal_cd_data:
+        thermal_cd_data = [float(x.strip()) for x in args.thermal_cd_data.split(',')]
 
     result = analyze_circular_dichroism_spectra(
-        sample_name=sample_name,
-        sample_type=sample_type,
+        sample_name=args.sample_name,
+        sample_type=args.sample_type,
         wavelength_data=wavelength_data,
         cd_signal_data=cd_signal_data,
         temperature_data=temperature_data,
         thermal_cd_data=thermal_cd_data,
-        output_dir=output_dir
+        output_dir=args.output
     )
 
     os.makedirs(args.output, exist_ok=True)

@@ -3,7 +3,7 @@
   "title": "Biomni: Estimate Cell Cycle Phase Durations",
   "description": "Estimate cell cycle phase durations using dual-nucleoside pulse labeling data and mathematical modeling",
   "content": "<h3>Overview</h3><p>Estimate cell cycle phase durations (G1, S, G2/M phases) using dual-nucleoside pulse labeling data combined with mathematical modeling and flow cytometry measurements. This tool analyzes sequential incorporation patterns of nucleoside analogs (e.g., EdU and BrdU) to calculate the time cells spend in each phase of the cell cycle, providing precise kinetic parameters essential for understanding proliferation dynamics.</p><h3>Input Parameters</h3><ul><li><strong>flow_cytometry_data</strong> (dict, required): Dictionary containing flow cytometry measurements from dual-pulse labeling experiments, including percentages of cells in different labeling categories (single-positive, double-positive, negative) and DNA content measurements for cell cycle phase assignment</li><li><strong>initial_estimates</strong> (dict, required): Dictionary with initial parameter estimates for optimization algorithms, including approximate durations for G1, S, and G2/M phases in hours (e.g., {'G1': 8, 'S': 6, 'G2M': 4}), and pulse intervals used in the experiment</li></ul><h3>Input Format</h3><pre>{\n  \"flow_cytometry_data\": {\n    \"EdU_only\": 15.2,\n    \"BrdU_only\": 8.6,\n    \"EdU_BrdU_double\": 12.4,\n    \"unlabeled\": 63.8,\n    \"pulse_interval_hours\": 2\n  },\n  \"initial_estimates\": {\n    \"G1_hours\": 8,\n    \"S_hours\": 6,\n    \"G2M_hours\": 4\n  }\n}</pre><h3>Biological Use Case</h3><p>Critical for quantifying immune cell proliferation kinetics in vivo and in vitro. Applications include: (1) Measuring T cell proliferation rates during immune responses to infection or vaccination, (2) Comparing cell cycle progression in naive vs. activated lymphocytes, (3) Assessing effects of cytokines (IL-2, IL-7, IL-15) on cell cycle kinetics, (4) Evaluating checkpoint control in cancer immunology and immunotherapy studies, (5) Characterizing proliferation of hematopoietic stem and progenitor cells in bone marrow, and (6) Studying cell cycle alterations in autoimmune lymphoproliferative disorders.</p><h3>Output</h3><p>Provides detailed cell cycle kinetics including: estimated duration of each cell cycle phase (G1, S, G2/M) in hours, total cell cycle time, growth fraction (percentage of cycling cells), cell cycle distribution, confidence intervals for estimates, and model fit quality metrics. Results include parameter estimates with statistical validation saved to 'cell_cycle_results.txt'.</p><h3>Category</h3><p>immunology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/immunology/estimate_cell_cycle_phase_durations.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/immunology/estimate_cell_cycle_phase_durations.py --flow_cytometry_data \"${flow_cytometry_data}\" --initial_estimates \"${initial_estimates}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,17 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "flow_cytometry_data",
+      "label": "Flow Cytometry Data",
+      "description": "Flow cytometry measurements from dual-pulse labeling (JSON dict)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "initial_estimates",
+      "label": "Initial Estimates",
+      "description": "Initial parameter estimates for G1, S, G2M phases (JSON dict)",
       "defaultValue": ""
     },
     {

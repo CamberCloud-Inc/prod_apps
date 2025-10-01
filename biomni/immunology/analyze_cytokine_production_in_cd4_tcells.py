@@ -1,43 +1,35 @@
 #!/usr/bin/env python3
 """
-Camber wrapper for analyze_cytokine_production_in_cd4_tcells from biomni.tool.immunology
+Biomni Tool: Analyze Cytokine Production In Cd4 Tcells
+Wraps: biomni.tool.immunology.analyze_cytokine_production_in_cd4_tcells
 """
-
 import argparse
 import sys
-import json
+import subprocess
 import os
-
-
+import json
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Analyze cytokine production in CD4 T cells from flow cytometry data'
+        description='Analyze Cytokine Production In Cd4 Tcells'
     )
-    parser.add_argument('input_file', help='JSON file with FCS file paths')
+    parser.add_argument('--fcs_files_dict', help='Dictionary mapping sample IDs to FCS file paths (JSON dict)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input data
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    fcs_files_dict = input_data['fcs_files_dict']
-
-    # Import after dependencies are installed
     from biomni.tool.immunology import analyze_cytokine_production_in_cd4_tcells
+
+    # Parse fcs_files_dict
+    fcs_files_dict = json.loads(args.fcs_files_dict) if args.fcs_files_dict else None
 
     result = analyze_cytokine_production_in_cd4_tcells(
         fcs_files_dict=fcs_files_dict,
@@ -50,6 +42,5 @@ def main():
         f.write(result)
     print(f"Complete! Results: {output_file}")
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

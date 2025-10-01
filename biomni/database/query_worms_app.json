@@ -3,7 +3,7 @@
   "title": "Biomni: Query Worms",
   "description": "Query the World Register of Marine Species for authoritative taxonomic information on marine organisms.",
   "content": "<h3>Overview</h3><p>Searches WoRMS, the authoritative marine taxonomy catalogue containing over 240,000 accepted species names with synonymy, taxonomy, distribution, and biological traits.</p><h3>Input Parameters</h3><ul><li><strong>prompt</strong> (string, optional): Natural language query</li><li><strong>endpoint</strong> (string, optional): WoRMS endpoint</li><li><strong>verbose</strong> (boolean, optional): Enable logging</li></ul><h3>Input Format</h3><p>Create JSON:</p><pre>{\n  \"prompt\": \"Find taxonomy for blue whale\"\n}</pre><h3>Biological Use Case</h3><p>Essential for marine biology, taxonomy, and biodiversity studies. Researchers use WoRMS to verify species names, access classifications, identify synonyms, understand distributions, link to traits, and standardize nomenclature.</p><h3>Output</h3><p>Returns JSON (worms_results.json) with taxonomic info including AphiaIDs, scientific names, authorship, classification, synonyms, accepted names, status, distribution, and database cross-references.</p><h3>Category</h3><p>database</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_worms.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_worms.py --prompt \"${prompt}\" --endpoint \"${endpoint}\" --verbose \"${verbose}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,24 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "prompt",
+      "label": "Prompt",
+      "description": "Query prompt/description",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "endpoint",
+      "label": "Endpoint",
+      "description": "API endpoint path",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "verbose",
+      "label": "Verbose",
+      "description": "Enable verbose output (true/false)",
       "defaultValue": ""
     },
     {

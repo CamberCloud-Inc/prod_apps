@@ -24,7 +24,10 @@ def main():
     parser = argparse.ArgumentParser(
         description='Optimize anaerobic digestion process conditions to maximize VFA production or methane yield.'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('--waste-characteristics', type=str, required=True, help='Waste composition and characteristics (JSON string)')
+    parser.add_argument('--operational-parameters', type=str, required=True, help='Operational parameters to optimize (JSON string)')
+    parser.add_argument('--target-output', type=str, default='methane_yield', help='Target output to maximize (methane_yield or vfa_production)')
+    parser.add_argument('--optimization-method', type=str, default='rsm', help='Optimization method to use (rsm, ga, etc.)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
     args = parser.parse_args()
 
@@ -33,22 +36,16 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.microbiology import optimize_anaerobic_digestion_process
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    # Extract parameters
-    waste_characteristics = input_data.get('waste_characteristics')
-    operational_parameters = input_data.get('operational_parameters')
-    target_output = input_data.get('target_output', 'methane_yield')
-    optimization_method = input_data.get('optimization_method', 'rsm')
+    # Parse JSON string parameters
+    waste_characteristics = json.loads(args.waste_characteristics)
+    operational_parameters = json.loads(args.operational_parameters)
 
     # Call the function
     result = optimize_anaerobic_digestion_process(
         waste_characteristics=waste_characteristics,
         operational_parameters=operational_parameters,
-        target_output=target_output,
-        optimization_method=optimization_method
+        target_output=args.target_output,
+        optimization_method=args.optimization_method
     )
 
     # Write result to output file

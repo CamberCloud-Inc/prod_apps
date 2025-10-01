@@ -19,18 +19,13 @@ def main():
     parser = argparse.ArgumentParser(
         description='Predicts intrinsically disordered regions (IDRs) in a protein sequence using IUPred2A'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters from stash')
+    parser.add_argument('protein_sequence', help='Amino acid sequence in single-letter code')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
+    parser.add_argument('-t', '--threshold', type=float, default=0.5,
+                        help='Disorder probability threshold (0.0 to 1.0, default: 0.5)')
 
     args = parser.parse_args()
     install_dependencies()
-
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    protein_sequence = input_data['protein_sequence']
-    threshold = input_data.get('threshold', 0.5)
 
     from biomni.tool.biophysics import predict_protein_disorder_regions
 
@@ -39,8 +34,8 @@ def main():
     output_csv_file = os.path.join(args.output, 'disorder_prediction_results.csv')
 
     result = predict_protein_disorder_regions(
-        protein_sequence=protein_sequence,
-        threshold=threshold,
+        protein_sequence=args.protein_sequence,
+        threshold=args.threshold,
         output_file=output_csv_file
     )
 

@@ -3,7 +3,7 @@
   "title": "Biomni: Design Primer",
   "description": "Design a single optimized primer for PCR or sequencing",
   "content": "<h3>Overview</h3><p>This tool designs a single optimized primer for PCR amplification or DNA sequencing. It analyzes the target sequence to generate primers meeting specified criteria for GC content, melting temperature (Tm), and length. The algorithm searches for optimal primer binding sites while avoiding secondary structures and repetitive sequences.</p><h3>Input Parameters</h3><ul><li><strong>sequence</strong>: Target DNA sequence (string)</li><li><strong>start_pos</strong>: Starting position for primer search (integer, 0-based)</li><li><strong>--primer-length</strong>: Desired primer length in bp (default: 20)</li><li><strong>--min-gc</strong>: Minimum GC content as decimal (default: 0.4 = 40%)</li><li><strong>--max-gc</strong>: Maximum GC content as decimal (default: 0.6 = 60%)</li><li><strong>--min-tm</strong>: Minimum melting temperature in Celsius (default: 55.0)</li><li><strong>--max-tm</strong>: Maximum melting temperature in Celsius (default: 65.0)</li><li><strong>--search-window</strong>: Search window size in bp (default: 100)</li></ul><h3>Input Format</h3><p>Command-line arguments format:</p><pre>python design_primer.py \"ATGCGAT...\" 100 --primer-length 22 --min-gc 0.45 --max-gc 0.65 --min-tm 58.0 --max-tm 62.0 --search-window 150 -o output/</pre><p>Sequence and start position are required; all other parameters are optional with sensible defaults.</p><h3>Biological Use Case</h3><p>Essential for various molecular biology applications:</p><ul><li>Design primers for PCR amplification of specific gene regions</li><li>Generate sequencing primers for Sanger sequencing validation</li><li>Create primers for colony PCR screening</li><li>Design primers for RT-PCR and qPCR experiments</li><li>Develop primers for site-directed mutagenesis</li><li>Generate walking primers for long-read sequencing projects</li></ul><h3>Output</h3><p>Returns a JSON file (designed_primer.json) containing the optimized primer sequence with calculated properties including GC content, Tm, position, and quality metrics.</p><h3>Category</h3><p>molecular_biology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/design_primer.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/design_primer.py \"${sequence}\" ${start_pos} --primer-length ${primer_length} --min-gc ${min_gc} --max-gc ${max_gc} --min-tm ${min_tm} --max-tm ${max_tm} --search-window ${search_window} -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,11 +28,60 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "sequence",
+      "label": "Target Sequence",
+      "description": "Target DNA sequence",
       "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "start_pos",
+      "label": "Start Position",
+      "description": "Starting position for primer search",
+      "defaultValue": "0"
+    },
+    {
+      "type": "Input",
+      "name": "primer_length",
+      "label": "Primer Length",
+      "description": "Primer length in bp (default: 20)",
+      "defaultValue": "20"
+    },
+    {
+      "type": "Input",
+      "name": "min_gc",
+      "label": "Minimum GC Content",
+      "description": "Minimum GC content as decimal (default: 0.4)",
+      "defaultValue": "0.4"
+    },
+    {
+      "type": "Input",
+      "name": "max_gc",
+      "label": "Maximum GC Content",
+      "description": "Maximum GC content as decimal (default: 0.6)",
+      "defaultValue": "0.6"
+    },
+    {
+      "type": "Input",
+      "name": "min_tm",
+      "label": "Minimum Tm",
+      "description": "Minimum melting temperature in Celsius (default: 55.0)",
+      "defaultValue": "55.0"
+    },
+    {
+      "type": "Input",
+      "name": "max_tm",
+      "label": "Maximum Tm",
+      "description": "Maximum melting temperature in Celsius (default: 65.0)",
+      "defaultValue": "65.0"
+    },
+    {
+      "type": "Input",
+      "name": "search_window",
+      "label": "Search Window",
+      "description": "Search window size in bp (default: 100)",
+      "defaultValue": "100"
     },
     {
       "type": "Stash File",

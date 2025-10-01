@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Biomni Tool: Get Genes Near cCRE
+Biomni Tool: Get Genes Near Ccre
 Wraps: biomni.tool.database.get_genes_near_ccre
 """
 import argparse
@@ -18,25 +18,24 @@ def install_dependencies():
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Get k nearest genes to a cCRE (Candidate cis-Regulatory Element)'
+        description='Get Genes Near Ccre'
     )
-    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('--accession', required=True, help='cCRE accession ID')
+    parser.add_argument('--assembly', required=True, help='Genome assembly (e.g., 'GRCh38')')
+    parser.add_argument('--chromosome', required=True, help='Chromosome name')
+    parser.add_argument('--k', default='10', help='Number of nearest genes to return (default: 10)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
     from biomni.tool.database import get_genes_near_ccre
 
     result = get_genes_near_ccre(
-        accession=input_data.get('accession'),
-        assembly=input_data.get('assembly'),
-        chromosome=input_data.get('chromosome'),
-        k=input_data.get('k', 10)
+        accession=args.accession,
+        assembly=args.assembly,
+        chromosome=args.chromosome,
+        k=int(args.k) if args.k else None
     )
 
     os.makedirs(args.output, exist_ok=True)

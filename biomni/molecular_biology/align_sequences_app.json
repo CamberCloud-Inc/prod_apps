@@ -3,7 +3,7 @@
   "title": "Biomni: Align Sequences",
   "description": "Align short sequences (primers) to a longer target sequence allowing for one mismatch",
   "content": "<h3>Overview</h3><p>This tool aligns short DNA sequences (such as primers) to a longer target sequence, allowing for up to one mismatch. It uses sequence alignment algorithms to find the best binding sites of short oligonucleotides on a template DNA sequence, which is essential for primer design validation and PCR optimization.</p><h3>Input Parameters</h3><ul><li><strong>long_seq</strong>: Target DNA sequence (template) to search for alignment sites</li><li><strong>short_seqs</strong>: One or more short DNA sequences (primers/oligonucleotides) to align against the target</li></ul><h3>Input Format</h3><p>Command-line arguments format:</p><pre>python align_sequences.py \"ATCGATCGATCG...\" \"ATCGAT\" \"GATCGA\" -o output/</pre><p>The tool accepts the target sequence as the first argument, followed by one or more short sequences to align.</p><h3>Biological Use Case</h3><p>Used in molecular cloning and PCR applications to:</p><ul><li>Validate primer binding sites on plasmid vectors</li><li>Check for off-target primer binding locations</li><li>Verify oligonucleotide specificity before ordering</li><li>Analyze probe hybridization sites for molecular diagnostics</li><li>Quality control for primer design in mutagenesis experiments</li></ul><h3>Output</h3><p>Returns a JSON file (alignment_results.json) containing alignment positions, match quality scores, and any mismatches identified for each short sequence aligned to the target.</p><h3>Category</h3><p>molecular_biology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/align_sequences.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/align_sequences.py \"${long_seq}\" ${short_seqs} -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,17 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "long_seq",
+      "label": "Target Sequence",
+      "description": "Target DNA sequence",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "short_seqs",
+      "label": "Short Sequences",
+      "description": "One or more short sequences to align (space-separated)",
       "defaultValue": ""
     },
     {

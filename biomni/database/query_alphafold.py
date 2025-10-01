@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Biomni Tool: Query AlphaFold
+Biomni Tool: Query Alphafold
 Wraps: biomni.tool.database.query_alphafold
 """
 import argparse
@@ -18,29 +18,32 @@ def install_dependencies():
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Query the AlphaFold Database API for protein structure predictions'
+        description='Query Alphafold'
     )
-    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('--uniprot_id', required=True, help='UniProt protein identifier')
+    parser.add_argument('--endpoint', default='prediction', help='API endpoint (default: prediction)')
+    parser.add_argument('--residue_range', help='Residue range (optional)')
+    parser.add_argument('--download', default='false', help='Download files (true/false, default: false)')
+    parser.add_argument('--output_dir', help='Output directory for downloads (optional)')
+    parser.add_argument('--file_format', default='pdb', help='File format (pdb/cif, default: pdb)')
+    parser.add_argument('--model_version', default='v4', help='Model version (default: v4)')
+    parser.add_argument('--model_number', default='1', help='Model number (default: 1)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
     from biomni.tool.database import query_alphafold
 
     result = query_alphafold(
-        uniprot_id=input_data.get('uniprot_id'),
-        endpoint=input_data.get('endpoint', 'prediction'),
-        residue_range=input_data.get('residue_range'),
-        download=input_data.get('download', False),
-        output_dir=input_data.get('output_dir'),
-        file_format=input_data.get('file_format', 'pdb'),
-        model_version=input_data.get('model_version', 'v4'),
-        model_number=input_data.get('model_number', 1)
+        uniprot_id=args.uniprot_id,
+        endpoint=args.endpoint,
+        residue_range=args.residue_range,
+        download=args.download.lower() == 'true' if args.download else None,
+        output_dir=args.output_dir,
+        file_format=args.file_format,
+        model_version=args.model_version,
+        model_number=int(args.model_number) if args.model_number else None
     )
 
     os.makedirs(args.output, exist_ok=True)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Biomni Tool: Query gnomAD
+Biomni Tool: Query Gnomad
 Wraps: biomni.tool.database.query_gnomad
 """
 import argparse
@@ -18,24 +18,22 @@ def install_dependencies():
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Query gnomAD for variants in a gene'
+        description='Query Gnomad'
     )
-    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('--prompt', help='Query prompt/description')
+    parser.add_argument('--gene_symbol', help='Gene symbol to query')
+    parser.add_argument('--verbose', default='true', help='Enable verbose output (true/false, default: true)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
     from biomni.tool.database import query_gnomad
 
     result = query_gnomad(
-        prompt=input_data.get('prompt'),
-        gene_symbol=input_data.get('gene_symbol'),
-        verbose=input_data.get('verbose', True)
+        prompt=args.prompt,
+        gene_symbol=args.gene_symbol,
+        verbose=args.verbose.lower() == 'true' if args.verbose else None
     )
 
     os.makedirs(args.output, exist_ok=True)

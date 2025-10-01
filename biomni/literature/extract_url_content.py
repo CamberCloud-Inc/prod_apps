@@ -1,51 +1,39 @@
 #!/usr/bin/env python3
 """
-Camber wrapper for extract_url_content from biomni.tool.literature
+Biomni Tool: Extract Url Content
+Wraps: biomni.tool.literature.extract_url_content
 """
-
 import argparse
 import sys
-import json
 import subprocess
 import os
-
 
 def install_dependencies():
     """Install required dependencies"""
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Extract content from URL'
+        description='Extract Url Content'
     )
-    parser.add_argument('input_file', help='JSON file with URL from stash')
+    parser.add_argument('--url', required=True, help='URL of the webpage to extract content from')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input data
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    url = input_data['url']
-
-    # Import after dependencies are installed
     from biomni.tool.literature import extract_url_content
 
-    result = extract_url_content(url=url)
+    result = extract_url_content(url=args.url)
 
-    # Write output
     os.makedirs(args.output, exist_ok=True)
     output_file = os.path.join(args.output, 'url_content.txt')
     with open(output_file, 'w') as f:
         f.write(result)
     print(f"Complete! Results: {output_file}")
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

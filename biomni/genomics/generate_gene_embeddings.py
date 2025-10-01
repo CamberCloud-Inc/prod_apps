@@ -18,7 +18,7 @@ def main():
     parser = argparse.ArgumentParser(
         description='Generate protein embeddings for genes using ESM language models'
     )
-    parser.add_argument('gene_ids_file', help='JSON file with list of ENSEMBL gene IDs from stash')
+    parser.add_argument('gene_ids', help='Comma-separated list of ENSEMBL gene IDs (e.g., "ENSG00000139618,ENSG00000141510")')
     parser.add_argument('--model-name', default='esm2_t6_8M_UR50D',
                        help='ESM model name (default: esm2_t6_8M_UR50D)')
     parser.add_argument('--layer', type=int, default=6,
@@ -32,12 +32,11 @@ def main():
     args = parser.parse_args()
     install_dependencies()
 
-    # Load gene IDs
-    with open(args.gene_ids_file, 'r') as f:
-        gene_ids = json.load(f)
+    # Parse gene IDs from comma-separated string
+    gene_ids = [g.strip() for g in args.gene_ids.split(',') if g.strip()]
 
-    if not isinstance(gene_ids, list):
-        raise ValueError("Gene IDs file must contain a JSON array")
+    if not gene_ids:
+        raise ValueError("No gene IDs provided")
 
     from biomni.tool.genomics import generate_gene_embeddings_with_ESM_models
 

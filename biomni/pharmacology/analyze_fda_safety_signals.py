@@ -23,26 +23,23 @@ def main():
     parser = argparse.ArgumentParser(
         description='Analyzes FDA safety signals for drugs'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('--drug-list', required=True, help='List of drug names to analyze (JSON array format, e.g., ["Aspirin", "Ibuprofen"])')
+    parser.add_argument('--comparison-period', help='Analysis period as two dates (JSON array format, e.g., ["2020-01-01", "2023-12-31"])')
+    parser.add_argument('--signal-threshold', type=float, default=2.0, help='Statistical threshold for signal detection (default: 2.0)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input data
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
+    # Parse JSON parameters
+    drug_list = json.loads(args.drug_list)
 
-    drug_list = input_data.get('drug_list')
-    comparison_period = input_data.get('comparison_period')
-    signal_threshold = input_data.get('signal_threshold', 2.0)
+    # Parse comparison_period if provided
+    comparison_period = None
+    if args.comparison_period:
+        comparison_period = tuple(json.loads(args.comparison_period))
 
-    if not drug_list:
-        raise ValueError("Missing required parameter: drug_list")
-
-    # Convert comparison_period to tuple if it's a list
-    if comparison_period and isinstance(comparison_period, list):
-        comparison_period = tuple(comparison_period)
+    signal_threshold = args.signal_threshold
 
     # Import after dependencies are installed
     from biomni.tool.pharmacology import analyze_fda_safety_signals

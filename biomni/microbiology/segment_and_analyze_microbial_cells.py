@@ -24,7 +24,10 @@ def main():
     parser = argparse.ArgumentParser(
         description='Segment and analyze microbial cells in microscopy images using image processing techniques.'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('--image-path', type=str, required=True, help='Path to microscopy image file')
+    parser.add_argument('--output-dir', type=str, default='./output', help='Directory where results will be saved')
+    parser.add_argument('--min-cell-size', type=int, default=50, help='Minimum cell size in pixels')
+    parser.add_argument('--max-cell-size', type=int, default=5000, help='Maximum cell size in pixels')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
     args = parser.parse_args()
 
@@ -33,22 +36,12 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.microbiology import segment_and_analyze_microbial_cells
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    # Extract parameters
-    image_path = input_data.get('image_path')
-    output_dir = input_data.get('output_dir', './output')
-    min_cell_size = input_data.get('min_cell_size', 50)
-    max_cell_size = input_data.get('max_cell_size', 5000)
-
     # Call the function
     result = segment_and_analyze_microbial_cells(
-        image_path=image_path,
-        output_dir=output_dir,
-        min_cell_size=min_cell_size,
-        max_cell_size=max_cell_size
+        image_path=args.image_path,
+        output_dir=args.output_dir,
+        min_cell_size=args.min_cell_size,
+        max_cell_size=args.max_cell_size
     )
 
     # Write result to output file

@@ -24,7 +24,8 @@ def main():
     parser = argparse.ArgumentParser(
         description='Calculate similarity metrics between two medical images'
     )
-    parser.add_argument('input_file', help='JSON config file from stash')
+    parser.add_argument('--image1_path', required=True, help='Path to the first medical image file')
+    parser.add_argument('--image2_path', required=True, help='Path to the second medical image file')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -33,15 +34,9 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.bioimaging import calculate_similarity_metrics
 
-    with open(args.input_file, 'r') as f:
-        config = json.load(f)
-
-    image1_path = config['image1_path']
-    image2_path = config['image2_path']
-
     result = calculate_similarity_metrics(
-        image1_path=image1_path,
-        image2_path=image2_path
+        image1_path=args.image1_path,
+        image2_path=args.image2_path
     )
 
     os.makedirs(args.output, exist_ok=True)

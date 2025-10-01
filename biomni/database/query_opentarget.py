@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Biomni Tool: Query OpenTargets
+Biomni Tool: Query Opentarget
 Wraps: biomni.tool.database.query_opentarget
 """
 import argparse
@@ -18,24 +18,25 @@ def install_dependencies():
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Query the OpenTargets Platform API'
+        description='Query Opentarget'
     )
-    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('--prompt', help='Query prompt/description')
+    parser.add_argument('--query', help='GraphQL query string')
+    parser.add_argument('--variables', help='GraphQL query variables (JSON)')
+    parser.add_argument('--verbose', help='Enable verbose output (true/false)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
     from biomni.tool.database import query_opentarget
 
-    result = query_opentarget(prompt=input_data.get('prompt'),
-        query=input_data.get('query'),
-        variables=input_data.get('variables'),
-        verbose=input_data.get('verbose'))
+    result = query_opentarget(
+        prompt=args.prompt,
+        query=args.query,
+        variables=args.variables,
+        verbose=args.verbose.lower() == 'true' if args.verbose else None
+    )
 
     os.makedirs(args.output, exist_ok=True)
     output_file = os.path.join(args.output, 'opentarget_results.json')

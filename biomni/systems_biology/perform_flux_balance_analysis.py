@@ -3,9 +3,9 @@
 Wrapper for Biomni perform_flux_balance_analysis tool
 """
 import sys
-import json
 import argparse
 import os
+import json
 
 
 def install_dependencies():
@@ -22,20 +22,31 @@ def main():
     parser = argparse.ArgumentParser(
         description='Perform flux balance analysis using Biomni'
     )
-    parser.add_argument('input_file', help='JSON file with FBA parameters')
+    parser.add_argument('model_file', help='Path to metabolic model file')
+    parser.add_argument('--constraints', help='JSON string or file with flux constraints')
+    parser.add_argument('--objective-reaction', help='Objective reaction for optimization')
+    parser.add_argument('--output-filename', default='fba_results.csv', help='Output filename (default: fba_results.csv)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
+    # Parse JSON parameters (handle both strings and file paths)
+    def parse_json_param(param):
+        if not param:
+            return None
+        try:
+            return json.loads(param)
+        except json.JSONDecodeError:
+            if os.path.exists(param):
+                with open(param, 'r') as f:
+                    return json.load(f)
+            raise ValueError(f"Parameter is neither valid JSON nor a file path: {param}")
 
-    model_file = input_data.get('model_file')
-    constraints = input_data.get('constraints')
-    objective_reaction = input_data.get('objective_reaction')
-    output_filename = input_data.get('output_file', 'fba_results.csv')
+    model_file = args.model_file
+    constraints = parse_json_param(args.constraints) if args.constraints else None
+    objective_reaction = args.objective_reaction
+    output_filename = args.output_filename
 
     # Import after dependencies are installed
     from biomni.tool.systems_biology import perform_flux_balance_analysis

@@ -3,7 +3,7 @@
   "title": "Biomni: Get Golden Gate Assembly Protocol",
   "description": "Get customized Golden Gate assembly protocol based on your requirements",
   "content": "<h3>Overview</h3><p>This tool generates a customized Golden Gate assembly protocol optimized for your specific experimental parameters. It calculates optimal DNA amounts, buffer volumes, enzyme concentrations, and thermocycler conditions based on the number of fragments, fragment sizes, and enzyme choice. The protocol includes detailed instructions for one-pot assembly reactions with precise molar ratios.</p><h3>Input Parameters</h3><ul><li><strong>--num-inserts</strong>: Number of DNA inserts to assemble (default: 1)</li><li><strong>--enzyme</strong>: Type IIS restriction enzyme (required): BsaI, BsmBI, BbsI, Esp3I, BtgZI, or SapI</li><li><strong>--vector-length</strong>: Vector/backbone length in base pairs (optional)</li><li><strong>--vector-amount</strong>: Amount of vector DNA in nanograms (default: 75.0)</li><li><strong>--insert-lengths</strong>: List of insert lengths in bp (space-separated, optional)</li><li><strong>--library-prep</strong>: Flag indicating protocol is for library preparation (optional)</li></ul><h3>Input Format</h3><p>Command-line arguments format:</p><pre>python get_golden_gate_assembly_protocol.py --num-inserts 3 --enzyme BsaI --vector-length 3000 --vector-amount 50.0 --insert-lengths 500 800 1200 -o output/</pre><p>Only enzyme is required; other parameters have defaults or can be omitted.</p><h3>Biological Use Case</h3><p>Facilitates standardized Golden Gate cloning workflows:</p><ul><li>Generate protocols for multi-fragment assemblies (2-7 fragments)</li><li>Calculate optimal DNA ratios for high-efficiency cloning</li><li>Obtain thermocycler programs for specific Type IIS enzymes</li><li>Prepare protocols for library construction projects</li><li>Standardize Golden Gate procedures across lab members</li><li>Optimize assembly conditions for difficult-to-clone fragments</li></ul><h3>Output</h3><p>Returns a JSON file (golden_gate_protocol.json) with complete assembly protocol including reagent volumes, DNA amounts, cycling conditions, and step-by-step instructions.</p><h3>Category</h3><p>molecular_biology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/get_golden_gate_assembly_protocol.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/get_golden_gate_assembly_protocol.py --num-inserts ${num_inserts} --enzyme \"${enzyme}\" --vector-length ${vector_length} --vector-amount ${vector_amount} --insert-lengths ${insert_lengths} ${library_prep} -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,45 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "num_inserts",
+      "label": "Number of Inserts",
+      "description": "Number of inserts (default: 1)",
+      "defaultValue": "1"
+    },
+    {
+      "type": "Input",
+      "name": "enzyme",
+      "label": "Enzyme",
+      "description": "Type IIS enzyme (BsaI, BsmBI, BbsI, Esp3I, BtgZI, SapI)",
+      "defaultValue": "BsaI"
+    },
+    {
+      "type": "Input",
+      "name": "vector_length",
+      "label": "Vector Length",
+      "description": "Vector length in bp (optional)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "vector_amount",
+      "label": "Vector Amount",
+      "description": "Vector amount in ng (default: 75.0)",
+      "defaultValue": "75.0"
+    },
+    {
+      "type": "Input",
+      "name": "insert_lengths",
+      "label": "Insert Lengths",
+      "description": "Insert lengths in bp (space-separated, optional)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "library_prep",
+      "label": "Library Preparation",
+      "description": "Protocol is for library preparation (leave empty or add --library-prep)",
       "defaultValue": ""
     },
     {

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Biomni Tool: BLAST Sequence
+Biomni Tool: Blast Sequence
 Wraps: biomni.tool.database.blast_sequence
 """
 import argparse
@@ -18,24 +18,22 @@ def install_dependencies():
 
 def main():
     parser = argparse.ArgumentParser(
-        description='BLAST a sequence against a database'
+        description='Blast Sequence'
     )
-    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('--sequence', required=True, help='The nucleotide or protein sequence to search')
+    parser.add_argument('--database', required=True, help='Target NCBI database (e.g., 'nt', 'nr')')
+    parser.add_argument('--program', required=True, help='BLAST program type (blastn, blastp, blastx, tblastn, tblastx)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
     from biomni.tool.database import blast_sequence
 
     result = blast_sequence(
-        sequence=input_data.get('sequence'),
-        database=input_data.get('database'),
-        program=input_data.get('program')
+        sequence=args.sequence,
+        database=args.database,
+        program=args.program
     )
 
     os.makedirs(args.output, exist_ok=True)

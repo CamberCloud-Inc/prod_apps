@@ -24,7 +24,10 @@ def main():
     parser = argparse.ArgumentParser(
         description='Preprocess medical images with denoising and normalization'
     )
-    parser.add_argument('input_file', help='JSON config file from stash')
+    parser.add_argument('--image_path', required=True, help='Path to the input medical image file')
+    parser.add_argument('--output_path', required=True, help='Path where the preprocessed image will be saved')
+    parser.add_argument('--denoise', type=lambda x: x.lower() == 'true', default=True, help='Enable denoising')
+    parser.add_argument('--normalize', type=lambda x: x.lower() == 'true', default=True, help='Enable normalization')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -33,19 +36,11 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.bioimaging import preprocess_image
 
-    with open(args.input_file, 'r') as f:
-        config = json.load(f)
-
-    image_path = config['image_path']
-    output_path = config['output_path']
-    denoise = config.get('denoise', True)
-    normalize = config.get('normalize', True)
-
     result = preprocess_image(
-        image_path=image_path,
-        output_path=output_path,
-        denoise=denoise,
-        normalize=normalize
+        image_path=args.image_path,
+        output_path=args.output_path,
+        denoise=args.denoise,
+        normalize=args.normalize
     )
 
     os.makedirs(args.output, exist_ok=True)

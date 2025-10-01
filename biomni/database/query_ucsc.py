@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Biomni Tool: Query UCSC
+Biomni Tool: Query Ucsc
 Wraps: biomni.tool.database.query_ucsc
 """
 import argparse
@@ -18,23 +18,23 @@ def install_dependencies():
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Query the UCSC Genome Browser API'
+        description='Query Ucsc'
     )
-    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('--prompt', help='Query prompt/description')
+    parser.add_argument('--endpoint', help='API endpoint path')
+    parser.add_argument('--verbose', help='Enable verbose output (true/false)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
     from biomni.tool.database import query_ucsc
 
-    result = query_ucsc(prompt=input_data.get('prompt'),
-        endpoint=input_data.get('endpoint'),
-        verbose=input_data.get('verbose'))
+    result = query_ucsc(
+        prompt=args.prompt,
+        endpoint=args.endpoint,
+        verbose=args.verbose.lower() == 'true' if args.verbose else None
+    )
 
     os.makedirs(args.output, exist_ok=True)
     output_file = os.path.join(args.output, 'ucsc_results.json')

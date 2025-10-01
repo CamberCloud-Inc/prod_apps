@@ -24,7 +24,9 @@ def main():
     parser = argparse.ArgumentParser(
         description='Prepare input data for nnUNet processing'
     )
-    parser.add_argument('input_file', help='JSON config file from stash')
+    parser.add_argument('--input_path', required=True, help='Path to the input image file or directory')
+    parser.add_argument('--output_dir', required=True, help='Directory for nnUNet-formatted files')
+    parser.add_argument('--case_name', default='BRAT', help='Identifier prefix for the case')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -33,17 +35,10 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.bioimaging import prepare_input_for_nnunet
 
-    with open(args.input_file, 'r') as f:
-        config = json.load(f)
-
-    input_path = config['input_path']
-    output_dir = config['output_dir']
-    case_name = config.get('case_name', 'BRAT')
-
     result = prepare_input_for_nnunet(
-        input_path=input_path,
-        output_dir=output_dir,
-        case_name=case_name
+        input_path=args.input_path,
+        output_dir=args.output_dir,
+        case_name=args.case_name
     )
 
     os.makedirs(args.output, exist_ok=True)

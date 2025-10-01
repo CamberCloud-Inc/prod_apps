@@ -24,8 +24,12 @@ def main():
     parser = argparse.ArgumentParser(
         description='Detect and annotate somatic mutations'
     )
-    parser.add_argument('input_file', help='JSON file with parameters')
+    parser.add_argument('tumor_bam', help='Path to the tumor sample BAM file')
+    parser.add_argument('normal_bam', help='Path to the matched normal sample BAM file')
+    parser.add_argument('reference_genome', help='Path to the reference genome FASTA file')
+    parser.add_argument('output_prefix', help='Prefix for output files')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
+    parser.add_argument('--snpeff-database', default='GRCh38.105', help='SnpEff annotation database version (default: GRCh38.105)')
 
     args = parser.parse_args()
     install_dependencies()
@@ -33,21 +37,12 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.cancer_biology import detect_and_annotate_somatic_mutations
 
-    with open(args.input_file, 'r') as f:
-        params = json.load(f)
-
-    tumor_bam = params['tumor_bam']
-    normal_bam = params['normal_bam']
-    reference_genome = params['reference_genome']
-    output_prefix = params['output_prefix']
-    snpeff_database = params.get('snpeff_database', 'GRCh38.105')
-
     result = detect_and_annotate_somatic_mutations(
-        tumor_bam=tumor_bam,
-        normal_bam=normal_bam,
-        reference_genome=reference_genome,
-        output_prefix=output_prefix,
-        snpeff_database=snpeff_database
+        tumor_bam=args.tumor_bam,
+        normal_bam=args.normal_bam,
+        reference_genome=args.reference_genome,
+        output_prefix=args.output_prefix,
+        snpeff_database=args.snpeff_database
     )
 
     os.makedirs(args.output, exist_ok=True)

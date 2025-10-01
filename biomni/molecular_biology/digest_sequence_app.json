@@ -3,7 +3,7 @@
   "title": "Biomni: Digest Sequence",
   "description": "Simulate restriction enzyme digestion and predict DNA fragments",
   "content": "<h3>Overview</h3><p>This tool simulates restriction enzyme digestion in silico and predicts the resulting DNA fragments. It performs virtual digestion using one or more restriction enzymes, calculating fragment sizes and positions as they would occur in a laboratory restriction digest. The tool handles both linear and circular DNA molecules and supports single or double digests.</p><h3>Input Parameters</h3><ul><li><strong>dna_sequence</strong>: DNA sequence to digest (string)</li><li><strong>enzymes</strong>: One or more restriction enzyme names (e.g., EcoRI, BamHI, HindIII)</li><li><strong>--linear</strong>: Optional flag indicating sequence is linear (default: circular)</li></ul><h3>Input Format</h3><p>Command-line arguments format:</p><pre>python digest_sequence.py \"ATGCGAATTCGAT...\" EcoRI BamHI --linear -o output/</pre><p>Provide the DNA sequence followed by one or more enzyme names. Multiple enzymes simulate a double/multiple digest.</p><h3>Biological Use Case</h3><p>Essential for restriction mapping and cloning strategy design:</p><ul><li>Predict fragment sizes for agarose gel electrophoresis analysis</li><li>Plan restriction cloning strategies by testing enzyme combinations</li><li>Verify plasmid identity by comparing predicted vs. observed digest patterns</li><li>Choose optimal enzymes for insert/vector linearization</li><li>Troubleshoot cloning failures by simulating expected results</li><li>Design diagnostic digests for screening transformants</li></ul><h3>Output</h3><p>Returns a JSON file (digestion_results.json) containing fragment sizes, cut positions, and fragment sequences for the specified enzyme digestion.</p><h3>Category</h3><p>molecular_biology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/digest_sequence.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/digest_sequence.py \"${dna_sequence}\" ${enzymes} ${linear} -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,24 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "dna_sequence",
+      "label": "DNA Sequence",
+      "description": "DNA sequence to digest",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "enzymes",
+      "label": "Enzymes",
+      "description": "One or more restriction enzyme names (space-separated, e.g., EcoRI BamHI)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "linear",
+      "label": "Linear Sequence",
+      "description": "Sequence is linear (leave empty for circular, add --linear for linear)",
       "defaultValue": ""
     },
     {

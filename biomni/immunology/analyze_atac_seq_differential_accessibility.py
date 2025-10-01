@@ -1,51 +1,45 @@
 #!/usr/bin/env python3
 """
-Camber wrapper for analyze_atac_seq_differential_accessibility from biomni.tool.immunology
+Biomni Tool: Analyze Atac Seq Differential Accessibility
+Wraps: biomni.tool.immunology.analyze_atac_seq_differential_accessibility
 """
-
 import argparse
 import sys
-import json
+import subprocess
 import os
-
-
+import json
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Analyze ATAC-seq differential accessibility between treatment and control'
+        description='Analyze Atac Seq Differential Accessibility'
     )
-    parser.add_argument('input_file', help='JSON file with analysis parameters')
+    parser.add_argument('--treatment_bam', help='Path to treatment BAM file with aligned ATAC-seq reads')
+    parser.add_argument('--control_bam', help='Path to control BAM file with aligned ATAC-seq reads')
+    parser.add_argument('--genome_size', help='Effective genome size (hs, mm, ce, dm) (default: hs)')
+    parser.add_argument('--q_value', help='Q-value cutoff for peak detection (default: 0.05)')
+    parser.add_argument('--name_prefix', help='Prefix for output file names (default: atac)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input data
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    treatment_bam = input_data['treatment_bam']
-    control_bam = input_data['control_bam']
-    genome_size = input_data.get('genome_size', 'hs')
-    q_value = input_data.get('q_value', 0.05)
-    name_prefix = input_data.get('name_prefix', 'atac')
-
-    # Import after dependencies are installed
     from biomni.tool.immunology import analyze_atac_seq_differential_accessibility
 
+    # Parse optional parameters with defaults
+    genome_size = args.genome_size if args.genome_size else 'hs'
+    q_value = float(args.q_value) if args.q_value else 0.05
+    name_prefix = args.name_prefix if args.name_prefix else 'atac'
+
     result = analyze_atac_seq_differential_accessibility(
-        treatment_bam=treatment_bam,
-        control_bam=control_bam,
+        treatment_bam=args.treatment_bam,
+        control_bam=args.control_bam,
         output_dir=args.output,
         genome_size=genome_size,
         q_value=q_value,
@@ -58,6 +52,5 @@ def main():
         f.write(result)
     print(f"Complete! Results: {output_file}")
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

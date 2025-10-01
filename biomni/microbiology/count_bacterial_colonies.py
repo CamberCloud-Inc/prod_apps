@@ -24,7 +24,10 @@ def main():
     parser = argparse.ArgumentParser(
         description='Count bacterial colonies from an image of agar plate using computer vision techniques.'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('--image-path', type=str, required=True, help='Path to the agar plate image file')
+    parser.add_argument('--dilution-factor', type=int, default=1, help='Dilution factor used for the sample')
+    parser.add_argument('--plate-area-cm2', type=float, default=65.0, help='Area of the agar plate in square centimeters')
+    parser.add_argument('--output-dir', type=str, default='./output', help='Directory where results will be saved')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
     args = parser.parse_args()
 
@@ -33,22 +36,12 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.microbiology import count_bacterial_colonies
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    # Extract parameters
-    image_path = input_data.get('image_path')
-    dilution_factor = input_data.get('dilution_factor', 1)
-    plate_area_cm2 = input_data.get('plate_area_cm2', 65.0)
-    output_dir = input_data.get('output_dir', './output')
-
     # Call the function
     result = count_bacterial_colonies(
-        image_path=image_path,
-        dilution_factor=dilution_factor,
-        plate_area_cm2=plate_area_cm2,
-        output_dir=output_dir
+        image_path=args.image_path,
+        dilution_factor=args.dilution_factor,
+        plate_area_cm2=args.plate_area_cm2,
+        output_dir=args.output_dir
     )
 
     # Write result to output file

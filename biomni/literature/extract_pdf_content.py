@@ -1,51 +1,39 @@
 #!/usr/bin/env python3
 """
-Camber wrapper for extract_pdf_content from biomni.tool.literature
+Biomni Tool: Extract Pdf Content
+Wraps: biomni.tool.literature.extract_pdf_content
 """
-
 import argparse
 import sys
-import json
 import subprocess
 import os
-
 
 def install_dependencies():
     """Install required dependencies"""
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Extract content from PDF'
+        description='Extract Pdf Content'
     )
-    parser.add_argument('input_file', help='JSON file with URL from stash')
+    parser.add_argument('--url', required=True, help='URL pointing to a PDF file or webpage containing a PDF link')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input data
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    url = input_data['url']
-
-    # Import after dependencies are installed
     from biomni.tool.literature import extract_pdf_content
 
-    result = extract_pdf_content(url=url)
+    result = extract_pdf_content(url=args.url)
 
-    # Write output
     os.makedirs(args.output, exist_ok=True)
     output_file = os.path.join(args.output, 'pdf_content.txt')
     with open(output_file, 'w') as f:
         f.write(result)
     print(f"Complete! Results: {output_file}")
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

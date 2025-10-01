@@ -20,23 +20,19 @@ def main():
     parser = argparse.ArgumentParser(
         description='Get all captured plots from the biomni session'
     )
-    parser.add_argument('input_file', help='JSON file with input data (can be empty dict)')
-    parser.add_argument('-o', '--output', required=True, help='Output directory')
+    parser.add_argument('-o', '--output-dir', default='./',
+                        help='Output directory for captured plots file (default: ./)')
 
     args = parser.parse_args()
     install_dependencies()
-
-    # Read input file (expected to be empty dict or minimal config)
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
 
     # Import after dependencies are installed
     from biomni.tool.support_tools import get_captured_plots
 
     result = get_captured_plots()
 
-    os.makedirs(args.output, exist_ok=True)
-    output_file = os.path.join(args.output, 'captured_plots.json')
+    os.makedirs(args.output_dir, exist_ok=True)
+    output_file = os.path.join(args.output_dir, 'captured_plots.json')
     with open(output_file, 'w') as f:
         json.dump(result, f, indent=2)
     print(f"Complete! Results: {output_file}")

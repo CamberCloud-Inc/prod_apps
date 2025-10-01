@@ -3,9 +3,9 @@
 Wrapper for Biomni simulate_metabolic_network_perturbation tool
 """
 import sys
-import json
 import argparse
 import os
+import json
 
 
 def install_dependencies():
@@ -22,21 +22,31 @@ def main():
     parser = argparse.ArgumentParser(
         description='Simulate metabolic network perturbation using Biomni'
     )
-    parser.add_argument('input_file', help='JSON file with simulation parameters')
+    parser.add_argument('model_file', help='Path to metabolic model file')
+    parser.add_argument('initial_concentrations', help='JSON string or file with initial metabolite concentrations')
+    parser.add_argument('perturbation_params', help='JSON string or file with perturbation parameters')
+    parser.add_argument('--simulation-time', type=float, default=100, help='Simulation time (default: 100)')
+    parser.add_argument('--time-points', type=int, default=1000, help='Number of time points (default: 1000)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
+    # Parse JSON parameters (handle both strings and file paths)
+    def parse_json_param(param):
+        try:
+            return json.loads(param)
+        except json.JSONDecodeError:
+            if os.path.exists(param):
+                with open(param, 'r') as f:
+                    return json.load(f)
+            raise ValueError(f"Parameter is neither valid JSON nor a file path: {param}")
 
-    model_file = input_data.get('model_file')
-    initial_concentrations = input_data.get('initial_concentrations')
-    perturbation_params = input_data.get('perturbation_params')
-    simulation_time = input_data.get('simulation_time', 100)
-    time_points = input_data.get('time_points', 1000)
+    model_file = args.model_file
+    initial_concentrations = parse_json_param(args.initial_concentrations)
+    perturbation_params = parse_json_param(args.perturbation_params)
+    simulation_time = args.simulation_time
+    time_points = args.time_points
 
     # Import after dependencies are installed
     from biomni.tool.systems_biology import simulate_metabolic_network_perturbation

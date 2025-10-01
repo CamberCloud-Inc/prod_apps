@@ -28,18 +28,16 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.bioengineering import decode_behavior_from_neural_trajectories
     parser = argparse.ArgumentParser(description='Model neural activity trajectories and decode behavioral variables')
-    parser.add_argument('input_file', help='JSON file containing input parameters')
+    parser.add_argument('--neural_data_file', required=True, help='Path to CSV file containing neural activity data')
+    parser.add_argument('--behavioral_data_file', required=True, help='Path to CSV file containing behavioral measurements')
+    parser.add_argument('--n_components', type=int, default=10, help='Number of principal components to extract (default: 10)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    neural_data_file = os.path.expanduser(input_data['neural_data_file'])
-    behavioral_data_file = os.path.expanduser(input_data['behavioral_data_file'])
-    n_components = input_data.get('n_components', 10)
+    neural_data_file = os.path.expanduser(args.neural_data_file)
+    behavioral_data_file = os.path.expanduser(args.behavioral_data_file)
+    n_components = args.n_components
 
     print(f"Loading neural data from: {neural_data_file}")
     print(f"Loading behavioral data from: {behavioral_data_file}")

@@ -3,7 +3,7 @@
   "title": "Biomni: Query Stringdb",
   "description": "Query STRING database for known and predicted protein-protein interactions with confidence scores and functional associations.",
   "content": "<h3>Overview</h3><p>Searches STRING, a comprehensive database of known and predicted protein-protein interactions integrating physical interactions, functional associations, and co-expression data. STRING covers over 67 million proteins from 14,000 organisms with interaction confidence scores and network visualization.</p><h3>Input Parameters</h3><ul><li><strong>prompt</strong> (string, optional): Natural language query about protein interactions</li><li><strong>endpoint</strong> (string, optional): Specific STRING API endpoint</li><li><strong>download_image</strong> (boolean, optional): Whether to download interaction network images</li><li><strong>output_dir</strong> (string, optional): Directory path for downloaded images</li><li><strong>verbose</strong> (boolean, optional): Enable detailed logging output</li></ul><h3>Input Format</h3><p>Create a JSON file with the following structure:</p><pre>{\n  \"prompt\": \"Find proteins interacting with TP53\",\n  \"endpoint\": \"/network\",\n  \"download_image\": true,\n  \"verbose\": true\n}</pre><h3>Biological Use Case</h3><p>Critical for systems biology, protein complex identification, and functional genomics. Researchers use STRING to discover protein partners, map signal transduction cascades, identify members of protein complexes, predict gene function via guilt-by-association, prioritize candidate genes, and understand disease networks. Essential for interpreting proteomics experiments.</p><h3>Output</h3><p>Returns a JSON file (stringdb_results.json) containing interaction data including protein pairs, interaction confidence scores (0-1), evidence types (experimental, database, text-mining, co-expression, neighborhood, fusion, co-occurrence), functional enrichments, and optionally downloaded network visualization images.</p><h3>Category</h3><p>database</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_stringdb.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_stringdb.py --prompt \"${prompt}\" --endpoint \"${endpoint}\" --download_image \"${download_image}\" --output_dir \"${output_dir}\" --verbose \"${verbose}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,38 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "prompt",
+      "label": "Prompt",
+      "description": "Query prompt/description",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "endpoint",
+      "label": "Endpoint",
+      "description": "API endpoint path",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "download_image",
+      "label": "Download Image",
+      "description": "Download network image (true/false)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "output_dir",
+      "label": "Output Directory",
+      "description": "Output directory for downloads",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "verbose",
+      "label": "Verbose",
+      "description": "Enable verbose output (true/false)",
       "defaultValue": ""
     },
     {

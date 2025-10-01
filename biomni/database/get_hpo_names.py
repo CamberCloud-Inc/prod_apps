@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Biomni Tool: Get HPO Names
+Biomni Tool: Get Hpo Names
 Wraps: biomni.tool.database.get_hpo_names
 """
 import argparse
@@ -18,23 +18,20 @@ def install_dependencies():
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Get names for HPO (Human Phenotype Ontology) terms'
+        description='Get Hpo Names'
     )
-    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('--hpo_terms', required=True, help='Comma-separated list of HPO term IDs')
+    parser.add_argument('--data_lake_path', help='Path to data lake (optional)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
     from biomni.tool.database import get_hpo_names
 
     result = get_hpo_names(
-        hpo_terms=input_data.get('hpo_terms'),
-        data_lake_path=input_data.get('data_lake_path')
+        hpo_terms=args.hpo_terms,
+        data_lake_path=args.data_lake_path
     )
 
     os.makedirs(args.output, exist_ok=True)

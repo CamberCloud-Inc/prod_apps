@@ -27,19 +27,18 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.bioengineering import analyze_myofiber_morphology
     parser = argparse.ArgumentParser(description='Quantify morphological properties of myofibers in microscopy images')
-    parser.add_argument('input_file', help='JSON file containing input parameters')
+    parser.add_argument('--image_path', required=True, help='Path to the multichannel fluorescence microscopy image file')
+    parser.add_argument('--nuclei_channel', type=int, default=2, help='Channel index containing nuclei staining (default: 2)')
+    parser.add_argument('--myofiber_channel', type=int, default=1, help='Channel index containing myofiber membrane staining (default: 1)')
+    parser.add_argument('--threshold_method', default='otsu', help='Segmentation threshold algorithm (default: otsu)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    image_path = os.path.expanduser(input_data['image_path'])
-    nuclei_channel = input_data.get('nuclei_channel', 2)
-    myofiber_channel = input_data.get('myofiber_channel', 1)
-    threshold_method = input_data.get('threshold_method', 'otsu')
+    image_path = os.path.expanduser(args.image_path)
+    nuclei_channel = args.nuclei_channel
+    myofiber_channel = args.myofiber_channel
+    threshold_method = args.threshold_method
 
     print(f"Analyzing myofiber morphology from: {image_path}")
 

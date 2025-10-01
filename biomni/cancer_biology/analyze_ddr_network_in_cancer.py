@@ -24,8 +24,10 @@ def main():
     parser = argparse.ArgumentParser(
         description='Analyze DNA damage response network in cancer'
     )
-    parser.add_argument('input_file', help='JSON file with parameters')
+    parser.add_argument('expression_data_path', help='Path to gene expression data file')
+    parser.add_argument('mutation_data_path', help='Path to mutation data file (VCF or MAF format)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
+    parser.add_argument('--output-dir', default='./results', help='Directory for output files (default: ./results)')
 
     args = parser.parse_args()
     install_dependencies()
@@ -33,17 +35,10 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.cancer_biology import analyze_ddr_network_in_cancer
 
-    with open(args.input_file, 'r') as f:
-        params = json.load(f)
-
-    expression_data_path = params['expression_data_path']
-    mutation_data_path = params['mutation_data_path']
-    output_dir = params.get('output_dir', './results')
-
     result = analyze_ddr_network_in_cancer(
-        expression_data_path=expression_data_path,
-        mutation_data_path=mutation_data_path,
-        output_dir=output_dir
+        expression_data_path=args.expression_data_path,
+        mutation_data_path=args.mutation_data_path,
+        output_dir=args.output_dir
     )
 
     os.makedirs(args.output, exist_ok=True)

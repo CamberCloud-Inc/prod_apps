@@ -24,7 +24,12 @@ def main():
     parser = argparse.ArgumentParser(
         description='Analyze Endolysosomal Calcium Dynamics'
     )
-    parser.add_argument('input_file', help='Input JSON file with time_points, luminescence_values and optional parameters')
+    parser.add_argument('--time-points-file', required=True, help='File containing time points (JSON array or CSV)')
+    parser.add_argument('--luminescence-values-file', required=True, help='File containing luminescence measurements (JSON array or CSV)')
+    parser.add_argument('--treatment-time', type=float, help='Time point when treatment was applied (optional)')
+    parser.add_argument('--cell-type', default='', help='Type of cells used (optional)')
+    parser.add_argument('--treatment-name', default='', help='Name of treatment applied (optional)')
+    parser.add_argument('--output-file', default='calcium_analysis_results.txt', help='Output filename (default: calcium_analysis_results.txt)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -33,23 +38,27 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.physiology import analyze_endolysosomal_calcium_dynamics
 
-    with open(args.input_file, 'r') as f:
-        inputs = json.load(f)
+    # Load time_points from file
+    with open(args.time_points_file, 'r') as f:
+        if args.time_points_file.endswith('.json'):
+            time_points = json.load(f)
+        else:  # Assume CSV
+            time_points = [float(line.strip()) for line in f if line.strip()]
 
-    time_points = inputs['time_points']
-    luminescence_values = inputs['luminescence_values']
-    treatment_time = inputs.get('treatment_time')
-    cell_type = inputs.get('cell_type', '')
-    treatment_name = inputs.get('treatment_name', '')
-    output_file = inputs.get('output_file', 'calcium_analysis_results.txt')
+    # Load luminescence_values from file
+    with open(args.luminescence_values_file, 'r') as f:
+        if args.luminescence_values_file.endswith('.json'):
+            luminescence_values = json.load(f)
+        else:  # Assume CSV
+            luminescence_values = [float(line.strip()) for line in f if line.strip()]
 
     result = analyze_endolysosomal_calcium_dynamics(
         time_points=time_points,
         luminescence_values=luminescence_values,
-        treatment_time=treatment_time,
-        cell_type=cell_type,
-        treatment_name=treatment_name,
-        output_file=output_file
+        treatment_time=args.treatment_time,
+        cell_type=args.cell_type,
+        treatment_name=args.treatment_name,
+        output_file=args.output_file
     )
 
     os.makedirs(args.output, exist_ok=True)

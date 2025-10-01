@@ -24,7 +24,17 @@ def main():
     parser = argparse.ArgumentParser(
         description='Segment medical images using nnUNet'
     )
-    parser.add_argument('input_file', help='JSON config file from stash')
+    parser.add_argument('--image_path', required=True, help='Path to the input medical image file or directory')
+    parser.add_argument('--output_dir', required=True, help='Directory for segmentation results')
+    parser.add_argument('--task_id', required=True, help='nnUNet task identifier')
+    parser.add_argument('--model_type', default='3d_fullres', help='Model architecture type')
+    parser.add_argument('--folds', default='0,1,2,3,4', help='Cross-validation folds (comma-separated)')
+    parser.add_argument('--use_tta', type=lambda x: x.lower() == 'true', default=False, help='Enable test-time augmentation')
+    parser.add_argument('--num_threads', type=int, default=1, help='Number of CPU threads')
+    parser.add_argument('--mixed_precision', type=lambda x: x.lower() == 'true', default=True, help='Use mixed precision')
+    parser.add_argument('--verbose', type=lambda x: x.lower() == 'true', default=True, help='Enable detailed logging')
+    parser.add_argument('--auto_prepare_input', type=lambda x: x.lower() == 'true', default=True, help='Auto-prepare input data')
+    parser.add_argument('--results_folder', default='', help='Path to custom nnUNet results folder')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -33,32 +43,21 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.bioimaging import segment_with_nn_unet
 
-    with open(args.input_file, 'r') as f:
-        config = json.load(f)
-
-    image_path = config['image_path']
-    output_dir = config['output_dir']
-    task_id = config['task_id']
-    model_type = config.get('model_type', '3d_fullres')
-    folds = config.get('folds', [0, 1, 2, 3, 4])
-    use_tta = config.get('use_tta', False)
-    num_threads = config.get('num_threads', 1)
-    mixed_precision = config.get('mixed_precision', True)
-    verbose = config.get('verbose', True)
-    auto_prepare_input = config.get('auto_prepare_input', True)
-    results_folder = config.get('results_folder')
+    # Parse folds from comma-separated string to list
+    folds = [int(f.strip()) for f in args.folds.split(',') if f.strip()]
+    results_folder = args.results_folder if args.results_folder else None
 
     result = segment_with_nn_unet(
-        image_path=image_path,
-        output_dir=output_dir,
-        task_id=task_id,
-        model_type=model_type,
+        image_path=args.image_path,
+        output_dir=args.output_dir,
+        task_id=args.task_id,
+        model_type=args.model_type,
         folds=folds,
-        use_tta=use_tta,
-        num_threads=num_threads,
-        mixed_precision=mixed_precision,
-        verbose=verbose,
-        auto_prepare_input=auto_prepare_input,
+        use_tta=args.use_tta,
+        num_threads=args.num_threads,
+        mixed_precision=args.mixed_precision,
+        verbose=args.verbose,
+        auto_prepare_input=args.auto_prepare_input,
         results_folder=results_folder
     )
 

@@ -23,22 +23,18 @@ def main():
     parser = argparse.ArgumentParser(
         description='Analyzes accelerated stability of pharmaceutical formulations'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('--formulations', required=True, help='List of pharmaceutical formulations to test (JSON array format)')
+    parser.add_argument('--storage-conditions', required=True, help='Storage conditions (JSON object format)')
+    parser.add_argument('--time-points', required=True, help='Time intervals for stability measurements (JSON array format)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input data
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    formulations = input_data.get('formulations')
-    storage_conditions = input_data.get('storage_conditions')
-    time_points = input_data.get('time_points')
-
-    if not formulations or not storage_conditions or not time_points:
-        raise ValueError("Missing required parameters: formulations, storage_conditions, time_points")
+    # Parse JSON parameters
+    formulations = json.loads(args.formulations)
+    storage_conditions = json.loads(args.storage_conditions)
+    time_points = json.loads(args.time_points)
 
     # Import after dependencies are installed
     from biomni.tool.pharmacology import analyze_accelerated_stability_of_pharmaceutical_formulations

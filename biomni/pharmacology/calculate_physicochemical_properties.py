@@ -23,20 +23,14 @@ def main():
     parser = argparse.ArgumentParser(
         description='Calculates physicochemical properties of molecules'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('--smiles-string', required=True, help='SMILES representation of the molecule')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input data
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    smiles_string = input_data.get('smiles_string')
-
-    if not smiles_string:
-        raise ValueError("Missing required parameter: smiles_string")
+    # Get parameter
+    smiles_string = args.smiles_string
 
     # Import after dependencies are installed
     from biomni.tool.pharmacology import calculate_physicochemical_properties

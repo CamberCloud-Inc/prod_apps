@@ -1,13 +1,7 @@
-#!/usr/bin/env python3
-"""
-Camber wrapper for analyze_mitochondrial_morphology_and_potential from Biomni
-"""
-
-import argparse
 import json
-import os
 import sys
-
+import os
+import argparse
 
 
 
@@ -22,47 +16,47 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='Analyze mitochondrial morphology and potential'
-    )
-    parser.add_argument('input_file', help='JSON file with input parameters')
-    parser.add_argument('-o', '--output', required=True, help='Output directory')
-
-    args = parser.parse_args()
 
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.cell_biology import analyze_mitochondrial_morphology_and_potential
+    parser = argparse.ArgumentParser(description='Analyze mitochondrial morphology and potential')
+    parser.add_argument('morphology_image_path', help='Path to fluorescence microscopy image showing mitochondrial morphology')
+    parser.add_argument('potential_image_path', help='Path to fluorescence microscopy image of mitochondrial membrane potential')
+    parser.add_argument('--output-dir', default='./output',
+                        help='Directory path where analysis results will be saved (default: ./output)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
+    args = parser.parse_args()
 
-    # Extract parameters
-    morphology_image_path = input_data.get("morphology_image_path", "")
-    potential_image_path = input_data.get("potential_image_path", "")
-    output_dir = input_data.get("output_dir", "./output")
-
-    # Call the function
-    result = analyze_mitochondrial_morphology_and_potential(
-        morphology_image_path=morphology_image_path,
-        potential_image_path=potential_image_path,
-        output_dir=output_dir
-    )
-
-    # Create output directory and write result
+    # Create output directory if it doesn't exist
     os.makedirs(args.output, exist_ok=True)
-    output_file = os.path.join(args.output, 'result.json')
 
-    output = {
-        "research_log": result
-    }
+    print(f"\nAnalyzing mitochondrial morphology and potential...")
+    print(f"Morphology image: {args.morphology_image_path}")
+    print(f"Potential image: {args.potential_image_path}")
 
-    with open(output_file, 'w') as f:
-        json.dump(output, f, indent=2)
+    try:
+        result = analyze_mitochondrial_morphology_and_potential(
+            args.morphology_image_path,
+            args.potential_image_path,
+            output_dir=args.output_dir
+        )
 
-    print(f"Complete! Results: {output_file}")
+        # Generate output filename
+        output_filename = "result.json"
+        output_path = os.path.join(args.output, output_filename)
+
+        # Write result to JSON
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump({"research_log": result}, f, indent=2, ensure_ascii=False)
+
+        print(f"Complete! Results: {output_path}")
+
+    except Exception as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

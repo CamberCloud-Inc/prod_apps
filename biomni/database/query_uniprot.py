@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Biomni Tool: Query UniProt
+Biomni Tool: Query Uniprot
 Wraps: biomni.tool.database.query_uniprot
 """
 import argparse
@@ -18,23 +18,23 @@ def install_dependencies():
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Query the UniProt REST API'
+        description='Query Uniprot'
     )
-    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('--prompt', help='Query prompt/description')
+    parser.add_argument('--endpoint', help='API endpoint path')
+    parser.add_argument('--max_results', help='Maximum number of results')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
     from biomni.tool.database import query_uniprot
 
-    result = query_uniprot(prompt=input_data.get('prompt'),
-        endpoint=input_data.get('endpoint'),
-        max_results=input_data.get('max_results'))
+    result = query_uniprot(
+        prompt=args.prompt,
+        endpoint=args.endpoint,
+        max_results=int(args.max_results) if args.max_results else None
+    )
 
     os.makedirs(args.output, exist_ok=True)
     output_file = os.path.join(args.output, 'uniprot_results.json')

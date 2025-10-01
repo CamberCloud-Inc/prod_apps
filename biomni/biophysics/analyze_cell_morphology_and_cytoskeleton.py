@@ -19,25 +19,20 @@ def main():
     parser = argparse.ArgumentParser(
         description='Quantifies cell morphology and cytoskeletal organization from fluorescence microscopy images'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters from stash')
+    parser.add_argument('image_path', help='Path to the fluorescence microscopy image file')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
+    parser.add_argument('-t', '--threshold-method', default='otsu',
+                        help='Segmentation threshold method (otsu, adaptive, or manual)')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    image_path = input_data['image_path']
-    threshold_method = input_data.get('threshold_method', 'otsu')
-
     from biomni.tool.biophysics import analyze_cell_morphology_and_cytoskeleton
 
     result = analyze_cell_morphology_and_cytoskeleton(
-        image_path=image_path,
+        image_path=args.image_path,
         output_dir=args.output,
-        threshold_method=threshold_method
+        threshold_method=args.threshold_method
     )
 
     os.makedirs(args.output, exist_ok=True)

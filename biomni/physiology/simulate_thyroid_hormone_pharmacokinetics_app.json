@@ -3,7 +3,7 @@
   "title": "Biomni: Simulate Thyroid Hormone Pharmacokinetics",
   "description": "Simulates the transport and binding of thyroid hormones across different tissue compartments using an ODE-based pharmacokinetic model.",
   "content": "<h3>Overview</h3><p>Simulates the transport and binding of thyroid hormones across different tissue compartments using an ODE (Ordinary Differential Equation)-based pharmacokinetic model. This tool models the complex distribution, metabolism, and tissue uptake kinetics of thyroid hormones (T4 and T3), accounting for protein binding, cellular transport, and metabolic conversion across multiple compartments including plasma, liver, and peripheral tissues.</p><h3>Input Parameters</h3><ul><li><strong>parameters</strong> (required): Dictionary of pharmacokinetic parameters (clearance rates, volumes of distribution, binding constants, conversion rates)</li><li><strong>initial_conditions</strong> (required): Dictionary of initial hormone concentrations in each compartment</li><li><strong>time_span</strong> (optional, default=[0, 24]): Time interval for simulation in hours [start, end]</li><li><strong>time_points</strong> (optional, default=100): Number of time points to evaluate</li></ul><h3>Input Format</h3><pre>{\n  \"parameters\": {\n    \"k_plasma_liver\": 0.5,\n    \"k_liver_plasma\": 0.3,\n    \"k_metabolic\": 0.1,\n    \"V_plasma\": 3.0,\n    \"V_liver\": 1.5,\n    \"binding_constant\": 0.99\n  },\n  \"initial_conditions\": {\n    \"T4_plasma\": 100.0,\n    \"T3_plasma\": 2.0,\n    \"T4_liver\": 0.0,\n    \"T3_liver\": 0.0\n  },\n  \"time_span\": [0, 24],\n  \"time_points\": 100\n}</pre><h3>Biological Use Case</h3><p>This simulation is valuable for:</p><ul><li>Optimizing thyroid hormone replacement therapy dosing regimens</li><li>Studying hypothyroidism and hyperthyroidism drug treatments</li><li>Understanding T4 to T3 conversion kinetics in tissues</li><li>Predicting hormone levels in thyroid disorders</li><li>Evaluating drug-drug interactions affecting thyroid hormone metabolism</li><li>Designing personalized medicine approaches for thyroid disease</li><li>Teaching endocrine pharmacology and hormone dynamics</li><li>Research on thyroid hormone transporters and deiodinases</li></ul><h3>Output</h3><p>Returns comprehensive pharmacokinetic simulation including:</p><ul><li>Time-course profiles of hormone concentrations in all compartments</li><li>T4 and T3 levels in plasma and tissues over time</li><li>Free vs. bound hormone fractions</li><li>Peak concentration (Cmax) and time to peak (Tmax)</li><li>Area under the curve (AUC) for pharmacokinetic analysis</li><li>Visualization plots of hormone dynamics</li><li>Steady-state predictions</li><li>Summary table with key pharmacokinetic parameters</li></ul><h3>Category</h3><p>physiology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/simulate_thyroid_hormone_pharmacokinetics.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/simulate_thyroid_hormone_pharmacokinetics.py --parameters-file \"${parametersFile}\" --initial-conditions-file \"${initialConditionsFile}\" --time-span-start \"${timeSpanStart}\" --time-span-end \"${timeSpanEnd}\" --time-points \"${timePoints}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,10 +29,38 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "name": "parametersFile",
+      "label": "Parameters File",
+      "description": "File containing model parameters (JSON dict)",
       "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "initialConditionsFile",
+      "label": "Initial Conditions File",
+      "description": "File containing initial conditions (JSON dict)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "timeSpanStart",
+      "label": "Time Span Start",
+      "description": "Start time for simulation",
+      "defaultValue": "0"
+    },
+    {
+      "type": "Input",
+      "name": "timeSpanEnd",
+      "label": "Time Span End",
+      "description": "End time for simulation",
+      "defaultValue": "24"
+    },
+    {
+      "type": "Input",
+      "name": "timePoints",
+      "label": "Time Points",
+      "description": "Number of time points",
+      "defaultValue": "100"
     },
     {
       "type": "Stash File",

@@ -19,31 +19,28 @@ def main():
     parser = argparse.ArgumentParser(
         description='Quantify tissue deformation and flow dynamics from microscopy image sequence'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters from stash')
+    parser.add_argument('image_sequence', help='Path to time-lapse microscopy images (glob pattern or directory)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
+    parser.add_argument('-p', '--pixel-scale', type=float, default=1.0,
+                        help='Physical size per pixel in micrometers (default: 1.0)')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
+    # Convert image_sequence to list if it's a path or glob pattern
+    import glob
+    image_sequence = sorted(glob.glob(args.image_sequence))
 
-    image_sequence = input_data['image_sequence']
-    pixel_scale = input_data.get('pixel_scale', 1.0)
-
-    # Convert image_sequence to list if it's a path or list of paths
-    if isinstance(image_sequence, str):
-        # Single path - treat as directory or file pattern
-        import glob
-        image_sequence = sorted(glob.glob(image_sequence))
+    if not image_sequence:
+        print(f"Error: No images found matching pattern: {args.image_sequence}")
+        sys.exit(1)
 
     from biomni.tool.biophysics import analyze_tissue_deformation_flow
 
     result = analyze_tissue_deformation_flow(
         image_sequence=image_sequence,
         output_dir=args.output,
-        pixel_scale=pixel_scale
+        pixel_scale=args.pixel_scale
     )
 
     os.makedirs(args.output, exist_ok=True)

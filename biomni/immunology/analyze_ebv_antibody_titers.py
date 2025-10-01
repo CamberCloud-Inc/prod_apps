@@ -1,43 +1,35 @@
 #!/usr/bin/env python3
 """
-Camber wrapper for analyze_ebv_antibody_titers from biomni.tool.immunology
+Biomni Tool: Analyze Ebv Antibody Titers
+Wraps: biomni.tool.immunology.analyze_ebv_antibody_titers
 """
-
 import argparse
 import sys
-import json
+import subprocess
 import os
-
-
+import json
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Analyze EBV antibody titers from ELISA data'
+        description='Analyze Ebv Antibody Titers'
     )
-    parser.add_argument('input_file', help='JSON file with sample data')
+    parser.add_argument('--sample_data', help='Dictionary containing sample information with OD readings (JSON dict)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input data
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    sample_data = input_data['sample_data']
-
-    # Import after dependencies are installed
     from biomni.tool.immunology import analyze_ebv_antibody_titers
+
+    # Parse sample_data
+    sample_data = json.loads(args.sample_data) if args.sample_data else None
 
     result = analyze_ebv_antibody_titers(
         sample_data=sample_data,
@@ -50,6 +42,5 @@ def main():
         f.write(result)
     print(f"Complete! Results: {output_file}")
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

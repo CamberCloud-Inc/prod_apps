@@ -1,48 +1,41 @@
 #!/usr/bin/env python3
 """
-Camber wrapper for analyze_cns_lesion_histology from biomni.tool.immunology
+Biomni Tool: Analyze Cns Lesion Histology
+Wraps: biomni.tool.immunology.analyze_cns_lesion_histology
 """
-
 import argparse
 import sys
-import json
+import subprocess
 import os
-
-
+import json
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Analyze CNS lesion histology from microscopy images'
+        description='Analyze Cns Lesion Histology'
     )
-    parser.add_argument('input_file', help='JSON file with analysis parameters')
+    parser.add_argument('--image_path', help='Path to histology image file')
+    parser.add_argument('--cell_markers', help='Cell markers with color thresholds (JSON dict, optional)')
+    parser.add_argument('--pixel_size_um', help='Physical size of each pixel in micrometers (default: 0.5)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input data
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    image_path = input_data['image_path']
-    cell_markers = input_data.get('cell_markers', None)
-    pixel_size_um = input_data.get('pixel_size_um', 0.5)
-
-    # Import after dependencies are installed
     from biomni.tool.immunology import analyze_cns_lesion_histology
 
+    # Parse cell_markers if provided
+    cell_markers = json.loads(args.cell_markers) if args.cell_markers else None
+    pixel_size_um = float(args.pixel_size_um) if args.pixel_size_um else 0.5
+
     result = analyze_cns_lesion_histology(
-        image_path=image_path,
+        image_path=args.image_path,
         output_dir=args.output,
         cell_markers=cell_markers,
         pixel_size_um=pixel_size_um
@@ -54,6 +47,5 @@ def main():
         f.write(result)
     print(f"Complete! Results: {output_file}")
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

@@ -3,7 +3,7 @@
   "title": "Biomni: Get Oligo Annealing Protocol",
   "description": "Get standard protocol for annealing complementary oligonucleotides",
   "content": "<h3>Overview</h3><p>This tool provides a standardized laboratory protocol for annealing complementary oligonucleotides to form double-stranded DNA. Oligo annealing is commonly used to create synthetic DNA inserts for cloning, generate linkers for ligation, or prepare sgRNA duplexes. The protocol includes temperature ramping conditions, buffer composition, and oligo concentration recommendations for efficient annealing.</p><h3>Input Parameters</h3><ul><li>No parameters required - generates standard oligo annealing protocol</li></ul><h3>Input Format</h3><p>Command-line arguments format:</p><pre>python get_oligo_annealing_protocol.py -o output/</pre><p>Simply run the tool to generate the standard protocol.</p><h3>Biological Use Case</h3><p>Essential for preparing double-stranded oligonucleotide inserts:</p><ul><li>Anneal complementary oligos for restriction cloning</li><li>Generate double-stranded adapters for Gibson assembly</li><li>Prepare sgRNA duplexes for CRISPR experiments</li><li>Create synthetic linkers with specific overhang sequences</li><li>Anneal oligos for site-directed mutagenesis primers</li><li>Prepare double-stranded oligos for ligation into vectors</li></ul><h3>Output</h3><p>Returns a JSON file (oligo_annealing_protocol.json) containing step-by-step annealing instructions with buffer composition, temperature program, and quality control recommendations.</p><h3>Category</h3><p>molecular_biology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/get_oligo_annealing_protocol.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/get_oligo_annealing_protocol.py -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -27,13 +27,6 @@
     }
   ],
   "spec": [
-    {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
-      "defaultValue": ""
-    },
     {
       "type": "Stash File",
       "name": "outputDir",

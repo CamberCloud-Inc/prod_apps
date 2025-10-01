@@ -7,9 +7,9 @@ Quantifies amyloid-beta plaques in microscopy images using image segmentation an
 
 import argparse
 import sys
-import json
 import os
 import subprocess
+import json
 
 
 def install_dependencies():
@@ -24,7 +24,11 @@ def main():
     parser = argparse.ArgumentParser(
         description='Quantify Amyloid Beta Plaques'
     )
-    parser.add_argument('input_file', help='Input JSON file with image_path and optional parameters')
+    parser.add_argument('--image-path', required=True, help='Path to microscopy image file of amyloid-beta stained tissue')
+    parser.add_argument('--output-dir', default='./results', help='Directory for output files and visualizations (default: ./results)')
+    parser.add_argument('--threshold-method', default='otsu', help='Thresholding method for plaque detection (otsu, manual, adaptive) (default: otsu)')
+    parser.add_argument('--min-plaque-size', type=int, default=50, help='Minimum plaque area in pixels to exclude noise (default: 50)')
+    parser.add_argument('--manual-threshold', type=int, default=127, help='Threshold value if using manual thresholding (default: 127)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -33,21 +37,12 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.physiology import quantify_amyloid_beta_plaques
 
-    with open(args.input_file, 'r') as f:
-        inputs = json.load(f)
-
-    image_path = inputs['image_path']
-    output_dir = inputs.get('output_dir', './results')
-    threshold_method = inputs.get('threshold_method', 'otsu')
-    min_plaque_size = inputs.get('min_plaque_size', 50)
-    manual_threshold = inputs.get('manual_threshold', 127)
-
     result = quantify_amyloid_beta_plaques(
-        image_path=image_path,
-        output_dir=output_dir,
-        threshold_method=threshold_method,
-        min_plaque_size=min_plaque_size,
-        manual_threshold=manual_threshold
+        image_path=args.image_path,
+        output_dir=args.output_dir,
+        threshold_method=args.threshold_method,
+        min_plaque_size=args.min_plaque_size,
+        manual_threshold=args.manual_threshold
     )
 
     os.makedirs(args.output, exist_ok=True)

@@ -24,7 +24,10 @@ def main():
     parser = argparse.ArgumentParser(
         description='Reconstruct 3D Face from MRI'
     )
-    parser.add_argument('input_file', help='Input JSON file with mri_file_path and optional parameters')
+    parser.add_argument('--mri-file-path', required=True, help='Path to MRI NIfTI file of head and neck')
+    parser.add_argument('--output-dir', default='./output', help='Directory for output files (default: ./output)')
+    parser.add_argument('--subject-id', default='subject', help='Subject identifier (default: subject)')
+    parser.add_argument('--threshold-value', type=int, default=300, help='Threshold value for segmentation (default: 300)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -33,19 +36,11 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.physiology import reconstruct_3d_face_from_mri
 
-    with open(args.input_file, 'r') as f:
-        inputs = json.load(f)
-
-    mri_file_path = inputs['mri_file_path']
-    output_dir = inputs.get('output_dir', './output')
-    subject_id = inputs.get('subject_id', 'subject')
-    threshold_value = inputs.get('threshold_value', 300)
-
     result = reconstruct_3d_face_from_mri(
-        mri_file_path=mri_file_path,
-        output_dir=output_dir,
-        subject_id=subject_id,
-        threshold_value=threshold_value
+        mri_file_path=args.mri_file_path,
+        output_dir=args.output_dir,
+        subject_id=args.subject_id,
+        threshold_value=args.threshold_value
     )
 
     os.makedirs(args.output, exist_ok=True)

@@ -3,7 +3,7 @@
   "title": "Biomni: Get Gene Coding Sequence",
   "description": "Retrieve coding sequences for genes from NCBI Entrez database",
   "content": "<h3>Overview</h3><p>This tool retrieves gene coding sequences (CDS) from the NCBI Entrez database. It queries NCBI Gene and Nucleotide databases to fetch validated coding sequences for specified genes in specific organisms. The tool returns the DNA sequence of the coding region that will be translated into the protein product, which is essential for cloning and expression studies.</p><h3>Input Parameters</h3><ul><li><strong>gene_name</strong>: Name or symbol of the target gene (e.g., EGFR, TP53, INS)</li><li><strong>organism</strong>: Scientific name of the organism (e.g., \"Homo sapiens\", \"Mus musculus\", \"Escherichia coli\")</li><li><strong>--email</strong>: Optional email address for NCBI Entrez queries (recommended for higher rate limits)</li></ul><h3>Input Format</h3><p>Command-line arguments format:</p><pre>python get_gene_coding_sequence.py \"TP53\" \"Homo sapiens\" --email \"user@example.com\" -o output/</pre><p>Gene name and organism are required; email is optional but recommended.</p><h3>Biological Use Case</h3><p>Essential for gene cloning and expression projects:</p><ul><li>Obtain coding sequences for cloning into expression vectors</li><li>Retrieve sequences for recombinant protein production</li><li>Design synthetic genes based on reference sequences</li><li>Compare coding sequences across different organisms</li><li>Plan codon optimization strategies for heterologous expression</li><li>Obtain template sequences for mutagenesis studies</li></ul><h3>Output</h3><p>Returns a JSON file (e.g., TP53_Homo_sapiens_cds.json) containing the coding sequence, accession numbers, gene description, and sequence metadata.</p><h3>Category</h3><p>molecular_biology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/get_gene_coding_sequence.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/get_gene_coding_sequence.py \"${gene_name}\" \"${organism}\" --email \"${email}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,24 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "gene_name",
+      "label": "Gene Name",
+      "description": "Name of the gene (e.g., EGFR, TP53)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "organism",
+      "label": "Organism",
+      "description": "Name of the organism (e.g., \"Homo sapiens\", \"Mus musculus\")",
+      "defaultValue": "Homo sapiens"
+    },
+    {
+      "type": "Input",
+      "name": "email",
+      "label": "Email",
+      "description": "Email address for NCBI Entrez (recommended)",
       "defaultValue": ""
     },
     {

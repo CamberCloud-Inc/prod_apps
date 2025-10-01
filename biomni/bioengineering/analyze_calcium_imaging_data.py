@@ -27,16 +27,12 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.bioengineering import analyze_calcium_imaging_data
     parser = argparse.ArgumentParser(description='Analyze calcium imaging data to quantify neuronal activity')
-    parser.add_argument('input_file', help='JSON file containing input parameters')
+    parser.add_argument('--image_stack_path', required=True, help='Path to the calcium imaging data file')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    image_stack_path = os.path.expanduser(input_data['image_stack_path'])
+    image_stack_path = os.path.expanduser(args.image_stack_path)
     print(f"Analyzing calcium imaging data from: {image_stack_path}")
 
     if not os.path.exists(image_stack_path):

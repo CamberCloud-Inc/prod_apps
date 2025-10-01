@@ -3,7 +3,7 @@
   "title": "Biomni: Extract Pdf Content",
   "description": "Extract text content from a PDF file given its URL. Automatically handles both direct PDF URLs and web pages containing PDF links.",
   "content": "<h3>Overview</h3><p>Extract text content from PDF research papers and documents given their URL. This tool automatically handles both direct PDF URLs and web pages containing PDF links, making it easy to access full-text content from published literature.</p><h3>Input Parameters</h3><ul><li><strong>url</strong> (required): URL pointing to a PDF file or a webpage containing a PDF link</li></ul><h3>Input Format</h3><pre><code class=\"language-json\">{\n  \"url\": \"https://www.nature.com/articles/s41586-021-03819-2.pdf\"\n}</code></pre><h3>Biological Use Case</h3><p>Essential for extracting full-text content from scientific publications for downstream analysis. Use cases include: extracting methods sections from published papers, gathering supplementary data descriptions, mining literature for specific experimental protocols, building text corpora for meta-analyses, and enabling text-based searches within PDFs. Particularly useful when working with papers from journals, preprint servers, or institutional repositories where PDFs are the primary format.</p><h3>Output</h3><p>Returns a text file (pdf_content.txt) containing the extracted text content from the PDF, maintaining the original document structure and formatting where possible. The text can be used for further analysis, searching, or data extraction.</p><h3>Category</h3><p>literature</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/literature/extract_pdf_content.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/literature/extract_pdf_content.py --url \"${url}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,10 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "url",
+      "label": "URL",
+      "description": "URL pointing to a PDF file or a webpage containing a PDF link",
       "defaultValue": ""
     },
     {

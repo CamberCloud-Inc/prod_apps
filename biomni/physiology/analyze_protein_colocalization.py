@@ -24,7 +24,10 @@ def main():
     parser = argparse.ArgumentParser(
         description='Analyze Protein Colocalization'
     )
-    parser.add_argument('input_file', help='Input JSON file with channel1_path, channel2_path and optional parameters')
+    parser.add_argument('--channel1-path', required=True, help='Path to channel 1 image file (first fluorescent protein)')
+    parser.add_argument('--channel2-path', required=True, help='Path to channel 2 image file (second fluorescent protein)')
+    parser.add_argument('--output-dir', default='./output', help='Directory for output files (default: ./output)')
+    parser.add_argument('--threshold-method', default='otsu', help='Thresholding method (otsu, manual, adaptive) (default: otsu)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -33,19 +36,11 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.physiology import analyze_protein_colocalization
 
-    with open(args.input_file, 'r') as f:
-        inputs = json.load(f)
-
-    channel1_path = inputs['channel1_path']
-    channel2_path = inputs['channel2_path']
-    output_dir = inputs.get('output_dir', './output')
-    threshold_method = inputs.get('threshold_method', 'otsu')
-
     result = analyze_protein_colocalization(
-        channel1_path=channel1_path,
-        channel2_path=channel2_path,
-        output_dir=output_dir,
-        threshold_method=threshold_method
+        channel1_path=args.channel1_path,
+        channel2_path=args.channel2_path,
+        output_dir=args.output_dir,
+        threshold_method=args.threshold_method
     )
 
     os.makedirs(args.output, exist_ok=True)

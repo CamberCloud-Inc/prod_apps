@@ -3,7 +3,7 @@
   "title": "Biomni: Analyze Protein Phylogeny",
   "description": "Perform phylogenetic analysis on protein sequences with alignment and tree construction",
   "content": "<h3>Overview</h3><p>This tool performs comprehensive phylogenetic analysis on protein sequences to reconstruct evolutionary relationships. It handles multiple sequence alignment using ClustalW or MUSCLE algorithms, constructs phylogenetic trees using maximum-likelihood (IQ-TREE) or approximate methods (FastTree), and generates publication-quality visualizations. The analysis reveals evolutionary relationships, sequence divergence, and ancestral relationships among proteins.</p><h3>Input Parameters</h3><ul><li><strong>fasta_sequences</strong> (string): Path to FASTA file containing protein sequences to analyze</li><li><strong>alignment_method</strong> (string, optional): Alignment algorithm - 'clustalw', 'muscle', or 'pre-aligned' (default: 'clustalw')</li><li><strong>tree_method</strong> (string, optional): Phylogenetic tree construction method - 'iqtree' or 'fasttree' (default: 'iqtree')</li></ul><h3>Input Format</h3><p>FASTA format protein sequences:</p><pre>&gt;Protein1_Human\nMKVLWALLLVWLWGARVSLWGPVFDDDKIVGGYTCGANTVPY\n&gt;Protein1_Mouse\nMKVLWALLLVWLWGARVSLWGPVFDEDKIVGGYTCGANTVPY\n&gt;Protein1_Zebrafish\nMKVLWALLLVWLWGARVSLWGPVFDDDKIVGSYTCGANTVPY\n\nNote: Sequences should be in single-letter amino acid code\nMinimum 3 sequences recommended for meaningful phylogenetic analysis</pre><h3>Biological Use Case</h3><p>Critical for evolutionary biology and comparative genomics studies: inferring evolutionary relationships among homologous proteins, identifying conserved and variable regions across species, studying protein family evolution, dating divergence events, analyzing functional evolution, and supporting taxonomic classification. Useful for drug target identification across species and understanding protein function through evolutionary context.</p><h3>Output</h3><p>Generates multiple output files: aligned protein sequences (FASTA/CLUSTAL format), phylogenetic tree file (Newick format), tree visualization (PNG image), bootstrap support values or branch confidence metrics, and a detailed analysis log (phylogeny_analysis_log.txt) containing alignment statistics, tree construction parameters, and evolutionary insights.</p><h3>Category</h3><p>genetics</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genetics/analyze_protein_phylogeny.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genetics/analyze_protein_phylogeny.py \"${fasta_sequences}\" ${alignment_method:+-a \"${alignment_method}\"} ${tree_method:+-t \"${tree_method}\"} -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,9 +29,23 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "name": "fasta_sequences",
+      "label": "FASTA Sequences",
+      "description": "Path to FASTA file with protein sequences",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "alignment_method",
+      "label": "Alignment Method (Optional)",
+      "description": "Method for sequence alignment: clustalw, muscle, pre-aligned (default: clustalw)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "tree_method",
+      "label": "Tree Method (Optional)",
+      "description": "Method for tree construction: iqtree or fasttree (default: iqtree)",
       "defaultValue": ""
     },
     {

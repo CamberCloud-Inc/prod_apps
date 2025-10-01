@@ -28,29 +28,17 @@ def main():
 
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description='Find N-glycosylation motifs in protein sequence')
-    parser.add_argument('input_file', help='Path to input JSON file')
+    parser.add_argument('-s', '--sequence', required=True, help='Protein sequence to analyze')
+    parser.add_argument('-a', '--allow-overlap', action='store_true', default=False,
+                        help='Allow overlapping motifs (default: False)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
     args = parser.parse_args()
-
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    sequence = input_data.get("sequence")
-    allow_overlap = input_data.get("allow_overlap", False)
-
-    # Validate required parameters
-    if not sequence:
-        print(json.dumps({
-            "error": "Missing required parameter: sequence"
-        }))
-        sys.exit(1)
 
     try:
         # Call the tool function
         result = find_n_glycosylation_motifs(
-            sequence=sequence,
-            allow_overlap=allow_overlap
+            sequence=args.sequence,
+            allow_overlap=args.allow_overlap
         )
 
         # Write output to file

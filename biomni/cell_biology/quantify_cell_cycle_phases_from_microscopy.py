@@ -1,13 +1,7 @@
-#!/usr/bin/env python3
-"""
-Camber wrapper for quantify_cell_cycle_phases_from_microscopy from Biomni
-"""
-
-import argparse
 import json
-import os
 import sys
-
+import os
+import argparse
 
 
 
@@ -22,45 +16,44 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='Quantify cell cycle phases from microscopy'
-    )
-    parser.add_argument('input_file', help='JSON file with input parameters')
-    parser.add_argument('-o', '--output', required=True, help='Output directory')
-
-    args = parser.parse_args()
 
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.cell_biology import quantify_cell_cycle_phases_from_microscopy
+    parser = argparse.ArgumentParser(description='Quantify cell cycle phases from microscopy')
+    parser.add_argument('image_paths', nargs='+', help='List of file paths to microscopy images for analysis')
+    parser.add_argument('--output-dir', default='./results',
+                        help='Directory path where results will be saved (default: ./results)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
+    args = parser.parse_args()
 
-    # Extract parameters
-    image_paths = input_data.get("image_paths", [])
-    output_dir = input_data.get("output_dir", "./results")
-
-    # Call the function
-    result = quantify_cell_cycle_phases_from_microscopy(
-        image_paths=image_paths,
-        output_dir=output_dir
-    )
-
-    # Create output directory and write result
+    # Create output directory if it doesn't exist
     os.makedirs(args.output, exist_ok=True)
-    output_file = os.path.join(args.output, 'result.json')
 
-    output = {
-        "research_log": result
-    }
+    print(f"\nQuantifying cell cycle phases from microscopy...")
+    print(f"Number of images: {len(args.image_paths)}")
 
-    with open(output_file, 'w') as f:
-        json.dump(output, f, indent=2)
+    try:
+        result = quantify_cell_cycle_phases_from_microscopy(
+            image_paths=args.image_paths,
+            output_dir=args.output_dir
+        )
 
-    print(f"Complete! Results: {output_file}")
+        # Generate output filename
+        output_filename = "result.json"
+        output_path = os.path.join(args.output, output_filename)
+
+        # Write result to JSON
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump({"research_log": result}, f, indent=2, ensure_ascii=False)
+
+        print(f"Complete! Results: {output_path}")
+
+    except Exception as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

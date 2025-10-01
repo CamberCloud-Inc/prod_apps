@@ -25,7 +25,11 @@ def main():
     parser = argparse.ArgumentParser(
         description='Simulate Thyroid Hormone Pharmacokinetics'
     )
-    parser.add_argument('input_file', help='Input JSON file with parameters, initial_conditions and optional time settings')
+    parser.add_argument('--parameters-file', required=True, help='File containing model parameters (JSON dict)')
+    parser.add_argument('--initial-conditions-file', required=True, help='File containing initial conditions (JSON dict)')
+    parser.add_argument('--time-span-start', type=float, default=0, help='Start time for simulation (default: 0)')
+    parser.add_argument('--time-span-end', type=float, default=24, help='End time for simulation (default: 24)')
+    parser.add_argument('--time-points', type=int, default=100, help='Number of time points (default: 100)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -34,19 +38,19 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.physiology import simulate_thyroid_hormone_pharmacokinetics
 
-    with open(args.input_file, 'r') as f:
-        inputs = json.load(f)
+    # Load parameters from file
+    with open(args.parameters_file, 'r') as f:
+        parameters = json.load(f)
 
-    parameters = inputs['parameters']
-    initial_conditions = inputs['initial_conditions']
-    time_span = inputs.get('time_span', [0, 24])
-    time_points = inputs.get('time_points', 100)
+    # Load initial_conditions from file
+    with open(args.initial_conditions_file, 'r') as f:
+        initial_conditions = json.load(f)
 
     result = simulate_thyroid_hormone_pharmacokinetics(
         parameters=parameters,
         initial_conditions=initial_conditions,
-        time_span=tuple(time_span),
-        time_points=time_points
+        time_span=(args.time_span_start, args.time_span_end),
+        time_points=args.time_points
     )
 
     os.makedirs(args.output, exist_ok=True)

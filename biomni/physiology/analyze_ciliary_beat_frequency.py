@@ -24,7 +24,11 @@ def main():
     parser = argparse.ArgumentParser(
         description='Analyze Ciliary Beat Frequency'
     )
-    parser.add_argument('input_file', help='Input JSON file with video_path and optional parameters')
+    parser.add_argument('--video-path', required=True, help='Path to high-speed video microscopy file')
+    parser.add_argument('--roi-count', type=int, default=5, help='Number of regions of interest to analyze (default: 5)')
+    parser.add_argument('--min-freq', type=float, default=0, help='Minimum frequency in Hz (default: 0)')
+    parser.add_argument('--max-freq', type=float, default=30, help='Maximum frequency in Hz (default: 30)')
+    parser.add_argument('--output-dir', default='./', help='Directory for output files (default: ./)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -33,21 +37,12 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.physiology import analyze_ciliary_beat_frequency
 
-    with open(args.input_file, 'r') as f:
-        inputs = json.load(f)
-
-    video_path = inputs['video_path']
-    roi_count = inputs.get('roi_count', 5)
-    min_freq = inputs.get('min_freq', 0)
-    max_freq = inputs.get('max_freq', 30)
-    output_dir = inputs.get('output_dir', './')
-
     result = analyze_ciliary_beat_frequency(
-        video_path=video_path,
-        roi_count=roi_count,
-        min_freq=min_freq,
-        max_freq=max_freq,
-        output_dir=output_dir
+        video_path=args.video_path,
+        roi_count=args.roi_count,
+        min_freq=args.min_freq,
+        max_freq=args.max_freq,
+        output_dir=args.output_dir
     )
 
     os.makedirs(args.output, exist_ok=True)

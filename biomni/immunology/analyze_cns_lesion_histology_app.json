@@ -3,7 +3,7 @@
   "title": "Biomni: Analyze Cns Lesion Histology",
   "description": "Analyze histological images of CNS lesions to quantify immune cell infiltration and tissue damage",
   "content": "<h3>Overview</h3><p>Analyze histological images of central nervous system (CNS) lesions to quantify immune cell infiltration, characterize inflammatory patterns, and assess tissue damage severity. This tool performs automated image analysis on stained tissue sections to identify and count infiltrating immune cells, measure lesion area, and evaluate demyelination extent in neuroinflammatory disease models.</p><h3>Input Parameters</h3><ul><li><strong>image_path</strong> (string, required): Path to the histology image file (e.g., brightfield microscopy of H&E, Luxol Fast Blue, or immunohistochemistry staining)</li><li><strong>cell_markers</strong> (dict or null, optional): Dictionary specifying cell markers and their color/intensity thresholds for identification (e.g., {'CD3': 'brown', 'CD68': 'red'}). If null, performs general cell counting. Default: null</li><li><strong>pixel_size_um</strong> (float, optional): Physical size of each pixel in micrometers for accurate area and distance measurements. Default: 0.5</li></ul><h3>Input Format</h3><pre>{\n  \"image_path\": \"/path/to/cns_section.tif\",\n  \"cell_markers\": {\"CD3\": \"brown\", \"Iba1\": \"red\"},\n  \"pixel_size_um\": 0.5\n}</pre><h3>Biological Use Case</h3><p>Essential for studying neuroinflammatory diseases and CNS immunity. Applications include: (1) Quantifying T cell and macrophage infiltration in experimental autoimmune encephalomyelitis (EAE), a model of multiple sclerosis, (2) Measuring lesion burden and immune cell distribution in stroke or traumatic brain injury models, (3) Assessing microglial activation patterns in neurodegenerative diseases, (4) Evaluating therapeutic efficacy of immunomodulatory treatments on CNS inflammation, (5) Characterizing perivascular cuffing and immune cell trafficking across the blood-brain barrier, and (6) Analyzing spatial relationships between different immune cell types in brain tissue.</p><h3>Output</h3><p>Generates comprehensive histological quantification including: total lesion area, immune cell counts per cell type, cell density (cells/mm²), distribution patterns of infiltrating cells, demyelination scores, and tissue damage indices. Results include annotated images with cell detections overlaid and detailed metrics saved to 'histology_results.txt'.</p><h3>Category</h3><p>immunology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/immunology/analyze_cns_lesion_histology.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/immunology/analyze_cns_lesion_histology.py --image_path \"${image_path}\" --cell_markers \"${cell_markers}\" --pixel_size_um \"${pixel_size_um}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,10 +29,24 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "name": "image_path",
+      "label": "Image Path",
+      "description": "Path to histology image file",
       "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "cell_markers",
+      "label": "Cell Markers",
+      "description": "Cell markers and color/intensity thresholds (JSON dict, optional)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "pixel_size_um",
+      "label": "Pixel Size (um)",
+      "description": "Physical size of each pixel in micrometers (default: 0.5)",
+      "defaultValue": "0.5"
     },
     {
       "type": "Stash File",

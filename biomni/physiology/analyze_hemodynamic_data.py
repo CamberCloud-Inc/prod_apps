@@ -24,7 +24,9 @@ def main():
     parser = argparse.ArgumentParser(
         description='Analyze Hemodynamic Data'
     )
-    parser.add_argument('input_file', help='Input JSON file with pressure_data and sampling_rate')
+    parser.add_argument('--pressure-data-file', required=True, help='File containing blood pressure values in mmHg (JSON array or CSV)')
+    parser.add_argument('--sampling-rate', type=float, required=True, help='Sampling frequency of the pressure recording in Hz')
+    parser.add_argument('--output-file', default='hemodynamic_results.csv', help='Name for output file (default: hemodynamic_results.csv)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -33,17 +35,17 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.physiology import analyze_hemodynamic_data
 
-    with open(args.input_file, 'r') as f:
-        inputs = json.load(f)
-
-    pressure_data = inputs['pressure_data']
-    sampling_rate = inputs['sampling_rate']
-    output_file = inputs.get('output_file', 'hemodynamic_results.csv')
+    # Load pressure data from file
+    with open(args.pressure_data_file, 'r') as f:
+        if args.pressure_data_file.endswith('.json'):
+            pressure_data = json.load(f)
+        else:  # Assume CSV
+            pressure_data = [float(line.strip()) for line in f if line.strip()]
 
     result = analyze_hemodynamic_data(
         pressure_data=pressure_data,
-        sampling_rate=sampling_rate,
-        output_file=output_file
+        sampling_rate=args.sampling_rate,
+        output_file=args.output_file
     )
 
     os.makedirs(args.output, exist_ok=True)

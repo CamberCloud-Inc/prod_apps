@@ -3,7 +3,7 @@
   "title": "Biomni: Analyze Calcium Imaging Data",
   "description": "Quantify neuronal activity metrics from calcium imaging microscopy data",
   "content": "<h3>Overview</h3><p>This tool analyzes calcium imaging data to quantify neuronal activity patterns. Calcium imaging is a powerful technique in neuroscience that uses fluorescent indicators to visualize calcium dynamics in neurons, which serve as a proxy for neuronal activity and action potentials. The analysis extracts time-series signals from regions of interest (ROIs), identifies neurons, and computes activity metrics including spike detection, frequency analysis, and correlation patterns between neurons.</p><h3>Input Parameters</h3><ul><li><strong>image_stack_path</strong> (string, required): Path to the calcium imaging data file. Supports multi-frame TIFF stacks or video files containing time-series fluorescence microscopy data.</li></ul><h3>Input Format</h3><p>Create a JSON file with the following structure:</p><pre>{\n  \"image_stack_path\": \"/path/to/calcium_imaging_stack.tif\"\n}</pre><h3>Biological Use Case</h3><p>Calcium imaging is essential for studying neural circuits, synaptic plasticity, and functional connectivity in neuronal populations. This tool is particularly useful for analyzing spontaneous activity in cultured neurons, stimulus-evoked responses in brain slices, or in vivo neural recordings. Researchers can use this to identify synchronous firing patterns, detect calcium transients corresponding to action potentials, quantify neuronal ensemble dynamics, and correlate neural activity with behavior or sensory stimuli. Applications include studying epileptiform activity, neural development, network reorganization after injury, and screening drug effects on neuronal excitability.</p><h3>Output</h3><p>The analysis generates calcium_imaging_results.txt containing: (1) detected neuron count and ROI statistics, (2) temporal activity traces for each neuron, (3) spike detection results with timing and frequency, (4) correlation matrix showing functional connectivity between neurons, (5) population-level statistics including synchrony index and burst detection, and (6) visualizations saved as PNG files showing fluorescence traces, raster plots, and correlation heatmaps.</p><h3>Category</h3><p>bioengineering</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/bioengineering/analyze_calcium_imaging_data.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/bioengineering/analyze_calcium_imaging_data.py --image_stack_path \"${image_stack_path}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,9 +29,9 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "name": "image_stack_path",
+      "label": "Image Stack Path",
+      "description": "Path to the calcium imaging data file (TIFF stack or video file)",
       "defaultValue": ""
     },
     {

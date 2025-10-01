@@ -23,21 +23,16 @@ def main():
     parser = argparse.ArgumentParser(
         description='Analyzes radiolabeled antibody biodistribution'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('--time-points', required=True, help='List of time points for biodistribution measurements (JSON array, e.g., [1, 4, 24, 48, 72])')
+    parser.add_argument('--tissue-data', required=True, help='Dictionary of tissue types with radioactivity measurements (JSON object)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input data
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    time_points = input_data.get('time_points')
-    tissue_data = input_data.get('tissue_data')
-
-    if not time_points or not tissue_data:
-        raise ValueError("Missing required parameters: time_points, tissue_data")
+    # Parse JSON parameters
+    time_points = json.loads(args.time_points)
+    tissue_data = json.loads(args.tissue_data)
 
     # Import after dependencies are installed
     from biomni.tool.pharmacology import analyze_radiolabeled_antibody_biodistribution

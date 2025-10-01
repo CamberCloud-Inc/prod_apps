@@ -24,8 +24,11 @@ def main():
     parser = argparse.ArgumentParser(
         description='Analyze copy number, purity, ploidy and focal events'
     )
-    parser.add_argument('input_file', help='JSON file with parameters')
+    parser.add_argument('tumor_bam', help='Path to the tumor sample BAM file')
+    parser.add_argument('reference_genome', help='Path to the reference genome FASTA file')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
+    parser.add_argument('--output-dir', default='./results', help='Directory for output files (default: ./results)')
+    parser.add_argument('--normal-bam', help='Path to the matched normal sample BAM file (optional)')
 
     args = parser.parse_args()
     install_dependencies()
@@ -33,19 +36,11 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.cancer_biology import analyze_copy_number_purity_ploidy_and_focal_events
 
-    with open(args.input_file, 'r') as f:
-        params = json.load(f)
-
-    tumor_bam = params['tumor_bam']
-    reference_genome = params['reference_genome']
-    output_dir = params.get('output_dir', './results')
-    normal_bam = params.get('normal_bam')
-
     result = analyze_copy_number_purity_ploidy_and_focal_events(
-        tumor_bam=tumor_bam,
-        reference_genome=reference_genome,
-        output_dir=output_dir,
-        normal_bam=normal_bam
+        tumor_bam=args.tumor_bam,
+        reference_genome=args.reference_genome,
+        output_dir=args.output_dir,
+        normal_bam=args.normal_bam
     )
 
     os.makedirs(args.output, exist_ok=True)

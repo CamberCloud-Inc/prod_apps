@@ -24,7 +24,16 @@ def main():
     parser = argparse.ArgumentParser(
         description='Quick affine registration of medical images'
     )
-    parser.add_argument('input_file', help='JSON config file from stash')
+    parser.add_argument('--fixed_image_path', required=True, help='Path to the reference/fixed image file')
+    parser.add_argument('--moving_image_path', required=True, help='Path to the moving image file')
+    parser.add_argument('--output_dir', required=True, help='Directory for output files')
+    parser.add_argument('--metric', default='mutual_information', help='Similarity metric')
+    parser.add_argument('--optimizer', default='gradient_descent', help='Optimization algorithm')
+    parser.add_argument('--preprocess', type=lambda x: x.lower() == 'true', default=True, help='Enable preprocessing')
+    parser.add_argument('--create_visualizations', type=lambda x: x.lower() == 'true', default=True, help='Create visualizations')
+    parser.add_argument('--learning_rate', type=float, default=0.01, help='Learning rate')
+    parser.add_argument('--number_of_iterations', type=int, default=100, help='Number of iterations')
+    parser.add_argument('--gradient_convergence_tolerance', type=float, default=1e-6, help='Convergence tolerance')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -33,31 +42,17 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.bioimaging import quick_affine_registration
 
-    with open(args.input_file, 'r') as f:
-        config = json.load(f)
-
-    fixed_image_path = config['fixed_image_path']
-    moving_image_path = config['moving_image_path']
-    output_dir = config['output_dir']
-    metric = config.get('metric', 'mutual_information')
-    optimizer = config.get('optimizer', 'gradient_descent')
-    preprocess = config.get('preprocess', True)
-    create_visualizations = config.get('create_visualizations', True)
-    learning_rate = config.get('learning_rate', 0.01)
-    number_of_iterations = config.get('number_of_iterations', 100)
-    gradient_convergence_tolerance = config.get('gradient_convergence_tolerance', 1e-6)
-
     result = quick_affine_registration(
-        fixed_image_path=fixed_image_path,
-        moving_image_path=moving_image_path,
-        output_dir=output_dir,
-        metric=metric,
-        optimizer=optimizer,
-        preprocess=preprocess,
-        create_visualizations=create_visualizations,
-        learning_rate=learning_rate,
-        number_of_iterations=number_of_iterations,
-        gradient_convergence_tolerance=gradient_convergence_tolerance
+        fixed_image_path=args.fixed_image_path,
+        moving_image_path=args.moving_image_path,
+        output_dir=args.output_dir,
+        metric=args.metric,
+        optimizer=args.optimizer,
+        preprocess=args.preprocess,
+        create_visualizations=args.create_visualizations,
+        learning_rate=args.learning_rate,
+        number_of_iterations=args.number_of_iterations,
+        gradient_convergence_tolerance=args.gradient_convergence_tolerance
     )
 
     os.makedirs(args.output, exist_ok=True)

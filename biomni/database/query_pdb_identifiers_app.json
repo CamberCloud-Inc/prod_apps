@@ -3,7 +3,7 @@
   "title": "Biomni: Query Pdb Identifiers",
   "description": "Retrieve detailed structural data for specific PDB identifiers including coordinates and metadata.",
   "content": "<h3>Overview</h3><p>Queries RCSB PDB for specific structure identifiers to retrieve comprehensive structural information including atomic coordinates, experimental details, and annotations.</p><h3>Input Parameters</h3><ul><li><strong>identifiers</strong> (list, required): PDB IDs (e.g., [\"1ABC\", \"2XYZ\"])</li><li><strong>return_type</strong> (string, optional): Data format</li><li><strong>download</strong> (boolean, optional): Download structure files</li><li><strong>attributes</strong> (list, optional): Specific attributes</li></ul><h3>Input Format</h3><p>Create JSON:</p><pre>{\n  \"identifiers\": [\"1HHO\", \"2HHB\"],\n  \"download\": true\n}</pre><h3>Biological Use Case</h3><p>Essential for batch retrieval in computational pipelines and structural bioinformatics. Researchers use this for multiple structure downloads, feature extraction, dataset building for machine learning, and structural comparisons.</p><h3>Output</h3><p>Returns JSON (pdb_identifiers_results.json) with structure details including methods, resolution, assemblies, sequences, ligands, and optionally coordinate files.</p><h3>Category</h3><p>database</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_pdb_identifiers.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_pdb_identifiers.py --identifiers \"${identifiers}\" --return_type \"${return_type}\" --download \"${download}\" --attributes \"${attributes}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,31 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "identifiers",
+      "label": "Identifiers",
+      "description": "Comma-separated PDB identifiers",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "return_type",
+      "label": "Return Type",
+      "description": "Return data type",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "download",
+      "label": "Download",
+      "description": "Download files (true/false)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "attributes",
+      "label": "Attributes",
+      "description": "Attributes to retrieve",
       "defaultValue": ""
     },
     {

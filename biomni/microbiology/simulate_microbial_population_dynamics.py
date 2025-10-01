@@ -24,7 +24,10 @@ def main():
     parser = argparse.ArgumentParser(
         description='Simulate microbial population dynamics with multiple interacting species.'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('--species-params', type=str, required=True, help='Parameters for each species (JSON string)')
+    parser.add_argument('--interactions', type=str, required=True, help='Interaction parameters between species (JSON string)')
+    parser.add_argument('--simulation-time', type=float, default=100, help='Total simulation time')
+    parser.add_argument('--time-step', type=float, default=0.1, help='Time step for numerical integration')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
     args = parser.parse_args()
 
@@ -33,22 +36,16 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.microbiology import simulate_microbial_population_dynamics
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    # Extract parameters
-    species_params = input_data.get('species_params')
-    interactions = input_data.get('interactions')
-    simulation_time = input_data.get('simulation_time', 100)
-    time_step = input_data.get('time_step', 0.1)
+    # Parse JSON string parameters
+    species_params = json.loads(args.species_params)
+    interactions = json.loads(args.interactions)
 
     # Call the function
     result = simulate_microbial_population_dynamics(
         species_params=species_params,
         interactions=interactions,
-        simulation_time=simulation_time,
-        time_step=time_step
+        simulation_time=args.simulation_time,
+        time_step=args.time_step
     )
 
     # Write result to output file

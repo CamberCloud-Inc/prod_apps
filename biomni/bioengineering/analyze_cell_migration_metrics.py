@@ -27,19 +27,18 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.bioengineering import analyze_cell_migration_metrics
     parser = argparse.ArgumentParser(description='Analyze cell migration metrics from time-lapse microscopy images')
-    parser.add_argument('input_file', help='JSON file containing input parameters')
+    parser.add_argument('--image_sequence_path', required=True, help='Path to directory containing time-lapse microscopy images or path to a multi-frame TIFF file')
+    parser.add_argument('--pixel_size_um', type=float, default=1.0, help='Physical size of each pixel in micrometers (default: 1.0)')
+    parser.add_argument('--time_interval_min', type=float, default=1.0, help='Time interval between consecutive frames in minutes (default: 1.0)')
+    parser.add_argument('--min_track_length', type=int, default=10, help='Minimum number of frames a cell must be tracked (default: 10)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    image_sequence_path = os.path.expanduser(input_data['image_sequence_path'])
-    pixel_size_um = input_data.get('pixel_size_um', 1.0)
-    time_interval_min = input_data.get('time_interval_min', 1.0)
-    min_track_length = input_data.get('min_track_length', 10)
+    image_sequence_path = os.path.expanduser(args.image_sequence_path)
+    pixel_size_um = args.pixel_size_um
+    time_interval_min = args.time_interval_min
+    min_track_length = args.min_track_length
 
     print(f"Analyzing cell migration from: {image_sequence_path}")
 

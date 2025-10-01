@@ -3,7 +3,7 @@
   "title": "Biomni: Annotate Plasmid",
   "description": "Annotate DNA sequences using pLannotate's comprehensive plasmid feature database",
   "content": "<h3>Overview</h3><p>This tool automatically annotates DNA sequences using pLannotate's comprehensive plasmid feature database. It identifies common plasmid features including promoters, terminators, resistance markers, origins of replication, epitope tags, and other functional elements by comparing the input sequence against a curated database of known genetic elements.</p><h3>Input Parameters</h3><ul><li><strong>sequence</strong>: DNA sequence to annotate (string)</li><li><strong>--linear</strong>: Optional flag indicating the sequence is linear (default: circular)</li></ul><h3>Input Format</h3><p>Command-line arguments format:</p><pre>python annotate_plasmid.py \"ATGCGATCGA...\" --linear -o output/</pre><p>The DNA sequence is provided as the first argument. Use --linear flag for linear sequences; omit for circular plasmids.</p><h3>Biological Use Case</h3><p>Critical for plasmid characterization in molecular cloning:</p><ul><li>Verify plasmid maps after receiving constructs from collaborators</li><li>Identify all functional elements in commercial expression vectors</li><li>Validate cloning products by confirming expected features</li><li>Discover unannotated elements in legacy plasmids</li><li>Quality control for synthetic DNA constructs before experiments</li><li>Generate comprehensive plasmid maps for publications</li></ul><h3>Output</h3><p>Returns a JSON file (plasmid_annotations.json) containing all identified features with their names, types, positions, orientations, and confidence scores.</p><h3>Category</h3><p>molecular_biology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/annotate_plasmid.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/annotate_plasmid.py \"${sequence}\" ${linear} -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,17 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "sequence",
+      "label": "DNA Sequence",
+      "description": "DNA sequence to annotate",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "linear",
+      "label": "Linear Sequence",
+      "description": "Sequence is linear (leave empty for circular, add --linear for linear)",
       "defaultValue": ""
     },
     {

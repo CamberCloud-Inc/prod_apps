@@ -3,7 +3,7 @@
   "title": "Biomni: Query Jaspar",
   "description": "Query JASPAR for transcription factor binding site profiles and motif information across multiple species.",
   "content": "<h3>Overview</h3><p>Searches JASPAR, the largest open-access database of curated transcription factor (TF) binding profiles. Contains position frequency matrices and sequence logos for TF binding sites enabling prediction of regulatory elements.</p><h3>Input Parameters</h3><ul><li><strong>prompt</strong> (string, optional): Natural language query about transcription factors</li><li><strong>endpoint</strong> (string, optional): Specific JASPAR API endpoint</li><li><strong>verbose</strong> (boolean, optional): Enable detailed logging output</li></ul><h3>Input Format</h3><p>Create a JSON file with the following structure:</p><pre>{\n  \"prompt\": \"Find binding sites for NF-kB\",\n  \"endpoint\": \"/matrix\",\n  \"verbose\": true\n}</pre><h3>Biological Use Case</h3><p>Critical for gene regulation studies, promoter analysis, and understanding transcriptional networks. Researchers use JASPAR to predict TF binding sites in regulatory regions, analyze promoter sequences, identify regulatory motifs, understand gene expression control, and design synthetic promoters.</p><h3>Output</h3><p>Returns a JSON file (jaspar_results.json) containing TF binding profiles including matrix IDs, TF names and families, position weight matrices (PWMs), sequence logos, binding site consensus sequences, species information, and experimental evidence.</p><h3>Category</h3><p>database</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_jaspar.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_jaspar.py --prompt \"${prompt}\" --endpoint \"${endpoint}\" --verbose \"${verbose}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,24 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "prompt",
+      "label": "Prompt",
+      "description": "Query prompt/description",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "endpoint",
+      "label": "Endpoint",
+      "description": "API endpoint path",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "verbose",
+      "label": "Verbose",
+      "description": "Enable verbose output (true/false)",
       "defaultValue": ""
     },
     {

@@ -3,9 +3,9 @@
 Wrapper for Biomni simulate_renin_angiotensin_system_dynamics tool
 """
 import sys
-import json
 import argparse
 import os
+import json
 
 
 def install_dependencies():
@@ -22,21 +22,31 @@ def main():
     parser = argparse.ArgumentParser(
         description='Simulate renin-angiotensin system dynamics using Biomni'
     )
-    parser.add_argument('input_file', help='JSON file with simulation parameters')
+    parser.add_argument('initial_concentrations', help='JSON string or file with initial concentrations')
+    parser.add_argument('rate_constants', help='JSON string or file with rate constants')
+    parser.add_argument('feedback_params', help='JSON string or file with feedback parameters')
+    parser.add_argument('--simulation-time', type=float, default=48, help='Simulation time (default: 48)')
+    parser.add_argument('--time-points', type=int, default=100, help='Number of time points (default: 100)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
+    # Parse JSON parameters (handle both strings and file paths)
+    def parse_json_param(param):
+        try:
+            return json.loads(param)
+        except json.JSONDecodeError:
+            if os.path.exists(param):
+                with open(param, 'r') as f:
+                    return json.load(f)
+            raise ValueError(f"Parameter is neither valid JSON nor a file path: {param}")
 
-    initial_concentrations = input_data.get('initial_concentrations')
-    rate_constants = input_data.get('rate_constants')
-    feedback_params = input_data.get('feedback_params')
-    simulation_time = input_data.get('simulation_time', 48)
-    time_points = input_data.get('time_points', 100)
+    initial_concentrations = parse_json_param(args.initial_concentrations)
+    rate_constants = parse_json_param(args.rate_constants)
+    feedback_params = parse_json_param(args.feedback_params)
+    simulation_time = args.simulation_time
+    time_points = args.time_points
 
     # Import after dependencies are installed
     from biomni.tool.systems_biology import simulate_renin_angiotensin_system_dynamics

@@ -28,33 +28,25 @@ def main():
 
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description='Predict O-glycosylation hotspots')
-    parser.add_argument('input_file', help='Path to input JSON file')
+    parser.add_argument('-s', '--sequence', required=True, help='Protein sequence to analyze')
+    parser.add_argument('-w', '--window', type=int, default=7,
+                        help='Sliding window size for S/T enrichment calculation (default: 7)')
+    parser.add_argument('-m', '--min-st-fraction', type=float, default=0.4,
+                        help='Minimum S/T fraction to consider as hotspot (default: 0.4)')
+    parser.add_argument('-d', '--disallow-proline-next', action='store_true', default=True,
+                        help='Exclude S/T residues followed by proline (default: True)')
+    parser.add_argument('--allow-proline-next', dest='disallow_proline_next', action='store_false',
+                        help='Allow S/T residues followed by proline')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
     args = parser.parse_args()
-
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    sequence = input_data.get("sequence")
-    window = input_data.get("window", 7)
-    min_st_fraction = input_data.get("min_st_fraction", 0.4)
-    disallow_proline_next = input_data.get("disallow_proline_next", True)
-
-    # Validate required parameters
-    if not sequence:
-        print(json.dumps({
-            "error": "Missing required parameter: sequence"
-        }))
-        sys.exit(1)
 
     try:
         # Call the tool function
         result = predict_o_glycosylation_hotspots(
-            sequence=sequence,
-            window=window,
-            min_st_fraction=min_st_fraction,
-            disallow_proline_next=disallow_proline_next
+            sequence=args.sequence,
+            window=args.window,
+            min_st_fraction=args.min_st_fraction,
+            disallow_proline_next=args.disallow_proline_next
         )
 
         # Write output to file

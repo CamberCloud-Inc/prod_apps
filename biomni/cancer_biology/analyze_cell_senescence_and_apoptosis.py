@@ -24,7 +24,7 @@ def main():
     parser = argparse.ArgumentParser(
         description='Analyze cell senescence and apoptosis from FCS file'
     )
-    parser.add_argument('input_file', help='JSON file with parameters')
+    parser.add_argument('fcs_file_path', help='Path to the FCS file containing flow cytometry data')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -33,12 +33,7 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.cancer_biology import analyze_cell_senescence_and_apoptosis
 
-    with open(args.input_file, 'r') as f:
-        params = json.load(f)
-
-    fcs_file_path = params['fcs_file_path']
-
-    result = analyze_cell_senescence_and_apoptosis(fcs_file_path=fcs_file_path)
+    result = analyze_cell_senescence_and_apoptosis(fcs_file_path=args.fcs_file_path)
 
     os.makedirs(args.output, exist_ok=True)
     output_file = os.path.join(args.output, 'senescence_apoptosis_results.txt')

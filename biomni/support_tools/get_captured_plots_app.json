@@ -3,7 +3,7 @@
   "title": "Biomni: Get Captured Plots",
   "description": "Get all captured matplotlib plots from previous Python REPL executions. Returns a list of base64-encoded plot images.",
   "content": "<h3>Overview</h3><p>This utility tool retrieves all matplotlib plots that have been captured during previous Python REPL executions in the persistent session. Plots are returned as base64-encoded image data, enabling programmatic access to generated visualizations.</p><h3>Input Parameters</h3><ul><li>None required - accepts empty JSON object ({})</li></ul><h3>Input Format</h3><pre><code class=\"language-json\">{\n  \"optional\": \"empty or minimal config\"\n}</code></pre><h3>Biological Use Case</h3><p>During exploratory bioinformatics analysis, researchers often generate multiple plots for quality control, data exploration, and results visualization. This tool allows programmatic retrieval of all captured plots for:</p><ul><li>Batch export of QC plots from sequencing data analysis</li><li>Collecting visualization series from iterative parameter testing</li><li>Automated report generation with embedded analysis plots</li><li>Archiving plots from multi-step genomic data processing pipelines</li><li>Extracting figures for manuscripts or presentations</li></ul><h3>Output</h3><p>Generates a JSON file (captured_plots.json) containing an array of base64-encoded plot images. Each plot can be decoded and saved as PNG or displayed in reports and dashboards.</p><h3>Category</h3><p>support_tools</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/support_tools/get_captured_plots.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/support_tools/get_captured_plots.py -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,16 +29,9 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
-      "defaultValue": ""
-    },
-    {
-      "type": "Stash File",
       "name": "outputDir",
       "label": "Output Directory",
-      "description": "Output directory in stash",
+      "description": "Select or create a stash folder where the captured plots will be saved",
       "defaultValue": "./"
     }
   ]

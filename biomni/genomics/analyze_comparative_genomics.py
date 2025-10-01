@@ -18,19 +18,20 @@ def main():
     parser = argparse.ArgumentParser(
         description='Perform comparative genomics and haplotype analysis on multiple genome samples'
     )
-    parser.add_argument('sample_files_json', help='JSON file with list of sample FASTA file paths from stash')
-    parser.add_argument('reference_genome', help='Reference genome FASTA file from stash')
+    parser.add_argument('sample_files', nargs='+',
+                       help='One or more sample FASTA files to analyze')
+    parser.add_argument('--reference-genome', required=True,
+                       help='Reference genome FASTA file from stash')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load sample files list
-    with open(args.sample_files_json, 'r') as f:
-        sample_files = json.load(f)
+    # Use sample files directly
+    sample_files = args.sample_files
 
-    if not isinstance(sample_files, list):
-        raise ValueError("Sample files JSON must contain an array of file paths")
+    if not sample_files:
+        raise ValueError("At least one sample file is required")
 
     from biomni.tool.genomics import analyze_comparative_genomics_and_haplotypes
 

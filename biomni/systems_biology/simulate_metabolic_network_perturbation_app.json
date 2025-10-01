@@ -3,7 +3,7 @@
   "title": "Biomni: Simulate Metabolic Network Perturbation",
   "description": "Construct and simulate kinetic models of metabolic networks and analyze their responses to perturbations",
   "content": "<h3>Overview</h3><p>Construct and simulate kinetic models of metabolic networks to analyze dynamic responses to perturbations. This tool uses ordinary differential equations (ODEs) to model enzyme kinetics and metabolite concentrations over time, enabling prediction of how metabolic networks respond to genetic, environmental, or pharmacological perturbations.</p><h3>Input Parameters</h3><ul><li><strong>model_file</strong> (string, required): Path to the kinetic model file defining reactions, enzymes, and rate laws</li><li><strong>initial_concentrations</strong> (dict, required): Dictionary of initial metabolite concentrations (in mM or μM)</li><li><strong>perturbation_params</strong> (dict, required): Parameters defining the perturbation (e.g., enzyme inhibition, knockout, metabolite addition)</li><li><strong>simulation_time</strong> (float, optional): Total simulation time in arbitrary time units (default: 100)</li><li><strong>time_points</strong> (int, optional): Number of time points to record (default: 1000)</li></ul><h3>Input Format</h3><pre>{\n  \"model_file\": \"/path/to/kinetic_model.xml\",\n  \"initial_concentrations\": {\n    \"Glucose\": 10.0,\n    \"ATP\": 4.0,\n    \"ADP\": 1.0,\n    \"Pyruvate\": 0.1\n  },\n  \"perturbation_params\": {\n    \"enzyme_inhibition\": {\"PFK\": 0.5},\n    \"metabolite_pulse\": {\"Glucose\": 5.0, \"time\": 20}\n  },\n  \"simulation_time\": 100,\n  \"time_points\": 1000\n}</pre><h3>Biological Use Case</h3><p>This tool is essential for systems biology studies involving:</p><ul><li>Predicting metabolic responses to enzyme inhibition by drugs or genetic knockouts</li><li>Analyzing metabolic pathway regulation and feedback control mechanisms</li><li>Studying dynamic metabolite flux redistribution under stress conditions</li><li>Investigating oscillations and bistability in metabolic networks (e.g., glycolytic oscillations)</li><li>Designing metabolic engineering strategies for enhanced production of target compounds</li><li>Understanding metabolic dysregulation in disease states (e.g., cancer metabolism, diabetes)</li><li>Analyzing the effects of enzyme mutations on metabolic homeostasis</li></ul><h3>Output</h3><p>The simulation generates:</p><ul><li>Time-course trajectories of all metabolite concentrations</li><li>Flux distributions through metabolic reactions over time</li><li>Steady-state analysis showing final concentrations after perturbation</li><li>Comparison of perturbed vs. control conditions</li><li>Identification of rate-limiting steps and metabolic bottlenecks</li></ul><p>Results are saved to 'metabolic_network_results.txt' in the specified output directory.</p><h3>Category</h3><p>systems_biology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/systems_biology/simulate_metabolic_network_perturbation.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/systems_biology/simulate_metabolic_network_perturbation.py \"${modelFile}\" \"${initialConcentrations}\" \"${perturbationParams}\" --simulation-time ${simulationTime} --time-points ${timePoints} -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,10 +29,38 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "name": "modelFile",
+      "label": "Model File",
+      "description": "Path to kinetic model file",
       "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "initialConcentrations",
+      "label": "Initial Concentrations",
+      "description": "JSON string with initial metabolite concentrations (e.g., {\"Glucose\": 10.0, \"ATP\": 4.0})",
+      "defaultValue": "{}"
+    },
+    {
+      "type": "String",
+      "name": "perturbationParams",
+      "label": "Perturbation Parameters",
+      "description": "JSON string with perturbation parameters (e.g., {\"enzyme_inhibition\": {\"PFK\": 0.5}})",
+      "defaultValue": "{}"
+    },
+    {
+      "type": "Number",
+      "name": "simulationTime",
+      "label": "Simulation Time",
+      "description": "Total simulation time",
+      "defaultValue": 100
+    },
+    {
+      "type": "Number",
+      "name": "timePoints",
+      "label": "Time Points",
+      "description": "Number of time points to record",
+      "defaultValue": 1000
     },
     {
       "type": "Stash File",

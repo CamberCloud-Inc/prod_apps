@@ -3,7 +3,7 @@
   "title": "Biomni: Quantify Amyloid Beta Plaques",
   "description": "Quantifies amyloid-beta plaques in microscopy images using image segmentation and analysis.",
   "content": "<h3>Overview</h3><p>Quantifies amyloid-beta (Aβ) plaques in microscopy images using image segmentation and analysis. This tool processes immunofluorescence or immunohistochemistry images of brain tissue stained for amyloid-beta, automatically detecting and measuring plaque burden, size distribution, and spatial characteristics, which are critical markers for Alzheimer's disease pathology.</p><h3>Input Parameters</h3><ul><li><strong>image_path</strong> (required): Path to microscopy image file of amyloid-beta stained tissue</li><li><strong>output_dir</strong> (optional, default='./results'): Directory for output files and visualizations</li><li><strong>threshold_method</strong> (optional, default='otsu'): Thresholding method for plaque detection ('otsu', 'manual', 'adaptive')</li><li><strong>min_plaque_size</strong> (optional, default=50): Minimum plaque area in pixels to exclude noise</li><li><strong>manual_threshold</strong> (optional, default=127): Threshold value if using manual thresholding</li></ul><h3>Input Format</h3><pre>{\n  \"image_path\": \"/path/to/amyloid_stained_section.tif\",\n  \"output_dir\": \"./results\",\n  \"threshold_method\": \"otsu\",\n  \"min_plaque_size\": 50,\n  \"manual_threshold\": 127\n}</pre><h3>Biological Use Case</h3><p>This analysis is essential for:</p><ul><li>Quantifying Alzheimer's disease pathology in human and animal models</li><li>Evaluating therapeutic efficacy in anti-amyloid drug trials</li><li>Characterizing plaque morphology (diffuse vs. dense-core plaques)</li><li>Studying regional distribution of amyloid pathology in brain</li><li>Correlating plaque burden with cognitive decline</li><li>Investigating genetic and environmental factors affecting amyloidosis</li><li>High-throughput screening of neuroprotective compounds</li></ul><h3>Output</h3><p>Returns comprehensive plaque quantification including:</p><ul><li>Total number of plaques detected</li><li>Total plaque area and percentage coverage</li><li>Mean, median, and distribution of plaque sizes</li><li>Plaque density (plaques per mm²)</li><li>Individual plaque measurements (area, perimeter, circularity)</li><li>Annotated image with detected plaques outlined</li><li>Plaque size distribution histogram</li><li>Summary statistics report</li></ul><h3>Category</h3><p>physiology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/quantify_amyloid_beta_plaques.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/quantify_amyloid_beta_plaques.py --image-path \"${imagePath}\" --output-dir \"${outputDirParam}\" --threshold-method \"${thresholdMethod}\" --min-plaque-size \"${minPlaqueSize}\" --manual-threshold \"${manualThreshold}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,10 +29,38 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "name": "imagePath",
+      "label": "Image Path",
+      "description": "Path to microscopy image file of amyloid-beta stained tissue",
       "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "outputDirParam",
+      "label": "Output Directory (for tool)",
+      "description": "Directory for output files and visualizations",
+      "defaultValue": "./results"
+    },
+    {
+      "type": "Input",
+      "name": "thresholdMethod",
+      "label": "Threshold Method",
+      "description": "Thresholding method for plaque detection (otsu, manual, adaptive)",
+      "defaultValue": "otsu"
+    },
+    {
+      "type": "Input",
+      "name": "minPlaqueSize",
+      "label": "Min Plaque Size",
+      "description": "Minimum plaque area in pixels to exclude noise",
+      "defaultValue": "50"
+    },
+    {
+      "type": "Input",
+      "name": "manualThreshold",
+      "label": "Manual Threshold",
+      "description": "Threshold value if using manual thresholding",
+      "defaultValue": "127"
     },
     {
       "type": "Stash File",

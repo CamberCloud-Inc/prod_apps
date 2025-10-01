@@ -3,7 +3,7 @@
   "title": "Biomni: Analyze Thrombus Histology",
   "description": "Analyze histological images of thrombus samples.",
   "content": "<h3>Overview</h3><p>This pathology analysis tool performs quantitative analysis of histological images from thrombus samples. The tool processes stained tissue sections to identify and characterize thrombus composition, including fibrin content, platelet aggregates, red blood cell components, and white blood cell infiltration, providing insights into clot age, composition, and pathological characteristics.</p><h3>Input Parameters</h3><ul><li><strong>image_path</strong> (required): Path to the histological image file (H&E, Masson's trichrome, or immunohistochemistry)</li><li><strong>output_dir</strong> (optional): Directory where analysis results will be saved (default: './output')</li></ul><h3>Input Format</h3><pre><code>{\n  \"image_path\": \"/path/to/thrombus_section.tif\",\n  \"output_dir\": \"./thrombus_results\"\n}</code></pre><h3>Biological Use Case</h3><p>Thrombus histology analysis is critical for understanding thrombotic disorders including deep vein thrombosis, pulmonary embolism, myocardial infarction, and stroke. This tool supports research into clot formation mechanisms, evaluation of antithrombotic therapies, investigation of thromboinflammation, and forensic determination of thrombus age. Clinical applications include characterizing retrieved thrombi from mechanical thrombectomy procedures, studying clot composition in coronary and cerebral arteries, and investigating hypercoagulable states and coagulopathies in various disease contexts.</p><h3>Output</h3><p>The analysis generates quantitative metrics of thrombus composition including percentages of fibrin, red blood cells, platelets, and leukocytes. Results include color-coded segmentation maps, compositional pie charts, spatial distribution analysis, and morphometric parameters such as thrombus density and organization patterns. Output data supports correlation with clinical outcomes and treatment responses.</p><h3>Category</h3><p>pathology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pathology/analyze_thrombus_histology.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pathology/analyze_thrombus_histology.py \"${image_path}\" --output-dir \"${output_dir}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,10 +29,17 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "name": "image_path",
+      "label": "Image Path",
+      "description": "Path to the histological image file (H&E, Masson's trichrome, or immunohistochemistry)",
       "defaultValue": ""
+    },
+    {
+      "type": "Text",
+      "name": "output_dir",
+      "label": "Output Directory",
+      "description": "Directory where analysis results will be saved (default: ./output)",
+      "defaultValue": "./output"
     },
     {
       "type": "Stash File",

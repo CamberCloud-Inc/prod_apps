@@ -24,7 +24,11 @@ def main():
     parser = argparse.ArgumentParser(
         description='Simulate microbial community dynamics using the generalized Lotka-Volterra model.'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('--initial-populations', type=str, required=True, help='Initial population sizes for each species (JSON string)')
+    parser.add_argument('--growth-rates', type=str, required=True, help='Growth rates for each species (JSON string)')
+    parser.add_argument('--interaction-matrix', type=str, required=True, help='Interaction matrix between species (JSON string)')
+    parser.add_argument('--simulation-time', type=float, default=100, help='Total simulation time')
+    parser.add_argument('--time-step', type=float, default=0.1, help='Time step for numerical integration')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
     args = parser.parse_args()
 
@@ -33,24 +37,18 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.microbiology import simulate_generalized_lotka_volterra_dynamics
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    # Extract parameters
-    initial_populations = input_data.get('initial_populations')
-    growth_rates = input_data.get('growth_rates')
-    interaction_matrix = input_data.get('interaction_matrix')
-    simulation_time = input_data.get('simulation_time', 100)
-    time_step = input_data.get('time_step', 0.1)
+    # Parse JSON string parameters
+    initial_populations = json.loads(args.initial_populations)
+    growth_rates = json.loads(args.growth_rates)
+    interaction_matrix = json.loads(args.interaction_matrix)
 
     # Call the function
     result = simulate_generalized_lotka_volterra_dynamics(
         initial_populations=initial_populations,
         growth_rates=growth_rates,
         interaction_matrix=interaction_matrix,
-        simulation_time=simulation_time,
-        time_step=time_step
+        simulation_time=args.simulation_time,
+        time_step=args.time_step
     )
 
     # Write result to output file

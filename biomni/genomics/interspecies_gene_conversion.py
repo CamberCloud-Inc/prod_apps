@@ -18,7 +18,7 @@ def main():
     parser = argparse.ArgumentParser(
         description='Convert ENSEMBL gene IDs between different species using BioMart'
     )
-    parser.add_argument('gene_list_file', help='JSON file with list of ENSEMBL gene IDs from stash')
+    parser.add_argument('gene_ids', help='Comma-separated list of ENSEMBL gene IDs (e.g., "ENSG00000139618,ENSG00000141510")')
     parser.add_argument('--source-species', required=True,
                        help='Source species (human, mouse, rat, zebrafish, fly, worm, yeast, chicken, pig, cow, dog, macaque)')
     parser.add_argument('--target-species', required=True,
@@ -28,12 +28,11 @@ def main():
     args = parser.parse_args()
     install_dependencies()
 
-    # Load gene list
-    with open(args.gene_list_file, 'r') as f:
-        gene_list = json.load(f)
+    # Parse gene list from comma-separated string
+    gene_list = [g.strip() for g in args.gene_ids.split(',') if g.strip()]
 
-    if not isinstance(gene_list, list):
-        raise ValueError("Gene list file must contain a JSON array of gene IDs")
+    if not gene_list:
+        raise ValueError("No gene IDs provided")
 
     from biomni.tool.genomics import interspecies_gene_conversion
 

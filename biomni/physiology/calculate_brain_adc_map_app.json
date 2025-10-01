@@ -3,7 +3,7 @@
   "title": "Biomni: Calculate Brain Adc Map",
   "description": "Calculate Apparent Diffusion Coefficient (ADC) map from diffusion-weighted MRI data.",
   "content": "<h3>Overview</h3><p>Calculate Apparent Diffusion Coefficient (ADC) map from diffusion-weighted MRI (DWI) data. This tool processes multi-b-value diffusion MRI scans to generate ADC maps, which quantify water diffusion in brain tissue. ADC values reflect tissue microstructure and cellularity, making them invaluable for detecting stroke, tumors, and other pathological changes in the brain.</p><h3>Input Parameters</h3><ul><li><strong>dwi_file_path</strong> (required): Path to diffusion-weighted MRI data file (NIfTI format, .nii or .nii.gz)</li><li><strong>b_values</strong> (required): Array of b-values (s/mm²) corresponding to each DWI volume</li><li><strong>output_path</strong> (optional, default='adc_map.nii.gz'): Output filename for ADC map</li><li><strong>mask_file_path</strong> (optional): Path to brain mask file to restrict analysis to brain tissue</li></ul><h3>Input Format</h3><pre>{\n  \"dwi_file_path\": \"/path/to/dwi_data.nii.gz\",\n  \"b_values\": [0, 500, 1000],\n  \"output_path\": \"adc_map.nii.gz\",\n  \"mask_file_path\": \"/path/to/brain_mask.nii.gz\"\n}</pre><h3>Biological Use Case</h3><p>This analysis is essential for:</p><ul><li>Early detection and characterization of acute ischemic stroke</li><li>Differentiating tumor types and grading brain tumors</li><li>Assessing treatment response in cancer patients</li><li>Detecting demyelinating lesions in multiple sclerosis</li><li>Evaluating traumatic brain injury and edema</li><li>Studying neurodevelopmental disorders and brain maturation</li><li>Quantifying tissue changes in neurodegenerative diseases</li></ul><h3>Output</h3><p>Returns ADC analysis including:</p><ul><li>ADC map in NIfTI format (units: mm²/s or μm²/ms)</li><li>Mean ADC values for masked regions</li><li>ADC distribution statistics</li><li>Quality metrics for the diffusion fit</li><li>Summary report with ADC ranges</li></ul><h3>Category</h3><p>physiology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/calculate_brain_adc_map.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/calculate_brain_adc_map.py --dwi-file-path \"${dwiFilePath}\" --b-values-file \"${bValuesFile}\" --output-path \"${outputPath}\" ${maskFilePath:+--mask-file-path \"${maskFilePath}\"} -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,9 +29,30 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "name": "dwiFilePath",
+      "label": "DWI File Path",
+      "description": "Path to diffusion-weighted imaging (DWI) NIfTI file",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "bValuesFile",
+      "label": "B Values File",
+      "description": "File containing b-values (JSON array or CSV)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "outputPath",
+      "label": "Output Path",
+      "description": "Output filename for ADC map",
+      "defaultValue": "adc_map.nii.gz"
+    },
+    {
+      "type": "Stash File",
+      "name": "maskFilePath",
+      "label": "Mask File Path (Optional)",
+      "description": "Optional brain mask file path",
       "defaultValue": ""
     },
     {

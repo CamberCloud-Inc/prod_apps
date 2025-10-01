@@ -3,7 +3,7 @@
   "title": "Biomni: Query Emdb",
   "description": "Query the Electron Microscopy Data Bank (EMDB) for cryo-EM derived 3D structures of biological macromolecules.",
   "content": "<h3>Overview</h3><p>Accesses EMDB, the public repository for electron microscopy density maps of macromolecular structures. EMDB contains cryo-EM, electron tomography, and other EM-derived structural data, complementing X-ray crystallography structures in the PDB.</p><h3>Input Parameters</h3><ul><li><strong>prompt</strong> (string, optional): Natural language query about EM structures (e.g., \"Find ribosome structures\")</li><li><strong>endpoint</strong> (string, optional): Specific EMDB API endpoint to query</li><li><strong>verbose</strong> (boolean, optional): Enable detailed logging output (default: true)</li></ul><h3>Input Format</h3><p>Create a JSON file with the following structure:</p><pre>{\n  \"prompt\": \"Find SARS-CoV-2 spike protein structures\",\n  \"endpoint\": \"/search\",\n  \"verbose\": true\n}</pre><h3>Biological Use Case</h3><p>Critical for structural biology research on large macromolecular complexes, membrane proteins, and cellular machinery that are challenging to crystallize. Researchers use EMDB to access cryo-EM structures of viruses, ribosomes, ion channels, and protein assemblies for understanding mechanism of action, drug design, and structural dynamics studies.</p><h3>Output</h3><p>Returns a JSON file (emdb_results.json) containing EMDB entry details including map IDs, resolution information, associated PDB structures, biological assembly descriptions, sample preparation methods, microscopy parameters, and downloadable density map file locations.</p><h3>Category</h3><p>database</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_emdb.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_emdb.py --prompt \"${prompt}\" --endpoint \"${endpoint}\" --verbose \"${verbose}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,11 +28,25 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "prompt",
+      "label": "Prompt",
+      "description": "Query prompt/description",
       "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "endpoint",
+      "label": "Endpoint",
+      "description": "API endpoint path",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "verbose",
+      "label": "Verbose",
+      "description": "Enable verbose output (true/false, default: true)",
+      "defaultValue": "true"
     },
     {
       "type": "Stash File",

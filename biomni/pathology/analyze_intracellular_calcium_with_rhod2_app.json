@@ -3,7 +3,7 @@
   "title": "Biomni: Analyze Intracellular Calcium With Rhod2",
   "description": "Analyze intracellular calcium concentration using Rhod-2 fluorescent indicator.",
   "content": "<h3>Overview</h3><p>This pathology analysis tool quantifies intracellular calcium concentration using Rhod-2 fluorescent indicator imaging. The tool processes fluorescence microscopy images to measure calcium levels in living cells, accounting for background fluorescence and providing calibrated calcium concentration measurements critical for studying cellular signaling and function.</p><h3>Input Parameters</h3><ul><li><strong>background_image_path</strong> (required): Path to the background fluorescence image (no cells/dye)</li><li><strong>control_image_path</strong> (required): Path to the control sample image (baseline calcium levels)</li><li><strong>sample_image_path</strong> (required): Path to the experimental sample fluorescence image</li><li><strong>output_dir</strong> (optional): Directory where analysis results will be saved (default: './output')</li></ul><h3>Input Format</h3><pre><code>{\n  \"background_image_path\": \"/path/to/background.tif\",\n  \"control_image_path\": \"/path/to/control.tif\",\n  \"sample_image_path\": \"/path/to/sample.tif\",\n  \"output_dir\": \"./calcium_analysis\"\n}</code></pre><h3>Biological Use Case</h3><p>Intracellular calcium signaling is fundamental to cellular physiology including muscle contraction, neurotransmitter release, gene expression, and cell death pathways. This tool is essential for studying cardiac arrhythmias, neurodegenerative diseases, mitochondrial dysfunction, excitation-contraction coupling defects, and calcium-dependent cell death mechanisms. Research applications include screening cardioprotective drugs, investigating calcium homeostasis in heart failure, analyzing neuronal activity patterns, and studying calcium dysregulation in ischemia-reperfusion injury and various cardiomyopathies.</p><h3>Output</h3><p>The analysis produces background-corrected fluorescence intensities, calibrated calcium concentrations, spatial distribution maps of intracellular calcium, temporal dynamics (if time-series), and statistical comparisons between control and experimental conditions. Output includes pseudocolor calcium concentration maps, quantitative plots, and region-of-interest analysis data.</p><h3>Category</h3><p>pathology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pathology/analyze_intracellular_calcium_with_rhod2.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pathology/analyze_intracellular_calcium_with_rhod2.py \"${background_image_path}\" \"${control_image_path}\" \"${sample_image_path}\" --output-dir \"${output_dir}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,10 +29,31 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "name": "background_image_path",
+      "label": "Background Image Path",
+      "description": "Path to the background fluorescence image (no cells/dye)",
       "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "control_image_path",
+      "label": "Control Image Path",
+      "description": "Path to the control sample image (baseline calcium levels)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "sample_image_path",
+      "label": "Sample Image Path",
+      "description": "Path to the experimental sample fluorescence image",
+      "defaultValue": ""
+    },
+    {
+      "type": "Text",
+      "name": "output_dir",
+      "label": "Output Directory",
+      "description": "Directory where analysis results will be saved (default: ./output)",
+      "defaultValue": "./output"
     },
     {
       "type": "Stash File",

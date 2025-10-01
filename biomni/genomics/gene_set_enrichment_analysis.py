@@ -18,13 +18,13 @@ def main():
     parser = argparse.ArgumentParser(
         description='Perform gene set enrichment analysis using multiple databases'
     )
-    parser.add_argument('genes_file', help='JSON file with list of gene symbols from stash')
+    parser.add_argument('genes', help='Comma-separated list of gene symbols (e.g., "BRCA1,TP53,EGFR")')
     parser.add_argument('--database', default='ontology',
                        help='Database: pathway, transcription, ontology, diseases_drugs, celltypes, kinase_interactions (default: ontology)')
     parser.add_argument('--top-k', type=int, default=10,
                        help='Number of top pathways to return (default: 10)')
-    parser.add_argument('--background-file', default=None,
-                       help='Optional JSON file with background gene list')
+    parser.add_argument('--background', default=None,
+                       help='Optional comma-separated list of background genes')
     parser.add_argument('--plot', action='store_true',
                        help='Generate bar plot of results')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
@@ -32,18 +32,16 @@ def main():
     args = parser.parse_args()
     install_dependencies()
 
-    # Load gene list
-    with open(args.genes_file, 'r') as f:
-        genes = json.load(f)
+    # Parse gene list from comma-separated string
+    genes = [g.strip() for g in args.genes.split(',') if g.strip()]
 
-    if not isinstance(genes, list):
-        raise ValueError("Genes file must contain a JSON array of gene symbols")
+    if not genes:
+        raise ValueError("No genes provided")
 
-    # Load background if provided
+    # Parse background if provided
     background_list = None
-    if args.background_file:
-        with open(args.background_file, 'r') as f:
-            background_list = json.load(f)
+    if args.background:
+        background_list = [g.strip() for g in args.background.split(',') if g.strip()]
 
     from biomni.tool.genomics import gene_set_enrichment_analysis
 

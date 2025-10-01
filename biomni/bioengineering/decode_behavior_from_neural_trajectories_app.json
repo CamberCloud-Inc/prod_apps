@@ -3,7 +3,7 @@
   "title": "Biomni: Decode Behavior From Neural Trajectories",
   "description": "Model neural activity trajectories and decode behavioral variables using PCA and Kalman filtering",
   "content": "<h3>Overview</h3><p>This tool performs neural population analysis to decode behavioral variables from high-dimensional neural activity recordings. Modern neuroscience techniques like multi-electrode arrays and calcium imaging can simultaneously record hundreds to thousands of neurons. This analysis applies dimensionality reduction (PCA) to identify low-dimensional neural manifolds or trajectories that represent population-level dynamics, then uses Kalman filtering and regression models to decode behavioral outputs such as movement direction, velocity, force, or decision variables from these neural trajectories.</p><h3>Input Parameters</h3><ul><li><strong>neural_data_file</strong> (string, required): Path to CSV file containing neural activity data. Each row represents a time point, and each column represents a neuron. Values can be spike counts, firing rates (Hz), or calcium imaging fluorescence traces.</li><li><strong>behavioral_data_file</strong> (string, required): Path to CSV file containing behavioral measurements at corresponding time points. Each row matches a neural data time point, and columns represent behavioral variables (e.g., x-position, y-position, velocity, arm angle).</li><li><strong>n_components</strong> (integer, optional): Number of principal components to extract from neural data for dimensionality reduction. Determines the dimensionality of the neural trajectory space. Should be much smaller than the number of neurons. Default: 10.</li></ul><h3>Input Format</h3><p>Create a JSON file with the following structure:</p><pre>{\n  \"neural_data_file\": \"/path/to/neural_recordings.csv\",\n  \"behavioral_data_file\": \"/path/to/behavioral_data.csv\",\n  \"n_components\": 15\n}</pre><p>The CSV files should have matching numbers of rows (time points). Neural data: timepoints x neurons matrix. Behavioral data: timepoints x behavioral_variables matrix.</p><h3>Biological Use Case</h3><p>Neural decoding is central to understanding sensorimotor transformations, decision-making circuits, and developing brain-computer interfaces (BCIs). In motor neuroscience, it reveals how motor cortex populations encode movement parameters and how these representations evolve during motor learning. For BCI applications, decoded neural signals can control prosthetic limbs, computer cursors, or communication devices for paralyzed patients. In cognitive neuroscience, decoding identifies neural correlates of decision variables, attention states, and memory retrieval. The low-dimensional trajectory analysis uncovers population-level computational principles, showing that neural dynamics often lie on curved manifolds corresponding to behavioral state spaces. This approach has revealed neural preparatory states before movement initiation, rotational dynamics during movement execution, and choice-selective trajectories during perceptual decisions.</p><h3>Output</h3><p>The analysis generates neural_trajectory_decoding_results.txt containing: (1) PCA decomposition results showing variance explained by each component and cumulative variance, (2) extracted neural trajectories (PC scores over time) for visualization of population dynamics, (3) Kalman filter parameters and state-space model representation, (4) decoding performance metrics including R-squared values, mean squared error, and correlation coefficients between actual and decoded behavior, (5) identification of behaviorally relevant neural dimensions and their contribution to decoding, and (6) visualization plots showing neural trajectories in 2D/3D PC space, actual vs. predicted behavioral variables, and component loadings saved as PNG files.</p><h3>Category</h3><p>bioengineering</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/bioengineering/decode_behavior_from_neural_trajectories.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/bioengineering/decode_behavior_from_neural_trajectories.py --neural_data_file \"${neural_data_file}\" --behavioral_data_file \"${behavioral_data_file}\" --n_components \"${n_components}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,10 +29,24 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "name": "neural_data_file",
+      "label": "Neural Data File",
+      "description": "Path to CSV file containing neural activity data",
       "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "behavioral_data_file",
+      "label": "Behavioral Data File",
+      "description": "Path to CSV file containing behavioral measurements",
+      "defaultValue": ""
+    },
+    {
+      "type": "Text",
+      "name": "n_components",
+      "label": "Number of Components",
+      "description": "Number of principal components to extract (default: 10)",
+      "defaultValue": "10"
     },
     {
       "type": "Stash File",

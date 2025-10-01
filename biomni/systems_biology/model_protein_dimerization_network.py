@@ -3,9 +3,9 @@
 Wrapper for Biomni model_protein_dimerization_network tool
 """
 import sys
-import json
 import argparse
 import os
+import json
 
 
 def install_dependencies():
@@ -22,19 +22,27 @@ def main():
     parser = argparse.ArgumentParser(
         description='Model protein dimerization network using Biomni'
     )
-    parser.add_argument('input_file', help='JSON file with network parameters')
+    parser.add_argument('monomer_concentrations', help='JSON string or file with monomer concentrations')
+    parser.add_argument('dimerization_affinities', help='JSON string or file with dimerization affinities')
+    parser.add_argument('network_topology', help='JSON string or file with network topology')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
+    # Parse JSON parameters (handle both strings and file paths)
+    def parse_json_param(param):
+        try:
+            return json.loads(param)
+        except json.JSONDecodeError:
+            if os.path.exists(param):
+                with open(param, 'r') as f:
+                    return json.load(f)
+            raise ValueError(f"Parameter is neither valid JSON nor a file path: {param}")
 
-    monomer_concentrations = input_data.get('monomer_concentrations')
-    dimerization_affinities = input_data.get('dimerization_affinities')
-    network_topology = input_data.get('network_topology')
+    monomer_concentrations = parse_json_param(args.monomer_concentrations)
+    dimerization_affinities = parse_json_param(args.dimerization_affinities)
+    network_topology = parse_json_param(args.network_topology)
 
     # Import after dependencies are installed
     from biomni.tool.systems_biology import model_protein_dimerization_network

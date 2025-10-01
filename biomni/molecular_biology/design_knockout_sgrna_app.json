@@ -3,7 +3,7 @@
   "title": "Biomni: Design Knockout Sgrna",
   "description": "Design optimized sgRNAs for CRISPR-Cas9 gene knockout",
   "content": "<h3>Overview</h3><p>This tool designs optimized single guide RNAs (sgRNAs) for CRISPR-Cas9 mediated gene knockout. It queries validated sgRNA libraries to find guides targeting specific genes with high on-target activity and minimal off-target effects. The tool retrieves pre-validated sgRNA sequences with associated efficiency scores to maximize knockout success rates.</p><h3>Input Parameters</h3><ul><li><strong>gene_name</strong>: Target gene symbol (e.g., EGFR, TP53, BRCA1)</li><li><strong>data_lake_path</strong>: Path to sgRNA library data repository</li><li><strong>--species</strong>: Target organism species (default: human). Options include human, mouse, etc.</li><li><strong>--num-guides</strong>: Number of sgRNA guides to return (default: 1)</li></ul><h3>Input Format</h3><p>Command-line arguments format:</p><pre>python design_knockout_sgrna.py \"TP53\" \"/path/to/data\" --species human --num-guides 3 -o output/</pre><p>Provide gene name and data path as positional arguments, with optional species and guide number specifications.</p><h3>Biological Use Case</h3><p>Critical for CRISPR genome editing experiments:</p><ul><li>Design sgRNAs for functional gene knockout studies</li><li>Generate loss-of-function mutants for disease modeling</li><li>Create knockout cell lines for drug target validation</li><li>Perform genetic screens with pooled sgRNA libraries</li><li>Engineer therapeutic gene knockouts (e.g., CCR5 for HIV resistance)</li><li>Validate gene function through CRISPR-mediated disruption</li></ul><h3>Output</h3><p>Returns a JSON file (e.g., TP53_sgrnas.json) containing sgRNA sequences, PAM sequences, target positions, on-target scores, and predicted off-target sites for the requested number of guides.</p><h3>Category</h3><p>molecular_biology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/design_knockout_sgrna.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/molecular_biology/design_knockout_sgrna.py \"${gene_name}\" \"${data_lake_path}\" --species \"${species}\" --num-guides ${num_guides} -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,11 +28,32 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "gene_name",
+      "label": "Gene Name",
+      "description": "Target gene symbol (e.g., EGFR, TP53)",
       "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "data_lake_path",
+      "label": "Data Lake Path",
+      "description": "Path to sgRNA library data",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "species",
+      "label": "Species",
+      "description": "Target species (default: human)",
+      "defaultValue": "human"
+    },
+    {
+      "type": "Input",
+      "name": "num_guides",
+      "label": "Number of Guides",
+      "description": "Number of guides to return (default: 1)",
+      "defaultValue": "1"
     },
     {
       "type": "Stash File",

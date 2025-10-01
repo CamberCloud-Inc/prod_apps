@@ -24,7 +24,9 @@ def main():
     parser = argparse.ArgumentParser(
         description='Segment cells in microscopy images using deep learning models.'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('--image-path', type=str, required=True, help='Path to microscopy image file')
+    parser.add_argument('--model-type', type=str, default='cellpose', help='Deep learning model to use (cellpose, stardist, etc.)')
+    parser.add_argument('--output-dir', type=str, default='./output', help='Directory where results will be saved')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
     args = parser.parse_args()
 
@@ -33,20 +35,11 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.microbiology import segment_cells_with_deep_learning
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    # Extract parameters
-    image_path = input_data.get('image_path')
-    model_type = input_data.get('model_type', 'cellpose')
-    output_dir = input_data.get('output_dir', './output')
-
     # Call the function
     result = segment_cells_with_deep_learning(
-        image_path=image_path,
-        model_type=model_type,
-        output_dir=output_dir
+        image_path=args.image_path,
+        model_type=args.model_type,
+        output_dir=args.output_dir
     )
 
     # Write result to output file

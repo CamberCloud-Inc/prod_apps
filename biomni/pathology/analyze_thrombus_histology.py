@@ -1,14 +1,7 @@
-#!/usr/bin/env python3
-"""
-Analyze Thrombus Histology
-
-Analyze histological images of thrombus samples.
-"""
-
-import argparse
-import sys
 import json
+import sys
 import os
+import argparse
 
 
 
@@ -23,35 +16,44 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='Analyze histological images of thrombus samples'
-    )
-    parser.add_argument('input_file', help='JSON file with input parameters')
-    parser.add_argument('-o', '--output', required=True, help='Output directory')
-
-    args = parser.parse_args()
 
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.pathology import analyze_thrombus_histology
+    parser = argparse.ArgumentParser(description='Analyze histological images of thrombus samples')
+    parser.add_argument('image_path', help='Path to the histological image file (H&E, Masson\'s trichrome, or immunohistochemistry)')
+    parser.add_argument('--output-dir', default='./output',
+                        help='Directory where analysis results will be saved (default: ./output)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
-    with open(args.input_file, 'r') as f:
-        inputs = json.load(f)
+    args = parser.parse_args()
 
-    image_path = inputs['image_path']
-    output_dir = inputs.get('output_dir', './output')
-
-    result = analyze_thrombus_histology(
-        image_path=image_path,
-        output_dir=output_dir
-    )
-
+    # Create output directory if it doesn't exist
     os.makedirs(args.output, exist_ok=True)
-    output_file = os.path.join(args.output, 'result.json')
-    with open(output_file, 'w') as f:
-        json.dump({"result": result}, f, indent=2)
-    print(f"Complete! Results: {output_file}")
+
+    print(f"\nAnalyzing thrombus histology...")
+    print(f"Image path: {args.image_path}")
+
+    try:
+        result = analyze_thrombus_histology(
+            args.image_path,
+            output_dir=args.output_dir
+        )
+
+        # Generate output filename
+        output_filename = "result.json"
+        output_path = os.path.join(args.output, output_filename)
+
+        # Write result to JSON
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump({"research_log": result}, f, indent=2, ensure_ascii=False)
+
+        print(f"Complete! Results: {output_path}")
+
+    except Exception as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

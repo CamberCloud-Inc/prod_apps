@@ -3,7 +3,7 @@
   "title": "Biomni: Simulate Demographic History",
   "description": "Simulate DNA sequences with specified demographic and coalescent histories using msprime",
   "content": "<h3>Overview</h3><p>This tool simulates DNA sequence evolution under demographic and coalescent models using the msprime coalescent simulator. It generates realistic genetic variation data by modeling population size changes, bottlenecks, expansions, and different coalescent processes. The tool produces synthetic genomic datasets with known evolutionary parameters, enabling validation of analysis methods, power calculations, and exploration of evolutionary scenarios. Supports both standard Kingman and more complex beta-coalescent models.</p><h3>Input Parameters</h3><ul><li><strong>num_samples</strong> (integer, optional): Number of sample haploid sequences to simulate (default: 10)</li><li><strong>sequence_length</strong> (integer, optional): Length of simulated genomic region in base pairs (default: 100000)</li><li><strong>recombination_rate</strong> (float, optional): Per-base recombination rate per generation (default: 1e-8)</li><li><strong>mutation_rate</strong> (float, optional): Per-base mutation rate per generation (default: 1e-8)</li><li><strong>demographic_model</strong> (string, optional): Population history model - 'constant', 'bottleneck', 'expansion', 'contraction', 'sawtooth' (default: 'constant')</li><li><strong>demographic_params</strong> (string, optional): Path to JSON file with model-specific demographic parameters</li><li><strong>coalescent_model</strong> (string, optional): Coalescent process - 'kingman' (standard) or 'beta' (multiple mergers) (default: 'kingman')</li><li><strong>beta_param</strong> (float, optional): Beta-coalescent alpha parameter (required if coalescent_model='beta')</li><li><strong>random_seed</strong> (integer, optional): Random seed for reproducible simulations</li><li><strong>output_file</strong> (string, optional): Output VCF filename (default: 'simulated_sequences.vcf')</li></ul><h3>Input Format</h3><pre>Demographic parameters JSON (optional):\n{\n  \"bottleneck\": {\n    \"time\": 1000,\n    \"strength\": 0.01,\n    \"duration\": 100\n  },\n  \"expansion\": {\n    \"growth_rate\": 0.001\n  }\n}\n\nCommand-line parameters:\nnum_samples: 50\nsequence_length: 1000000\nrecombination_rate: 1e-8\nmutation_rate: 2e-8\ndemographic_model: \"bottleneck\"</pre><h3>Biological Use Case</h3><p>Critical for population genetics research: testing statistical methods on data with known truth, estimating power for detecting selection or demographic events, exploring effects of population history on genetic diversity, simulating null distributions for hypothesis testing, training machine learning models for genomic inference, validating bioinformatics pipelines, and understanding how different evolutionary processes shape genomic variation. Essential for experimental design and method development.</p><h3>Output</h3><p>Generates simulated genomic data including: VCF file with simulated variants and genotypes, complete genealogical relationships (tree sequences), mutation positions and allele frequencies, demographic event timeline, realized recombination breakpoints, and comprehensive log file (demographic_simulation_log.txt) containing simulation parameters, summary statistics (heterozygosity, Tajima's D, nucleotide diversity), and validation metrics for the simulated population.</p><h3>Category</h3><p>genetics</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genetics/simulate_demographic_history.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genetics/simulate_demographic_history.py ${num_samples:+-n ${num_samples}} ${sequence_length:+-l ${sequence_length}} ${recombination_rate:+-r ${recombination_rate}} ${mutation_rate:+-m ${mutation_rate}} ${demographic_model:+-d \"${demographic_model}\"} ${demographic_params:+-p \"${demographic_params}\"} ${coalescent_model:+-c \"${coalescent_model}\"} ${beta_param:+-b ${beta_param}} ${random_seed:+-s ${random_seed}} ${output_file:+-f \"${output_file}\"} -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,73 @@
   ],
   "spec": [
     {
+      "type": "String",
+      "name": "num_samples",
+      "label": "Number of Samples (Optional)",
+      "description": "Number of sample sequences to simulate (default: 10)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "sequence_length",
+      "label": "Sequence Length (Optional)",
+      "description": "Length of simulated sequence in base pairs (default: 100000)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "recombination_rate",
+      "label": "Recombination Rate (Optional)",
+      "description": "Per-base recombination rate (default: 1e-8)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "mutation_rate",
+      "label": "Mutation Rate (Optional)",
+      "description": "Per-base mutation rate (default: 1e-8)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "demographic_model",
+      "label": "Demographic Model (Optional)",
+      "description": "Type of demographic model: constant, bottleneck, expansion, contraction, sawtooth (default: constant)",
+      "defaultValue": ""
+    },
+    {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "name": "demographic_params",
+      "label": "Demographic Parameters (Optional)",
+      "description": "Path to JSON file with demographic parameters (optional)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "coalescent_model",
+      "label": "Coalescent Model (Optional)",
+      "description": "Type of coalescent model: kingman or beta (default: kingman)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "beta_param",
+      "label": "Beta Parameter (Optional)",
+      "description": "Beta-coalescent parameter (required if coalescent-model=beta)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "random_seed",
+      "label": "Random Seed (Optional)",
+      "description": "Random seed for reproducibility (optional)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "output_file",
+      "label": "Output File (Optional)",
+      "description": "Output filename for VCF (default: simulated_sequences.vcf)",
       "defaultValue": ""
     },
     {

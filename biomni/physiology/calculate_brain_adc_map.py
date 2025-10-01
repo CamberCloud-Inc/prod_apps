@@ -24,7 +24,10 @@ def main():
     parser = argparse.ArgumentParser(
         description='Calculate Brain ADC Map'
     )
-    parser.add_argument('input_file', help='Input JSON file with dwi_file_path, b_values and optional parameters')
+    parser.add_argument('--dwi-file-path', required=True, help='Path to diffusion-weighted imaging (DWI) NIfTI file')
+    parser.add_argument('--b-values-file', required=True, help='File containing b-values (JSON array or CSV)')
+    parser.add_argument('--output-path', default='adc_map.nii.gz', help='Output filename for ADC map (default: adc_map.nii.gz)')
+    parser.add_argument('--mask-file-path', help='Optional brain mask file path')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -33,19 +36,18 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.physiology import calculate_brain_adc_map
 
-    with open(args.input_file, 'r') as f:
-        inputs = json.load(f)
-
-    dwi_file_path = inputs['dwi_file_path']
-    b_values = inputs['b_values']
-    output_path = inputs.get('output_path', 'adc_map.nii.gz')
-    mask_file_path = inputs.get('mask_file_path')
+    # Load b_values from file
+    with open(args.b_values_file, 'r') as f:
+        if args.b_values_file.endswith('.json'):
+            b_values = json.load(f)
+        else:  # Assume CSV
+            b_values = [float(line.strip()) for line in f if line.strip()]
 
     result = calculate_brain_adc_map(
-        dwi_file_path=dwi_file_path,
+        dwi_file_path=args.dwi_file_path,
         b_values=b_values,
-        output_path=output_path,
-        mask_file_path=mask_file_path
+        output_path=args.output_path,
+        mask_file_path=args.mask_file_path
     )
 
     os.makedirs(args.output, exist_ok=True)

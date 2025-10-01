@@ -24,7 +24,12 @@ def main():
     parser = argparse.ArgumentParser(
         description='Quantify bacterial concentration (CFU/mL) using serial dilutions and spot plating.'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('--initial-sample-volume-ml', type=float, default=1.0, help='Initial sample volume in milliliters')
+    parser.add_argument('--estimated-concentration', type=float, default=1e8, help='Estimated bacterial concentration (CFU/mL)')
+    parser.add_argument('--dilution-factor', type=int, default=10, help='Dilution factor between successive dilutions')
+    parser.add_argument('--num-dilutions', type=int, default=8, help='Number of dilution steps')
+    parser.add_argument('--spots-per-dilution', type=int, default=3, help='Number of spots plated per dilution')
+    parser.add_argument('--output-file', type=str, default='cfu_enumeration_results.csv', help='Output CSV filename')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
     args = parser.parse_args()
 
@@ -33,26 +38,14 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.microbiology import enumerate_bacterial_cfu_by_serial_dilution
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    # Extract parameters
-    initial_sample_volume_ml = input_data.get('initial_sample_volume_ml', 1.0)
-    estimated_concentration = input_data.get('estimated_concentration', 1e8)
-    dilution_factor = input_data.get('dilution_factor', 10)
-    num_dilutions = input_data.get('num_dilutions', 8)
-    spots_per_dilution = input_data.get('spots_per_dilution', 3)
-    output_file = input_data.get('output_file', 'cfu_enumeration_results.csv')
-
     # Call the function
     result = enumerate_bacterial_cfu_by_serial_dilution(
-        initial_sample_volume_ml=initial_sample_volume_ml,
-        estimated_concentration=estimated_concentration,
-        dilution_factor=dilution_factor,
-        num_dilutions=num_dilutions,
-        spots_per_dilution=spots_per_dilution,
-        output_file=output_file
+        initial_sample_volume_ml=args.initial_sample_volume_ml,
+        estimated_concentration=args.estimated_concentration,
+        dilution_factor=args.dilution_factor,
+        num_dilutions=args.num_dilutions,
+        spots_per_dilution=args.spots_per_dilution,
+        output_file=args.output_file
     )
 
     # Write result to output file

@@ -3,7 +3,7 @@
   "title": "Biomni: Query Uniprot",
   "description": "Query UniProt for comprehensive protein sequence and functional information curated from literature and computational analysis.",
   "content": "<h3>Overview</h3><p>Searches UniProt, the world's most comprehensive catalog of protein sequences and functional information. UniProt combines expertly curated data (Swiss-Prot) with automatically annotated sequences (TrEMBL), covering sequence data, protein names, functions, domains, PTMs, interactions, and disease associations for all known proteins.</p><h3>Input Parameters</h3><ul><li><strong>prompt</strong> (string, optional): Natural language query about proteins (e.g., \"Find information about BRCA1 protein\")</li><li><strong>endpoint</strong> (string, optional): Specific UniProt API endpoint</li><li><strong>max_results</strong> (integer, optional): Maximum number of results to return</li></ul><h3>Input Format</h3><p>Create a JSON file with the following structure:</p><pre>{\n  \"prompt\": \"Find human insulin protein\",\n  \"endpoint\": \"/uniprotkb/search\",\n  \"max_results\": 10\n}</pre><h3>Biological Use Case</h3><p>Fundamental for protein biology research, proteomics analysis, and functional annotation. Researchers use UniProt to identify protein functions, find homologous proteins, map domains and motifs, understand post-translational modifications, discover disease associations, retrieve protein sequences for experimental work, and annotate newly sequenced genomes.</p><h3>Output</h3><p>Returns a JSON file (uniprot_results.json) containing protein entries with UniProt accessions, protein names, gene names, sequences, functional annotations, domain architecture, subcellular localization, tissue expression, disease associations, post-translational modifications, and extensive cross-references to structural and functional databases.</p><h3>Category</h3><p>database</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_uniprot.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_uniprot.py --prompt \"${prompt}\" --endpoint \"${endpoint}\" --max_results \"${max_results}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,24 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "prompt",
+      "label": "Prompt",
+      "description": "Query prompt/description",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "endpoint",
+      "label": "Endpoint",
+      "description": "API endpoint path",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "max_results",
+      "label": "Max Results",
+      "description": "Maximum number of results",
       "defaultValue": ""
     },
     {

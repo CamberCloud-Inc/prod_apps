@@ -6,7 +6,6 @@ import argparse
 import sys
 import subprocess
 import os
-import json
 
 def install_dependencies():
     """Install required dependencies"""
@@ -20,15 +19,11 @@ def main():
     parser = argparse.ArgumentParser(
         description='Clear all captured plots from the biomni session'
     )
-    parser.add_argument('input_file', help='JSON file with input data (can be empty dict)')
-    parser.add_argument('-o', '--output', required=True, help='Output directory')
+    parser.add_argument('-o', '--output-dir', default='./',
+                        help='Output directory for result file (default: ./)')
 
     args = parser.parse_args()
     install_dependencies()
-
-    # Read input file (expected to be empty dict or minimal config)
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
 
     # Import after dependencies are installed
     from biomni.tool.support_tools import clear_captured_plots
@@ -37,8 +32,8 @@ def main():
 
     result = "Captured plots cleared successfully"
 
-    os.makedirs(args.output, exist_ok=True)
-    output_file = os.path.join(args.output, 'clear_plots_result.txt')
+    os.makedirs(args.output_dir, exist_ok=True)
+    output_file = os.path.join(args.output_dir, 'clear_plots_result.txt')
     with open(output_file, 'w') as f:
         f.write(result)
     print(f"Complete! Results: {output_file}")

@@ -24,7 +24,12 @@ def main():
     parser = argparse.ArgumentParser(
         description='Annotate a bacterial genome using Prokka to identify genes, proteins, and functional features.'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('--genome-file-path', type=str, required=True, help='Path to the bacterial genome assembly file (FASTA format)')
+    parser.add_argument('--output-dir', type=str, default='annotation_results', help='Directory where annotation results will be saved')
+    parser.add_argument('--genus', type=str, default='', help='Genus name of the organism for improved annotation accuracy')
+    parser.add_argument('--species', type=str, default='', help='Species name of the organism')
+    parser.add_argument('--strain', type=str, default='', help='Strain identifier for the organism')
+    parser.add_argument('--prefix', type=str, default='', help='Prefix for output file naming')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
     args = parser.parse_args()
 
@@ -33,26 +38,14 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.microbiology import annotate_bacterial_genome
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    # Extract parameters
-    genome_file_path = input_data.get('genome_file_path')
-    output_dir = input_data.get('output_dir', 'annotation_results')
-    genus = input_data.get('genus', '')
-    species = input_data.get('species', '')
-    strain = input_data.get('strain', '')
-    prefix = input_data.get('prefix', '')
-
     # Call the function
     result = annotate_bacterial_genome(
-        genome_file_path=genome_file_path,
-        output_dir=output_dir,
-        genus=genus,
-        species=species,
-        strain=strain,
-        prefix=prefix
+        genome_file_path=args.genome_file_path,
+        output_dir=args.output_dir,
+        genus=args.genus,
+        species=args.species,
+        strain=args.strain,
+        prefix=args.prefix
     )
 
     # Write result to output file

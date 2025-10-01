@@ -3,7 +3,7 @@
   "title": "Biomni: Split Modalities",
   "description": "Split a 4D NIfTI file into separate modality files for nnUNet processing",
   "content": "<h3>Overview</h3><p>Multi-modal medical imaging datasets often store multiple imaging sequences (modalities) in a single 4D NIfTI file where the fourth dimension represents different contrasts or acquisition types. This tool extracts individual modalities from 4D files, creating separate 3D NIfTI files for each modality with appropriate naming conventions. This separation is essential for workflows requiring independent access to each modality, particularly for nnUNet processing which expects each modality as a separate file with specific naming patterns.</p><h3>Input Parameters</h3><ul><li><strong>input_file</strong> (string, required): Path to the input 4D NIfTI file (.nii or .nii.gz) containing multiple modalities stacked along the fourth dimension</li><li><strong>output_dir</strong> (string, required): Directory where separated modality files will be saved with appropriate naming</li><li><strong>case_name</strong> (string, optional): Identifier prefix for naming output files (e.g., 'BRAT' results in BRAT_0000.nii.gz, BRAT_0001.nii.gz). Default: 'BRAT'</li></ul><h3>Input Format</h3><pre>{\n  \"input_file\": \"/path/to/multimodal_4D_image.nii.gz\",\n  \"output_dir\": \"/path/to/split_output/\",\n  \"case_name\": \"Patient001\"\n}</pre><h3>Biological Use Case</h3><p>This tool is critical for processing BraTS (Brain Tumor Segmentation) datasets where T1, T1-contrast enhanced, T2, and FLAIR MRI sequences are provided as a single 4D volume but need to be separated for nnUNet training or inference. In multi-parametric prostate MRI, it splits T2-weighted, diffusion-weighted imaging (DWI), and dynamic contrast-enhanced (DCE) sequences stored together. For cardiac imaging, it separates different cardiac phases or contrast timings. The tool ensures proper formatting for downstream processing pipelines that require individual modality files, enabling automated batch processing of large imaging studies and maintaining data organization consistency across research projects.</p><h3>Output</h3><p>Returns a JSON file (split_modalities_results.json) containing the path to the output directory with separated files. The output directory contains individual 3D NIfTI files for each modality, named according to nnUNet conventions (e.g., CaseName_0000.nii.gz for modality 0, CaseName_0001.nii.gz for modality 1, etc.). Each output file preserves the spatial resolution, orientation, and metadata from the original 4D file, with only the fourth dimension removed to create standard 3D volumes ready for further processing or analysis.</p><h3>Category</h3><p>bioimaging</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/bioimaging/split_modalities.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/bioimaging/split_modalities.py --input_file \"${input_file}\" --output_dir \"${output_dir}\" --case_name \"${case_name}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,10 +29,24 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
+      "name": "input_file",
       "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "description": "Path to the input 4D NIfTI file (.nii or .nii.gz)",
       "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "output_dir",
+      "label": "Output Directory",
+      "description": "Directory where separated modality files will be saved",
+      "defaultValue": ""
+    },
+    {
+      "type": "Text",
+      "name": "case_name",
+      "label": "Case Name",
+      "description": "Identifier prefix for naming output files (e.g., 'BRAT' results in BRAT_0000.nii.gz)",
+      "defaultValue": "BRAT"
     },
     {
       "type": "Stash File",

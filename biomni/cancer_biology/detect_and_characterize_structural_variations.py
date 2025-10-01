@@ -24,8 +24,12 @@ def main():
     parser = argparse.ArgumentParser(
         description='Detect and characterize structural variations'
     )
-    parser.add_argument('input_file', help='JSON file with parameters')
+    parser.add_argument('bam_file_path', help='Path to the BAM file containing aligned sequencing reads')
+    parser.add_argument('reference_genome_path', help='Path to the reference genome FASTA file')
+    parser.add_argument('output_dir_internal', help='Directory for output files')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
+    parser.add_argument('--cosmic-db-path', help='Path to COSMIC database for annotation (optional)')
+    parser.add_argument('--clinvar-db-path', help='Path to ClinVar database for annotation (optional)')
 
     args = parser.parse_args()
     install_dependencies()
@@ -33,21 +37,12 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.cancer_biology import detect_and_characterize_structural_variations
 
-    with open(args.input_file, 'r') as f:
-        params = json.load(f)
-
-    bam_file_path = params['bam_file_path']
-    reference_genome_path = params['reference_genome_path']
-    output_dir = params['output_dir']
-    cosmic_db_path = params.get('cosmic_db_path')
-    clinvar_db_path = params.get('clinvar_db_path')
-
     result = detect_and_characterize_structural_variations(
-        bam_file_path=bam_file_path,
-        reference_genome_path=reference_genome_path,
-        output_dir=output_dir,
-        cosmic_db_path=cosmic_db_path,
-        clinvar_db_path=clinvar_db_path
+        bam_file_path=args.bam_file_path,
+        reference_genome_path=args.reference_genome_path,
+        output_dir=args.output_dir_internal,
+        cosmic_db_path=args.cosmic_db_path,
+        clinvar_db_path=args.clinvar_db_path
     )
 
     os.makedirs(args.output, exist_ok=True)

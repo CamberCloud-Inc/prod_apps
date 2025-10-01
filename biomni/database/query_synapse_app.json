@@ -3,7 +3,7 @@
   "title": "Biomni: Query Synapse",
   "description": "Query Sage Bionetworks Synapse for collaborative research datasets and computational workflows.",
   "content": "<h3>Overview</h3><p>Searches Synapse platform hosting collaborative biomedical research data including genomics datasets, clinical data, tools, and reproducible workflows with version control and provenance tracking.</p><h3>Input Parameters</h3><ul><li><strong>prompt</strong> (string, optional): Natural language query</li><li><strong>query_term</strong> (string, optional): Direct search term</li><li><strong>return_fields</strong> (list, optional): Specific fields</li><li><strong>max_results</strong> (integer, optional): Maximum results</li><li><strong>query_type</strong> (string, optional): Entity type</li><li><strong>verbose</strong> (boolean, optional): Enable logging</li></ul><h3>Input Format</h3><p>Create JSON:</p><pre>{\n  \"prompt\": \"Find Alzheimer genomics datasets\",\n  \"max_results\": 20\n}</pre><h3>Biological Use Case</h3><p>Important for accessing collaborative datasets and reproducible science. Researchers use Synapse to share and discover datasets, collaborate on analyses, track provenance, run workflows, and access curated disease collections.</p><h3>Output</h3><p>Returns JSON (synapse_results.json) with project info, Synapse IDs, descriptions, data types, files, access requirements, versions, publications, and download links.</p><h3>Category</h3><p>database</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_synapse.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_synapse.py --prompt \"${prompt}\" --query_term \"${query_term}\" --return_fields \"${return_fields}\" --max_results \"${max_results}\" --query_type \"${query_type}\" --verbose \"${verbose}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,45 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "prompt",
+      "label": "Prompt",
+      "description": "Query prompt/description",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "query_term",
+      "label": "Query Term",
+      "description": "Search term",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "return_fields",
+      "label": "Return Fields",
+      "description": "Fields to return",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "max_results",
+      "label": "Max Results",
+      "description": "Maximum number of results",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "query_type",
+      "label": "Query Type",
+      "description": "Query type",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "verbose",
+      "label": "Verbose",
+      "description": "Enable verbose output (true/false)",
       "defaultValue": ""
     },
     {

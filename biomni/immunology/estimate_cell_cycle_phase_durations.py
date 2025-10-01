@@ -1,44 +1,37 @@
 #!/usr/bin/env python3
 """
-Camber wrapper for estimate_cell_cycle_phase_durations from biomni.tool.immunology
+Biomni Tool: Estimate Cell Cycle Phase Durations
+Wraps: biomni.tool.immunology.estimate_cell_cycle_phase_durations
 """
-
 import argparse
 import sys
-import json
+import subprocess
 import os
-
-
+import json
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Estimate cell cycle phase durations from flow cytometry data'
+        description='Estimate Cell Cycle Phase Durations'
     )
-    parser.add_argument('input_file', help='JSON file with flow cytometry data and initial estimates')
+    parser.add_argument('--flow_cytometry_data', help='Flow cytometry measurements from dual-pulse labeling (JSON dict)')
+    parser.add_argument('--initial_estimates', help='Initial parameter estimates for optimization (JSON dict)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input data
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    flow_cytometry_data = input_data['flow_cytometry_data']
-    initial_estimates = input_data['initial_estimates']
-
-    # Import after dependencies are installed
     from biomni.tool.immunology import estimate_cell_cycle_phase_durations
+
+    # Parse JSON inputs
+    flow_cytometry_data = json.loads(args.flow_cytometry_data) if args.flow_cytometry_data else None
+    initial_estimates = json.loads(args.initial_estimates) if args.initial_estimates else None
 
     result = estimate_cell_cycle_phase_durations(
         flow_cytometry_data=flow_cytometry_data,
@@ -51,6 +44,5 @@ def main():
         f.write(result)
     print(f"Complete! Results: {output_file}")
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

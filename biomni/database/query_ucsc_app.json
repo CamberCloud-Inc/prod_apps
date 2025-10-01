@@ -3,7 +3,7 @@
   "title": "Biomni: Query Ucsc",
   "description": "Query UCSC Genome Browser for genome annotations, conservation scores, and multi-species alignments.",
   "content": "<h3>Overview</h3><p>Searches UCSC Genome Browser providing reference sequences and annotations including genes, comparative genomics, variation, regulation, and expression with powerful visualization tools.</p><h3>Input Parameters</h3><ul><li><strong>prompt</strong> (string, optional): Natural language query</li><li><strong>endpoint</strong> (string, optional): UCSC endpoint</li><li><strong>verbose</strong> (boolean, optional): Enable logging</li></ul><h3>Input Format</h3><p>Create JSON:</p><pre>{\n  \"prompt\": \"Get conservation for chr1:1000000-1001000\"\n}</pre><h3>Biological Use Case</h3><p>Fundamental for genome analysis and comparative genomics. Researchers use UCSC to visualize regions, access conservation scores, retrieve sequences, analyze regulatory features, compare genomes, and integrate diverse genomic annotations.</p><h3>Output</h3><p>Returns JSON (ucsc_results.json) with genomic data including sequences, gene annotations, conservation scores, repeats, variation data, regulatory features, and cross-species alignments.</p><h3>Category</h3><p>database</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_ucsc.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_ucsc.py --prompt \"${prompt}\" --endpoint \"${endpoint}\" --verbose \"${verbose}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,24 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "prompt",
+      "label": "Prompt",
+      "description": "Query prompt/description",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "endpoint",
+      "label": "Endpoint",
+      "description": "API endpoint path",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "verbose",
+      "label": "Verbose",
+      "description": "Enable verbose output (true/false)",
       "defaultValue": ""
     },
     {

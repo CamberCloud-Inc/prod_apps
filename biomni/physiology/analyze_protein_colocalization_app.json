@@ -3,7 +3,7 @@
   "title": "Biomni: Analyze Protein Colocalization",
   "description": "Analyze colocalization between two fluorescently labeled proteins in microscopy images.",
   "content": "<h3>Overview</h3><p>Analyze colocalization between two fluorescently labeled proteins in microscopy images. This tool quantifies the spatial overlap between two protein markers imaged in separate fluorescent channels, calculating colocalization coefficients that indicate physical proximity or interaction, which is essential for understanding protein-protein interactions, subcellular localization, and cellular signaling pathways.</p><h3>Input Parameters</h3><ul><li><strong>channel1_path</strong> (required): Path to first fluorescence channel image file (e.g., red channel)</li><li><strong>channel2_path</strong> (required): Path to second fluorescence channel image file (e.g., green channel)</li><li><strong>output_dir</strong> (optional, default='./output'): Directory for output files and visualizations</li><li><strong>threshold_method</strong> (optional, default='otsu'): Method for image thresholding ('otsu', 'manual', 'adaptive')</li></ul><h3>Input Format</h3><pre>{\n  \"channel1_path\": \"/path/to/red_channel.tif\",\n  \"channel2_path\": \"/path/to/green_channel.tif\",\n  \"output_dir\": \"./output\",\n  \"threshold_method\": \"otsu\"\n}</pre><h3>Biological Use Case</h3><p>This analysis is valuable for:</p><ul><li>Confirming protein-protein interactions in cells</li><li>Studying receptor-ligand binding and endocytosis</li><li>Analyzing organelle-protein associations</li><li>Investigating subcellular trafficking and localization</li><li>Validating immunofluorescence and co-immunoprecipitation experiments</li><li>Assessing drug effects on protein localization</li><li>Characterizing disease-related protein mislocalization</li></ul><h3>Output</h3><p>Returns comprehensive colocalization analysis including:</p><ul><li>Pearson's correlation coefficient</li><li>Manders' colocalization coefficients (M1, M2)</li><li>Overlap coefficient</li><li>Thresholded Manders' coefficients (tM1, tM2)</li><li>Colocalization scatter plots</li><li>Merged image with colocalized pixels highlighted</li><li>Statistical summary report</li></ul><h3>Category</h3><p>physiology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/analyze_protein_colocalization.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/analyze_protein_colocalization.py --channel1-path \"${channel1Path}\" --channel2-path \"${channel2Path}\" --output-dir \"${outputDirParam}\" --threshold-method \"${thresholdMethod}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,10 +29,31 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "name": "channel1Path",
+      "label": "Channel 1 Path",
+      "description": "Path to first fluorescence channel image file",
       "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "channel2Path",
+      "label": "Channel 2 Path",
+      "description": "Path to second fluorescence channel image file",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "outputDirParam",
+      "label": "Output Directory (for tool)",
+      "description": "Directory for output files",
+      "defaultValue": "./output"
+    },
+    {
+      "type": "Input",
+      "name": "thresholdMethod",
+      "label": "Threshold Method",
+      "description": "Thresholding method (otsu, manual, adaptive)",
+      "defaultValue": "otsu"
     },
     {
       "type": "Stash File",

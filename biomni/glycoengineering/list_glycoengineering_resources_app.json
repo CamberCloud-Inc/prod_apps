@@ -3,7 +3,7 @@
   "title": "Biomni: List Glycoengineering Resources",
   "description": "Curate and summarize external glycoengineering tools and resources",
   "content": "<h3>Overview</h3><p>This tool provides a comprehensive, curated list of external glycoengineering tools, databases, and resources available to researchers and protein engineers. It serves as a reference guide to the glycobiology and glycoengineering ecosystem, helping users discover specialized tools for glycan analysis, prediction algorithms, structural databases, and experimental resources. The tool aggregates information about publicly available resources, including web servers, software packages, and databases relevant to glycoprotein research and engineering.</p><h3>Input Parameters</h3><p>This tool requires no input parameters. It returns a pre-curated list of glycoengineering resources.</p><h3>Input Format</h3><p>The input should be an empty or minimal JSON file:</p><pre>{\n}</pre><p>An empty JSON object is sufficient as no parameters are needed.</p><h3>Biological Use Case</h3><p>The glycoengineering resources list is valuable for:</p><ul><li><strong>Research planning</strong>: Identifying appropriate tools and databases for glycan structure prediction, analysis, and characterization before designing experiments.</li><li><strong>Computational glycobiology</strong>: Finding specialized software for glycan modeling, glycosylation site prediction, and glycoprotein structure analysis.</li><li><strong>Data mining</strong>: Accessing comprehensive glycan databases to retrieve experimental glycosylation data for specific proteins or organisms.</li><li><strong>Method development</strong>: Discovering state-of-the-art tools and algorithms that can be integrated into custom glycoengineering workflows.</li><li><strong>Education and training</strong>: Providing students and new researchers with a starting point for learning about available glycoengineering resources.</li></ul><h3>Output</h3><p>The tool generates a JSON file (glycoengineering_resources.json) containing a structured list of glycoengineering resources. Each resource entry typically includes the resource name, description, URL, and category (e.g., prediction tool, database, analysis software). This reference list helps researchers quickly identify and access relevant tools for their glycoengineering projects.</p><h3>Category</h3><p>glycoengineering</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/glycoengineering/list_glycoengineering_resources.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/glycoengineering/list_glycoengineering_resources.py -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -27,13 +27,6 @@
     }
   ],
   "spec": [
-    {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
-      "defaultValue": ""
-    },
     {
       "type": "Stash File",
       "name": "outputDir",

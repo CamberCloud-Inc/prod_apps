@@ -18,25 +18,27 @@ def install_dependencies():
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Query the Reactome database'
+        description='Query Reactome'
     )
-    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('--prompt', help='Query prompt/description')
+    parser.add_argument('--endpoint', help='API endpoint path')
+    parser.add_argument('--download', help='Download files (true/false)')
+    parser.add_argument('--output_dir', help='Output directory for downloads')
+    parser.add_argument('--verbose', help='Enable verbose output (true/false)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
     from biomni.tool.database import query_reactome
 
-    result = query_reactome(prompt=input_data.get('prompt'),
-        endpoint=input_data.get('endpoint'),
-        download=input_data.get('download'),
-        output_dir=input_data.get('output_dir'),
-        verbose=input_data.get('verbose'))
+    result = query_reactome(
+        prompt=args.prompt,
+        endpoint=args.endpoint,
+        download=args.download.lower() == 'true' if args.download else None,
+        output_dir=args.output_dir,
+        verbose=args.verbose.lower() == 'true' if args.verbose else None
+    )
 
     os.makedirs(args.output, exist_ok=True)
     output_file = os.path.join(args.output, 'reactome_results.json')

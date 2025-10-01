@@ -3,7 +3,7 @@
   "title": "Biomni: Analyze Ebv Antibody Titers",
   "description": "Quantify Epstein-Barr Virus (EBV) antibody titers in plasma/serum samples using ELISA optical density values",
   "content": "<h3>Overview</h3><p>Quantify Epstein-Barr Virus (EBV)-specific antibody titers in plasma or serum samples using ELISA optical density values. This tool converts raw OD measurements into antibody concentrations or titers, compares values against standard curves, and determines serostatus (positive/negative) based on established cutoff values. EBV serology is used to assess infection status and immune responses to viral antigens including VCA (Viral Capsid Antigen), EBNA (Epstein-Barr Nuclear Antigen), and EA (Early Antigen).</p><h3>Input Parameters</h3><ul><li><strong>sample_data</strong> (dict, required): Dictionary containing sample information with keys for sample IDs and their corresponding ELISA optical density readings, along with optional metadata such as dilution factors, antigen types (VCA-IgG, VCA-IgM, EBNA-IgG, EA-IgG), and patient demographics</li></ul><h3>Input Format</h3><pre>{\n  \"sample_data\": {\n    \"patient_001\": {\"VCA_IgG\": 1.85, \"EBNA_IgG\": 2.10, \"VCA_IgM\": 0.15},\n    \"patient_002\": {\"VCA_IgG\": 0.45, \"EBNA_IgG\": 0.30, \"VCA_IgM\": 0.12},\n    \"patient_003\": {\"VCA_IgG\": 3.20, \"EBNA_IgG\": 2.85, \"VCA_IgM\": 2.45}\n  }\n}</pre><h3>Biological Use Case</h3><p>Important for diagnosing EBV infection stages and studying virus-associated diseases. Applications include: (1) Differentiating acute, past, or chronic EBV infection based on antibody patterns (VCA-IgM indicates acute infection; VCA-IgG with EBNA-IgG indicates past infection), (2) Investigating EBV reactivation in immunocompromised patients or transplant recipients, (3) Studying EBV serology in autoimmune diseases like multiple sclerosis and systemic lupus erythematosus where elevated titers are associated with disease risk, (4) Monitoring EBV-associated malignancies including Burkitt lymphoma and nasopharyngeal carcinoma, (5) Epidemiological studies of EBV seroprevalence in populations, and (6) Assessing vaccine efficacy in EBV vaccine trials.</p><h3>Output</h3><p>Generates serological analysis report including: calculated antibody titers or units, serostatus classification (negative, equivocal, positive) for each antigen, infection stage interpretation (acute, recent, past, chronic, reactivation), comparison to reference ranges, and statistical summaries across samples. Results saved to 'ebv_antibody_results.txt' with individual sample reports.</p><h3>Category</h3><p>immunology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/immunology/analyze_ebv_antibody_titers.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/immunology/analyze_ebv_antibody_titers.py --sample_data \"${sample_data}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,10 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "sample_data",
+      "label": "Sample Data",
+      "description": "Dictionary with sample IDs and ELISA OD readings (JSON dict)",
       "defaultValue": ""
     },
     {

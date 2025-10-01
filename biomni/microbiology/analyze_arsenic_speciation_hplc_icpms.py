@@ -24,7 +24,9 @@ def main():
     parser = argparse.ArgumentParser(
         description='Analyzes arsenic speciation in liquid samples using HPLC-ICP-MS technique.'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('--sample-data', type=str, required=True, help='List of HPLC-ICP-MS measurement data points (JSON string)')
+    parser.add_argument('--sample-name', type=str, default='Unknown Sample', help='Identifier for the sample being analyzed')
+    parser.add_argument('--calibration-data', type=str, required=True, help='Calibration curve data for quantification (JSON string)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
     args = parser.parse_args()
 
@@ -33,19 +35,14 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.microbiology import analyze_arsenic_speciation_hplc_icpms
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    # Extract parameters
-    sample_data = input_data.get('sample_data')
-    sample_name = input_data.get('sample_name', 'Unknown Sample')
-    calibration_data = input_data.get('calibration_data')
+    # Parse JSON string parameters
+    sample_data = json.loads(args.sample_data)
+    calibration_data = json.loads(args.calibration_data)
 
     # Call the function
     result = analyze_arsenic_speciation_hplc_icpms(
         sample_data=sample_data,
-        sample_name=sample_name,
+        sample_name=args.sample_name,
         calibration_data=calibration_data
     )
 

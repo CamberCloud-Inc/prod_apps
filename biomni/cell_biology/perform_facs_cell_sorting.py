@@ -1,13 +1,7 @@
-#!/usr/bin/env python3
-"""
-Camber wrapper for perform_facs_cell_sorting from Biomni
-"""
-
-import argparse
 import json
-import os
 import sys
-
+import os
+import argparse
 
 
 
@@ -22,51 +16,53 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='Perform FACS cell sorting'
-    )
-    parser.add_argument('input_file', help='JSON file with input parameters')
-    parser.add_argument('-o', '--output', required=True, help='Output directory')
-
-    args = parser.parse_args()
 
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.cell_biology import perform_facs_cell_sorting
+    parser = argparse.ArgumentParser(description='Perform FACS cell sorting')
+    parser.add_argument('cell_suspension_data', help='Path to the FCS file containing flow cytometry data')
+    parser.add_argument('fluorescence_parameter', help='Name of the fluorescence channel to use for sorting decisions')
+    parser.add_argument('--threshold-min', type=float, default=None,
+                        help='Minimum fluorescence intensity threshold for the sort gate')
+    parser.add_argument('--threshold-max', type=float, default=None,
+                        help='Maximum fluorescence intensity threshold for the sort gate')
+    parser.add_argument('--output-file', default='sorted_cells.csv',
+                        help='Filename for the sorted cell data CSV export (default: sorted_cells.csv)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
+    args = parser.parse_args()
 
-    # Extract parameters
-    cell_suspension_data = input_data.get("cell_suspension_data", "")
-    fluorescence_parameter = input_data.get("fluorescence_parameter", "")
-    threshold_min = input_data.get("threshold_min")
-    threshold_max = input_data.get("threshold_max")
-    output_file = input_data.get("output_file", "sorted_cells.csv")
-
-    # Call the function
-    result = perform_facs_cell_sorting(
-        cell_suspension_data=cell_suspension_data,
-        fluorescence_parameter=fluorescence_parameter,
-        threshold_min=threshold_min,
-        threshold_max=threshold_max,
-        output_file=output_file
-    )
-
-    # Create output directory and write result
+    # Create output directory if it doesn't exist
     os.makedirs(args.output, exist_ok=True)
-    output_file = os.path.join(args.output, 'result.json')
 
-    output = {
-        "research_log": result
-    }
+    print(f"\nPerforming FACS cell sorting...")
+    print(f"Cell suspension data: {args.cell_suspension_data}")
+    print(f"Fluorescence parameter: {args.fluorescence_parameter}")
 
-    with open(output_file, 'w') as f:
-        json.dump(output, f, indent=2)
+    try:
+        result = perform_facs_cell_sorting(
+            args.cell_suspension_data,
+            args.fluorescence_parameter,
+            threshold_min=args.threshold_min,
+            threshold_max=args.threshold_max,
+            output_file=args.output_file
+        )
 
-    print(f"Complete! Results: {output_file}")
+        # Generate output filename
+        output_filename = "result.json"
+        output_path = os.path.join(args.output, output_filename)
+
+        # Write result to JSON
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump({"research_log": result}, f, indent=2, ensure_ascii=False)
+
+        print(f"Complete! Results: {output_path}")
+
+    except Exception as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

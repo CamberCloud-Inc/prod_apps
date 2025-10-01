@@ -3,7 +3,7 @@
   "title": "Biomni: Query Gtopdb",
   "description": "Query the Guide to PHARMACOLOGY (GtoPdb) for curated data on drug targets, ligands, and pharmacological interactions.",
   "content": "<h3>Overview</h3><p>Searches GtoPdb, an expert-curated resource of drug targets and their interactions with ligands. Provides quantitative pharmacological data on receptors, ion channels, enzymes, transporters, and their small molecule ligands with binding affinities, selectivity, and functional effects.</p><h3>Input Parameters</h3><ul><li><strong>prompt</strong> (string, optional): Natural language query about drug targets or ligands</li><li><strong>endpoint</strong> (string, optional): Specific GtoPdb API endpoint</li><li><strong>verbose</strong> (boolean, optional): Enable detailed logging output (default: true)</li></ul><h3>Input Format</h3><p>Create a JSON file with the following structure:</p><pre>{\n  \"prompt\": \"Find serotonin receptor ligands\",\n  \"endpoint\": \"/targets\",\n  \"verbose\": true\n}</pre><h3>Biological Use Case</h3><p>Essential for drug discovery, pharmacology research, and understanding drug mechanisms of action. Researchers use GtoPdb to identify validated drug targets, discover selective ligands, compare binding affinities, understand off-target effects, and design new therapeutic compounds. Critical for medicinal chemistry and pharmaceutical development.</p><h3>Output</h3><p>Returns a JSON file (gtopdb_results.json) containing target information including receptor subtypes, ligand binding data (Ki, IC50, EC50 values), selectivity profiles, approved drug information, clinical development status, and links to pharmacological literature and chemical structures.</p><h3>Category</h3><p>database</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_gtopdb.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_gtopdb.py --prompt \"${prompt}\" --endpoint \"${endpoint}\" --verbose \"${verbose}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,11 +28,25 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "prompt",
+      "label": "Prompt",
+      "description": "Query prompt/description",
       "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "endpoint",
+      "label": "Endpoint",
+      "description": "API endpoint path",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "verbose",
+      "label": "Verbose",
+      "description": "Enable verbose output (true/false, default: true)",
+      "defaultValue": "true"
     },
     {
       "type": "Stash File",

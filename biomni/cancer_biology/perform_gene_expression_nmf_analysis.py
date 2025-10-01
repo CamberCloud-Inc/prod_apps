@@ -24,8 +24,10 @@ def main():
     parser = argparse.ArgumentParser(
         description='Perform gene expression NMF analysis'
     )
-    parser.add_argument('input_file', help='JSON file with parameters')
+    parser.add_argument('expression_data_path', help='Path to gene expression data file')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
+    parser.add_argument('-n', '--n-components', type=int, default=5, help='Number of NMF components/signatures to extract (default: 5)')
+    parser.add_argument('--output-dir', default='./results', help='Directory for output files (default: ./results)')
 
     args = parser.parse_args()
     install_dependencies()
@@ -33,17 +35,10 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.cancer_biology import perform_gene_expression_nmf_analysis
 
-    with open(args.input_file, 'r') as f:
-        params = json.load(f)
-
-    expression_data_path = params['expression_data_path']
-    n_components = params.get('n_components', 5)
-    output_dir = params.get('output_dir', './results')
-
     result = perform_gene_expression_nmf_analysis(
-        expression_data_path=expression_data_path,
-        n_components=n_components,
-        output_dir=output_dir
+        expression_data_path=args.expression_data_path,
+        n_components=args.n_components,
+        output_dir=args.output_dir
     )
 
     os.makedirs(args.output, exist_ok=True)

@@ -3,7 +3,7 @@
   "title": "Biomni: Query Regulomedb",
   "description": "Query RegulomeDB for functional annotation of variants in regulatory regions with ENCODE evidence.",
   "content": "<h3>Overview</h3><p>Searches RegulomeDB annotating SNPs with regulatory information from ENCODE. Assigns functional scores based on chromatin state, TF binding, accessibility, and eQTL data.</p><h3>Input Parameters</h3><ul><li><strong>prompt</strong> (string, optional): Natural language query</li><li><strong>endpoint</strong> (string, optional): RegulomeDB endpoint</li><li><strong>verbose</strong> (boolean, optional): Enable logging</li></ul><h3>Input Format</h3><p>Create JSON:</p><pre>{\n  \"prompt\": \"Evaluate regulatory function of rs12345\"\n}</pre><h3>Biological Use Case</h3><p>Essential for functional interpretation of non-coding GWAS variants. Researchers use RegulomeDB to prioritize causal variants, understand regulatory mechanisms, identify eQTLs, annotate disease SNPs, and guide functional validation.</p><h3>Output</h3><p>Returns JSON (regulomedb_results.json) with regulatory scores, chromatin states, TF binding, DNase hypersensitivity, histone marks, eQTL associations, and ENCODE experiment links.</p><h3>Category</h3><p>database</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_regulomedb.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_regulomedb.py --prompt \"${prompt}\" --endpoint \"${endpoint}\" --verbose \"${verbose}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,24 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Input",
+      "name": "prompt",
+      "label": "Prompt",
+      "description": "Query prompt/description",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "endpoint",
+      "label": "Endpoint",
+      "description": "API endpoint path",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "verbose",
+      "label": "Verbose",
+      "description": "Enable verbose output (true/false)",
       "defaultValue": ""
     },
     {

@@ -3,7 +3,7 @@
   "title": "Biomni: Perform Cosinor Analysis",
   "description": "Performs cosinor analysis on physiological time series data to characterize circadian rhythms.",
   "content": "<h3>Overview</h3><p>Performs cosinor analysis on physiological time series data to characterize circadian rhythms. This tool fits a sinusoidal model to rhythmic biological data, extracting key circadian parameters including amplitude, acrophase (peak time), and mesor (rhythm-adjusted mean), which are essential for studying biological clocks and temporal patterns in physiology.</p><h3>Input Parameters</h3><ul><li><strong>time_data</strong> (required): Array of time points (hours) for physiological measurements</li><li><strong>physiological_data</strong> (required): Array of physiological values (e.g., temperature, hormone levels, activity) corresponding to each time point</li><li><strong>period</strong> (optional, default=24.0): Expected period of the rhythm in hours (24 for circadian)</li></ul><h3>Input Format</h3><pre>{\n  \"time_data\": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, ...],\n  \"physiological_data\": [36.5, 36.3, 36.2, 36.4, 36.8, 37.0, 37.2, 37.1, 36.9, 36.7, 36.6, 36.4, ...],\n  \"period\": 24.0\n}</pre><h3>Biological Use Case</h3><p>This analysis is valuable for:</p><ul><li>Characterizing circadian rhythms in body temperature, hormone secretion, and metabolism</li><li>Studying sleep-wake cycle disturbances and chronobiology</li><li>Evaluating shift work effects and jet lag on physiological rhythms</li><li>Assessing circadian clock gene expression patterns</li><li>Investigating seasonal rhythms and ultradian oscillations</li><li>Analyzing drug chronotherapy and optimal dosing times</li><li>Studying circadian disruption in disease (e.g., cancer, metabolic disorders)</li></ul><h3>Output</h3><p>Returns comprehensive cosinor analysis including:</p><ul><li>MESOR (Midline Estimating Statistic Of Rhythm): rhythm-adjusted mean</li><li>Amplitude: half the difference between peak and trough</li><li>Acrophase: time of peak in the fitted rhythm (hours)</li><li>Period: validated rhythm period</li><li>R-squared and p-value for rhythm detection</li><li>Fitted curve parameters and confidence intervals</li><li>Visualization plot with data points and fitted cosinor curve</li></ul><h3>Category</h3><p>physiology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/perform_cosinor_analysis.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/physiology/perform_cosinor_analysis.py --time-data-file \"${timeDataFile}\" --physiological-data-file \"${physiologicalDataFile}\" --period \"${period}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,10 +29,24 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "name": "timeDataFile",
+      "label": "Time Data File",
+      "description": "File containing time points (JSON array or CSV)",
       "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "physiologicalDataFile",
+      "label": "Physiological Data File",
+      "description": "File containing physiological measurements (JSON array or CSV)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Input",
+      "name": "period",
+      "label": "Period",
+      "description": "Expected period in hours",
+      "defaultValue": "24.0"
     },
     {
       "type": "Stash File",

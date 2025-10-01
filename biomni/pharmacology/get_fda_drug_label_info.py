@@ -23,21 +23,16 @@ def main():
     parser = argparse.ArgumentParser(
         description='Retrieves FDA drug label information'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('--drug-name', required=True, help='Name of drug to retrieve label information')
+    parser.add_argument('--sections', help='Specific label sections to retrieve (JSON array, e.g., ["indications_and_usage", "warnings"])')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input data
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    drug_name = input_data.get('drug_name')
-    sections = input_data.get('sections')
-
-    if not drug_name:
-        raise ValueError("Missing required parameter: drug_name")
+    # Parse parameters
+    drug_name = args.drug_name
+    sections = json.loads(args.sections) if args.sections else None
 
     # Import after dependencies are installed
     from biomni.tool.pharmacology import get_fda_drug_label_info

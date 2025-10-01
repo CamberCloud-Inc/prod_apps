@@ -5,7 +5,6 @@ Wrapper for Biomni compare_protein_structures tool
 import sys
 import argparse
 import os
-import json
 
 
 def install_dependencies():
@@ -22,21 +21,21 @@ def main():
     parser = argparse.ArgumentParser(
         description='Compare protein structures using Biomni'
     )
-    parser.add_argument('input_file', help='JSON file with comparison parameters')
+    parser.add_argument('pdb_file1', help='Path to the first PDB structure file')
+    parser.add_argument('pdb_file2', help='Path to the second PDB structure file')
+    parser.add_argument('--chain-id1', default='A', help='Chain identifier for first structure (default: A)')
+    parser.add_argument('--chain-id2', default='A', help='Chain identifier for second structure (default: A)')
+    parser.add_argument('--output-prefix', default='protein_comparison', help='Prefix for output files (default: protein_comparison)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    pdb_file1 = input_data.get('pdb_file1')
-    pdb_file2 = input_data.get('pdb_file2')
-    chain_id1 = input_data.get('chain_id1', 'A')
-    chain_id2 = input_data.get('chain_id2', 'A')
-    output_prefix = input_data.get('output_prefix', 'protein_comparison')
+    pdb_file1 = args.pdb_file1
+    pdb_file2 = args.pdb_file2
+    chain_id1 = args.chain_id1
+    chain_id2 = args.chain_id2
+    output_prefix = args.output_prefix
 
     # Import after dependencies are installed
     from biomni.tool.systems_biology import compare_protein_structures

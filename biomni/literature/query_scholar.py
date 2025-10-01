@@ -1,51 +1,39 @@
 #!/usr/bin/env python3
 """
-Camber wrapper for query_scholar from biomni.tool.literature
+Biomni Tool: Query Scholar
+Wraps: biomni.tool.literature.query_scholar
 """
-
 import argparse
 import sys
-import json
 import subprocess
 import os
-
 
 def install_dependencies():
     """Install required dependencies"""
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Query Google Scholar'
+        description='Query Scholar'
     )
-    parser.add_argument('input_file', help='JSON file with query from stash')
+    parser.add_argument('--query', required=True, help='Search query string for scholarly literature')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input data
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    query = input_data['query']
-
-    # Import after dependencies are installed
     from biomni.tool.literature import query_scholar
 
-    result = query_scholar(query=query)
+    result = query_scholar(query=args.query)
 
-    # Write output
     os.makedirs(args.output, exist_ok=True)
     output_file = os.path.join(args.output, 'scholar_results.txt')
     with open(output_file, 'w') as f:
         f.write(result)
     print(f"Complete! Results: {output_file}")
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

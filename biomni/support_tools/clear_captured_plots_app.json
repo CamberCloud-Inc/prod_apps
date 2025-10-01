@@ -3,7 +3,7 @@
   "title": "Biomni: Clear Captured Plots",
   "description": "Clear all captured matplotlib plots from memory. Use this to free up memory or reset the plot capture state.",
   "content": "<h3>Overview</h3><p>This utility tool clears all captured matplotlib plots from the persistent Python REPL session memory. It helps free up memory resources and reset the plot capture state when working with multiple visualizations in bioinformatics workflows.</p><h3>Input Parameters</h3><ul><li>None required - accepts empty JSON object ({})</li></ul><h3>Input Format</h3><pre><code class=\"language-json\">{\n  \"optional\": \"empty or minimal config\"\n}</code></pre><h3>Biological Use Case</h3><p>When running iterative genomic data analysis or visualization pipelines, multiple plots can accumulate in memory. This tool allows researchers to clear captured plots between analysis steps, ensuring clean memory state for new visualizations. Essential for workflows involving:</p><ul><li>Multiple rounds of quality control plot generation</li><li>Iterative data exploration with different visualizations</li><li>Memory-intensive plot operations on large genomic datasets</li><li>Batch visualization workflows requiring fresh plot state</li></ul><h3>Output</h3><p>Generates a text file (clear_plots_result.txt) confirming successful clearing of captured plots. All matplotlib plots previously captured in the session are removed from memory.</p><h3>Category</h3><p>support_tools</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/support_tools/clear_captured_plots.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/support_tools/clear_captured_plots.py -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -29,16 +29,9 @@
   "spec": [
     {
       "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
-      "defaultValue": ""
-    },
-    {
-      "type": "Stash File",
       "name": "outputDir",
       "label": "Output Directory",
-      "description": "Output directory in stash",
+      "description": "Select or create a stash folder where the result will be saved",
       "defaultValue": "./"
     }
   ]

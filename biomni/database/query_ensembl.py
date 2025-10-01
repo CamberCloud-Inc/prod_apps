@@ -18,24 +18,22 @@ def install_dependencies():
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Query the Ensembl REST API for genomic data'
+        description='Query Ensembl'
     )
-    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('--prompt', help='Query prompt/description')
+    parser.add_argument('--endpoint', help='API endpoint path')
+    parser.add_argument('--verbose', default='true', help='Enable verbose output (true/false, default: true)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
     from biomni.tool.database import query_ensembl
 
     result = query_ensembl(
-        prompt=input_data.get('prompt'),
-        endpoint=input_data.get('endpoint'),
-        verbose=input_data.get('verbose', True)
+        prompt=args.prompt,
+        endpoint=args.endpoint,
+        verbose=args.verbose.lower() == 'true' if args.verbose else None
     )
 
     os.makedirs(args.output, exist_ok=True)

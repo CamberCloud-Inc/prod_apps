@@ -3,7 +3,7 @@
   "title": "Biomni: Analyze Radiolabeled Antibody Biodistribution",
   "description": "Analyzes radiolabeled antibody biodistribution across tissues",
   "content": "<h3>Overview</h3><p>Analyzes radiolabeled antibody biodistribution across tissues over time, essential for therapeutic antibody development and radioimmunotherapy applications. Quantifies tissue uptake, clearance kinetics, and target engagement.</p><h3>Input Parameters</h3><ul><li><strong>time_points</strong> (required): List of time points for biodistribution measurements (hours or days post-injection)</li><li><strong>tissue_data</strong> (required): Dictionary of tissue types with corresponding radioactivity measurements (% ID/g or similar units)</li></ul><h3>Input Format</h3><pre>{\n  \"time_points\": [1, 4, 24, 48, 72],\n  \"tissue_data\": {\n    \"tumor\": [2.5, 5.8, 12.3, 10.1, 7.8],\n    \"liver\": [8.2, 6.5, 4.1, 2.9, 2.1],\n    \"kidney\": [15.3, 12.1, 8.4, 5.2, 3.6]\n  }\n}</pre><h3>Biological Use Case</h3><p>Critical for antibody-drug conjugate (ADC) and radioimmunotherapy development. Enables optimization of antibody pharmacokinetics, assessment of tumor targeting efficiency, and evaluation of off-target accumulation in normal tissues for safety profiling.</p><h3>Output</h3><p>Biodistribution analysis including tissue uptake curves, tumor-to-blood ratios, clearance rates, and optimal imaging timepoints saved to biodistribution_results.txt</p><h3>Category</h3><p>pharmacology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pharmacology/analyze_radiolabeled_antibody_biodistribution.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pharmacology/analyze_radiolabeled_antibody_biodistribution.py --time-points \"${timePoints}\" --tissue-data \"${tissueData}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,17 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Text",
+      "name": "timePoints",
+      "label": "Time Points",
+      "description": "List of time points for biodistribution measurements (JSON array, e.g., [1, 4, 24, 48, 72])",
+      "defaultValue": ""
+    },
+    {
+      "type": "Text",
+      "name": "tissueData",
+      "label": "Tissue Data",
+      "description": "Dictionary of tissue types with radioactivity measurements (JSON object, e.g., {\"tumor\": [2.5, 5.8], \"liver\": [8.2, 6.5]})",
       "defaultValue": ""
     },
     {

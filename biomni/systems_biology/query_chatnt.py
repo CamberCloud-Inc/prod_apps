@@ -5,7 +5,6 @@ Wrapper for Biomni query_chatnt tool
 import sys
 import argparse
 import os
-import json
 
 
 def install_dependencies():
@@ -22,19 +21,17 @@ def main():
     parser = argparse.ArgumentParser(
         description='Query ChatNT using Biomni'
     )
-    parser.add_argument('input_file', help='JSON file with query parameters')
+    parser.add_argument('question', help='Question to ask about the nucleotide sequence')
+    parser.add_argument('sequence', help='Nucleotide sequence to analyze')
+    parser.add_argument('--device', type=int, default=0, help='Device ID for computation (default: 0)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
     install_dependencies()
 
-    # Load input parameters
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    question = input_data.get('question')
-    sequence = input_data.get('sequence')
-    device = input_data.get('device', 0)
+    question = args.question
+    sequence = args.sequence
+    device = args.device
 
     # Import after dependencies are installed
     from biomni.tool.systems_biology import query_chatnt

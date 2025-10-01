@@ -3,7 +3,7 @@
   "title": "Biomni: Calculate Physicochemical Properties",
   "description": "Calculates physicochemical properties of molecules from SMILES strings",
   "content": "<h3>Overview</h3><p>Calculates physicochemical properties of molecules from SMILES strings, including molecular weight, logP, hydrogen bond donors/acceptors, polar surface area, and other drug-like properties essential for medicinal chemistry optimization.</p><h3>Input Parameters</h3><ul><li><strong>smiles_string</strong> (required): SMILES notation representing the molecular structure</li></ul><h3>Input Format</h3><pre>{\n  \"smiles_string\": \"CC(=O)Oc1ccccc1C(=O)O\"\n}</pre><h3>Biological Use Case</h3><p>Fundamental for early-stage drug discovery and lead optimization. Predicts drug-likeness using Lipinski's Rule of Five, assesses blood-brain barrier permeability, estimates oral bioavailability, and guides medicinal chemistry strategies for improving compound properties. Essential for virtual screening and compound prioritization.</p><h3>Output</h3><p>Comprehensive physicochemical property report including molecular weight, logP, hydrogen bond donors/acceptors, TPSA, rotatable bonds, and drug-likeness scores saved to physicochemical_properties_results.txt</p><h3>Category</h3><p>pharmacology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pharmacology/calculate_physicochemical_properties.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/pharmacology/calculate_physicochemical_properties.py --smiles-string \"${smilesString}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,10 +28,10 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "Text",
+      "name": "smilesString",
+      "label": "SMILES String",
+      "description": "SMILES representation of the molecule (e.g., CC(=O)Oc1ccccc1C(=O)O for Aspirin)",
       "defaultValue": ""
     },
     {

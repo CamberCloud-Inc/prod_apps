@@ -24,7 +24,9 @@ def main():
     parser = argparse.ArgumentParser(
         description='Quantify biofilm biomass using the crystal violet staining method.'
     )
-    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('--absorbance-readings', type=str, required=True, help='Absorbance readings from crystal violet assay (JSON string)')
+    parser.add_argument('--control-wells', type=str, required=True, help='Control well absorbance readings (JSON string)')
+    parser.add_argument('--sample-names', type=str, required=True, help='Sample identifiers (JSON string)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
     args = parser.parse_args()
 
@@ -33,14 +35,10 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.microbiology import quantify_biofilm_biomass_crystal_violet
 
-    # Read input from file
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
-
-    # Extract parameters
-    absorbance_readings = input_data.get('absorbance_readings')
-    control_wells = input_data.get('control_wells')
-    sample_names = input_data.get('sample_names')
+    # Parse JSON string parameters
+    absorbance_readings = json.loads(args.absorbance_readings)
+    control_wells = json.loads(args.control_wells)
+    sample_names = json.loads(args.sample_names)
 
     # Call the function
     result = quantify_biofilm_biomass_crystal_violet(

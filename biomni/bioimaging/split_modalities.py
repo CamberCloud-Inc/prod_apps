@@ -24,7 +24,9 @@ def main():
     parser = argparse.ArgumentParser(
         description='Split 4D NIfTI medical imaging file into separate modality files'
     )
-    parser.add_argument('input_file', help='JSON config file from stash')
+    parser.add_argument('--input_file', required=True, help='Path to the input 4D NIfTI file')
+    parser.add_argument('--output_dir', required=True, help='Directory for separated modality files')
+    parser.add_argument('--case_name', default='BRAT', help='Identifier prefix for naming output files')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -33,17 +35,10 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.bioimaging import split_modalities
 
-    with open(args.input_file, 'r') as f:
-        config = json.load(f)
-
-    input_file = config['input_file']
-    output_dir = config['output_dir']
-    case_name = config.get('case_name', 'BRAT')
-
     result = split_modalities(
-        input_file=input_file,
-        output_dir=output_dir,
-        case_name=case_name
+        input_file=args.input_file,
+        output_dir=args.output_dir,
+        case_name=args.case_name
     )
 
     os.makedirs(args.output, exist_ok=True)

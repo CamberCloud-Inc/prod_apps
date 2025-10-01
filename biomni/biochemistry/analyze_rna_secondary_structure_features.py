@@ -26,7 +26,8 @@ def main():
     parser = argparse.ArgumentParser(
         description='Calculate structural features of RNA secondary structure'
     )
-    parser.add_argument('input_file', help='JSON file with RNA structure data')
+    parser.add_argument('--dot_bracket_structure', required=True, help='RNA secondary structure in dot-bracket notation')
+    parser.add_argument('--sequence', help='RNA nucleotide sequence (A, U, G, C) corresponding to the structure (optional)')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
@@ -35,15 +36,9 @@ def main():
     # Import after dependencies are installed
     from biomni.tool.biochemistry import analyze_rna_secondary_structure_features
 
-    with open(args.input_file, 'r') as f:
-        inputs = json.load(f)
-
-    dot_bracket_structure = inputs['dot_bracket_structure']
-    sequence = inputs.get('sequence')
-
     result = analyze_rna_secondary_structure_features(
-        dot_bracket_structure=dot_bracket_structure,
-        sequence=sequence
+        dot_bracket_structure=args.dot_bracket_structure,
+        sequence=args.sequence
     )
 
     os.makedirs(args.output, exist_ok=True)

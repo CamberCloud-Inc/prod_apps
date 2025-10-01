@@ -28,13 +28,8 @@ def main():
 
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description='List glycoengineering resources')
-    parser.add_argument('input_file', help='Path to input JSON file')
     parser.add_argument('-o', '--output', required=True, help='Output directory')
     args = parser.parse_args()
-
-    # Read input from file (even though no parameters are needed)
-    with open(args.input_file, 'r') as f:
-        input_data = json.load(f)
 
     try:
         # Call the tool function

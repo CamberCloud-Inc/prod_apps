@@ -3,7 +3,7 @@
   "title": "Biomni: Query Chatnt",
   "description": "Call ChatNT to answer a question about a DNA sequence using transformer-based language model",
   "content": "<h3>Overview</h3><p>Query ChatNT, a transformer-based language model specialized for nucleotide sequences, to answer questions about DNA sequences. ChatNT leverages deep learning to analyze genomic sequences and provide insights about regulatory elements, functional regions, sequence properties, and biological significance.</p><h3>Input Parameters</h3><ul><li><strong>question</strong> (string, required): The question to ask about the DNA sequence (e.g., 'What are the regulatory elements?', 'Identify potential transcription factor binding sites')</li><li><strong>sequence</strong> (string, required): The DNA nucleotide sequence to analyze (A, T, G, C)</li><li><strong>device</strong> (int, optional): GPU device ID to use for computation (default: 0, use -1 for CPU)</li></ul><h3>Input Format</h3><pre>{\n  \"question\": \"What are the functional elements in this sequence?\",\n  \"sequence\": \"ATGCGTACGTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAG\",\n  \"device\": 0\n}</pre><h3>Biological Use Case</h3><p>ChatNT is useful for genomic and systems biology analysis including:</p><ul><li>Annotating regulatory regions in promoters and enhancers</li><li>Identifying transcription factor binding motifs and sites</li><li>Analyzing gene structure elements (exons, introns, splice sites)</li><li>Predicting functional consequences of sequence variants</li><li>Characterizing non-coding RNA structures and regulatory sequences</li><li>Understanding evolutionary conservation patterns in DNA regions</li><li>Exploring chromatin accessibility and epigenetic regulation signals</li></ul><h3>Output</h3><p>The ChatNT analysis provides:</p><ul><li>Natural language responses addressing the specific question about the sequence</li><li>Identification of functional sequence elements and their locations</li><li>Biological interpretations based on learned genomic patterns</li><li>Confidence scores or probabilities for predictions when applicable</li></ul><p>Results are saved to 'chatnt_results.txt' in the specified output directory.</p><h3>Category</h3><p>systems_biology</p>",
-  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/systems_biology/query_chatnt.py \"${inputFile}\" -o \"${outputDir}\"",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/systems_biology/query_chatnt.py \"${question}\" \"${sequence}\" --device ${device} -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
     {
@@ -28,11 +28,25 @@
   ],
   "spec": [
     {
-      "type": "Stash File",
-      "name": "inputFile",
-      "label": "Input File",
-      "description": "Input file from stash (JSON format)",
+      "type": "String",
+      "name": "question",
+      "label": "Question",
+      "description": "Question to ask about the DNA sequence",
       "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "sequence",
+      "label": "Sequence",
+      "description": "DNA nucleotide sequence to analyze (A, T, G, C)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Number",
+      "name": "device",
+      "label": "Device",
+      "description": "GPU device ID (0 for GPU, -1 for CPU)",
+      "defaultValue": 0
     },
     {
       "type": "Stash File",
