@@ -1,16 +1,97 @@
 {
-  "name": "neutronstar-astrophysics",
-  "title": "Neutron Star",
-  "description": " Astrophysics Analysis",
+  "name": "neutronstar-10x-assembly",
+  "title": "Neutronstar: 10x Genomics De Novo Assembly",
+  "description": "De novo genome assembly pipeline for 10x Genomics Chromium linked-read technology using Supernova assembler. Produces high-quality phased genome assemblies from linked-read sequencing data with scaffold N50 values exceeding traditional short-read methods.",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/neutronstar --input ${input} --outdir ${outdir} -r  Neutron star data analysis pipeline:1.0.0 ",
+  "command": "nextflow run nf-core/neutronstar --input ${input} --outdir ${outdir} --max_cpus ${max_cpus} --max_memory ${max_memory} -r 1.0.0 -profile k8s -c /etc/mpi/nextflow.camber.config",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/neutronstar/master/docs/images/nf-core-neutronstar_logo_light.png",
-  "content": "<h2><strong>Neutron Star</strong></h2><p> Astrophysics Analysis</p>",
+  "content": "<h1 class=\"heading-node\">🧬 Neutronstar: 10x Genomics De Novo Assembly</h1><p class=\"text-node\"><strong>High-Quality Genome Assembly from Linked-Read Technology</strong></p><p class=\"text-node\">nf-core/neutronstar is a bioinformatics best-practice pipeline for de novo genome assembly of 10x Genomics Chromium linked-read sequencing data using the Supernova assembler. This technology enables phased genome assembly with superior contiguity compared to traditional short-read methods.</p><img src=\"https://raw.githubusercontent.com/nf-core/neutronstar/master/docs/images/nf-core-neutronstar_logo_light.png\" alt=\"nf-core/neutronstar workflow\" width=\"400\" height=\"200\"><h2 class=\"heading-node\">🎯 What is 10x Genomics Linked-Read Technology?</h2><p class=\"text-node\">10x Genomics Chromium linked-read sequencing partitions long DNA molecules into microscopic droplets, where short-read sequencing is performed. Each partition receives a unique barcode, allowing computational reconstruction of long-range genomic information from short reads.</p><h3 class=\"heading-node\">Key Advantages</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔗 Long-range Information:</strong> Reconstruct scaffolds spanning megabases using barcode linkage</p></li><li><p class=\"text-node\"><strong>🧬 Phased Assembly:</strong> Separate maternal and paternal haplotypes in diploid genomes</p></li><li><p class=\"text-node\"><strong>📊 Superior N50:</strong> Achieve scaffold N50 values 10-100x higher than standard short-read assemblies</p></li><li><p class=\"text-node\"><strong>🎯 Structural Variant Detection:</strong> Identify large insertions, deletions, and rearrangements</p></li></ul><h2 class=\"heading-node\">🔬 Supernova Assembler</h2><p class=\"text-node\">The pipeline uses 10x Genomics' Supernova assembler, specifically designed for linked-read data:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Optimized for Diploid Genomes:</strong> Handles heterozygosity and produces phased assemblies</p></li><li><p class=\"text-node\"><strong>Quality-Aware:</strong> Leverages barcode information and molecule length distributions</p></li><li><p class=\"text-node\"><strong>Scalable:</strong> Efficiently processes large genomes (tested up to 3.5 Gb)</p></li><li><p class=\"text-node\"><strong>Multiple Output Formats:</strong> Pseudohaplotype, megabubbles, and raw assemblies</p></li></ul><h2 class=\"heading-node\">📋 Input Requirements</h2><h3 class=\"heading-node\">Sample Sheet Format</h3><p class=\"text-node\">Your CSV samplesheet defines linked-read samples:</p><pre class=\"block-node\"><code>sample,fastq_1,fastq_2\nsample1_S1_L001,/path/to/sample1_S1_L001_R1_001.fastq.gz,/path/to/sample1_S1_L001_R2_001.fastq.gz\nsample1_S1_L002,/path/to/sample1_S1_L002_R1_001.fastq.gz,/path/to/sample1_S1_L002_R2_001.fastq.gz</code></pre><h3 class=\"heading-node\">Data Requirements</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Input Format:</strong> 10x Genomics Chromium linked-read FASTQ files</p></li><li><p class=\"text-node\"><strong>Coverage:</strong> 30-60x genome coverage recommended (56x optimal)</p></li><li><p class=\"text-node\"><strong>Molecule Length:</strong> Mean molecule length >50 kb (longer is better)</p></li><li><p class=\"text-node\"><strong>Genome Size:</strong> Works for genomes 100 Mb - 3.5 Gb</p></li><li><p class=\"text-node\"><strong>Read Length:</strong> Standard Illumina paired-end reads (2x150bp typical)</p></li></ul><h2 class=\"heading-node\">🔄 Pipeline Workflow</h2><h3 class=\"heading-node\">Processing Steps</h3><ol class=\"list-node\"><li><p class=\"text-node\"><strong>Input Validation:</strong> Verify FASTQ format and 10x barcode structure</p></li><li><p class=\"text-node\"><strong>Quality Control:</strong> FastQC analysis of raw reads</p></li><li><p class=\"text-node\"><strong>Barcode Processing:</strong> Extract and validate 10x barcodes from read headers</p></li><li><p class=\"text-node\"><strong>Supernova Assembly:</strong> De novo assembly leveraging linked-read information</p></li><li><p class=\"text-node\"><strong>Assembly QC:</strong> QUAST metrics, N50 statistics, and completeness assessment</p></li><li><p class=\"text-node\"><strong>Output Generation:</strong> Multiple assembly formats and comprehensive reports</p></li><li><p class=\"text-node\"><strong>MultiQC Report:</strong> Integrated quality control summary</p></li></ol><h2 class=\"heading-node\">📊 Comprehensive Results</h2><h3 class=\"heading-node\">Assembly Outputs</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📁 Pseudohaplotype Assembly:</strong> Single haplotype representation (most contiguous)</p></li><li><p class=\"text-node\"><strong>🧬 Phased Assembly:</strong> Separated maternal and paternal scaffolds</p></li><li><p class=\"text-node\"><strong>💫 Megabubbles:</strong> Large heterozygous regions for variant analysis</p></li><li><p class=\"text-node\"><strong>🔧 Raw Assembly:</strong> Unprocessed assembly graph output</p></li></ul><h3 class=\"heading-node\">Quality Metrics</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📈 Scaffold Statistics:</strong> N50, N90, L50 metrics for assembly contiguity</p></li><li><p class=\"text-node\"><strong>🔍 Phasing Quality:</strong> Phase block N50 and phasing accuracy</p></li><li><p class=\"text-node\"><strong>📊 Molecule Metrics:</strong> Effective coverage, molecule length distributions</p></li><li><p class=\"text-node\"><strong>✅ BUSCO Assessment:</strong> Genome completeness via conserved gene sets</p></li></ul><h3 class=\"heading-node\">Analysis Reports</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📋 Supernova Summary:</strong> Detailed assembly statistics and warnings</p></li><li><p class=\"text-node\"><strong>🎨 MultiQC Report:</strong> Interactive visualization of all QC metrics</p></li><li><p class=\"text-node\"><strong>📊 QUAST Report:</strong> Comprehensive assembly evaluation</p></li></ul><h2 class=\"heading-node\">🎯 Ideal Use Cases</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🧬 Novel Genome Assembly:</strong> First assembly of species without reference</p></li><li><p class=\"text-node\"><strong>🔬 Population Genomics:</strong> Haplotype-resolved assemblies for genetic studies</p></li><li><p class=\"text-node\"><strong>🧪 Structural Variation:</strong> Detect large-scale genomic rearrangements</p></li><li><p class=\"text-node\"><strong>🌱 Plant Genomics:</strong> Assemble complex polyploid genomes</p></li><li><p class=\"text-node\"><strong>🐾 Conservation Biology:</strong> Reference genomes for endangered species</p></li><li><p class=\"text-node\"><strong>🏥 Clinical Genomics:</strong> Phased assemblies for personalized medicine</p></li></ul><h2 class=\"heading-node\">⚙️ Resource Requirements</h2><p class=\"text-node\">Linked-read assembly is computationally intensive:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Memory:</strong> 200+ GB RAM for mammalian-sized genomes</p></li><li><p class=\"text-node\"><strong>Storage:</strong> 1-2 TB for intermediate files (cleaned up after completion)</p></li><li><p class=\"text-node\"><strong>Runtime:</strong> 6-24 hours depending on genome size and coverage</p></li><li><p class=\"text-node\"><strong>Node Size:</strong> XLARGE recommended for optimal performance</p></li></ul><h2 class=\"heading-node\">🌟 Expected Assembly Quality</h2><p class=\"text-node\"><strong>Typical Results for High-Quality Data:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Scaffold N50:</strong> 10-50 Mb (mammalian genomes)</p></li><li><p class=\"text-node\"><strong>Phase Block N50:</strong> 1-10 Mb</p></li><li><p class=\"text-node\"><strong>Contig N50:</strong> 50-200 kb</p></li><li><p class=\"text-node\"><strong>BUSCO Completeness:</strong> >90% for well-sequenced samples</p></li></ul><blockquote class=\"block-node\"><p class=\"text-node\"><strong>Perfect for Research in:</strong> De novo genome assembly • Population genomics • Structural variation • Conservation genomics • Haplotype phasing • Complex genome assembly • Personalized genomics</p></blockquote><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/neutronstar/1.0.0/\" target=\"_blank\">nf-core/neutronstar v1.0.0</a> • Containerized execution • Continuous integration tested</p>",
   "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./neutronstar-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV samplesheet with columns: sample, fastq_1, fastq_2 (10x Genomics Chromium linked-read data)",
+      "required": true,
+      "hidden": false,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory for assembly outputs, quality metrics, and reports",
+      "defaultValue": "./neutronstar-results",
+      "required": true,
+      "hidden": false,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    },
+    {
+      "type": "Input",
+      "label": "Maximum CPUs",
+      "name": "max_cpus",
+      "description": "Maximum number of CPUs to use per process",
+      "defaultValue": "32",
+      "required": false,
+      "hidden": false,
+      "disabled": false
+    },
+    {
+      "type": "Input",
+      "label": "Maximum Memory",
+      "name": "max_memory",
+      "description": "Maximum memory allocation (e.g., 256.GB for large genomes)",
+      "defaultValue": "256.GB",
+      "required": false,
+      "hidden": false,
+      "disabled": false
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "neutronstar", "type": "task"}]
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "description": "Linked-read assembly requires substantial computational resources. XLARGE recommended for mammalian genomes.",
+      "options": [
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Small genomes (<1 Gb)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE (96 CPUs, 540GB RAM) - Recommended for most projects",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xlarge"
+    }
+  ],
+  "tags": [
+    {"name": "genomics", "type": "subfield"},
+    {"name": "genome-assembly", "type": "task"},
+    {"name": "de-novo-assembly", "type": "task"},
+    {"name": "linked-reads", "type": "technology"},
+    {"name": "10x-genomics", "type": "technology"}
+  ]
 }

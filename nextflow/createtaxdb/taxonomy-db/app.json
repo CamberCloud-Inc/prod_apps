@@ -1,16 +1,108 @@
 {
   "name": "createtaxdb-taxonomy-db",
-  "title": "Create Tax DB",
-  "description": " Taxonomy Database",
+  "title": "Custom Taxonomy Database Builder (Kraken2/DIAMOND/Kaiju)",
+  "description": "Build custom metagenomic classifier databases from reference genome sets using nf-core/createtaxdb. Supports Kraken2, Bracken, DIAMOND, Kaiju, and Centrifuge for taxonomic profiling applications. Parallelized construction from nucleotide and protein sequences with automated taxonomy integration.",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/createtaxdb --input ${input} --outdir ${outdir} -r  Build custom taxonomy databases:1.0.0 ",
+  "command": "nextflow run nf-core/createtaxdb --input ${input} --outdir ${outdir} --accession2taxid ${accession2taxid} --nodesdmp ${nodesdmp} --namesdmp ${namesdmp} --dbname ${dbname} --build_kraken2 --build_bracken -r 1.0.0 -profile docker",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/createtaxdb/master/docs/images/nf-core-createtaxdb_logo_light.png",
-  "content": "<h2><strong>Create Tax DB</strong></h2><p> Taxonomy Database</p>",
+  "content": "<h1>Custom Taxonomy Database Builder</h1><h2>What This Pipeline Does</h2><p>This pipeline constructs custom metagenomic classifier databases from your own reference genome sets in a highly automated and parallelized manner. Built as a companion to nf-core/taxprofiler, it enables you to create specialized databases for taxonomic classification of metagenomic samples. The pipeline supports building databases for multiple classifiers simultaneously - including Kraken2, Bracken, DIAMOND, Kaiju, and Centrifuge - from the same input sequences, ensuring consistency across different profiling approaches.</p><h2>When To Use This</h2><ul><li><strong>Custom Organism Sets:</strong> Build databases containing specific organisms relevant to your research (e.g., gut bacteria, plant pathogens, marine microbes)</li><li><strong>Novel or Rare Species:</strong> Include newly sequenced genomes or rare organisms not present in standard databases</li><li><strong>Reduced Databases:</strong> Create smaller, faster databases focused on expected taxa to improve classification speed and memory usage</li><li><strong>Contamination Screening:</strong> Build databases of common laboratory contaminants or host sequences for quality control</li><li><strong>Multiple Classifier Compatibility:</strong> Generate databases for several profiling tools from the same genome set to compare classification approaches</li><li><strong>Updated References:</strong> Refresh databases with the latest genome releases from NCBI or other repositories</li></ul><h2>What You Need</h2><h3>1. Reference Genome Samplesheet (CSV File)</h3><p>Create a CSV file listing all reference sequences to include in your database:</p><pre>id,taxid,fasta_dna,fasta_aa\nEscherichia_coli_K12,511145,/path/to/ecoli_k12.fna,/path/to/ecoli_k12.faa\nSalmonella_enterica,28901,/path/to/salmonella.fna.gz,\nHuman_mitochondrial,9606,https://ftp.ncbi.nlm.nih.gov/genomes/H_sapiens/chrMT.fa,</pre><p><strong>Column Details:</strong></p><ul><li><strong>id:</strong> Unique identifier for this reference (species name, strain ID, or accession number)</li><li><strong>taxid:</strong> NCBI Taxonomy ID for this organism (required for proper taxonomic assignment)</li><li><strong>fasta_dna:</strong> Path or URL to nucleotide FASTA file. Can be compressed (.gz). Leave empty if only providing protein sequences</li><li><strong>fasta_aa:</strong> Path or URL to protein/amino acid FASTA file. Can be compressed (.gz). Leave empty if only providing nucleotide sequences</li></ul><p><strong>Important Notes:</strong></p><ul><li>Each row must have at least one FASTA file (DNA or protein)</li><li>You can provide both DNA and protein for the same organism</li><li>File paths can be local files or URLs to public repositories</li><li>Compressed (.gz) files are automatically handled</li><li>Taxonomy IDs can be found at the <a href='https://www.ncbi.nlm.nih.gov/taxonomy' target='_blank'>NCBI Taxonomy Browser</a></li></ul><h3>2. Taxonomy Mapping Files</h3><p>These files link sequence accessions to NCBI taxonomy IDs. Required for proper taxonomic assignment:</p><p><strong>Accession2TaxID File:</strong></p><ul><li>Maps sequence accessions to taxonomy IDs</li><li>For nucleotide databases: Use <code>nucl_gb.accession2taxid</code> or <code>nucl_wgs.accession2taxid</code></li><li>For protein databases: Use <code>prot.accession2taxid</code></li><li>Available from <a href='https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/' target='_blank'>NCBI FTP</a></li><li>Large files (several GB) - download and provide path</li></ul><p><strong>Taxonomy Tree Files:</strong></p><ul><li><strong>nodes.dmp:</strong> Defines the taxonomic tree structure (parent-child relationships)</li><li><strong>names.dmp:</strong> Contains scientific and common names for each taxon</li><li>Both available in <code>taxdmp.zip</code> from <a href='https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/' target='_blank'>NCBI Taxonomy FTP</a></li><li>Extract the .dmp files and provide their paths</li></ul><h3>3. Database Configuration</h3><p><strong>Database Name:</strong> Choose a descriptive name for your database (e.g., \"gut_bacteria_v1\", \"plant_pathogens_2024\", \"marine_microbiome\")</p><p><strong>Classifier Selection:</strong> This app is pre-configured to build Kraken2 and Bracken databases. For other classifiers:</p><ul><li><strong>Kraken2:</strong> Fast k-mer based classifier (enabled by default)</li><li><strong>Bracken:</strong> Bayesian abundance estimation using Kraken2 output (enabled by default)</li><li><strong>DIAMOND:</strong> Protein-based aligner for functional profiling (add <code>--build_diamond</code> to command)</li><li><strong>Kaiju:</strong> Protein-based taxonomic classifier (add <code>--build_kaiju</code> to command)</li><li><strong>Centrifuge:</strong> Memory-efficient nucleotide classifier (add <code>--build_centrifuge</code> to command)</li></ul><h2>What You'll Get</h2><h3>Database Files</h3><ul><li><strong>Kraken2 Database:</strong> <code>kraken2/</code> - Ready-to-use Kraken2 database with hash.k2d, opts.k2d, and taxo.k2d files</li><li><strong>Bracken Database:</strong> <code>bracken/</code> - Abundance estimation files for different read lengths (50bp, 75bp, 100bp, 150bp, 200bp, 250bp)</li><li><strong>Database Archives:</strong> Compressed .tar.gz files for easy distribution and storage</li><li><strong>Database Logs:</strong> Build logs showing number of sequences processed, k-mer statistics, and database size</li></ul><h3>Quality Control Files</h3><ul><li><strong>Input Validation:</strong> Summary of reference sequences processed and taxonomy assignments</li><li><strong>Build Statistics:</strong> Number of k-mers indexed, unique taxa included, database size metrics</li><li><strong>MultiQC Report:</strong> Comprehensive overview of database construction process</li></ul><h3>Metadata Files</h3><ul><li><strong>Sequence Manifest:</strong> List of all sequences included in the database</li><li><strong>Taxonomy Tree:</strong> Hierarchical structure of taxa present in your custom database</li><li><strong>Version Information:</strong> Software versions and parameters used for reproducibility</li></ul><h2>Expected Build Time</h2><ul><li><strong>Small database (10-50 genomes):</strong> 1-3 hours</li><li><strong>Medium database (100-500 genomes):</strong> 4-8 hours</li><li><strong>Large database (1000+ genomes):</strong> 12-24 hours</li><li><strong>Note:</strong> Build time depends on genome size, number of sequences, and classifier complexity. Kraken2 builds are typically faster than protein-based classifiers like DIAMOND or Kaiju.</li></ul><h2>Using Your Custom Database</h2><p>Once built, your custom database can be used directly with taxonomic profiling pipelines:</p><ol><li><strong>With nf-core/taxprofiler:</strong> Specify your database in the database samplesheet</li><li><strong>With Kraken2 directly:</strong> Use the path to your kraken2/ directory with <code>kraken2 --db</code></li><li><strong>With Bracken:</strong> Use for abundance estimation after Kraken2 classification</li><li><strong>Distribution:</strong> Share compressed .tar.gz archives with collaborators</li></ol><h2>Scientific Background</h2><p>Metagenomic taxonomic classification relies on comparing sequencing reads to databases of known reference genomes. While standard databases like NCBI RefSeq or GenBank provide broad coverage, custom databases offer several advantages: higher sensitivity for target organisms, faster classification by reducing search space, inclusion of newly sequenced or private genomes, and consistency when comparing multiple profiling tools. The createtaxdb pipeline automates the complex process of building these databases, handling taxonomy integration, sequence indexing, and format conversion for multiple classifiers from a single input set.</p><h2>Best Practices</h2><ul><li><strong>Representative Genomes:</strong> Include complete, high-quality reference genomes when possible</li><li><strong>Taxonomic Coverage:</strong> Balance specificity (your target organisms) with breadth (related taxa for context)</li><li><strong>Database Size:</strong> Larger databases require more memory for classification - optimize for your compute resources</li><li><strong>Version Control:</strong> Document genome versions and build dates for reproducibility</li><li><strong>Validation:</strong> Test your custom database with mock communities or positive controls</li><li><strong>Updates:</strong> Rebuild periodically as new genome assemblies become available</li></ul><h2>Common Use Cases</h2><ul><li><strong>Host + Microbiome:</strong> Include host genome (for removal) plus microbial references (for profiling)</li><li><strong>Disease Surveillance:</strong> Pathogen genomes plus closely related non-pathogenic strains</li><li><strong>Environmental Studies:</strong> Organisms from specific habitats (soil, marine, extreme environments)</li><li><strong>Food Safety:</strong> Foodborne pathogens and spoilage organisms</li><li><strong>Clinical Diagnostics:</strong> Medically relevant bacteria, viruses, fungi, and parasites</li></ul><p><a href='https://nf-co.re/createtaxdb' target='_blank'>Advanced users: See full nf-core/createtaxdb documentation</a></p>",
   "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./createtaxdb-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "type": "Stash File",
+      "label": "Reference Genome Samplesheet",
+      "name": "input",
+      "description": "CSV file with columns: id, taxid, fasta_dna, fasta_aa. Each row represents one reference genome to include in the database.",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [".csv", ".tsv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Accession2TaxID File",
+      "name": "accession2taxid",
+      "description": "NCBI accession2taxid mapping file (nucl_gb.accession2taxid for nucleotides, prot.accession2taxid for proteins). Download from NCBI FTP.",
+      "required": true
+    },
+    {
+      "type": "Stash File",
+      "label": "Nodes.dmp File",
+      "name": "nodesdmp",
+      "description": "NCBI taxonomy nodes.dmp file defining taxonomic tree structure. Extract from taxdmp.zip available at NCBI Taxonomy FTP.",
+      "required": true
+    },
+    {
+      "type": "Stash File",
+      "label": "Names.dmp File",
+      "name": "namesdmp",
+      "description": "NCBI taxonomy names.dmp file containing taxon names. Extract from taxdmp.zip available at NCBI Taxonomy FTP.",
+      "required": true
+    },
+    {
+      "type": "Text",
+      "label": "Database Name",
+      "name": "dbname",
+      "description": "Descriptive name for your custom database (e.g., gut_bacteria_v1, plant_pathogens_2024). Used in output files and database metadata.",
+      "required": true,
+      "defaultValue": "custom_db"
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory where database files, archives, and reports will be saved",
+      "defaultValue": "./createtaxdb-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "createtaxdb", "type": "task"}]
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "description": "Select computational resources based on database size. Large databases (>100 genomes) require substantial memory and CPU for indexing.",
+      "options": [
+        {
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Small databases (<50 genomes)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Medium databases (50-500 genomes)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE (96 CPUs, 720GB RAM) - Large databases (>500 genomes)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {"name": "metagenomics", "type": "subfield"},
+    {"name": "database-construction", "type": "task"},
+    {"name": "taxonomy", "type": "task"},
+    {"name": "biology", "type": "field"}
+  ]
 }

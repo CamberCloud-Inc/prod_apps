@@ -1,16 +1,308 @@
 {
   "name": "molkart-spatial-multiomics",
-  "title": "Molkart",
-  "description": " Spatial Multi-omics",
-  "version": "1.0.0",
+  "description": "A comprehensive pipeline for processing Molecular Cartography spatial transcriptomics data from Resolve Bioscience. Performs end-to-end analysis including image preprocessing, state-of-the-art cell segmentation, spot-to-cell assignment, and comprehensive quality control for combinatorial FISH data.",
+  "content": "The nf-core/molkart pipeline enables researchers to analyze spatial transcriptomics data by processing FISH spot positions (x,y,z,gene) alongside DAPI nuclear images and optional membrane staining images. The pipeline performs image preprocessing with grid pattern filling and contrast enhancement, applies multiple segmentation methods (Cellpose, Mesmer, ilastik, Stardist), assigns deduplicated spots to segmented cells, and generates detailed quality metrics including spot assignment rates, spots per cell statistics, and segmentation mask size distributions. This workflow produces a matched cell-by-transcript table essential for downstream spatial transcriptomics analysis, making it ideal for researchers working with Molecular Cartography or MERSCOPE targeted spatial data.",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/molkart/master/docs/images/molkart_metro_map.png",
+  "command": "rm -rf prod_apps && git clone git@github.com:CamberCloud-Inc/prod_apps.git && cd ./prod_apps/nextflow/molkart/spatial-multiomics/ && sh run_molkart.sh",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/molkart --input ${input} --outdir ${outdir} -r  Tissue architecture and protein neighborhoods:1.0.0 ",
-  "imageUrl": "https://raw.githubusercontent.com/nf-core/molkart/master/docs/images/nf-core-molkart_logo_light.png",
-  "content": "<h2><strong>Molkart</strong></h2><p> Spatial Multi-omics</p>",
-  "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./molkart-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "options": [
+        {
+          "label": "default",
+          "value": "default",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 4,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "SMALL",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 2,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 4,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 8,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "default"
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "molkart", "type": "task"}]
+  "spec": [
+    {
+      "label": "input",
+      "name": "input",
+      "description": "Path to CSV samplesheet containing sample ID, nuclear image (TIFF), spot locations table, and optional membrane image. Required format: sample,nuclear_image,spot_locations,membrane_image",
+      "defaultValue": [],
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "type": "Multi Stash File"
+    },
+    {
+      "label": "outdir",
+      "name": "outdir",
+      "description": "The output directory where results will be saved including cell-by-transcript tables, segmentation masks, preprocessed images, and quality control reports.",
+      "defaultValue": [],
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Multi Stash File"
+    },
+    {
+      "label": "email",
+      "name": "email",
+      "description": "Email address for completion summary and notifications.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "segmentation_method",
+      "name": "segmentation_method",
+      "description": "Select the segmentation tool to apply for cell segmentation. Mesmer is optimized for nuclear and membrane stains, Cellpose offers versatile deep learning segmentation, ilastik provides pixel classification, and Stardist excels at star-convex nuclei detection.",
+      "defaultValue": "mesmer",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Radio",
+      "options": [
+        {
+          "label": "Mesmer (nuclear + membrane)",
+          "value": "mesmer"
+        },
+        {
+          "label": "Cellpose",
+          "value": "cellpose"
+        },
+        {
+          "label": "ilastik",
+          "value": "ilastik"
+        },
+        {
+          "label": "Stardist",
+          "value": "stardist"
+        }
+      ]
+    },
+    {
+      "label": "segmentation_min_area",
+      "name": "segmentation_min_area",
+      "description": "Minimum area size (in pixels) for segmentation masks. Masks smaller than this will be filtered out to remove artifacts and debris.",
+      "defaultValue": "100",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "segmentation_max_area",
+      "name": "segmentation_max_area",
+      "description": "Maximum area size (in pixels) for segmentation masks. Masks larger than this will be filtered out to remove artifacts and clumps.",
+      "defaultValue": "10000",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "skip_mindagap",
+      "name": "skip_mindagap",
+      "description": "Skip the Mindagap grid pattern filling step if your images do not contain tile gaps or if preprocessing is not needed.",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Checkbox"
+    },
+    {
+      "label": "mindagap_boxsize",
+      "name": "mindagap_boxsize",
+      "description": "Box size parameter for Mindagap gap filling algorithm. Larger values fill larger gaps but may introduce artifacts.",
+      "defaultValue": "3",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "clahe_cliplimit",
+      "name": "clahe_cliplimit",
+      "description": "Contrast limit for CLAHE (Contrast Limited Adaptive Histogram Equalization). Higher values increase contrast enhancement. Range: 0.0 to 1.0",
+      "defaultValue": "0.01",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "clahe_kernel",
+      "name": "clahe_kernel",
+      "description": "Kernel size for CLAHE processing. Larger kernels consider more pixels for local contrast adjustment.",
+      "defaultValue": "8",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "create_training_subset",
+      "name": "create_training_subset",
+      "description": "Create a subset of images for training custom segmentation models. Useful for developing domain-specific segmentation approaches.",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Checkbox"
+    },
+    {
+      "label": "crop_size_x",
+      "name": "crop_size_x",
+      "description": "Width (in pixels) of image crops to extract for training subset generation.",
+      "defaultValue": "400",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "crop_size_y",
+      "name": "crop_size_y",
+      "description": "Height (in pixels) of image crops to extract for training subset generation.",
+      "defaultValue": "400",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "crop_amount",
+      "name": "crop_amount",
+      "description": "Number of random crops to extract from each image for training subset creation.",
+      "defaultValue": "4",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "cellpose_diameter",
+      "name": "cellpose_diameter",
+      "description": "Expected cell diameter in pixels for Cellpose segmentation. Set to 0 for automatic estimation.",
+      "defaultValue": "0",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "cellpose_model",
+      "name": "cellpose_model",
+      "description": "Pre-trained Cellpose model to use. 'nuclei' for nuclear stains, 'cyto' for cytoplasmic stains, 'cyto2' for improved cell detection.",
+      "defaultValue": "nuclei",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Radio",
+      "options": [
+        {
+          "label": "nuclei",
+          "value": "nuclei"
+        },
+        {
+          "label": "cyto",
+          "value": "cyto"
+        },
+        {
+          "label": "cyto2",
+          "value": "cyto2"
+        }
+      ]
+    },
+    {
+      "label": "cellpose_flow_threshold",
+      "name": "cellpose_flow_threshold",
+      "description": "Flow threshold for Cellpose. Lower values are more permissive and may oversegment. Range: 0.0 to 3.0",
+      "defaultValue": "0.4",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "cellpose_cellprob_threshold",
+      "name": "cellpose_cellprob_threshold",
+      "description": "Cell probability threshold for Cellpose. Lower values detect more cells. Range: -6.0 to 6.0",
+      "defaultValue": "0.0",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "mesmer_image_mpp",
+      "name": "mesmer_image_mpp",
+      "description": "Microns per pixel resolution for Mesmer segmentation. Affects the scale at which segmentation is performed.",
+      "defaultValue": "0.5",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "spot_distance_threshold",
+      "name": "spot_distance_threshold",
+      "description": "Maximum distance (in pixels) for assigning spots to segmented cells. Spots beyond this distance are considered unassigned.",
+      "defaultValue": "5",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "multiqc_title",
+      "name": "multiqc_title",
+      "description": "Custom title for the MultiQC report. Printed as page header and used for filename if not otherwise specified.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "multiqc_methods_description",
+      "name": "multiqc_methods_description",
+      "description": "Custom MultiQC yaml file containing HTML including a methods description for the analysis report.",
+      "defaultValue": [],
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Multi Stash File"
+    }
+  ]
 }

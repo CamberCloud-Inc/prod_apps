@@ -1,16 +1,69 @@
 {
   "name": "methylong-long-read-methylation",
-  "title": "Methyl Long",
-  "description": " Long-read Methylation",
+  "title": "Long-Read Methylation Analysis (ONT/PacBio)",
+  "description": "Extract methylation calls from long-read sequencing data (Oxford Nanopore Technologies and PacBio). Comprehensive analysis pipeline for DNA methylation profiling using modification-basecalled reads.",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/methylong --input ${input} --outdir ${outdir} -r  PacBio and Nanopore methylation:1.0.0 ",
+  "command": "nextflow run nf-core/methylong --input ${input} --outdir ${outdir} --fasta ${fasta} -r 1.0.0",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/methylong/master/docs/images/nf-core-methylong_logo_light.png",
-  "content": "<h2><strong>Methyl Long</strong></h2><p> Long-read Methylation</p>",
+  "content": "<h2><strong>Long-Read Methylation Analysis</strong></h2><p><strong>DNA methylation</strong> is a crucial epigenetic modification that regulates gene expression, development, and disease. Long-read sequencing technologies from Oxford Nanopore Technologies (ONT) and PacBio enable direct detection of methylation without bisulfite conversion, preserving native DNA structure and providing long-range methylation patterns.</p><h3><strong>What is Long-Read Methylation Sequencing?</strong></h3><blockquote><p><strong>The Technology</strong>:</p><ol><li><strong>ONT (Oxford Nanopore)</strong>: Detects methylation through electrical signal changes as DNA passes through nanopores</li><li><strong>PacBio HiFi</strong>: Identifies methylation via polymerase kinetics during sequencing</li><li><strong>No Bisulfite Conversion</strong>: Direct detection preserves DNA integrity</li><li><strong>Long Reads</strong>: Spans entire genes, regulatory regions, and repeat elements</li><li><strong>Phased Methylation</strong>: Can determine haplotype-specific methylation patterns</li></ol></blockquote><h3><strong>Pipeline Workflows</strong></h3><p><strong>ONT Workflow</strong>:</p><ul><li>Modification calling (optional with raw Pod5/BAM)</li><li>Read preprocessing (trim and repair with Porechop)</li><li>Genome alignment (Minimap2)</li><li>Methylation extraction (Modkit, NanoMethPhase)</li><li>QC and visualization</li></ul><p><strong>PacBio HiFi Workflow</strong>:</p><ul><li>Modification calling (optional for raw data)</li><li>Genome alignment (pbmm2/Minimap2)</li><li>Methylation extraction (pb-CpG-tools, Modkit)</li><li>QC and reporting</li></ul><h3><strong>Advantages of Long-Read Methylation</strong></h3><ul><li><strong>No Bisulfite Bias</strong>: Avoids DNA degradation and amplification bias</li><li><strong>Phased Methylation</strong>: Links methylation to parental alleles</li><li><strong>Inaccessible Regions</strong>: Sequences through repeats, centromeres, telomeres</li><li><strong>Multiple Modifications</strong>: Detects 5mC, 5hmC, 6mA simultaneously</li><li><strong>Structural Variants</strong>: Combines methylation with SV detection</li><li><strong>Native DNA</strong>: Preserves genomic context and long-range patterns</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV/TSV samplesheet with columns:</p><ul><li><strong>sample</strong>: Sample identifier</li><li><strong>long_reads</strong>: Path to FASTQ/BAM/Pod5 files</li><li><strong>group</strong>: Optional grouping for co-analysis</li></ul><p><strong>Reference Requirements</strong>:</p><ul><li><strong>Genome FASTA</strong>: Reference genome (required)</li><li>Accepts modification-basecalled ONT reads, PacBio HiFi modBAM, raw Pod5, or raw BAM files</li></ul><h3><strong>Methylation Detection Methods</strong></h3><p><strong>5-methylcytosine (5mC)</strong>:</p><ul><li>Most common methylation mark</li><li>CpG islands, gene bodies, regulatory regions</li><li>Gene silencing, X-inactivation, imprinting</li></ul><p><strong>5-hydroxymethylcytosine (5hmC)</strong>:</p><ul><li>Oxidation product of 5mC</li><li>Active demethylation intermediate</li><li>Enriched in neurons and stem cells</li></ul><p><strong>N6-methyladenine (6mA)</strong>:</p><ul><li>Rare in mammals, common in bacteria</li><li>Emerging role in eukaryotic gene regulation</li></ul><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Cancer Epigenetics</strong>: Hypermethylation of tumor suppressors, DNA repair genes</li><li><strong>Imprinting Disorders</strong>: Aberrant methylation at imprinted loci (Prader-Willi, Angelman)</li><li><strong>Neurodevelopment</strong>: Brain-specific methylation patterns</li><li><strong>Aging Research</strong>: Epigenetic clock and age-related methylation changes</li><li><strong>Microbial Epigenomics</strong>: Restriction-modification systems, phage resistance</li><li><strong>Allele-Specific Methylation</strong>: Parent-of-origin effects, X-inactivation</li></ul><h3><strong>Key Analysis Steps</strong></h3><ol><li><strong>Quality Control</strong>: NanoPlot/FastQC for read statistics</li><li><strong>Adapter Trimming</strong>: Porechop (ONT) removes sequencing adapters</li><li><strong>Alignment</strong>: Minimap2/pbmm2 maps long reads to reference</li><li><strong>Methylation Calling</strong>: Modkit extracts modification probabilities</li><li><strong>Phasing</strong>: NanoMethPhase links methylation to haplotypes</li><li><strong>DMR Detection</strong>: Identifies differentially methylated regions</li><li><strong>Annotation</strong>: Overlaps with genes, promoters, enhancers, CpG islands</li><li><strong>Visualization</strong>: IGV tracks, methylation heatmaps, QC reports</li></ol><h3><strong>Output Files</strong></h3><ul><li><strong>Methylation Calls</strong>: BED/bedGraph format with per-base modification probabilities</li><li><strong>BAM Alignments</strong>: Sorted and indexed long-read alignments</li><li><strong>Phased Methylation</strong>: Haplotype-resolved methylation patterns</li><li><strong>DMRs</strong>: Differentially methylated regions between samples/conditions</li><li><strong>QC Reports</strong>: Read quality, alignment stats, methylation coverage</li><li><strong>Visualizations</strong>: Genome browser tracks, methylation plots</li></ul><h3><strong>Biological Contexts</strong></h3><p><strong>Gene Regulation</strong>:</p><ul><li><strong>Promoter Methylation</strong>: Silences gene transcription</li><li><strong>Gene Body Methylation</strong>: Associated with active transcription</li><li><strong>Enhancer Methylation</strong>: Tissue-specific regulatory elements</li></ul><p><strong>Chromatin Structure</strong>:</p><ul><li><strong>Heterochromatin</strong>: Hypermethylated, transcriptionally silent</li><li><strong>Euchromatin</strong>: Hypomethylated, transcriptionally active</li><li><strong>CpG Islands</strong>: Unmethylated in normal cells, hypermethylated in cancer</li></ul><p><strong>Developmental Biology</strong>:</p><ul><li><strong>Reprogramming</strong>: Erasure/re-establishment during early development</li><li><strong>Differentiation</strong>: Cell-type-specific methylation patterns</li><li><strong>Imprinting</strong>: Parent-of-origin gene expression</li></ul><h3><strong>Key Metrics</strong></h3><ul><li><strong>Read Length</strong>: Median >10kb for ONT, >15kb for PacBio HiFi</li><li><strong>Modification Coverage</strong>: >10X coverage per CpG for confident calls</li><li><strong>Alignment Rate</strong>: >85% of reads aligned to reference</li><li><strong>Methylation Frequency</strong>: Global % methylated CpGs</li><li><strong>Phasing Success</strong>: % of reads assigned to haplotypes</li></ul><h3><strong>Comparison: Long-Read vs Bisulfite-Seq</strong></h3><table><tr><th>Feature</th><th>Long-Read (ONT/PacBio)</th><th>Bisulfite-Seq</th></tr><tr><td>DNA Degradation</td><td>None (native DNA)</td><td>High (bisulfite damages DNA)</td></tr><tr><td>Read Length</td><td>10-100+ kb</td><td>50-150 bp (fragmented)</td></tr><tr><td>Phasing</td><td>Yes (haplotype-resolved)</td><td>No</td></tr><tr><td>Modification Types</td><td>5mC, 5hmC, 6mA</td><td>5mC only</td></tr><tr><td>Repeat Regions</td><td>Accessible</td><td>Difficult</td></tr><tr><td>Cost</td><td>Higher per base</td><td>Lower per base</td></tr><tr><td>Throughput</td><td>Lower</td><td>Higher</td></tr></table><h3><strong>Disease Applications</strong></h3><ul><li><strong>Cancer</strong>: Hypermethylation of BRCA1, MLH1, VHL silences tumor suppressors</li><li><strong>Beckwith-Wiedemann</strong>: Loss of imprinting at 11p15.5 locus</li><li><strong>Fragile X Syndrome</strong>: FMR1 promoter hypermethylation</li><li><strong>ICF Syndrome</strong>: Hypomethylation of pericentromeric repeats</li><li><strong>Rett Syndrome</strong>: MeCP2 mutations affect methylation reading</li></ul><blockquote><p><strong>Perfect for:</strong> Long-read methylation • ONT/PacBio • Native DNA • Phased methylation • Imprinting • Cancer epigenetics • Structural variants</p></blockquote>",
   "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./methylong-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV/TSV with long-read samples (ONT or PacBio)",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv", ".tsv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Reference Genome (FASTA)",
+      "name": "fasta",
+      "description": "Reference genome FASTA file (required for alignment and methylation calling)",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".fasta", ".fa", ".fna", ".gz"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory for results",
+      "defaultValue": "./methylong-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "methylong", "type": "task"}]
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "description": "Select compute resources (LARGE recommended for long-read analysis)",
+      "hidden": false,
+      "options": [
+        {"label": "LARGE (Recommended)", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}},
+        {"label": "XLARGE (Large Datasets)", "value": "xlarge", "mapValue": {"nodeSize": "XLARGE", "numNodes": 1, "withGpu": false}}
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {"name": "methylation", "type": "field"},
+    {"name": "long-read", "type": "task"},
+    {"name": "nanopore", "type": "task"},
+    {"name": "pacbio", "type": "task"},
+    {"name": "epigenomics", "type": "task"}
+  ]
 }

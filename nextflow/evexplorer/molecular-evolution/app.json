@@ -1,16 +1,153 @@
 {
   "name": "evexplorer-molecular-evolution",
-  "title": "EvExplorer",
-  "description": " Molecular Evolution",
+  "title": "EvExplorer - Extracellular Vesicle RNA Analysis",
+  "description": "Comprehensive analysis pipeline for RNA data from extracellular vesicles. Compatible with nextflex, comboSeq, and ONT technologies. Performs quality control, expressed region detection, library size normalization, and Differential RNA Expression (DRE) analysis.",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/evexplorer --input ${input} --outdir ${outdir} -r  Evolutionary genomics analysis:1.0.0 ",
+  "command": "nextflow run nf-core/evexplorer --input ${input} --outdir ${outdir} -profile docker",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/evexplorer/master/docs/images/nf-core-evexplorer_logo_light.png",
-  "content": "<h2><strong>EvExplorer</strong></h2><p> Molecular Evolution</p>",
+  "content": "<h2><strong>EvExplorer - Extracellular Vesicle RNA Analysis Pipeline</strong></h2><p><strong>nf-core/evexplorer</strong> is a bioinformatics pipeline designed to analyze RNA data from extracellular vesicles (EVs).</p><h3>Pipeline Features</h3><ul><li><strong>Quality Control:</strong> Comprehensive QC of raw sequencing reads using FastQC and MultiQC</li><li><strong>Technology Support:</strong> Compatible with nextflex, comboSeq, and ONT sequencing technologies</li><li><strong>Expressed Region Detection:</strong> Identifies RNA expression patterns in extracellular vesicle samples</li><li><strong>Normalization:</strong> Library size normalization for accurate quantification</li><li><strong>Differential Expression:</strong> Statistical analysis to identify Differential RNA Expression (DRE) between conditions</li></ul><h3>Input Requirements</h3><p>The pipeline requires a samplesheet (CSV or TSV format) containing information about your samples. The samplesheet should include:</p><ul><li>Sample identifiers</li><li>Path to FASTQ files (single-end or paired-end)</li><li>Experimental conditions/groups for differential expression analysis</li></ul><h3>Output Files</h3><p>The pipeline generates comprehensive results including:</p><ul><li>Quality control reports (FastQC, MultiQC)</li><li>Processed and filtered sequencing reads</li><li>Expression quantification matrices</li><li>Differential expression analysis results</li><li>Visualization plots and summary statistics</li></ul><h3>Recommended Resources</h3><p>This pipeline is computationally intensive and requires sufficient resources for RNA-seq analysis. A LARGE node configuration is recommended for optimal performance.</p><p><em>For detailed documentation, visit the <a href='https://nf-co.re/evexplorer' target='_blank'>nf-core/evexplorer documentation</a></em></p>",
   "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./evexplorer-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "label": "Input Samplesheet",
+      "name": "input",
+      "description": "CSV or TSV samplesheet file containing information about the samples in the experiment. Must include sample names, FASTQ file paths, and experimental conditions.",
+      "defaultValue": [],
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "type": "Stash File",
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [".csv", ".tsv"]
+      }
+    },
+    {
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "The output directory where the results will be saved. All pipeline outputs including QC reports, expression matrices, and differential expression results will be stored here.",
+      "defaultValue": "./evexplorer-results",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "type": "Stash File",
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    },
+    {
+      "label": "Single-end Reads",
+      "name": "single_end",
+      "description": "Specifies that the input data consists of single-end reads. Leave unchecked for paired-end sequencing data.",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Checkbox"
+    },
+    {
+      "label": "Email Address",
+      "name": "email",
+      "description": "Email address for completion summary and notifications. Will receive a report when the pipeline completes.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "MultiQC Report Title",
+      "name": "multiqc_title",
+      "description": "Custom title for the MultiQC report. This will be displayed as the page header and used in the filename.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "Save Trimmed Reads",
+      "name": "save_trimmed",
+      "description": "Save the trimmed FASTQ files to the output directory for downstream analysis or archival purposes.",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Checkbox"
+    },
+    {
+      "label": "Skip Quality Trimming",
+      "name": "skip_trimming",
+      "description": "Skip the adapter and quality trimming step. Use only if your reads are already preprocessed.",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Checkbox"
+    },
+    {
+      "label": "Skip FastQC",
+      "name": "skip_fastqc",
+      "description": "Skip FastQC quality control step. Not recommended unless QC has been performed externally.",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Checkbox"
+    },
+    {
+      "label": "Skip MultiQC",
+      "name": "skip_multiqc",
+      "description": "Skip MultiQC report generation. MultiQC aggregates all QC metrics into a single comprehensive report.",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Checkbox"
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "evexplorer", "type": "task"}]
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Resources",
+      "name": "system_size",
+      "options": [
+        {
+          "label": "LARGE (Recommended)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {"name": "evexplorer", "type": "task"},
+    {"name": "rna-seq", "type": "task"},
+    {"name": "extracellular-vesicles", "type": "task"},
+    {"name": "nf-core", "type": "task"}
+  ]
 }

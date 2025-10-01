@@ -1,16 +1,133 @@
 {
   "name": "datasync-data-sync",
   "title": "Data Sync",
-  "description": " Data Synchronization",
+  "description": "nf-core/datasync is a system operation pipeline that provides workflows for handling data synchronization, validation, and automation tasks commonly needed in large data processing and analysis facilities.",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/datasync --input ${input} --outdir ${outdir} -r  Data transfer and synchronization:1.0.0 ",
+  "command": "nextflow run nf-core/datasync --input ${input} --outdir ${outdir} --sync ${sync} -r ${revision}",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/datasync/master/docs/images/nf-core-datasync_logo_light.png",
-  "content": "<h2><strong>Data Sync</strong></h2><p> Data Synchronization</p>",
+  "content": "<img src=\"https://raw.githubusercontent.com/nf-core/datasync/master/docs/images/nf-core-datasync_logo_light.png\" alt=\"nf-core/datasync logo\" title=\"nf-core/datasync\" width=\"400\" height=\"200\"><p class=\"text-node\"></p><p class=\"text-node\"><strong>nf-core/datasync</strong> is a specialized Nextflow pipeline designed for system operations, automation, and data management tasks in large-scale data processing facilities. Originally developed by Alexander Peltzer, this pipeline simplifies complex data synchronization and validation workflows.</p><p class=\"text-node\"><strong>Key Features:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Data Synchronization</strong>: Configurable checksum backend (SHA256, MD5) for reliable data transfer verification and integrity checking.</p></li><li><p class=\"text-node\"><strong>Flexible Configuration</strong>: Include or exclude specific folders and subfolders, with support for checkpoint files (e.g., DEMUX_DONE) to signal completion of upstream processes.</p></li><li><p class=\"text-node\"><strong>Validation Workflows</strong>: Verify that files match checksums from synchronization and check both source and target locations for file existence.</p></li><li><p class=\"text-node\"><strong>Comprehensive Reporting</strong>: Generates detailed reports using MultiQC custom content, providing visibility into all synchronization operations.</p></li><li><p class=\"text-node\"><strong>Production-Ready</strong>: Built with Nextflow DSL2 and containerized processes (Docker/Singularity) ensuring reproducibility and portability.</p></li><li><p class=\"text-node\"><strong>Community Standards</strong>: Follows nf-core best practices with standardized modules promoting code reuse and community contributions.</p></li></ul><p class=\"text-node\"><strong>Common Use Cases:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\">Data transfer between storage systems with integrity verification</p></li><li><p class=\"text-node\">Automated synchronization of sequencing runs from instruments to analysis servers</p></li><li><p class=\"text-node\">Validation of data migrations and backups</p></li><li><p class=\"text-node\">Checkpoint-based workflow automation in data processing pipelines</p></li></ul><p class=\"text-node\"><strong>Usage:</strong></p><ol class=\"list-node\"><li><p class=\"text-node\">Prepare a samplesheet.csv with file paths or patterns to synchronize.</p></li><li><p class=\"text-node\">Run with:</p></li></ol><pre class=\"block-node\"><code>nextflow run nf-core/datasync \\\n  -profile &lt;docker/singularity/...&gt; \\\n  --input samplesheet.csv \\\n  --outdir &lt;OUTDIR&gt; \\\n  --sync \\\n  --sync_backend 'sha256'</code></pre><p class=\"text-node\">For more information, visit the <a href=\"https://nf-co.re/datasync\" target=\"_blank\">nf-core/datasync documentation</a> or reach out on the Slack #datasync channel.</p>",
   "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./datasync-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "type": "Stash File",
+      "label": "Input Samplesheet",
+      "name": "input",
+      "description": "CSV samplesheet file containing information about the files to synchronize. Should include paths to source data.",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [".csv", ".tsv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "The output directory where synchronization results and reports will be saved.",
+      "defaultValue": "./datasync-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    },
+    {
+      "type": "Switch",
+      "label": "Enable Sync",
+      "name": "sync",
+      "description": "Enable data synchronization workflow with checksum verification.",
+      "defaultValue": true,
+      "required": false
+    },
+    {
+      "type": "Select",
+      "label": "Sync Backend",
+      "name": "sync_backend",
+      "description": "Checksum algorithm to use for data integrity verification.",
+      "defaultValue": "sha256",
+      "required": false,
+      "options": [
+        {
+          "label": "SHA256",
+          "value": "sha256"
+        },
+        {
+          "label": "MD5",
+          "value": "md5"
+        }
+      ]
+    },
+    {
+      "type": "Switch",
+      "label": "Create Sync Done File",
+      "name": "sync_done",
+      "description": "Create a SYNC_DONE checkpoint file in each folder when synchronization completes successfully.",
+      "defaultValue": false,
+      "required": false
+    },
+    {
+      "type": "Input",
+      "label": "Pipeline Revision",
+      "name": "revision",
+      "description": "Version or revision of the nf-core/datasync pipeline to use.",
+      "defaultValue": "dev",
+      "required": true
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "datasync", "type": "task"}]
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "description": "Select the compute resources for the synchronization job.",
+      "options": [
+        {
+          "label": "SMALL",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "small"
+    }
+  ],
+  "tags": [
+    {
+      "name": "datasync",
+      "type": "task"
+    },
+    {
+      "name": "data-transfer",
+      "type": "task"
+    },
+    {
+      "name": "validation",
+      "type": "task"
+    },
+    {
+      "name": "system-operations",
+      "type": "task"
+    }
+  ]
 }

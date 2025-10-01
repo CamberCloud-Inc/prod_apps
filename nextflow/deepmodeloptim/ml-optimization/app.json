@@ -1,16 +1,155 @@
 {
   "name": "deepmodeloptim-ml-optimization",
-  "title": "Deep Model Optimization",
-  "description": " ML Optimization",
-  "version": "1.0.0",
+  "title": "Deep Learning Model Optimization: STIMULUS",
+  "description": "Automated deep learning model testing and training data optimization pipeline. Systematically transforms data through preprocessing pipelines, tunes hyperparameters, performs sanity checks, and trains minimal models to identify optimal dataset-architecture combinations for genomics and bioinformatics applications.",
+  "version": "1.3.1",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/deepmodeloptim --input ${input} --outdir ${outdir} -r  Deep learning model tuning:1.0.0 ",
+  "command": "nextflow run nf-core/deepmodeloptim --input ${input} --outdir ${outdir} -r dev -profile docker",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/deepmodeloptim/master/docs/images/nf-core-deepmodeloptim_logo_light.png",
-  "content": "<h2><strong>Deep Model Optimization</strong></h2><p> ML Optimization</p>",
+  "content": "<h1 class=\"heading-node\">🧠 Deep Learning Model Optimization: STIMULUS</h1><p class=\"text-node\"><strong>Stochastic Testing and Input Manipulation for Unbiased Learning Systems</strong></p><p class=\"text-node\">Optimizing deep learning models for biological data is challenging: researchers must define preprocessing pipelines, select architectures, tune hyperparameters, and iterate repeatedly. The <strong>nf-core/deepmodeloptim</strong> pipeline automates this entire workflow, systematically testing preprocessing strategies and architectures to identify the optimal configuration for your specific task.</p><img src=\"https://raw.githubusercontent.com/nf-core/deepmodeloptim/dev/docs/images/nf-core-deepmodeloptim_metro_map.png\" alt=\"deepmodeloptim workflow\" width=\"600\" height=\"400\"><h2 class=\"heading-node\">🎯 The Deep Learning Challenge</h2><p class=\"text-node\"><strong>The Problem:</strong> Most deep learning performance is driven by the training data, yet the connection between data preprocessing and model performance is often overlooked or tested manually. Researchers face:</p><ul class=\"list-node\"><li><p class=\"text-node\">🔄 <strong>Manual iteration:</strong> Testing preprocessing steps one-by-one</p></li><li><p class=\"text-node\">🎲 <strong>Arbitrary choices:</strong> Guessing which normalization or transformation works best</p></li><li><p class=\"text-node\">⚙️ <strong>Hyperparameter tuning:</strong> Finding optimal architecture parameters for each data variant</p></li><li><p class=\"text-node\">📊 <strong>Reproducibility:</strong> Tracking experiments and comparing results</p></li><li><p class=\"text-node\">⏱️ <strong>Time-consuming:</strong> Weeks of trial-and-error before large-scale training</p></li></ul><h2 class=\"heading-node\">💡 How STIMULUS Solves This</h2><p class=\"text-node\">The pipeline automates the entire model development workflow:</p><ol class=\"list-node\"><li><p class=\"text-node\"><strong>🔄 Data Transformation:</strong> Systematically applies all possible preprocessing pipelines to your data</p><ul class=\"list-node\"><li><p class=\"text-node\">Normalization strategies (z-score, min-max, quantile)</p></li><li><p class=\"text-node\">Feature selection and filtering</p></li><li><p class=\"text-node\">Augmentation techniques</p></li><li><p class=\"text-node\">Dimensionality reduction</p></li></ul></li><li><p class=\"text-node\"><strong>🏗️ Architecture Search:</strong> Finds optimal hyperparameters for each transformed dataset</p><ul class=\"list-node\"><li><p class=\"text-node\">Neural network depth and width</p></li><li><p class=\"text-node\">Learning rates and batch sizes</p></li><li><p class=\"text-node\">Dropout and regularization</p></li><li><p class=\"text-node\">Activation functions</p></li></ul></li><li><p class=\"text-node\"><strong>✅ Sanity Checks:</strong> Validates models to ensure they're learning meaningful patterns</p><ul class=\"list-node\"><li><p class=\"text-node\">Overfitting detection</p></li><li><p class=\"text-node\">Gradient flow analysis</p></li><li><p class=\"text-node\">Loss convergence verification</p></li></ul></li><li><p class=\"text-node\"><strong>🏃 Minimal Training:</strong> Trains lightweight versions of each configuration</p><ul class=\"list-node\"><li><p class=\"text-node\">Quick performance evaluation</p></li><li><p class=\"text-node\">Cross-validation metrics</p></li><li><p class=\"text-node\">Statistical significance testing</p></li></ul></li><li><p class=\"text-node\"><strong>📊 Comprehensive Report:</strong> Compiles intuitive visualizations and rankings</p><ul class=\"list-node\"><li><p class=\"text-node\">Best preprocessing-architecture combinations</p></li><li><p class=\"text-node\">Performance comparisons</p></li><li><p class=\"text-node\">Recommendations for full-scale training</p></li></ul></li></ol><h2 class=\"heading-node\">🚀 Key Benefits</h2><p class=\"text-node\">Leveraging Nextflow's power (polyglotism, container integration, cloud scalability), this pipeline helps you:</p><ul class=\"list-node\"><li><p class=\"text-node\">⚡ <strong>Automate Testing:</strong> Run hundreds of experiments in parallel instead of manually</p></li><li><p class=\"text-node\">🎯 <strong>Gain Insights:</strong> Understand which data transformations and architectures work best for your task</p></li><li><p class=\"text-node\">🏎️ <strong>Accelerate Development:</strong> Reduce weeks of manual work to hours of automated testing</p></li><li><p class=\"text-node\">📈 <strong>Improve Performance:</strong> Find the optimal configuration before investing in full-scale training</p></li><li><p class=\"text-node\">🔬 <strong>Ensure Reproducibility:</strong> Containerized, version-controlled experiments with complete provenance</p></li></ul><h2 class=\"heading-node\">📋 Input Data Format</h2><p class=\"text-node\">Your data must be provided as a <strong>CSV file</strong> with special header formatting:</p><pre class=\"block-node\"><code>gene_1:input:float,gene_2:input:float,age:meta:int,disease_status:label:binary\n5.2,3.1,45,1\n4.8,2.9,52,0\n6.1,4.2,38,1</code></pre><p class=\"text-node\"><strong>Header Format:</strong> <code class=\"inline\" spellcheck=\"false\">column_name:type:class</code></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>input:</strong> Features fed into the model (gene expression, clinical values, etc.)</p></li><li><p class=\"text-node\"><strong>meta:</strong> Metadata tracked but not transformed or used for training</p></li><li><p class=\"text-node\"><strong>label:</strong> Target variable for supervised learning (classification or regression)</p></li></ul><h2 class=\"heading-node\">🔧 Custom Model Integration</h2><p class=\"text-node\">The pipeline supports <strong>custom PyTorch models</strong> with specific structural requirements:</p><ul class=\"list-node\"><li><p class=\"text-node\">PyTorch-based neural network definitions</p></li><li><p class=\"text-node\">Compatible with standard training loops</p></li><li><p class=\"text-node\">Configurable architecture parameters</p></li><li><p class=\"text-node\">Support for various loss functions and optimizers</p></li></ul><h2 class=\"heading-node\">🎯 Scientific Applications</h2><h3 class=\"heading-node\">Genomics & Bioinformatics</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🧬 Gene Expression Analysis:</strong> Find optimal normalization for RNA-seq classification</p></li><li><p class=\"text-node\"><strong>🔬 Variant Calling:</strong> Optimize feature engineering for genomic variant prediction</p></li><li><p class=\"text-node\"><strong>📊 Single-Cell:</strong> Identify best preprocessing for cell type classification</p></li><li><p class=\"text-node\"><strong>🧫 Proteomics:</strong> Test transformations for protein abundance prediction</p></li></ul><h3 class=\"heading-node\">Clinical & Translational Research</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🏥 Disease Prediction:</strong> Optimize multi-omics integration for diagnosis</p></li><li><p class=\"text-node\"><strong>💊 Drug Response:</strong> Find best model for treatment outcome prediction</p></li><li><p class=\"text-node\"><strong>🔍 Biomarker Discovery:</strong> Test feature selection strategies</p></li><li><p class=\"text-node\"><strong>🧠 Patient Stratification:</strong> Optimize clustering and classification</p></li></ul><h3 class=\"heading-node\">Model Development</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🎓 Proof of Concept:</strong> Quickly test if deep learning is appropriate for your data</p></li><li><p class=\"text-node\"><strong>🔬 Hypothesis Testing:</strong> Compare data transformation hypotheses systematically</p></li><li><p class=\"text-node\"><strong>📈 Baseline Establishment:</strong> Set performance benchmarks before production models</p></li><li><p class=\"text-node\"><strong>⚙️ Pipeline Design:</strong> Determine optimal preprocessing for production pipelines</p></li></ul><h2 class=\"heading-node\">📊 Comprehensive Outputs</h2><h3 class=\"heading-node\">Experiment Results</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📈 Performance Metrics:</strong> Accuracy, precision, recall, F1, AUC-ROC for all configurations</p></li><li><p class=\"text-node\"><strong>📊 Comparison Tables:</strong> Ranked preprocessing-architecture combinations</p></li><li><p class=\"text-node\"><strong>📉 Learning Curves:</strong> Training/validation loss plots for each experiment</p></li><li><p class=\"text-node\"><strong>🎯 Best Models:</strong> Top-performing configurations identified</p></li></ul><h3 class=\"heading-node\">Quality Control</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>✅ Sanity Check Reports:</strong> Validation that models are learning appropriately</p></li><li><p class=\"text-node\"><strong>⚠️ Failure Analysis:</strong> Identification of problematic configurations</p></li><li><p class=\"text-node\"><strong>📊 Statistical Tests:</strong> Significance of performance differences</p></li></ul><h3 class=\"heading-node\">Interactive Reports</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📱 HTML Dashboard:</strong> Interactive exploration of all experiments</p></li><li><p class=\"text-node\"><strong>📊 Visualization Suite:</strong> Heatmaps, scatter plots, box plots comparing methods</p></li><li><p class=\"text-node\"><strong>💡 Recommendations:</strong> Clear guidance on which configuration to use for production</p></li></ul><h3 class=\"heading-node\">Trained Models</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>💾 Model Checkpoints:</strong> Saved weights for best-performing configurations</p></li><li><p class=\"text-node\"><strong>⚙️ Hyperparameters:</strong> Complete configuration files for reproduction</p></li><li><p class=\"text-node\"><strong>📋 Training Logs:</strong> Detailed execution traces for debugging</p></li></ul><h2 class=\"heading-node\">🔬 Workflow Philosophy</h2><blockquote><p class=\"text-node\"><strong>\"Most of the performance is driven by the training data\"</strong></p></blockquote><p class=\"text-node\">Rather than spending weeks manually testing preprocessing approaches, STIMULUS systematically explores the data transformation space. This ensures you're not leaving performance on the table due to suboptimal data preparation, which is often the biggest bottleneck in deep learning success.</p><h2 class=\"heading-node\">⚡ Powered by Nextflow & nf-core</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔄 Reproducible:</strong> Containerized execution (Docker/Singularity)</p></li><li><p class=\"text-node\"><strong>☁️ Scalable:</strong> Run locally or on cloud (AWS, GCP, Azure)</p></li><li><p class=\"text-node\"><strong>📊 Portable:</strong> Works on HPC clusters, laptops, or cloud platforms</p></li><li><p class=\"text-node\"><strong>✅ Tested:</strong> Continuous integration with comprehensive test suite</p></li><li><p class=\"text-node\"><strong>📚 Documented:</strong> Extensive documentation and community support</p></li></ul><p class=\"text-node\"><strong>Perfect for:</strong> Machine learning model development • Deep learning optimization • Genomics data analysis • Clinical prediction models • Bioinformatics research • Data science workflows • Automated hyperparameter tuning • Model comparison studies</p><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/deepmodeloptim/dev/\" target=\"_blank\">nf-core/deepmodeloptim</a> • Containerized execution • Open source</p>",
   "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./deepmodeloptim-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "type": "Stash File",
+      "label": "Training Data (CSV)",
+      "name": "input",
+      "description": "CSV file with special header format: column_name:type:class where type is 'input', 'meta', or 'label'. Input columns are features for training, meta columns are tracked metadata, label is the target variable.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory for all pipeline outputs including trained models, performance metrics, comparison reports, and visualizations.",
+      "defaultValue": "./deepmodeloptim-results",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Optimization Strategy",
+      "name": "optimization_mode",
+      "description": "Level of preprocessing exploration: Quick (few transformations), Standard (balanced), Comprehensive (exhaustive testing).",
+      "defaultValue": "standard",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Quick - Fast exploration with common preprocessing",
+          "value": "quick"
+        },
+        {
+          "label": "Standard - Balanced testing (Recommended)",
+          "value": "standard"
+        },
+        {
+          "label": "Comprehensive - Exhaustive preprocessing combinations",
+          "value": "comprehensive"
+        }
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Task Type",
+      "name": "task_type",
+      "description": "Type of machine learning task: binary classification, multi-class classification, or regression.",
+      "defaultValue": "binary_classification",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Binary Classification (0/1, True/False)",
+          "value": "binary_classification"
+        },
+        {
+          "label": "Multi-class Classification (3+ categories)",
+          "value": "multiclass_classification"
+        },
+        {
+          "label": "Regression (Continuous values)",
+          "value": "regression"
+        }
+      ]
+    },
+    {
+      "type": "Number",
+      "label": "Cross-Validation Folds",
+      "name": "cv_folds",
+      "description": "Number of cross-validation folds for model evaluation (typically 5 or 10).",
+      "defaultValue": 5,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "deepmodeloptim", "type": "task"}]
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "description": "Resource allocation based on dataset size and complexity. GPU support available for large-scale experiments.",
+      "hidden": false,
+      "options": [
+        {
+          "label": "MEDIUM (32 CPUs, 180GB RAM) - Small datasets (<10K samples)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Recommended for most experiments",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE (96 CPUs, 540GB RAM) - Large datasets (>50K samples)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE + GPU - Deep learning with GPU acceleration",
+          "value": "large_gpu",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": true
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {"name": "machine-learning", "type": "field"},
+    {"name": "deep-learning", "type": "subfield"},
+    {"name": "optimization", "type": "task"},
+    {"name": "model-training", "type": "task"},
+    {"name": "genomics", "type": "field"},
+    {"name": "bioinformatics", "type": "field"}
+  ]
 }

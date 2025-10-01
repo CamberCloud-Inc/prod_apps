@@ -1,16 +1,118 @@
 {
-  "name": "radseq-rad-seq",
-  "title": "RAD-Seq",
-  "description": " RAD Sequencing",
-  "version": "1.0.0",
-  "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/radseq --input ${input} --outdir ${outdir} -r  Restriction site associated DNA sequencing:1.0.0 ",
+  "name": "radseq-variant-calling",
+  "title": "RAD-seq: Variant Calling for Population Genomics",
+  "description": "Restriction site-associated DNA sequencing (RAD-seq) variant-calling pipeline for population genomics and phylogenetics. Supports species with or without reference genomes, UMI-based deduplication, and comprehensive quality control. Ideal for evolutionary studies, conservation genetics, and ecological genomics.",
+  "content": "<h1 class=\"heading-node\">🧬 RAD-seq: Variant Calling for Population Genomics</h1><p class=\"text-node\"><strong>Discover Genetic Variation Across Populations</strong></p><p class=\"text-node\">Restriction site-associated DNA sequencing (RAD-seq) is a reduced-representation sequencing technique that enables cost-effective genome-wide variant discovery. By sequencing DNA fragments adjacent to restriction enzyme cut sites, RAD-seq reveals thousands of genetic markers across the genome - perfect for population studies, phylogenetics, and evolutionary research.</p><img src=\"https://raw.githubusercontent.com/nf-core/radseq/master/docs/images/nf-core-radseq_logo_light.png\" alt=\"nf-core/radseq workflow\" width=\"600\" height=\"300\"><h2 class=\"heading-node\">🎯 What is RAD-seq?</h2><p class=\"text-node\">RAD-seq uses restriction enzymes to systematically sample the genome, generating comparable markers across many individuals:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>💰 Cost-effective:</strong> Sequence 0.1-1% of genome instead of whole genome sequencing</p></li><li><p class=\"text-node\"><strong>🎯 Targeted discovery:</strong> Thousands of SNPs across the genome at restriction sites</p></li><li><p class=\"text-node\"><strong>🌍 Population scale:</strong> Genotype hundreds of individuals simultaneously</p></li><li><p class=\"text-node\"><strong>🔬 No reference needed:</strong> Works with reference genomes or de novo approaches</p></li></ul><h2 class=\"heading-node\">🔧 Pipeline Features</h2><h3 class=\"heading-node\">Variant Calling Workflow</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📊 Quality Control:</strong> FastQC analysis of raw sequencing data</p></li><li><p class=\"text-node\"><strong>✂️ Trimming:</strong> Adapter removal and quality filtering with FastP</p></li><li><p class=\"text-node\"><strong>🧬 Reference Options:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\">Use existing reference genome (BWA/BWA-mem2 alignment)</p></li><li><p class=\"text-node\">Generate pseudoreference with CD-HIT-est and Rainbow</p></li></ul></li><li><p class=\"text-node\"><strong>🔍 Alignment:</strong> BWA or BWA-mem2 mapping with optimized parameters</p></li><li><p class=\"text-node\"><strong>🎯 UMI Deduplication:</strong> Remove PCR duplicates using unique molecular identifiers</p></li><li><p class=\"text-node\"><strong>📍 Variant Calling:</strong> FreeBayes for accurate SNP and indel detection</p></li><li><p class=\"text-node\"><strong>📈 Reporting:</strong> Comprehensive MultiQC quality control reports</p></li></ul><h2 class=\"heading-node\">🧪 Experimental Applications</h2><h3 class=\"heading-node\">Population Genomics</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🌍 Population structure:</strong> Identify genetic clusters and admixture patterns</p></li><li><p class=\"text-node\"><strong>🧬 Genetic diversity:</strong> Measure heterozygosity, FST, and diversity indices</p></li><li><p class=\"text-node\"><strong>🔄 Gene flow:</strong> Detect migration patterns between populations</p></li></ul><h3 class=\"heading-node\">Evolutionary Studies</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🌳 Phylogenetics:</strong> Build phylogenetic trees from thousands of loci</p></li><li><p class=\"text-node\"><strong>⏱️ Divergence dating:</strong> Estimate divergence times between lineages</p></li><li><p class=\"text-node\"><strong>🎯 Selection scans:</strong> Identify regions under positive or balancing selection</p></li></ul><h3 class=\"heading-node\">Conservation Genetics</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🦎 Species delimitation:</strong> Identify cryptic species and subspecies</p></li><li><p class=\"text-node\"><strong>🧬 Inbreeding detection:</strong> Assess genetic health of endangered populations</p></li><li><p class=\"text-node\"><strong>📍 Landscape genetics:</strong> Connect genetic patterns with geography</p></li></ul><h2 class=\"heading-node\">📋 Sample Sheet Format</h2><p class=\"text-node\">Your CSV samplesheet defines samples and read files:</p><pre class=\"block-node\"><code>sample,fastq_1,fastq_2\npopulation1_ind1,pop1_ind1_R1.fastq.gz,pop1_ind1_R2.fastq.gz\npopulation1_ind2,pop1_ind2_R1.fastq.gz,pop1_ind2_R2.fastq.gz\npopulation2_ind1,pop2_ind1_R1.fastq.gz,pop2_ind1_R2.fastq.gz\npopulation2_ind2,pop2_ind2_R1.fastq.gz,pop2_ind2_R2.fastq.gz</code></pre><p class=\"text-node\"><strong>Column Descriptions:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>sample:</strong> Unique sample identifier (individual ID or population_individual)</p></li><li><p class=\"text-node\"><strong>fastq_1:</strong> Path to Read 1 FASTQ file</p></li><li><p class=\"text-node\"><strong>fastq_2:</strong> Path to Read 2 FASTQ file (leave empty for single-end data)</p></li></ul><h2 class=\"heading-node\">🧬 Reference Genome Options</h2><p class=\"text-node\">Choose the appropriate strategy for your study:</p><h3 class=\"heading-node\">Option 1: With Reference Genome</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>✅ When to use:</strong> Reference genome available for your species</p></li><li><p class=\"text-node\"><strong>🎯 Benefits:</strong> More accurate variant calling, genomic context for SNPs</p></li><li><p class=\"text-node\"><strong>📍 Output:</strong> Variant positions mapped to chromosomes/scaffolds</p></li></ul><h3 class=\"heading-node\">Option 2: De Novo Pseudoreference</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>✅ When to use:</strong> No reference genome available (non-model organisms)</p></li><li><p class=\"text-node\"><strong>🔧 Method:</strong> Cluster reads to build consensus reference</p></li><li><p class=\"text-node\"><strong>📍 Output:</strong> Relative variant positions across discovered loci</p></li></ul><h2 class=\"heading-node\">⚙️ UMI-based Deduplication</h2><p class=\"text-node\">Unique Molecular Identifiers (UMIs) enable accurate PCR duplicate removal:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🎯 True biological duplicates:</strong> Distinguished from PCR artifacts</p></li><li><p class=\"text-node\"><strong>📊 Improved accuracy:</strong> Better allele frequency estimates</p></li><li><p class=\"text-node\"><strong>🔬 Library complexity:</strong> Assess complexity of sequencing libraries</p></li></ul><h2 class=\"heading-node\">📊 Comprehensive Results</h2><h3 class=\"heading-node\">Variant Files</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📍 VCF files:</strong> Variant Call Format with all discovered SNPs and indels</p></li><li><p class=\"text-node\"><strong>🧮 Population statistics:</strong> Allele frequencies, genotype calls, quality scores</p></li><li><p class=\"text-node\"><strong>🎯 Filtered variants:</strong> High-quality variants passing QC thresholds</p></li></ul><h3 class=\"heading-node\">Alignment Files</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📁 BAM files:</strong> Aligned reads for each sample</p></li><li><p class=\"text-node\"><strong>📊 Coverage statistics:</strong> Depth of coverage across loci</p></li><li><p class=\"text-node\"><strong>🎯 Mapping metrics:</strong> Alignment rates, insert sizes, duplicate rates</p></li></ul><h3 class=\"heading-node\">Quality Control</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📈 MultiQC Report:</strong> Comprehensive analysis summary with interactive plots</p></li><li><p class=\"text-node\"><strong>📊 Per-sample QC:</strong> Read quality, adapter content, GC bias</p></li><li><p class=\"text-node\"><strong>🔍 Library metrics:</strong> Duplication rates, complexity, coverage uniformity</p></li><li><p class=\"text-node\"><strong>✅ Variant QC:</strong> Transition/transversion ratios, depth distributions</p></li></ul><h2 class=\"heading-node\">🔬 Biological Applications</h2><p class=\"text-node\"><strong>Perfect for Research in:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🌍 Ecology:</strong> Population structure, local adaptation, gene flow</p></li><li><p class=\"text-node\"><strong>🐟 Fisheries:</strong> Stock identification, management unit delineation</p></li><li><p class=\"text-node\"><strong>🌿 Plant breeding:</strong> Genetic mapping, QTL analysis, marker-assisted selection</p></li><li><p class=\"text-node\"><strong>🦎 Conservation:</strong> Genetic diversity assessment, connectivity studies</p></li><li><p class=\"text-node\"><strong>🌳 Phylogenomics:</strong> Species relationships, hybridization detection</p></li><li><p class=\"text-node\"><strong>🧬 Evolutionary biology:</strong> Selection signatures, demographic history</p></li></ul><h2 class=\"heading-node\">⚙️ Pipeline Specifications</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔧 Quality Control:</strong> FastQC for raw data assessment</p></li><li><p class=\"text-node\"><strong>✂️ Trimming:</strong> FastP for adapter removal and quality filtering</p></li><li><p class=\"text-node\"><strong>🧬 Alignment:</strong> BWA-mem2 (faster) or BWA (standard)</p></li><li><p class=\"text-node\"><strong>📍 Variant Caller:</strong> FreeBayes with population-aware parameters</p></li><li><p class=\"text-node\"><strong>🎯 Deduplication:</strong> UMI-based PCR duplicate removal</p></li><li><p class=\"text-node\"><strong>📊 Reporting:</strong> MultiQC aggregated quality reports</p></li></ul><p class=\"text-node\"><strong>Key Advantages:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\">✅ Cost-effective genome-wide marker discovery</p></li><li><p class=\"text-node\">✅ Scalable to hundreds of individuals</p></li><li><p class=\"text-node\">✅ Works with or without reference genome</p></li><li><p class=\"text-node\">✅ Proven for non-model organisms</p></li><li><p class=\"text-node\">✅ Comprehensive quality control at every step</p></li></ul><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/radseq/dev/\" target=\"_blank\">nf-core/radseq (development)</a> • Based on dDocent by Jon Puritz • Containerized execution • Continuous integration tested</p>",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/radseq/master/docs/images/nf-core-radseq_logo_light.png",
-  "content": "<h2><strong>RAD-Seq</strong></h2><p> RAD Sequencing</p>",
-  "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./radseq-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+  "command": "nextflow run nf-core/radseq --input ${input} --outdir ${outdir} --genome ${genome} -r dev",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select compute resources. Use MEDIUM for most RAD-seq datasets, LARGE for extensive population studies.",
+      "options": [
+        {
+          "label": "SMALL (8 CPUs, 30GB RAM) - Testing/small datasets (5-10 samples)",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Standard datasets (20-50 samples)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Large cohorts (50-200+ samples)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "medium"
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "radseq", "type": "task"}]
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV samplesheet with columns: sample, fastq_1, fastq_2. Each row represents one individual/sample for RAD-seq variant calling.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv", ".tsv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory where variant calls, alignments, and quality control reports will be saved",
+      "defaultValue": "./radseq-results",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome for variant calling. Choose organism matching your study species, or use custom FASTA for non-model organisms.",
+      "defaultValue": "GRCh38",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {"label": "Human GRCh38 (NCBI)", "value": "GRCh38"},
+        {"label": "Human GRCh37 (Ensembl)", "value": "GRCh37"},
+        {"label": "Mouse GRCm39 (Ensembl)", "value": "GRCm39"},
+        {"label": "Mouse GRCm38 (Ensembl)", "value": "GRCm38"},
+        {"label": "Zebrafish GRCz11 (Ensembl)", "value": "GRCz11"},
+        {"label": "Zebrafish GRCz10 (Ensembl)", "value": "GRCz10"},
+        {"label": "Fruit Fly BDGP6 (Ensembl)", "value": "BDGP6"},
+        {"label": "C. elegans WBcel235 (Ensembl)", "value": "WBcel235"},
+        {"label": "Arabidopsis TAIR10 (Ensembl)", "value": "TAIR10"},
+        {"label": "Rice IRGSP-1.0 (Ensembl)", "value": "IRGSP-1.0"},
+        {"label": "Maize AGPv3 (Ensembl)", "value": "AGPv3"},
+        {"label": "Sorghum Sbi1 (Ensembl)", "value": "Sbi1"},
+        {"label": "Rat Rnor_6.0 (Ensembl)", "value": "Rnor_6.0"},
+        {"label": "Chicken Galgal4 (Ensembl)", "value": "Galgal4"},
+        {"label": "Cow UMD3.1 (Ensembl)", "value": "UMD3.1"},
+        {"label": "Dog CanFam3.1 (Ensembl)", "value": "CanFam3.1"},
+        {"label": "Horse EquCab2 (Ensembl)", "value": "EquCab2"},
+        {"label": "Pig Sscrofa10.2 (Ensembl)", "value": "Sscrofa10.2"},
+        {"label": "Yeast R64-1-1 (Ensembl)", "value": "R64-1-1"}
+      ]
+    }
+  ],
+  "tags": [
+    {"name": "genomics", "type": "subfield"},
+    {"name": "population-genomics", "type": "subfield"},
+    {"name": "variant-calling", "type": "task"},
+    {"name": "radseq", "type": "task"},
+    {"name": "biology", "type": "field"}
+  ]
 }

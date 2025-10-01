@@ -1,16 +1,63 @@
 {
   "name": "viralmetagenome-viral-discovery",
   "title": "Viral Metagenome",
-  "description": " Viral Discovery",
+  "description": "Viral metagenome analysis pipeline for untargeted viral genome reconstruction and variant discovery. Detects and assembles viral genomes from metagenomic sequencing data while identifying intra-sample variants for comprehensive viral characterization.",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/viralmetagenome --input ${input} --outdir ${outdir} -r  Environmental virome characterization:1.0.0 ",
+  "command": "export NXF_CACHE_DIR=/camber_work/temp/.nextflow; export NXF_LOG_FILE=/home/camber/jobs/${JOB_ID}/outputs/nextflow.log; nextflow run nf-core/viralmetagenome -r 0.1.2 --input ${input} --outdir ${outdir} --max_memory 128.GB --max_cpus 16 -c /etc/mpi/nextflow.camber.config -ansi-log false -profile k8s",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/viralmetagenome/master/docs/images/nf-core-viralmetagenome_logo_light.png",
-  "content": "<h2><strong>Viral Metagenome</strong></h2><p> Viral Discovery</p>",
+  "content": "<h2 class=\"heading-node\"><strong>Viral Metagenome Discovery Pipeline</strong></h2><p class=\"text-node\">This application implements the <strong>nf-core/viralmetagenome</strong> pipeline for comprehensive viral genome reconstruction and variant analysis from metagenomic samples. It processes short-read sequencing data to automatically detect, assemble, and characterize viral genomes while identifying intra-host single nucleotide variants (iSNVs) for detailed evolutionary and epidemiological insights.</p><img src=\"https://raw.githubusercontent.com/nf-core/viralmetagenome/dev/docs/images/nf-core-viralmetagenome_logo_light.png\" alt=\"nf-core/viralmetagenome workflow\" title=\"\" width=\"600\" height=\"400\"><h2 class=\"heading-node\"><strong>Key Features</strong></h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Untargeted Viral Discovery:</strong> Detects and reconstructs complete viral genomes from complex metagenomic samples without prior knowledge of viral composition</p></li><li><p class=\"text-node\"><strong>De Novo Assembly:</strong> Employs multiple state-of-the-art assemblers (SPAdes, TRINITY, MEGAHIT) and combines contigs for comprehensive genome reconstruction</p></li><li><p class=\"text-node\"><strong>Variant Calling:</strong> Identifies intra-sample single nucleotide variants (iSNVs) with detailed frequency information for viral evolution studies</p></li><li><p class=\"text-node\"><strong>Automated Reference Selection:</strong> Intelligent selection of reference genomes for mapping-based consensus generation and variant analysis</p></li><li><p class=\"text-node\"><strong>Consensus Quality Control:</strong> Comprehensive QC metrics using CheckV, QUAST, and BLAST for genome completeness and contamination assessment</p></li><li><p class=\"text-node\"><strong>Annotation Pipeline:</strong> Functional annotation with Prokka and MMseqs2 for gene prediction and protein family classification</p></li></ul><h2 class=\"heading-node\"><strong>Workflow Overview</strong></h2><p class=\"text-node\">The pipeline follows a multi-step approach optimized for viral metagenome analysis:</p><ol class=\"list-node\"><li><p class=\"text-node\"><strong>Quality Control:</strong> FastQC and MultiQC assess raw read quality and generate comprehensive reports</p></li><li><p class=\"text-node\"><strong>Read Preprocessing:</strong> Adapter trimming and quality filtering prepare reads for downstream analysis</p></li><li><p class=\"text-node\"><strong>De Novo Assembly:</strong> Multiple assemblers generate contigs independently, which are then merged and deduplicated</p></li><li><p class=\"text-node\"><strong>Contig Extension:</strong> Optional extension using SSPACE_basic followed by filtering with PRINSEQ++</p></li><li><p class=\"text-node\"><strong>Coverage Estimation:</strong> Read mapping with Bowtie2, BWA-mem2, and BWA to calculate per-contig coverage</p></li><li><p class=\"text-node\"><strong>Reference-Based Analysis:</strong> Maps reads to selected references for consensus generation and variant calling</p></li><li><p class=\"text-node\"><strong>Genome Evaluation:</strong> CheckV and QUAST assess completeness, contamination, and assembly quality</p></li><li><p class=\"text-node\"><strong>Taxonomic Classification:</strong> BLAST against viral databases for taxonomic assignment</p></li><li><p class=\"text-node\"><strong>Functional Annotation:</strong> Gene prediction and protein family assignment with Prokka and MMseqs2</p></li><li><p class=\"text-node\"><strong>Phylogenetic Analysis:</strong> MAFFT alignment for evolutionary context when multiple related genomes are present</p></li></ol><h2 class=\"heading-node\"><strong>Use Cases</strong></h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Viral Discovery:</strong> Identify novel or emerging viruses in environmental, clinical, or animal metagenomic samples</p></li><li><p class=\"text-node\"><strong>Outbreak Investigation:</strong> Characterize viral populations during disease outbreaks with variant-level resolution</p></li><li><p class=\"text-node\"><strong>Evolutionary Studies:</strong> Track viral evolution through intra-host variant analysis across time series samples</p></li><li><p class=\"text-node\"><strong>Biodiversity Surveys:</strong> Catalog viral diversity in complex ecosystems like oceans, soil, or microbiomes</p></li><li><p class=\"text-node\"><strong>Clinical Diagnostics:</strong> Detect and characterize viral pathogens from enriched or metagenomic clinical specimens</p></li></ul><h2 class=\"heading-node\"><strong>Pipeline Outputs</strong></h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Assembled Genomes:</strong> High-quality consensus FASTA files for each detected viral genome</p></li><li><p class=\"text-node\"><strong>Variant Calls:</strong> VCF files containing intra-sample variants with frequency and coverage information</p></li><li><p class=\"text-node\"><strong>Quality Reports:</strong> Comprehensive MultiQC report with assembly statistics, coverage plots, and QC metrics</p></li><li><p class=\"text-node\"><strong>Annotation Files:</strong> GFF files with predicted genes and functional annotations</p></li><li><p class=\"text-node\"><strong>Taxonomic Assignments:</strong> BLAST results mapping contigs to known viral taxa</p></li><li><p class=\"text-node\"><strong>Alignment Files:</strong> BAM files with mapped reads for visualization and downstream analysis</p></li><li><p class=\"text-node\"><strong>Completeness Metrics:</strong> CheckV reports assessing genome quality and potential contamination</p></li></ul><h2 class=\"heading-node\"><strong>Technical Specifications</strong></h2><p class=\"text-node\">Built using <a class=\"link\" href=\"https://www.nextflow.io/\"><u>Nextflow</u></a> with containerized processes (Docker/Singularity) for maximum reproducibility and portability. Part of the <a class=\"link\" href=\"https://nf-co.re/viralmetagenome\"><u>nf-core</u></a> community pipelines, ensuring best practices in workflow design, documentation, and continuous integration testing.</p><p class=\"text-node\">Supports both single-end and paired-end Illumina sequencing data. Scales efficiently from small targeted studies to large-scale metagenomic surveys. All tools and databases are automatically managed within the containerized environment for seamless execution.</p>",
   "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./viralmetagenome-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "Path to CSV samplesheet containing sample information. Format: sample,fastq_1,fastq_2. Each row represents one sample with FASTQ files (single-end or paired-end). Accepts local paths or URLs to FASTQ files from metagenomic sequencing experiments.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory for all analysis results. If not specified, results will be written to ~/jobs/<jobid>/outputs/. Contains assembled genomes, variant calls, annotations, quality reports, and taxonomic classifications.",
+      "defaultValue": "./",
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Selecting a preset will prefill the node configuration below. Viral metagenome analysis requires substantial compute resources for assembly and variant calling.",
+      "options": [
+        {
+          "label": "Default (Large)",
+          "value": "default",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Extra Large (High-throughput)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "default"
+    }
+  ],
   "tags": [{"name": "viralmetagenome", "type": "task"}]
 }

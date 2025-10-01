@@ -1,16 +1,95 @@
 {
   "name": "mitodetect-mitochondrial-variants",
-  "title": "Mito Detect",
-  "description": " Mitochondrial Variants",
+  "title": "MitoDetect: Mitochondrial Variant Detection",
+  "description": "nf-core/mitodetect is a bioinformatics pipeline for A-Z analysis of mitochondrial NGS data. It performs read quality control with FastQC and MultiQC, enabling comprehensive mitochondrial variant detection from next-generation sequencing data.",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/mitodetect --input ${input} --outdir ${outdir} -r  mtDNA variant detection:1.0.0 ",
+  "command": "nextflow run nf-core/mitodetect --input ${input} --outdir ${outdir} -r ${revision}",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/mitodetect/master/docs/images/nf-core-mitodetect_logo_light.png",
-  "content": "<h2><strong>Mito Detect</strong></h2><p> Mitochondrial Variants</p>",
+  "content": "<h2 class=\"heading-node\"><strong>Introduction</strong></h2><p class=\"text-node\"><strong>nf-core/mitodetect</strong> is a bioinformatics pipeline for A-Z analysis of mitochondrial NGS data. This pipeline provides comprehensive analysis of mitochondrial DNA (mtDNA) from next-generation sequencing data, enabling detection of variants, heteroplasmy levels, and other mitochondrial genomic features.</p><img src=\"https://raw.githubusercontent.com/nf-core/mitodetect/master/docs/images/nf-core-mitodetect_logo_light.png\" alt=\"nf-core/mitodetect\" title=\"MitoDetect Pipeline\" width=\"400\" height=\"200\"><p class=\"text-node\">The pipeline is built using <a class=\"link\" href=\"https://www.nextflow.io/\"><u>Nextflow</u></a>, a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker / Singularity containers making installation trivial and results highly reproducible.</p><h2 class=\"heading-node\"><strong>Pipeline Summary</strong></h2><p class=\"text-node\">The pipeline performs the following analysis steps:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Read Quality Control (QC)</strong> - Uses FastQC to assess the quality of raw sequencing reads</p></li><li><p class=\"text-node\"><strong>Comprehensive Quality Reporting</strong> - Employs MultiQC to aggregate quality control results across all samples</p></li><li><p class=\"text-node\"><strong>Mitochondrial Variant Detection</strong> - Specialized analysis of mtDNA variants including heteroplasmy detection</p></li><li><p class=\"text-node\"><strong>Standardized Reporting</strong> - Generates publication-ready reports and visualizations</p></li></ul><h2 class=\"heading-node\"><strong>Key Features</strong></h2><ul class=\"list-node\"><li><p class=\"text-node\">Built with <strong>Nextflow DSL2</strong>, using containerized processes for reproducibility and portability</p></li><li><p class=\"text-node\">Specialized for <strong>mitochondrial DNA analysis</strong> with optimized variant calling</p></li><li><p class=\"text-node\">Supports <strong>heteroplasmy detection</strong> for mixed mitochondrial populations</p></li><li><p class=\"text-node\">Comprehensive <strong>quality control</strong> with FastQC and MultiQC integration</p></li><li><p class=\"text-node\">Compatible with standard NGS data formats and reference genomes</p></li></ul><h2 class=\"heading-node\"><strong>Usage</strong></h2><ol class=\"list-node\"><li><p class=\"text-node\">Prepare a samplesheet.csv with your input sequencing data (FASTQ files)</p></li><li><p class=\"text-node\">Run the pipeline with appropriate parameters</p></li></ol><pre class=\"block-node\"><code>nextflow run nf-core/mitodetect \\\n  -profile &lt;docker/singularity/...&gt; \\\n  --input samplesheet.csv \\\n  --outdir &lt;OUTDIR&gt;</code></pre><h2 class=\"heading-node\"><strong>Applications</strong></h2><p class=\"text-node\">This pipeline is ideal for:</p><ul class=\"list-node\"><li><p class=\"text-node\">Mitochondrial disease research and diagnostics</p></li><li><p class=\"text-node\">Population genetics studies of mtDNA</p></li><li><p class=\"text-node\">Cancer research involving mitochondrial mutations</p></li><li><p class=\"text-node\">Ancient DNA studies with degraded mitochondrial genomes</p></li><li><p class=\"text-node\">Quality control of sequencing data targeting mitochondrial regions</p></li></ul><blockquote class=\"block-node\"><p class=\"text-node\"><em>For more information, visit the </em><a class=\"link\" href=\"https://nf-co.re/mitodetect\"><em><u>nf-core/mitodetect documentation</u></em></a></p></blockquote>",
   "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./mitodetect-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "type": "Stash File",
+      "label": "Input Samplesheet",
+      "name": "input",
+      "description": "CSV samplesheet file containing information about the samples and their FASTQ files (format: sample,fastq_1,fastq_2)",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [".csv", ".tsv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "The output directory where the results will be saved. All pipeline outputs including variant calls, QC reports, and visualizations will be stored here.",
+      "defaultValue": "./mitodetect-results",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    },
+    {
+      "type": "Input",
+      "label": "Pipeline Revision",
+      "name": "revision",
+      "description": "Specify the nf-core/mitodetect pipeline version to use (e.g., 'dev', '1.0.0', etc.)",
+      "defaultValue": "dev",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "mitodetect", "type": "task"}]
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": false,
+      "description": "Select compute resources for the pipeline. MEDIUM is recommended for most datasets. LARGE for high-coverage or many samples.",
+      "options": [
+        {
+          "label": "MEDIUM (Recommended)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (High-coverage data)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "SMALL (Testing only)",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "medium"
+    }
+  ],
+  "tags": [
+    {"name": "mitodetect", "type": "pipeline"},
+    {"name": "mitochondrial", "type": "analysis"},
+    {"name": "variant-calling", "type": "task"},
+    {"name": "nf-core", "type": "framework"}
+  ]
 }

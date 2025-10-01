@@ -1,16 +1,185 @@
 {
   "name": "references-reference-management",
-  "title": "References",
-  "description": " Reference Management",
-  "version": "1.0.0",
+  "title": "Reference Genome Builder",
+  "description": "nf-core/references is a bioinformatics pipeline that builds reference files for multiple use cases. It generates reference indexes from FASTA files including Bowtie1/2, BWA-MEM, DRAGMAP, HISAT2, Kallisto, RSEM, Salmon, and STAR indexes. Primarily designed to build references for common organisms and replace AWS iGenomes.",
+  "version": "0.1",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/references --input ${input} --outdir ${outdir} -r  Reference genome management system:1.0.0 ",
+  "command": "nextflow run nf-core/references --input ${input} --outdir ${outdir} --genome ${genome} --fasta ${fasta} --gtf ${gtf} --build_references ${build_references} -r ${revision}",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/references/master/docs/images/nf-core-references_logo_light.png",
-  "content": "<h2><strong>References</strong></h2><p> Reference Management</p>",
+  "content": "<h2><strong>nf-core/references</strong></h2><p>A bioinformatics pipeline that builds reference files for multiple use cases.</p><p><strong>Key Features:</strong></p><ul><li><strong>Multiple Index Types:</strong> Generate Bowtie1/2, BWA-MEM/MEM2, DRAGMAP, HISAT2, Kallisto, RSEM, Salmon, and STAR indexes</li><li><strong>Flexible Input:</strong> Build from FASTA files alone or with GFF3/GTF annotation files</li><li><strong>Reference Management:</strong> Designed to replace and improve AWS iGenomes</li><li><strong>Quality Control:</strong> Includes FASTA dictionary and related validation files</li><li><strong>VCF Support:</strong> Tabix indexing for VCF files</li></ul><p><strong>Reference Building Capabilities:</strong></p><ul><li><strong>From FASTA Files:</strong> Bowtie1/2 indexes, BWA-MEM/BWA-MEM2 indexes, DRAGMAP hashtable, FASTA dictionary</li><li><strong>With Annotation (GFF3/GTF):</strong> GTF conversion, HISAT2 index, Kallisto index, RSEM index, Salmon index, STAR index, Transcript fasta</li><li><strong>Additional:</strong> Tabix indexing for VCF files</li></ul><p><strong>Usage:</strong></p><ol><li>Prepare an input CSV/TSV with reference information</li><li>Specify genome and reference files (FASTA, GTF)</li><li>Select which reference indexes to build</li><li>Run the pipeline to generate comprehensive reference files</li></ol>",
   "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./references-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "type": "Stash File",
+      "label": "Input Samplesheet",
+      "name": "input",
+      "description": "CSV or TSV file containing information about the references to build",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [".csv", ".tsv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "The output directory where reference files will be saved",
+      "defaultValue": "./references-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    },
+    {
+      "type": "Input",
+      "label": "Genome",
+      "name": "genome",
+      "description": "Name of genome reference (e.g., GRCh38, GRCm39)",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "type": "Stash File",
+      "label": "FASTA File",
+      "name": "fasta",
+      "description": "Path to reference genome FASTA file",
+      "defaultValue": "",
+      "required": false,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [".fasta", ".fa", ".fna", ".gz"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "GTF Annotation",
+      "name": "gtf",
+      "description": "Path to genome annotation GTF file",
+      "defaultValue": "",
+      "required": false,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [".gtf", ".gtf.gz"]
+      }
+    },
+    {
+      "type": "Multi Select",
+      "label": "Build References",
+      "name": "build_references",
+      "description": "Specify which reference indexes to build (comma-separated)",
+      "defaultValue": ["bowtie2", "bwa"],
+      "required": false,
+      "options": [
+        {
+          "label": "Bowtie1",
+          "value": "bowtie1"
+        },
+        {
+          "label": "Bowtie2",
+          "value": "bowtie2"
+        },
+        {
+          "label": "BWA-MEM",
+          "value": "bwa"
+        },
+        {
+          "label": "BWA-MEM2",
+          "value": "bwamem2"
+        },
+        {
+          "label": "DRAGMAP",
+          "value": "dragmap"
+        },
+        {
+          "label": "HISAT2",
+          "value": "hisat2"
+        },
+        {
+          "label": "Kallisto",
+          "value": "kallisto"
+        },
+        {
+          "label": "RSEM",
+          "value": "rsem"
+        },
+        {
+          "label": "Salmon",
+          "value": "salmon"
+        },
+        {
+          "label": "STAR",
+          "value": "star"
+        }
+      ]
+    },
+    {
+      "type": "Input",
+      "label": "Pipeline Revision",
+      "name": "revision",
+      "description": "nf-core/references pipeline version",
+      "defaultValue": "0.1",
+      "required": true
+    },
+    {
+      "type": "Switch",
+      "label": "Skip QC",
+      "name": "skip_qc",
+      "description": "Skip quality control steps",
+      "defaultValue": false,
+      "required": false
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "references", "type": "task"}]
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "description": "Select compute resources based on reference size",
+      "options": [
+        {
+          "label": "SMALL",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "medium"
+    }
+  ],
+  "tags": [
+    {
+      "name": "references",
+      "type": "task"
+    },
+    {
+      "name": "bioinformatics",
+      "type": "domain"
+    },
+    {
+      "name": "genomics",
+      "type": "domain"
+    }
+  ]
 }

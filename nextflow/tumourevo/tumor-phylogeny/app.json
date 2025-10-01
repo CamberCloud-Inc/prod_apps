@@ -1,16 +1,149 @@
 {
   "name": "tumourevo-tumor-phylogeny",
-  "title": "Tumor Evolution",
-  "description": " Phylogenetic Analysis",
+  "title": "Tumor Clonal Evolution Analysis",
+  "description": "Comprehensive phylogenetic analysis to reconstruct tumor evolution from whole-genome sequencing data. Models clonal populations, mutational signatures, and evolutionary processes driving tumor development from variant and copy-number calls.",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/tumourevo --input ${input} --outdir ${outdir} -r  Clonal evolution and tumor heterogeneity:1.0.0 ",
+  "command": "nextflow run nf-core/tumourevo --input ${input} --outdir ${outdir} --tools ${tools} -r ${revision}",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/tumourevo/master/docs/images/nf-core-tumourevo_logo_light.png",
-  "content": "<h2><strong>Tumor Evolution</strong></h2><p> Phylogenetic Analysis</p>",
+  "content": "<h1>Tumor Clonal Evolution Analysis</h1><h2>What This Analysis Does</h2><p>This pipeline reconstructs the evolutionary history of tumors from whole-genome sequencing data. By analyzing somatic variants and copy-number changes, it identifies distinct cancer cell populations (clones), traces their ancestry, and reveals the mutational processes that drove tumor development. This powerful approach helps understand tumor heterogeneity, treatment resistance mechanisms, and disease progression patterns.</p><p>The analysis performs variant annotation, quality control, subclonal deconvolution, clone tree inference, and mutational signature analysis - providing comprehensive insights into how your tumor evolved from a single transformed cell into a complex ecosystem of related cancer clones.</p><h2>When To Use This</h2><ul><li><strong>Tumor Heterogeneity Studies:</strong> Understand the genetic diversity within a single tumor sample</li><li><strong>Multi-Region Analysis:</strong> Compare evolution across different tumor regions to map spatial heterogeneity</li><li><strong>Longitudinal Studies:</strong> Track clonal evolution over time from primary to metastatic or relapsed disease</li><li><strong>Treatment Response:</strong> Identify resistant clones and understand mechanisms of therapy failure</li><li><strong>Metastasis Research:</strong> Trace the evolutionary relationship between primary tumors and metastases</li><li><strong>Cancer Evolution:</strong> Study fundamental processes of somatic evolution in cancer</li><li><strong>Cohort Studies:</strong> Compare evolutionary patterns across multiple patients</li></ul><h2>What You Need</h2><h3>1. Samplesheet (CSV File)</h3><p>A CSV file describing your samples with 10 required columns. The pipeline supports three analysis modes:</p><p><strong>Required Columns:</strong></p><ul><li><strong>dataset:</strong> Study or cohort identifier (groups samples for joint analysis)</li><li><strong>patient:</strong> Patient identifier (groups samples from same individual)</li><li><strong>tumour_sample:</strong> Tumor sample name/ID</li><li><strong>normal_sample:</strong> Matched normal/germline sample name/ID</li><li><strong>vcf:</strong> Path to VCF file with somatic variants (from supported callers: Mutect2, Strelka2, or consensus calling)</li><li><strong>tbi:</strong> Path to VCF index file (.tbi)</li><li><strong>cna_segments:</strong> Path to copy-number segment file</li><li><strong>cna_extra:</strong> Path to additional CNA files (format depends on caller)</li><li><strong>cna_caller:</strong> Copy-number caller used (supported: ascat, battenberg, facets, purple, sequenza)</li><li><strong>cancer_type:</strong> Cancer type (affects signature analysis, e.g., LUAD, BRCA, COAD)</li></ul><p><strong>Example Single Sample:</strong></p><pre>dataset,patient,tumour_sample,normal_sample,vcf,tbi,cna_segments,cna_extra,cna_caller,cancer_type\nlung_study,PT001,tumor1,normal1,tumor1.vcf.gz,tumor1.vcf.gz.tbi,segments.txt,extra.txt,ascat,LUAD</pre><p><strong>Example Multi-Region (2 regions from one patient):</strong></p><pre>dataset,patient,tumour_sample,normal_sample,vcf,tbi,cna_segments,cna_extra,cna_caller,cancer_type\nbreast_study,PT001,region1,normal1,region1.vcf.gz,region1.vcf.gz.tbi,region1_seg.txt,region1_extra.txt,ascat,BRCA\nbreast_study,PT001,region2,normal1,region2.vcf.gz,region2.vcf.gz.tbi,region2_seg.txt,region2_extra.txt,ascat,BRCA</pre><h3>2. Variant Calls (VCF Files)</h3><p>Somatic variant calls from tumor-normal paired analysis:</p><ul><li><strong>Format:</strong> VCF files (compressed, .vcf.gz) with tabix index (.tbi)</li><li><strong>Content:</strong> Somatic SNVs and indels with allele frequencies</li><li><strong>Supported Callers:</strong> Mutect2 (GATK), Strelka2, or consensus multi-caller VCFs</li><li><strong>Quality:</strong> Should be filtered for germline contamination and artifacts</li><li><strong>Coverage:</strong> Minimum 30x tumor coverage recommended, 60-100x optimal</li></ul><h3>3. Copy Number Data</h3><p>Copy-number segment calls from supported tools:</p><ul><li><strong>Supported Tools:</strong> ASCAT, Battenberg, FACETS, PURPLE, Sequenza</li><li><strong>Format:</strong> Segment files with chromosome, start, end, and copy number states</li><li><strong>Quality:</strong> Should include major/minor allele copy numbers for accurate clonal analysis</li><li><strong>Purity:</strong> Tumor purity estimates improve deconvolution accuracy</li></ul><h2>Analysis Tools You Can Choose</h2><p>Select which analysis tools to run using the <code>--tools</code> parameter. Tools can be combined (comma-separated):</p><h3>Subclonal Deconvolution Tools:</h3><ul><li><strong>pyclonevi:</strong> Bayesian clustering of mutations into clonal populations (recommended for multi-region)</li><li><strong>mobster:</strong> Model-based clustering using Beta-Binomial mixture models</li><li><strong>viber:</strong> Variational inference for clone tree reconstruction</li><li><strong>ctree:</strong> Clone tree inference from PyClone-VI clusters</li></ul><h3>Mutational Signature Analysis:</h3><ul><li><strong>sparsesignatures:</strong> Identifies active mutational signatures using sparse methods</li><li><strong>sigprofiler:</strong> Comprehensive signature extraction and fitting (COSMIC signatures)</li></ul><p><strong>Example tool combinations:</strong></p><ul><li>Standard analysis: <code>pyclonevi,mobster,viber,sparsesignatures</code></li><li>Comprehensive: <code>pyclonevi,mobster,viber,ctree,sparsesignatures,sigprofiler</code></li><li>Quick screening: <code>mobster,sparsesignatures</code></li></ul><h2>What You'll Get</h2><h3>Clonal Population Analysis</h3><ul><li><strong>Clone Identification:</strong> Distinct clonal populations with their mutations and frequencies</li><li><strong>Clonal Fractions:</strong> Proportion of tumor cells belonging to each clone</li><li><strong>Clone Trees:</strong> Phylogenetic trees showing evolutionary relationships between clones</li><li><strong>Mutation Assignments:</strong> Which mutations are clonal vs. subclonal</li><li><strong>Clonal Architecture:</strong> Spatial/temporal distribution of clones across samples</li></ul><h3>Quality Control Reports</h3><ul><li><strong>CNAqc:</strong> Validates concordance between copy-number and variant calls</li><li><strong>TINC:</strong> Assesses tumor sample contamination from normal cells</li><li><strong>QC Plots:</strong> Visual summaries of data quality and filtering results</li><li><strong>Sample Purity:</strong> Tumor purity estimates and confidence intervals</li></ul><h3>Mutational Signatures</h3><ul><li><strong>Active Signatures:</strong> COSMIC mutational signatures detected in your samples</li><li><strong>Exposure Estimates:</strong> Contribution of each signature to tumor mutation burden</li><li><strong>Biological Processes:</strong> Inferred mutational processes (e.g., APOBEC, smoking, UV, MMR deficiency)</li><li><strong>Temporal Evolution:</strong> How signature activity changed during tumor evolution</li></ul><h3>Driver Annotation</h3><ul><li><strong>Driver Mutations:</strong> Variants in known cancer genes with functional impact</li><li><strong>Pathways:</strong> Affected cancer pathways and biological processes</li><li><strong>Clonal Timing:</strong> Whether drivers are early (clonal) or late (subclonal) events</li><li><strong>Actionability:</strong> Therapeutic implications of detected alterations</li></ul><h3>Visualizations</h3><ul><li><strong>Clone Trees:</strong> Phylogenetic trees showing tumor evolution</li><li><strong>Cancer Cell Fractions:</strong> Plots of clonal population frequencies</li><li><strong>Mutational Spectra:</strong> Signature profiles and temporal changes</li><li><strong>VAF Distributions:</strong> Variant allele frequency plots showing clonal structure</li><li><strong>Copy Number Profiles:</strong> Genome-wide copy number landscapes</li></ul><h2>Expected Analysis Time</h2><ul><li><strong>Single sample:</strong> 2-4 hours</li><li><strong>Multi-region (2-4 samples):</strong> 4-8 hours</li><li><strong>Longitudinal series:</strong> 6-12 hours</li><li><strong>Large cohort (10+ patients):</strong> 12-24 hours</li></ul><p><em>Note: Analysis time depends on sample count, genome coverage, mutation burden, and selected tools. Signature deconvolution and phylogeny inference are computationally intensive steps.</em></p><h2>Scientific Background</h2><p>The nf-core/tumourevo pipeline implements state-of-the-art methods for modeling tumor evolution. It combines:</p><ul><li><strong>Variant Effect Predictor (VEP):</strong> Annotates functional consequences of mutations</li><li><strong>PyClone-VI:</strong> Bayesian clustering for clonal structure inference</li><li><strong>MOBSTER:</strong> Identifies clonal and subclonal mutations using mixture models</li><li><strong>VIBER:</strong> Variational methods for clone tree reconstruction</li><li><strong>CNAqc:</strong> Quality control ensuring CNA/SNV concordance</li><li><strong>SparseSignatures/SigProfiler:</strong> COSMIC mutational signature analysis</li></ul><p>These methods model variant allele frequencies accounting for copy-number changes, tumor purity, and sequencing depth to accurately infer clonal populations. The pipeline follows best practices for tumor evolution analysis used in major cancer genomics studies.</p><h2>Key Concepts</h2><p><strong>Clonal Evolution:</strong> Tumors evolve through sequential acquisition of mutations, creating related populations of cancer cells (clones) with shared ancestry.</p><p><strong>Cancer Cell Fraction (CCF):</strong> The proportion of cancer cells carrying a specific mutation. CCF = 1.0 indicates a clonal (founding) mutation present in all tumor cells.</p><p><strong>Subclonal Structure:</strong> Multiple genetically distinct populations coexisting within a tumor, each with different mutations and potentially different biological properties.</p><p><strong>Mutational Signatures:</strong> Characteristic patterns of mutations reflecting specific DNA damage and repair processes (e.g., tobacco smoking, UV exposure, chemotherapy, defective DNA repair).</p><h2>Clinical and Research Applications</h2><p><strong>Treatment Planning:</strong> Identify resistant clones before they cause clinical relapse. Clonal driver mutations are better therapeutic targets than subclonal alterations.</p><p><strong>Metastasis Prediction:</strong> Track which clones seed metastases by comparing phylogenies between primary and metastatic sites.</p><p><strong>Minimal Residual Disease:</strong> Monitor treatment response by tracking clonal populations longitudinally.</p><p><strong>Biomarker Discovery:</strong> Identify evolutionary patterns associated with outcomes or treatment response.</p><h2>Data Requirements</h2><p><strong>Sequencing Quality:</strong></p><ul><li>Whole-genome sequencing at 30-100x tumor coverage</li><li>High-quality somatic variant calls filtered for artifacts</li><li>Accurate copy-number calls with allele-specific information</li><li>Multiple samples per patient improve phylogeny reconstruction</li></ul><p><strong>Computational Resources:</strong></p><ul><li>Analysis requires substantial memory and compute (especially for multi-sample/cohort studies)</li><li>Recommended: LARGE or XLARGE node configurations</li><li>Storage for intermediate files and visualizations</li></ul><h2>Getting Started</h2><p><strong>Step 1:</strong> Obtain somatic variant calls (VCF) and copy-number calls from tumor-normal WGS analysis</p><p><strong>Step 2:</strong> Prepare your samplesheet CSV with all required columns and file paths</p><p><strong>Step 3:</strong> Choose which analysis tools to run based on your research questions</p><p><strong>Step 4:</strong> Upload input files and samplesheet to your storage</p><p><strong>Step 5:</strong> Run the analysis with appropriate computational resources</p><p><strong>Step 6:</strong> Review QC reports first to ensure high-quality input data</p><p><strong>Step 7:</strong> Examine clone trees, mutational signatures, and driver annotations</p><p><strong>Step 8:</strong> Interpret results in biological context with domain expertise</p><p><a href='https://nf-co.re/tumourevo' target='_blank'>Advanced users: See full pipeline documentation at nf-co.re/tumourevo</a></p>",
   "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./tumourevo-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "type": "Stash File",
+      "label": "Samplesheet",
+      "name": "input",
+      "description": "CSV file with 10 required columns: dataset, patient, tumour_sample, normal_sample, vcf, tbi, cna_segments, cna_extra, cna_caller, cancer_type. See documentation for detailed format.",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [".csv", ".tsv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Where to save clone trees, signatures, annotations, and QC reports. Results organized by analysis type.",
+      "defaultValue": "./tumourevo-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Analysis Tools",
+      "name": "tools",
+      "description": "Choose which analysis tools to run. Multiple tools can be combined (comma-separated). For comprehensive analysis, select all tools.",
+      "defaultValue": "pyclonevi,mobster,viber,sparsesignatures",
+      "required": true,
+      "options": [
+        {
+          "label": "PyClone-VI (Bayesian clonal clustering)",
+          "value": "pyclonevi"
+        },
+        {
+          "label": "MOBSTER (Model-based clustering)",
+          "value": "mobster"
+        },
+        {
+          "label": "VIBER (Clone tree inference)",
+          "value": "viber"
+        },
+        {
+          "label": "Ctree (Phylogenetic trees from PyClone)",
+          "value": "ctree"
+        },
+        {
+          "label": "SparseSignatures (Mutational signatures)",
+          "value": "sparsesignatures"
+        },
+        {
+          "label": "SigProfiler (Comprehensive signatures)",
+          "value": "sigprofiler"
+        },
+        {
+          "label": "Standard: PyClone + MOBSTER + VIBER + Signatures",
+          "value": "pyclonevi,mobster,viber,sparsesignatures"
+        },
+        {
+          "label": "Comprehensive: All tools",
+          "value": "pyclonevi,mobster,viber,ctree,sparsesignatures,sigprofiler"
+        },
+        {
+          "label": "Quick: MOBSTER + Signatures only",
+          "value": "mobster,sparsesignatures"
+        }
+      ]
+    },
+    {
+      "type": "Input",
+      "label": "Pipeline Version",
+      "name": "revision",
+      "description": "nf-core/tumourevo pipeline version. Use 'dev' for latest development version or specific version tags for reproducibility.",
+      "defaultValue": "dev",
+      "required": true
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "tumourevo", "type": "task"}]
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "description": "Computational resources. Use LARGE for single samples, XLARGE for multi-region or cohort analyses.",
+      "options": [
+        {
+          "label": "Medium - Testing only",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Large - Single sample (Recommended)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLarge - Multi-region or cohort studies",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "name": "cancer-evolution",
+      "type": "task"
+    },
+    {
+      "name": "tumor-phylogeny",
+      "type": "task"
+    },
+    {
+      "name": "clonal-analysis",
+      "type": "task"
+    },
+    {
+      "name": "biology",
+      "type": "field"
+    }
+  ]
 }

@@ -1,16 +1,88 @@
 {
   "name": "ssds-single-strand-dna",
-  "title": "SSDS",
-  "description": " Single-strand DNA Sequencing",
+  "title": "SSDS: Single-Strand DNA Sequencing",
+  "description": "Analyze single-stranded DNA (ssDNA) in meiotic recombination hotspots. Map ssDNA formation during meiosis to identify recombination initiation sites, DSB hotspots, and strand-specific processes in mammalian genomes.",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/ssds --input ${input} --outdir ${outdir} -r  ssDNA-seq analysis:1.0.0 ",
+  "command": "nextflow run nf-core/ssds --input ${input} --outdir ${outdir} --genome ${genome} -r dev",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/ssds/master/docs/images/nf-core-ssds_logo_light.png",
-  "content": "<h2><strong>SSDS</strong></h2><p> Single-strand DNA Sequencing</p>",
+  "content": "<h2><strong>SSDS: Single-Strand DNA Sequencing</strong></h2><p><strong>Single-Strand DNA Sequencing (SSDS)</strong> is a specialized technique for mapping single-stranded DNA (ssDNA) regions in the genome, particularly during meiotic recombination. This pipeline analyzes SSDS data to identify recombination hotspots, double-strand break (DSB) sites, and strand-specific DNA processing events.</p><img src=\"https://raw.githubusercontent.com/nf-core/ssds/master/docs/images/nf-core-ssds_logo_light.png\" alt=\"nf-core/ssds workflow\" width=\"500\" height=\"250\"><h3><strong>What is SSDS?</strong></h3><p>SSDS captures and sequences single-stranded DNA regions that form during meiotic recombination. During meiosis, programmed double-strand breaks (DSBs) are processed to generate extended single-stranded DNA overhangs, which are crucial for homologous recombination and genetic diversity.</p><blockquote><p><strong>The Biology</strong>:</p><ol><li><strong>DSB Formation</strong>: SPO11 creates double-strand breaks at recombination hotspots</li><li><strong>5' to 3' Resection</strong>: Exonucleases process DNA ends, generating long 3' ssDNA tails</li><li><strong>ssDNA Detection</strong>: SSDS specifically captures these single-stranded regions</li><li><strong>Strand Specificity</strong>: Distinguishes Watson vs Crick strand processing</li><li><strong>Hotspot Mapping</strong>: Identifies where recombination initiates genome-wide</li></ol></blockquote><h3><strong>Why SSDS?</strong></h3><ul><li><strong>Recombination Hotspots</strong>: Genome-wide map of meiotic DSB sites</li><li><strong>Strand Specificity</strong>: Distinguish DNA processing on each strand</li><li><strong>High Resolution</strong>: Precise localization of ssDNA regions</li><li><strong>Mechanistic Insights</strong>: Understand recombination initiation and processing</li><li><strong>Evolutionary Studies</strong>: Compare hotspot locations across species</li><li><strong>PRDM9 Binding</strong>: Map zinc-finger protein binding that defines hotspots</li></ul><h3><strong>SSDS vs Other Methods</strong></h3><table><tr><th>Feature</th><th>SSDS</th><th>ChIP-seq (DMC1/RAD51)</th><th>END-seq</th></tr><tr><td><strong>Target</strong></td><td>ssDNA regions</td><td>Recombinase-bound DNA</td><td>DSB ends</td></tr><tr><td><strong>Resolution</strong></td><td>Base-pair</td><td>~200bp</td><td>~50bp</td></tr><tr><td><strong>Strand Info</strong></td><td>✅ Yes</td><td>❌ No</td><td>✅ Limited</td></tr><tr><td><strong>Antibodies</strong></td><td>❌ No</td><td>✅ Yes (anti-DMC1)</td><td>❌ No</td></tr><tr><td><strong>Requires</strong></td><td>Paired-end reads</td><td>Any reads</td><td>Special library prep</td></tr></table><h3><strong>Important: Paired-End Mode Required</strong></h3><p><strong>⚠️ SSDS MUST be run in paired-end mode</strong>. Single-end sequencing cannot identify the molecular features necessary to distinguish ssDNA from dsDNA. The pipeline specifically looks for:</p><ul><li><strong>Type 1 reads</strong>: Both R1 and R2 map to same strand → dsDNA</li><li><strong>Type 2 reads</strong>: R1 and R2 map to opposite strands → ssDNA</li></ul><h3><strong>What SSDS Reveals</strong></h3><p><strong>Recombination Landscape</strong>:</p><ul><li><strong>Hotspot Locations</strong>: Genome-wide map of where DSBs occur</li><li><strong>Hotspot Strength</strong>: Quantify recombination frequency per site</li><li><strong>PRDM9 Motifs</strong>: DNA sequences bound by hotspot-defining protein</li><li><strong>Hotspot Evolution</strong>: Species-specific vs conserved sites</li></ul><p><strong>DNA Processing Events</strong>:</p><ul><li><strong>5' to 3' Resection</strong>: Track exonuclease activity</li><li><strong>Strand Bias</strong>: Asymmetric processing between strands</li><li><strong>ssDNA Length</strong>: Extent of nuclease processing</li><li><strong>Temporal Dynamics</strong>: Compare early vs late meiotic stages</li></ul><h3><strong>Pipeline Analysis Steps</strong></h3><ol><li><strong>Quality Control</strong>: FastQC checks read quality and adapter content</li><li><strong>Trimming</strong>: Trim-galore removes adapters and low-quality bases</li><li><strong>Alignment</strong>: BWA-MEM maps paired-end reads to reference genome</li><li><strong>BAM Processing</strong>: Sort and index aligned reads</li><li><strong>ssDNA/dsDNA Parsing</strong>: Classify reads based on strand orientation</li><li><strong>Coverage Tracks</strong>: Generate strand-specific BigWig files</li><li><strong>Enrichment Calculation</strong>: Identify ssDNA-enriched regions (hotspots)</li><li><strong>QC Reporting</strong>: MultiQC summarizes pipeline metrics</li></ol><h3><strong>Input Requirements</strong></h3><p><strong>Samplesheet Format</strong> (CSV file with 3 columns):</p><pre>sample,fastq_1,fastq_2\nmouse_testis_ssds,sample_R1.fastq.gz,sample_R2.fastq.gz\nmouse_testis_control,control_R1.fastq.gz,control_R2.fastq.gz</pre><p><strong>Column Descriptions</strong>:</p><ul><li><strong>sample</strong>: Unique sample identifier (spaces converted to underscores)</li><li><strong>fastq_1</strong>: Path to R1 FASTQ file (must be .fastq.gz or .fq.gz)</li><li><strong>fastq_2</strong>: Path to R2 FASTQ file (must be .fastq.gz or .fq.gz)</li></ul><p><strong>⚠️ Note</strong>: If you have multiple sequencing runs for the same sample, pool them beforehand.</p><h3><strong>Reference Genome Selection</strong></h3><p>Choose the appropriate genome for your organism:</p><ul><li><strong>🐭 Mouse</strong>: mm10 (GRCm38) or mm39 (GRCm39) - Most common for SSDS studies</li><li><strong>🧑 Human</strong>: hg38 (GRCh38) or hg19 (GRCh37)</li><li><strong>🐀 Rat</strong>: rn6 or rn7</li><li><strong>🔬 Other organisms</strong>: Ensure genome is available in iGenomes or provide custom FASTA</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>ssDNA/dsDNA BAM files</strong>: Classified reads for downstream analysis</li><li><strong>BigWig coverage tracks</strong>: Strand-specific signal for genome browsers</li><li><strong>Hotspot regions</strong>: Enriched ssDNA sites (recombination hotspots)</li><li><strong>QC metrics</strong>: Alignment rates, duplication levels, library complexity</li><li><strong>MultiQC report</strong>: Comprehensive quality control summary</li></ul><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Meiosis Research</strong>: Map recombination initiation sites</li><li><strong>Fertility Studies</strong>: Understand reproductive biology</li><li><strong>Evolutionary Biology</strong>: Compare hotspot evolution across species</li><li><strong>PRDM9 Studies</strong>: Investigate hotspot determination mechanisms</li><li><strong>Chromosome Biology</strong>: Study chromosome pairing and synapsis</li><li><strong>Disease Research</strong>: Aberrant recombination in infertility</li></ul><h3><strong>QC Metrics to Monitor</strong></h3><ul><li><strong>Alignment Rate</strong>: Should be >85% for good quality data</li><li><strong>Duplicate Rate</strong>: <30% indicates good library complexity</li><li><strong>Type 1 vs Type 2 ratio</strong>: Depends on enrichment efficiency</li><li><strong>Hotspot Enrichment</strong>: ssDNA signal at known recombination sites</li></ul><h3><strong>Pipeline Technical Details</strong></h3><ul><li><strong>🔧 Aligner</strong>: BWA-MEM (optimized for paired-end reads)</li><li><strong>📊 Coverage</strong>: Strand-specific BigWig tracks</li><li><strong>🎯 Read Classification</strong>: Custom scripts parse ssDNA vs dsDNA</li><li><strong>✅ Quality Filters</strong>: Proper pairing, MAPQ thresholds, duplicate removal</li><li><strong>📈 Enrichment</strong>: Statistical analysis of ssDNA-enriched regions</li></ul><h3><strong>Important Notes</strong></h3><blockquote><p><strong>⚠️ Pipeline Status</strong>: This pipeline was archived on March 10, 2023, and is no longer actively maintained by nf-core. It remains functional but may not receive updates. Use the dev branch for the most recent version.</p></blockquote><blockquote><p><strong>📖 Citation</strong>: If you use this pipeline, please cite the original SSDS method paper:<br>Khil et al. (2012) \"Sensitive mapping of recombination hotspots using sequencing-based detection of ssDNA\" Genome Res.</p></blockquote><p><strong>Perfect for Research in:</strong> Meiosis • Recombination • Fertility • Evolutionary genetics • Chromosome biology • PRDM9 studies • Reproductive health</p><p>Built with <a href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a href=\"https://nf-co.re/ssds/dev/\" target=\"_blank\">nf-core/ssds</a> • Containerized execution • Originally developed by Kevin Brick</p>",
   "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./ssds-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV samplesheet with columns: sample, fastq_1, fastq_2. Each row represents a paired-end SSDS sample. FASTQ files must be gzipped (.fastq.gz or .fq.gz).",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv", ".tsv"]
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome for alignment. Use mm10 for mouse (most common for SSDS studies), hg38 for human.",
+      "defaultValue": "mm10",
+      "required": true,
+      "options": [
+        {"label": "Mouse mm10/GRCm38 (most common for SSDS)", "value": "mm10"},
+        {"label": "Mouse mm39/GRCm39 (latest)", "value": "mm39"},
+        {"label": "Human hg38/GRCh38 (latest)", "value": "hg38"},
+        {"label": "Human hg19/GRCh37 (legacy)", "value": "hg19"},
+        {"label": "Rat rn6", "value": "rn6"},
+        {"label": "Rat rn7", "value": "rn7"}
+      ]
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory where analysis results including ssDNA/dsDNA classifications, coverage tracks, and QC reports will be saved.",
+      "defaultValue": "./ssds-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "ssds", "type": "task"}]
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "description": "Select compute resources. LARGE recommended for mammalian genomes.",
+      "options": [
+        {
+          "label": "LARGE (Recommended for mammalian genomes)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM (Small genomes or few samples)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {"name": "ssds", "type": "task"},
+    {"name": "recombination", "type": "task"},
+    {"name": "meiosis", "type": "task"},
+    {"name": "genomics", "type": "field"},
+    {"name": "reproductive-biology", "type": "field"}
+  ]
 }

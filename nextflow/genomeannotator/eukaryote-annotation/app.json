@@ -1,16 +1,69 @@
 {
   "name": "genomeannotator-eukaryote-annotation",
-  "title": "Genome Annotator",
-  "description": " Eukaryotic Annotation",
+  "title": "Genome Annotator - Eukaryotic Annotation",
+  "description": "nf-core/genomeannotator is a bioinformatics pipeline for comprehensive annotation of eukaryotic genomes. It preprocesses genome assemblies, aligns protein and transcript evidence, builds gene models using AUGUSTUS and PASA, and generates consensus gene annotations with EvidenceModeler.",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/genomeannotator --input ${input} --outdir ${outdir} -r  Eukaryotic genome annotation:1.0.0 ",
+  "command": "nextflow run nf-core/genomeannotator --input ${input} --outdir ${outdir} -r dev",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/genomeannotator/master/docs/images/nf-core-genomeannotator_logo_light.png",
-  "content": "<h2><strong>Genome Annotator</strong></h2><p> Eukaryotic Annotation</p>",
+  "content": "<h2 class=\"heading-node\"><strong>Genome Annotator - Eukaryotic Annotation Pipeline</strong></h2><p class=\"text-node\"><strong>nf-core/genomeannotator</strong> is a bioinformatics best-practice analysis pipeline for the annotation of eukaryotic genomes, with a primary focus on metazoans. It provides a comprehensive workflow for identifying and structuring genes in draft genomes.</p><h3 class=\"heading-node\"><strong>Key Features</strong></h3><ul class=\"list-node\"><li class=\"list-item-node\">Built with <strong>Nextflow DSL2</strong>, using containerized processes (Docker/Singularity) for reproducibility and portability</li><li class=\"list-item-node\">Preprocessing and filtering of genome assembly contigs</li><li class=\"list-item-node\">Alignment of protein and transcript evidence to the genome</li><li class=\"list-item-node\">Gene model construction using <strong>AUGUSTUS</strong> and <strong>PASA</strong></li><li class=\"list-item-node\">Consensus gene build generation with <strong>EvidenceModeler</strong></li><li class=\"list-item-node\">Optional de-novo transcriptome assembly with <strong>Trinity</strong></li><li class=\"list-item-node\">Optional annotation mapping from related genomes using <strong>Satsuma2</strong> and <strong>Kraken</strong></li></ul><h3 class=\"heading-node\"><strong>Pipeline Workflow</strong></h3><ol class=\"list-node\"><li class=\"list-item-node\"><strong>Assembly Preparation</strong>: Filter and clean genome assembly contigs</li><li class=\"list-item-node\"><strong>Evidence Alignment</strong>: Align proteins, transcripts, and RNA-seq data to the genome</li><li class=\"list-item-node\"><strong>Annotation Support</strong>: Convert alignments to annotation evidence</li><li class=\"list-item-node\"><strong>Gene Modeling</strong>: Build gene models using multiple prediction tools</li><li class=\"list-item-node\"><strong>Consensus Building</strong>: Generate final consensus gene annotations</li></ol><h3 class=\"heading-node\"><strong>Input Requirements</strong></h3><p class=\"text-node\">Provide a samplesheet (CSV or TSV format) containing:</p><ul class=\"list-node\"><li class=\"list-item-node\">Genome assembly file (FASTA format)</li><li class=\"list-item-node\">Optional: Protein evidence sequences</li><li class=\"list-item-node\">Optional: Transcript evidence sequences</li><li class=\"list-item-node\">Optional: RNA-seq reads for de-novo transcriptome assembly</li></ul><h3 class=\"heading-node\"><strong>Supported Organisms</strong></h3><p class=\"text-node\">Primarily designed for <strong>metazoans</strong> (animals), but adaptable to other eukaryotic groups including fungi, plants, and protists with appropriate training data.</p><h3 class=\"heading-node\"><strong>Output</strong></h3><p class=\"text-node\">The pipeline generates comprehensive annotation results including:</p><ul class=\"list-node\"><li class=\"list-item-node\">Gene structure predictions in GFF3/GTF format</li><li class=\"list-item-node\">Protein and transcript sequences (FASTA)</li><li class=\"list-item-node\">Evidence alignment files</li><li class=\"list-item-node\">Quality control reports</li><li class=\"list-item-node\">MultiQC summary report</li></ul><h3 class=\"heading-node\"><strong>Use Cases</strong></h3><ul class=\"list-node\"><li class=\"list-item-node\">Annotating newly sequenced eukaryotic genomes</li><li class=\"list-item-node\">Improving existing genome annotations with new evidence</li><li class=\"list-item-node\">Preparing genomes for NCBI GenBank submission</li><li class=\"list-item-node\">Comparative genomics studies requiring consistent annotation</li><li class=\"list-item-node\">Integration of multiple evidence sources for robust gene prediction</li></ul><blockquote class=\"block-node\"><p class=\"text-node\"><strong><em>Note:</em></strong><em> This pipeline is part of the nf-core community-driven bioinformatics pipeline collection, ensuring best practices, rigorous testing, and continuous improvement.</em></p></blockquote>",
   "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./genomeannotator-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "type": "Stash File",
+      "label": "Input Samplesheet",
+      "name": "input",
+      "description": "CSV/TSV file containing genome assembly and evidence data paths",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [".csv", ".tsv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory where annotation results will be saved",
+      "defaultValue": "./genomeannotator-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "genomeannotator", "type": "task"}]
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "description": "Select the compute resources for annotation. LARGE recommended for most eukaryotic genomes.",
+      "options": [
+        {
+          "label": "LARGE",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "name": "genomeannotator",
+      "type": "task"
+    },
+    {
+      "name": "annotation",
+      "type": "task"
+    },
+    {
+      "name": "eukaryote",
+      "type": "task"
+    }
+  ]
 }

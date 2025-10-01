@@ -1,16 +1,186 @@
 {
   "name": "callingcards-tf-binding",
-  "title": "Calling Cards",
-  "description": " TF Binding",
+  "title": "Calling Cards - TF Binding Analysis",
+  "description": "A comprehensive bioinformatics pipeline for processing Calling Cards data from transposon-based experiments. Analyzes transcription factor binding sites by processing raw sequencing data from yeast (S. cerevisiae) and mammalian (human, mouse) Calling Cards experiments to identify protein-DNA interactions over time.",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/callingcards --input ${input} --outdir ${outdir} -r  Transposon-based TF mapping:1.0.0 ",
+  "command": "nextflow run nf-core/callingcards --input ${input} --outdir ${outdir} --datatype ${datatype} --aligner ${aligner} -r 1.0.0 -profile docker",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/callingcards/master/docs/images/nf-core-callingcards_logo_light.png",
-  "content": "<h2><strong>Calling Cards</strong></h2><p> TF Binding</p>",
+  "content": "<h2><strong>Calling Cards Pipeline</strong></h2><p>The nf-core/callingcards pipeline enables researchers to analyze transposon-based Calling Cards data, a powerful technique for studying transcription factor binding events. This pipeline processes raw sequencing reads to identify and quantify genomic insertion sites ('hops'), providing insights into protein-DNA interactions over time in both yeast and mammalian systems.</p><h3>Key Features</h3><ul><li><strong>Dual Organism Support:</strong> Optimized workflows for both yeast (S. cerevisiae) and mammalian (human, mouse) experiments with organism-specific processing profiles</li><li><strong>Comprehensive Read Processing:</strong> Automated quality control with FastQC, barcode demultiplexing, and optional read trimming for optimal data preparation</li><li><strong>Flexible Alignment:</strong> Multiple aligner options including Bowtie, Bowtie2, BWA, and BWAmem2 for accurate read mapping to reference genomes</li><li><strong>Insertion Site Analysis:</strong> Precise counting and annotation of transposon insertion sites using specialized callingCardsTools algorithms</li><li><strong>Quality Metrics:</strong> Detailed QC reporting with MultiQC for comprehensive assessment of experiment quality and data integrity</li></ul><h3>Workflow Overview</h3><p>The pipeline takes a samplesheet describing sample names, fastq file paths, and barcode details JSON files, along with organism type and reference genome information. It performs genome preparation (optional masking, aligner indices creation), read preprocessing (QC, demultiplexing, trimming), alignment with quality checks, insertion site counting, and generates aggregated quality control reports.</p><h3>Use Cases</h3><ul><li>Mapping transcription factor binding landscapes in yeast and mammalian cells</li><li>Temporal analysis of protein-DNA interactions using transposon insertion profiles</li><li>Comparative genomic studies of regulatory element occupancy</li><li>High-throughput screening of DNA-binding protein activities</li></ul><p><strong>Pipeline Version:</strong> 1.0.0 | <strong>Documentation:</strong> <a href='https://nf-co.re/callingcards/1.0.0/' target='_blank'>nf-co.re/callingcards</a></p>",
   "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./callingcards-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "type": "Stash File",
+      "label": "Input Samplesheet",
+      "name": "input",
+      "description": "CSV or TSV samplesheet containing sample names, paths to FASTQ files, and paths to barcode details JSON files. Required columns: sample, fastq_1, fastq_2 (for paired-end), barcode_details.",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [".csv", ".tsv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "The output directory where results will be saved, including processed reads, alignment files, insertion site counts, and comprehensive quality control reports.",
+      "defaultValue": "./callingcards-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    },
+    {
+      "type": "Radio",
+      "label": "Organism Type",
+      "name": "datatype",
+      "description": "Select the organism type for your Calling Cards experiment. Choose 'yeast' for S. cerevisiae experiments or 'mammals' for human/mouse experiments. This determines the appropriate processing workflow and default parameters.",
+      "defaultValue": "yeast",
+      "required": true,
+      "options": [
+        {
+          "label": "Yeast (S. cerevisiae)",
+          "value": "yeast"
+        },
+        {
+          "label": "Mammals (Human/Mouse)",
+          "value": "mammals"
+        }
+      ]
+    },
+    {
+      "type": "Radio",
+      "label": "Aligner",
+      "name": "aligner",
+      "description": "Select the alignment tool for mapping reads to the reference genome. Bowtie2 (default) offers good balance of speed and accuracy for most applications. BWA-MEM2 provides faster performance for larger datasets.",
+      "defaultValue": "bowtie2",
+      "required": false,
+      "options": [
+        {
+          "label": "Bowtie2 (recommended)",
+          "value": "bowtie2"
+        },
+        {
+          "label": "Bowtie",
+          "value": "bowtie"
+        },
+        {
+          "label": "BWA",
+          "value": "bwa"
+        },
+        {
+          "label": "BWA-MEM2",
+          "value": "bwamem2"
+        }
+      ]
+    },
+    {
+      "type": "Input",
+      "label": "Reference Genome FASTA",
+      "name": "fasta",
+      "description": "Path to reference genome FASTA file. Required for mammals workflow. For yeast, default reference will be used if not specified.",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "type": "Input",
+      "label": "Gene Annotation GTF/GFF",
+      "name": "gtf",
+      "description": "Path to gene annotation file in GTF or GFF format. Used for annotating insertion sites relative to genomic features.",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "type": "Input",
+      "label": "Minimum Mapping Quality",
+      "name": "min_mapq",
+      "description": "Minimum mapping quality score (MAPQ) for filtering aligned reads. Higher values (e.g., 30) ensure more confident alignments but may reduce sensitivity. Range: 0-60.",
+      "defaultValue": "10",
+      "required": false
+    },
+    {
+      "type": "Input",
+      "label": "R1 Read Crop Length",
+      "name": "r1_crop",
+      "description": "Number of bases to crop from R1 reads during preprocessing. Useful for removing low-quality bases or adapter sequences from read ends.",
+      "defaultValue": "0",
+      "required": false
+    },
+    {
+      "type": "Checkbox",
+      "label": "Skip Trimming",
+      "name": "skip_trimming",
+      "description": "Skip the read trimming step if your reads are already preprocessed or of high quality throughout their length.",
+      "defaultValue": false,
+      "required": false
+    },
+    {
+      "type": "Input",
+      "label": "Email",
+      "name": "email",
+      "description": "Email address for pipeline completion summary and notifications.",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "type": "Input",
+      "label": "MultiQC Title",
+      "name": "multiqc_title",
+      "description": "Custom title for the MultiQC report. Will be displayed as the page header and used in the filename.",
+      "defaultValue": "",
+      "required": false
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "callingcards", "type": "task"}]
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Resources",
+      "name": "system_size",
+      "options": [
+        {
+          "label": "SMALL (2 nodes)",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 2,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM (4 nodes)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 4,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (8 nodes) - Recommended",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 8,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "name": "callingcards",
+      "type": "task"
+    },
+    {
+      "name": "transcription-factor",
+      "type": "task"
+    },
+    {
+      "name": "genomics",
+      "type": "domain"
+    }
+  ]
 }

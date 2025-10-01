@@ -1,16 +1,49 @@
 {
-  "name": "genomeassembler-short-read-assembly",
-  "title": "Genome Assembler",
-  "description": " Short-read Assembly",
+  "name": "genomeassembler-long-read-assembly",
+  "title": "Genome Assembler: Long-Read Assembly & Scaffolding",
+  "description": "Complete genome assembly pipeline for haploid/unphased genomes from long reads (ONT/PacBio HiFi) with assembly via flye/hifiasm, polishing with medaka/pilon, scaffolding using LINKS/Longstitch/RagTag, and comprehensive quality control with BUSCO/QUAST/merqury.",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/genomeassembler --input ${input} --outdir ${outdir} -r  Illumina genome assembly:1.0.0 ",
+  "command": "nextflow run nf-core/genomeassembler --input ${input} --outdir ${outdir} -r dev",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/genomeassembler/master/docs/images/nf-core-genomeassembler_logo_light.png",
-  "content": "<h2><strong>Genome Assembler</strong></h2><p> Short-read Assembly</p>",
+  "content": "<h2><strong>Genome Assembler: Long-Read Assembly</strong></h2><p>Comprehensive pipeline for assembling, polishing, and scaffolding haploid or diploid inbred genomes from Oxford Nanopore Technologies (ONT) or PacBio HiFi long reads.</p><h3><strong>Assembly & Polishing Workflow</strong></h3><ul><li><strong>Assembly Options</strong>: Choose between Flye (ONT-optimized) or Hifiasm (HiFi-optimized) assemblers</li><li><strong>Polishing</strong>: Medaka for ONT reads or Pilon for short-read polishing</li><li><strong>Scaffolding</strong>: LINKS, Longstitch, or RagTag (reference-guided) for improving contiguity</li><li><strong>Quality Control</strong>: BUSCO completeness, QUAST assembly metrics, and Merqury accuracy assessment</li></ul><h3><strong>Key Features</strong></h3><ul><li><strong>Long-Read Optimized</strong>: Designed for ONT and PacBio HiFi sequencing technologies</li><li><strong>Flexible Assembly</strong>: Multiple assembler options to match your data type</li><li><strong>Comprehensive QC</strong>: Gene completeness, assembly statistics, and base-level accuracy</li><li><strong>Reference-Guided</strong>: Optional scaffolding with reference genomes using RagTag</li></ul><h3><strong>Input Requirements</strong></h3><p>Samplesheet (CSV format) with columns:</p><ul><li><code>sample</code>: Sample identifier</li><li><code>ontreads</code>: Path to ONT reads (optional)</li><li><code>hifireads</code>: Path to HiFi reads (optional)</li><li><code>ref_fasta</code>: Reference genome for scaffolding (optional)</li><li><code>shortread_F/R</code>: Short reads for polishing (optional)</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Assembled Genome</strong>: FASTA files with contigs/scaffolds</li><li><strong>Assembly Metrics</strong>: N50, L50, total length, number of contigs</li><li><strong>BUSCO Results</strong>: Gene completeness assessment</li><li><strong>QUAST Report</strong>: Comprehensive assembly statistics</li><li><strong>Merqury QC</strong>: Base-level accuracy and kmer analysis</li><li><strong>MultiQC Report</strong>: Integrated quality control summary</li></ul><h3><strong>Important Notes</strong></h3><ul><li><strong>Genome Type</strong>: Designed for haploid or diploid inbred genomes</li><li><strong>Not Supported</strong>: Polyploid genome phasing, HiC scaffolding</li><li><strong>Resource Requirements</strong>: Large genomes require substantial compute resources</li></ul><blockquote><p><strong>Perfect for:</strong> De novo genome assembly • Long-read sequencing projects • Plant/animal genome projects • Microbial genome assembly • Reference genome construction</p></blockquote><p>Built with <a href=\"https://www.nextflow.io/\">Nextflow</a> • Powered by <a href=\"https://nf-co.re/genomeassembler/\">nf-core/genomeassembler</a> • Citation: doi:10.5281/zenodo.14986998</p>",
   "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./genomeassembler-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV samplesheet with columns: sample, ontreads, hifireads, ref_fasta, shortread_F, shortread_R",
+      "required": true,
+      "restrictions": {"allow_files": true, "allow_folders": false, "allowed_file_types": [".csv"]}
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory for assembly results, QC reports, and scaffolds",
+      "defaultValue": "./genomeassembler-results",
+      "required": true,
+      "restrictions": {"allow_files": false, "allow_folders": true}
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "genomeassembler", "type": "task"}]
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "description": "Select compute resources based on genome size and complexity",
+      "options": [
+        {"label": "LARGE (64 CPUs, 360GB RAM) - Recommended for most genomes", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}},
+        {"label": "XLARGE (96 CPUs, 540GB RAM) - Large/complex genomes", "value": "xlarge", "mapValue": {"nodeSize": "XLARGE", "numNodes": 1, "withGpu": false}}
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {"name": "genome-assembly", "type": "field"},
+    {"name": "long-read-sequencing", "type": "task"},
+    {"name": "de-novo-assembly", "type": "task"},
+    {"name": "genomics", "type": "subfield"}
+  ]
 }

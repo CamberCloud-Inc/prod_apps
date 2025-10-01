@@ -1,16 +1,156 @@
 {
   "name": "pairgenomealign-synteny-analysis",
-  "title": "Pairwise Genome Alignment",
-  "description": " Synteny Analysis",
-  "version": "1.0.0",
+  "title": "Pairwise Genome Alignment: Synteny Analysis",
+  "description": "Comparative genomics pipeline using LAST software to align query genomes to a target genome, perform synteny analysis, and generate alignment visualizations. Supports multiple alignment modes for discovering conserved genomic regions, chromosomal rearrangements, and evolutionary relationships.",
+  "version": "2.2.1",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/pairgenomealign --input ${input} --outdir ${outdir} -r  Comparative genome alignment:1.0.0 ",
+  "command": "nextflow run nf-core/pairgenomealign --target ${target} --input ${input} --outdir ${outdir} --m2m ${m2m} --export_aln_to ${export_format} -r 2.2.1",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/pairgenomealign/master/docs/images/nf-core-pairgenomealign_logo_light.png",
-  "content": "<h2><strong>Pairwise Genome Alignment</strong></h2><p> Synteny Analysis</p>",
+  "content": "<h1 class=\"heading-node\">🧬 Pairwise Genome Alignment: Synteny Analysis</h1><p class=\"text-node\"><strong>Discover Genomic Conservation and Evolutionary Relationships</strong></p><p class=\"text-node\">The <strong>pairgenomealign</strong> pipeline performs comprehensive pairwise genome comparisons using the powerful LAST alignment software, revealing syntenic regions, chromosomal rearrangements, and evolutionary patterns across genomes.</p><img src=\"https://raw.githubusercontent.com/nf-core/pairgenomealign/master/docs/images/nf-core-pairgenomealign_logo_light.png\" alt=\"nf-core/pairgenomealign workflow\" width=\"600\" height=\"400\"><h2 class=\"heading-node\">🎯 What is Synteny Analysis?</h2><p class=\"text-node\"><strong>Synteny</strong> refers to the conservation of gene order and chromosomal arrangement between different species or genomes. This pipeline identifies and visualizes these conserved genomic regions through pairwise genome alignments.</p><h3 class=\"heading-node\">Key Concepts</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔗 Conserved Blocks:</strong> Genomic regions maintaining similar sequence and organization</p></li><li><p class=\"text-node\"><strong>🔄 Rearrangements:</strong> Inversions, translocations, and structural variations</p></li><li><p class=\"text-node\"><strong>🧬 Orthology:</strong> Genes in different species descended from a common ancestor</p></li><li><p class=\"text-node\"><strong>📊 Dotplots:</strong> Visual representations of genome alignments revealing patterns</p></li></ul><h2 class=\"heading-node\">⚙️ Pipeline Workflow</h2><p class=\"text-node\">The pipeline executes a comprehensive analysis in five stages:</p><h3 class=\"heading-node\">1. 📋 Genome Quality Control</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>assembly-scan:</strong> Validates input genomes and checks quality metrics</p></li><li><p class=\"text-node\">Ensures proper FASTA format and sequence integrity</p></li><li><p class=\"text-node\">Reports assembly statistics and potential issues</p></li></ul><h3 class=\"heading-node\">2. 🗄️ Genome Indexing</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>lastdb:</strong> Creates optimized index of the target genome</p></li><li><p class=\"text-node\">Enables fast alignment queries</p></li><li><p class=\"text-node\">Configurable for DNA/protein sequences</p></li></ul><h3 class=\"heading-node\">3. 🎯 Pairwise Alignments</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>lastal:</strong> Performs high-quality pairwise genome alignments</p></li><li><p class=\"text-node\">Aligns each query genome to the target genome</p></li><li><p class=\"text-node\">Supports multiple alignment modes (see below)</p></li></ul><h3 class=\"heading-node\">4. 📊 Alignment Visualization</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>last-dotplot:</strong> Generates publication-quality dotplots</p></li><li><p class=\"text-node\">PNG line plots revealing syntenic patterns</p></li><li><p class=\"text-node\">Visual identification of conserved blocks and rearrangements</p></li></ul><h3 class=\"heading-node\">5. 🔄 Format Conversion</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>maf-convert:</strong> Exports alignments to multiple formats</p></li><li><p class=\"text-node\">Supports SAM, BAM, CRAM, PSL, and other formats</p></li><li><p class=\"text-node\">Compatible with downstream analysis tools</p></li></ul><h2 class=\"heading-node\">🔬 Alignment Modes</h2><p class=\"text-node\">Choose the optimal alignment strategy for your research question:</p><h3 class=\"heading-node\">Many-to-Many (default)</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🌐 Most Comprehensive:</strong> Allows multiple matches in both genomes</p></li><li><p class=\"text-node\"><strong>Best for:</strong> Detecting duplications, repeats, and complex rearrangements</p></li><li><p class=\"text-node\"><strong>Use case:</strong> Genomes with segmental duplications or polyploidy</p></li></ul><h3 class=\"heading-node\">Many-to-One</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🎯 Query-focused:</strong> Query sequences can match multiple target regions</p></li><li><p class=\"text-node\"><strong>Best for:</strong> Identifying gene families in the target genome</p></li><li><p class=\"text-node\"><strong>Use case:</strong> Mapping paralogs and expanded gene families</p></li></ul><h3 class=\"heading-node\">One-to-Many</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔍 Target-focused:</strong> Target sequences can match multiple query regions</p></li><li><p class=\"text-node\"><strong>Best for:</strong> Finding duplicated regions in query genomes</p></li><li><p class=\"text-node\"><strong>Use case:</strong> Studying query genome expansions</p></li></ul><h3 class=\"heading-node\">One-to-One</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🎯 Most Stringent:</strong> Single best match only</p></li><li><p class=\"text-node\"><strong>Best for:</strong> Clean orthology assignments</p></li><li><p class=\"text-node\"><strong>Use case:</strong> Simple synteny blocks between closely related species</p></li></ul><h2 class=\"heading-node\">📋 Input Requirements</h2><h3 class=\"heading-node\">Target Genome</h3><p class=\"text-node\">A single reference genome in FASTA format that serves as the alignment target. This is typically the better-assembled or more complete genome.</p><h3 class=\"heading-node\">Sample Sheet (CSV)</h3><p class=\"text-node\">CSV file with query genomes to align:</p><pre class=\"block-node\"><code>sample,fasta\nspecies1,/path/to/species1_genome.fa\nspecies2,/path/to/species2_genome.fa\nspecies3,/path/to/species3_genome.fa</code></pre><ul class=\"list-node\"><li><p class=\"text-node\"><strong>sample:</strong> Unique identifier for each genome</p></li><li><p class=\"text-node\"><strong>fasta:</strong> Full path to genome FASTA file</p></li></ul><h2 class=\"heading-node\">📊 Comprehensive Results</h2><h3 class=\"heading-node\">Alignment Files</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📁 MAF Format:</strong> Multiple Alignment Format with detailed alignment blocks</p></li><li><p class=\"text-node\"><strong>🧬 SAM/BAM/CRAM:</strong> Standard genomics formats for visualization</p></li><li><p class=\"text-node\"><strong>📊 PSL:</strong> Detailed alignment coordinates and statistics</p></li><li><p class=\"text-node\"><strong>🔍 BLAST:</strong> Tabular format for quick parsing</p></li></ul><h3 class=\"heading-node\">Visualization</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📈 Dotplots:</strong> PNG line plots showing syntenic relationships</p></li><li><p class=\"text-node\"><strong>🎨 Color-coded:</strong> Forward and reverse alignments distinguished</p></li><li><p class=\"text-node\"><strong>📍 Coordinates:</strong> Genomic positions clearly labeled</p></li><li><p class=\"text-node\"><strong>🔍 Resolution:</strong> High-quality publication-ready images</p></li></ul><h3 class=\"heading-node\">Quality Metrics</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📊 Assembly Statistics:</strong> N50, completeness, quality scores</p></li><li><p class=\"text-node\"><strong>🎯 Alignment Coverage:</strong> Percentage of genomes aligned</p></li><li><p class=\"text-node\"><strong>🧮 Identity Scores:</strong> Sequence similarity metrics</p></li><li><p class=\"text-node\"><strong>📈 MultiQC Report:</strong> Comprehensive summary across all comparisons</p></li></ul><h2 class=\"heading-node\">🧪 Scientific Applications</h2><h3 class=\"heading-node\">Evolutionary Biology</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🌳 Phylogenomics:</strong> Reconstruct evolutionary relationships</p></li><li><p class=\"text-node\"><strong>🔄 Chromosomal Evolution:</strong> Track rearrangements over time</p></li><li><p class=\"text-node\"><strong>🧬 Gene Order Conservation:</strong> Identify functional constraints</p></li></ul><h3 class=\"heading-node\">Comparative Genomics</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔍 Ortholog Identification:</strong> Find corresponding genes across species</p></li><li><p class=\"text-node\"><strong>📊 Gene Family Expansion:</strong> Detect duplications and losses</p></li><li><p class=\"text-node\"><strong>🎯 Functional Annotation:</strong> Transfer annotations via synteny</p></li></ul><h3 class=\"heading-node\">Population Genomics</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔄 Structural Variation:</strong> Large-scale genomic differences</p></li><li><p class=\"text-node\"><strong>🧬 Inversion Mapping:</strong> Identify polymorphic inversions</p></li><li><p class=\"text-node\"><strong>📍 Translocation Detection:</strong> Inter-chromosomal rearrangements</p></li></ul><h3 class=\"heading-node\">Agricultural Genomics</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🌾 Crop Improvement:</strong> Transfer knowledge between varieties</p></li><li><p class=\"text-node\"><strong>🧬 Trait Mapping:</strong> Identify syntenic QTL regions</p></li><li><p class=\"text-node\"><strong>🔍 Comparative Breeding:</strong> Cross-species genetic insights</p></li></ul><h2 class=\"heading-node\">💡 Best Practices</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>✅ Choose high-quality assemblies:</strong> Better assemblies yield clearer synteny</p></li><li><p class=\"text-node\"><strong>✅ Select appropriate mode:</strong> Match alignment mode to research question</p></li><li><p class=\"text-node\"><strong>✅ Use closely related species:</strong> More divergent genomes may need parameter tuning</p></li><li><p class=\"text-node\"><strong>✅ Export multiple formats:</strong> Different formats suit different downstream analyses</p></li><li><p class=\"text-node\"><strong>✅ Examine dotplots:</strong> Visual inspection reveals biological insights</p></li></ul><h2 class=\"heading-node\">🔧 Pipeline Features</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>⚡ Fast:</strong> Optimized LAST algorithms for rapid alignment</p></li><li><p class=\"text-node\"><strong>🔄 Flexible:</strong> Multiple alignment modes and export formats</p></li><li><p class=\"text-node\"><strong>📊 Comprehensive:</strong> From QC to publication-ready visualizations</p></li><li><p class=\"text-node\"><strong>🔬 Reproducible:</strong> Containerized execution with full parameter tracking</p></li><li><p class=\"text-node\"><strong>🎯 Scalable:</strong> Handle multiple query genomes in parallel</p></li></ul><p class=\"text-node\"><strong>Perfect for Research in:</strong> Evolutionary genomics • Comparative genomics • Population genetics • Agricultural genomics • Phylogenomics • Chromosomal evolution • Synteny mapping • Structural variation</p><blockquote><p class=\"text-node\"><strong>Citation:</strong> Plessy et al. (2024). \"Extreme genome scrambling in marine planktonic Oikopleura dioica cryptic species.\" <em>Genome Research</em>.</p></blockquote><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/pairgenomealign/2.2.1/\" target=\"_blank\">nf-core/pairgenomealign v2.2.1</a> • Containerized execution • Continuous integration tested</p>",
   "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./pairgenomealign-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "type": "Stash File",
+      "label": "Target Genome",
+      "name": "target",
+      "description": "Reference genome in FASTA format to serve as alignment target. This should be the better-assembled or more complete genome.",
+      "required": true,
+      "hidden": false,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".fa", ".fasta", ".fna"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Query Genomes Samplesheet",
+      "name": "input",
+      "description": "CSV samplesheet with columns: sample (unique ID), fasta (full path to genome FASTA file).",
+      "required": true,
+      "hidden": false,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv"]
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Alignment Mode",
+      "name": "m2m",
+      "description": "Alignment strategy: many-to-many allows all matches, one-to-one restricts to best match only.",
+      "defaultValue": "true",
+      "required": false,
+      "hidden": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Many-to-Many (Comprehensive - detects duplications)",
+          "value": "true"
+        },
+        {
+          "label": "One-to-One (Stringent - best match only)",
+          "value": "false"
+        }
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Export Alignment Format",
+      "name": "export_format",
+      "description": "Additional alignment output formats for downstream analysis and visualization.",
+      "defaultValue": "sam",
+      "required": false,
+      "hidden": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "SAM - Sequence Alignment/Map format",
+          "value": "sam"
+        },
+        {
+          "label": "BAM - Compressed SAM format",
+          "value": "bam"
+        },
+        {
+          "label": "CRAM - Reference-based compressed format",
+          "value": "cram"
+        },
+        {
+          "label": "PSL - BLAT's alignment format",
+          "value": "psl"
+        },
+        {
+          "label": "BLAST - Tabular BLAST format",
+          "value": "blast"
+        },
+        {
+          "label": "None - MAF format only",
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory for alignment results, dotplots, and quality reports.",
+      "defaultValue": "./pairgenomealign-results",
+      "required": true,
+      "hidden": false,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "pairgenomealign", "type": "task"}]
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "description": "Select compute size based on genome complexity and number of comparisons.",
+      "hidden": false,
+      "options": [
+        {
+          "label": "Medium (32 CPUs, 180GB RAM) - Small genomes",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Large (64 CPUs, 360GB RAM) - Recommended",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLarge (96 CPUs, 540GB RAM) - Large genomes",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {"name": "genomics", "type": "subfield"},
+    {"name": "comparative", "type": "task"},
+    {"name": "synteny", "type": "task"},
+    {"name": "alignment", "type": "task"},
+    {"name": "biology", "type": "field"}
+  ]
 }

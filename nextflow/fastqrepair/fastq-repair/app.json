@@ -1,16 +1,70 @@
 {
   "name": "fastqrepair-fastq-repair",
-  "title": "FASTQ Repair",
-  "description": " File Repair",
-  "version": "1.0.0",
-  "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/fastqrepair --input ${input} --outdir ${outdir} -r  Fix corrupted FASTQ files:1.0.0 ",
+  "title": "FASTQ Repair: Recover and Clean Corrupted FASTQ Files",
+  "description": "Recover corrupted FASTQ.gz files, drop or fix uncompliant reads, remove unpaired reads, and settle reads that became disordered. Comprehensive toolkit combining gzrt, wipertools, and BBMap for robust FASTQ file recovery.",
+  "content": "<h1 class=\"heading-node\">🔧 FASTQ Repair: Recover and Clean Corrupted FASTQ Files</h1><p class=\"text-node\"><strong>Rescue Your Corrupted Sequencing Data</strong></p><p class=\"text-node\">The nf-core/fastqrepair pipeline recovers corrupted FASTQ.gz files, fixes malformed reads, removes unpaired reads, and re-establishes proper read pairing. Perfect for salvaging valuable sequencing data from corrupted files, restoring read order, and ensuring data quality before downstream analysis.</p><img src=\"https://raw.githubusercontent.com/nf-core/fastqrepair/master/docs/images/nf-core-fastqrepair_logo_light.png\" alt=\"nf-core/fastqrepair logo\" width=\"400\" height=\"300\"><h2 class=\"heading-node\">🎯 What This App Does</h2><p class=\"text-node\">This pipeline provides a comprehensive solution for repairing corrupted or problematic FASTQ files through a multi-step recovery process.</p><h3 class=\"heading-node\">✨ Key Features</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🛠️ Corruption Recovery:</strong> Uses gzrt to recover reads from corrupted FASTQ.gz files</p></li><li><p class=\"text-node\"><strong>✅ Read Validation:</strong> Employs wipertools to make recovered reads well-formed</p></li><li><p class=\"text-node\"><strong>🔄 Re-pairing:</strong> Uses BBMap repair.sh to restore proper read pairing</p></li><li><p class=\"text-node\"><strong>🗑️ Unpaired Removal:</strong> Eliminates singleton reads that lost their mates</p></li><li><p class=\"text-node\"><strong>📊 Quality Control:</strong> Integrated FastQC and MultiQC for comprehensive QC reports</p></li><li><p class=\"text-node\"><strong>📈 Detailed Reporting:</strong> Per-sample cleaning reports showing recovery statistics</p></li></ul><h2 class=\"heading-node\">🚀 Pipeline Workflow</h2><p class=\"text-node\">The repair process follows these steps:</p><ol class=\"list-node\"><li><p class=\"text-node\"><strong>gzrt Recovery:</strong> Extracts recoverable reads from corrupted gzip archives</p></li><li><p class=\"text-node\"><strong>Wipertools Validation:</strong> Fixes malformed records, removes invalid bases, corrects quality strings</p></li><li><p class=\"text-node\"><strong>BBMap Re-pairing:</strong> Matches read pairs, separates paired and singleton reads</p></li><li><p class=\"text-node\"><strong>FastQC Analysis:</strong> Generates quality reports for repaired files</p></li><li><p class=\"text-node\"><strong>MultiQC Summary:</strong> Consolidates all QC metrics into comprehensive report</p></li></ol><h2 class=\"heading-node\">📋 Input File Format</h2><p class=\"text-node\">Create a CSV samplesheet with columns for your samples:</p><pre class=\"block-node\"><code>sample,fastq_1,fastq_2\nmysampleA,mysampleA_R1.fastq.gz,mysampleA_R2.fastq.gz\nmysampleB,mysampleB_R1.fastq.gz,mysampleB_R2.fastq.gz\nmysampleC,mysampleC_R1.fastq.gz,</code></pre><ul class=\"list-node\"><li><p class=\"text-node\"><strong>sample:</strong> Unique sample identifier</p></li><li><p class=\"text-node\"><strong>fastq_1:</strong> Path to R1 reads (required)</p></li><li><p class=\"text-node\"><strong>fastq_2:</strong> Path to R2 reads (optional for single-end data)</p></li></ul><h2 class=\"heading-node\">🔍 Common Use Cases</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🚨 Corrupted Archives:</strong> Recover data from damaged FASTQ.gz files after storage issues</p></li><li><p class=\"text-node\"><strong>📡 Transfer Errors:</strong> Fix files corrupted during data transfer or download</p></li><li><p class=\"text-node\"><strong>🔧 Format Issues:</strong> Repair FASTQ files with malformed records or invalid characters</p></li><li><p class=\"text-node\"><strong>🔄 Unpaired Reads:</strong> Re-establish pairing for reads that became disordered</p></li><li><p class=\"text-node\"><strong>🧹 Data Cleaning:</strong> Remove non-compliant reads before analysis</p></li><li><p class=\"text-node\"><strong>✅ Pre-processing:</strong> Ensure data quality before resource-intensive analyses</p></li></ul><h2 class=\"heading-node\">📊 Output Files</h2><h3 class=\"heading-node\">Repaired Data</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📁 repaired/:</strong> Recovered and cleaned FASTQ files ready for analysis</p><ul class=\"list-node\"><li><p class=\"text-node\">Paired-end: <code class=\"inline\" spellcheck=\"false\">*_R1.fastq.gz</code> and <code class=\"inline\" spellcheck=\"false\">*_R2.fastq.gz</code></p></li><li><p class=\"text-node\">Singletons: <code class=\"inline\" spellcheck=\"false\">*_singleton.fastq.gz</code> (reads without mates)</p></li></ul></li><li><p class=\"text-node\"><strong>📄 Cleaning Reports:</strong> <code class=\"inline\" spellcheck=\"false\">*.report</code> files with recovery statistics per sample</p></li></ul><h3 class=\"heading-node\">Quality Control</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📊 QC/fastqc/:</strong> Individual FastQC reports for each repaired file</p></li><li><p class=\"text-node\"><strong>📈 QC/multiqc/:</strong> Comprehensive MultiQC report consolidating all metrics</p></li></ul><h3 class=\"heading-node\">Pipeline Information</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>⚙️ pipeline_info/:</strong> Execution reports, software versions, parameters used</p></li><li><p class=\"text-node\"><strong>✅ Validated samplesheet:</strong> Processed input file with validation results</p></li></ul><h2 class=\"heading-node\">🧬 Supported File Types</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>✅ Gzipped FASTQ:</strong> <code class=\"inline\" spellcheck=\"false\">.fastq.gz</code>, <code class=\"inline\" spellcheck=\"false\">.fq.gz</code></p></li><li><p class=\"text-node\"><strong>✅ Single-end:</strong> One FASTQ file per sample</p></li><li><p class=\"text-node\"><strong>✅ Paired-end:</strong> R1/R2 read pairs</p></li><li><p class=\"text-node\"><strong>✅ Mixed samples:</strong> Both SE and PE in same samplesheet</p></li></ul><h2 class=\"heading-node\">🔬 Technology Compatibility</h2><p class=\"text-node\">Works with FASTQ files from any sequencing platform:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Illumina:</strong> HiSeq, NovaSeq, MiSeq, NextSeq</p></li><li><p class=\"text-node\"><strong>Ion Torrent:</strong> PGM, Proton, S5</p></li><li><p class=\"text-node\"><strong>BGI:</strong> MGISEQ, DNBSEQ</p></li><li><p class=\"text-node\"><strong>Pacific Biosciences:</strong> Sequel, Revio</p></li><li><p class=\"text-node\"><strong>Oxford Nanopore:</strong> MinION, GridION, PromethION</p></li></ul><h2 class=\"heading-node\">💡 Tips for Success</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Backup First:</strong> Always keep original files before repair attempts</p></li><li><p class=\"text-node\"><strong>Check Reports:</strong> Review cleaning reports to understand data loss</p></li><li><p class=\"text-node\"><strong>QC Comparison:</strong> Compare pre/post repair QC metrics</p></li><li><p class=\"text-node\"><strong>Storage Space:</strong> Ensure sufficient space for both input and output files</p></li><li><p class=\"text-node\"><strong>Resource Allocation:</strong> Use LARGE instance for better performance</p></li></ul><h2 class=\"heading-node\">⚠️ What Gets Removed</h2><p class=\"text-node\">The pipeline removes or fixes:</p><ul class=\"list-node\"><li><p class=\"text-node\">Reads with invalid nucleotide characters</p></li><li><p class=\"text-node\">Reads with mismatched sequence/quality lengths</p></li><li><p class=\"text-node\">Reads that cannot be paired with their mates</p></li><li><p class=\"text-node\">Duplicate or corrupted read IDs</p></li><li><p class=\"text-node\">Truncated or incomplete read records</p></li></ul><h2 class=\"heading-node\">🔬 Perfect For</h2><p class=\"text-node\"><strong>Data Recovery</strong> • <strong>Quality Assurance</strong> • <strong>Pre-processing</strong> • <strong>Archive Validation</strong> • <strong>Transfer Verification</strong> • <strong>Format Standardization</strong></p><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/fastqrepair/1.0.0/\" target=\"_blank\">nf-core/fastqrepair v1.0.0</a> • Containerized execution • Continuous integration tested</p>",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/fastqrepair/master/docs/images/nf-core-fastqrepair_logo_light.png",
-  "content": "<h2><strong>FASTQ Repair</strong></h2><p> File Repair</p>",
-  "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./fastqrepair-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+  "command": "nextflow run nf-core/fastqrepair -r 1.0.0 --input ${input} --outdir ${outdir} -c /etc/mpi/nextflow.camber.config -profile k8s",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Compute resources for FASTQ repair. MEDIUM suitable for most repairs, LARGE for many samples or very large files.",
+      "options": [
+        {
+          "label": "MEDIUM (32 CPUs, 180GB RAM) - Standard repair jobs",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Large cohorts or huge files",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "medium"
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "fastqrepair", "type": "task"}]
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV samplesheet with columns: sample, fastq_1, fastq_2. See documentation for format details.",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [".csv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory where repaired FASTQ files and QC reports will be saved.",
+      "defaultValue": "./fastqrepair-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "tags": [
+    {"name": "genomics", "type": "subfield"},
+    {"name": "preprocessing", "type": "task"},
+    {"name": "quality-control", "type": "task"},
+    {"name": "biology", "type": "field"}
+  ]
 }

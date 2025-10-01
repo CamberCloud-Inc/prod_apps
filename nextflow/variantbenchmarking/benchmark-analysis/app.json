@@ -1,16 +1,155 @@
 {
   "name": "variantbenchmarking-benchmark-analysis",
-  "title": "Variant Benchmarking",
-  "description": " Benchmark Analysis",
+  "title": "Variant Benchmarking: Comprehensive Accuracy Evaluation",
+  "description": "Evaluate and validate variant calling accuracy using gold standard truth sets. Supports small variants (SNVs, INDELs), structural variants (SVs), and copy number variations (CNVs) for both germline and somatic analyses. Compare multiple variant calling methods with industry-standard benchmarking tools including hap.py, rtg vcfeval, Truvari, and more.",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/variantbenchmarking --input ${input} --outdir ${outdir} -r  Variant calling performance evaluation:1.0.0 ",
+  "command": "nextflow run nf-core/variantbenchmarking --input ${input} --outdir ${outdir} --genome ${genome} --analysis ${analysis} --variant_type ${variant_type} --method ${method} -r 1.2.0",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/variantbenchmarking/master/docs/images/nf-core-variantbenchmarking_logo_light.png",
-  "content": "<h2><strong>Variant Benchmarking</strong></h2><p> Benchmark Analysis</p>",
+  "content": "<h1 class=\"heading-node\">🧬 Variant Benchmarking: Comprehensive Accuracy Evaluation</h1><p class=\"text-node\"><strong>Validate Variant Calling Accuracy with Gold Standard Truth Sets</strong></p><p class=\"text-node\">The nf-core/variantbenchmarking pipeline evaluates and validates the accuracy of variant calling methods in genomic research. Initially tuned for available gold standard truth sets (Genome in a Bottle and SEQC2 samples), it can compare any two variant calling results.</p><img src=\"https://raw.githubusercontent.com/nf-core/variantbenchmarking/master/docs/images/nf-core-variantbenchmarking_logo_light.png\" alt=\"nf-core/variantbenchmarking\" width=\"400\" height=\"200\"><h2 class=\"heading-node\">🎯 Pipeline Overview</h2><p class=\"text-node\">This comprehensive benchmarking workflow provides:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📊 Multiple Variant Types:</strong> Small variants (SNVs, INDELs), Structural Variants (SVs), Copy Number Variations (CNVs)</p></li><li><p class=\"text-node\"><strong>🧬 Analysis Modes:</strong> Germline and somatic variant benchmarking</p></li><li><p class=\"text-node\"><strong>🔧 Multiple Tools:</strong> Industry-standard benchmarking tools for comprehensive evaluation</p></li><li><p class=\"text-node\"><strong>📈 Statistical Reports:</strong> Detailed accuracy metrics and performance comparisons</p></li></ul><h2 class=\"heading-node\">🔬 Benchmarking Tools</h2><h3 class=\"heading-node\">Small Variants (SNVs & INDELs)</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>hap.py:</strong> Genome in a Bottle (GIAB) standard tool for small variant comparison</p></li><li><p class=\"text-node\"><strong>som.py:</strong> Optimized for somatic variant benchmarking</p></li><li><p class=\"text-node\"><strong>rtg vcfeval:</strong> Real Time Genomics variant evaluation tool</p></li></ul><h3 class=\"heading-node\">Structural Variants (SVs)</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Truvari:</strong> SV comparison and benchmarking for long and short reads</p></li><li><p class=\"text-node\"><strong>SVanalyzer:</strong> Comprehensive structural variant analysis</p></li><li><p class=\"text-node\"><strong>Rtgtools:</strong> Extended SV evaluation capabilities</p></li></ul><h3 class=\"heading-node\">Copy Number Variations (CNVs)</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Truvari:</strong> CNV benchmarking with size-based filtering</p></li><li><p class=\"text-node\"><strong>Wittyer:</strong> Precision CNV evaluation</p></li><li><p class=\"text-node\"><strong>Bedtools intersection:</strong> Overlap-based CNV comparison</p></li></ul><h2 class=\"heading-node\">📋 Workflow Components</h2><ol class=\"list-node\"><li><p class=\"text-node\"><strong>Variant Standardization:</strong> Normalize VCF files for consistent comparison</p></li><li><p class=\"text-node\"><strong>Filtering Options:</strong> Apply quality filters and region restrictions</p></li><li><p class=\"text-node\"><strong>Genome Coordinate Liftover:</strong> Convert between genome builds (e.g., GRCh37 to GRCh38)</p></li><li><p class=\"text-node\"><strong>Variant Statistical Inference:</strong> Calculate accuracy metrics</p></li><li><p class=\"text-node\"><strong>Benchmarking:</strong> Compare test VCFs against truth sets</p></li><li><p class=\"text-node\"><strong>Benchmark Region Intersection:</strong> Evaluate within specific genomic regions</p></li><li><p class=\"text-node\"><strong>Result Comparison:</strong> Multi-tool consensus analysis</p></li><li><p class=\"text-node\"><strong>Reporting:</strong> Comprehensive HTML and CSV reports</p></li></ol><h2 class=\"heading-node\">📊 Input Requirements</h2><p class=\"text-node\"><strong>Samplesheet Format (CSV):</strong></p><pre class=\"block-node\"><code>id,test_vcf,caller\nsample1,/path/to/test.vcf.gz,haplotypecaller\nsample2,/path/to/test2.vcf.gz,deepvariant\nsample3,/path/to/test3.vcf.gz,freebayes</code></pre><p class=\"text-node\"><strong>Required Columns:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>id:</strong> Unique sample identifier</p></li><li><p class=\"text-node\"><strong>test_vcf:</strong> Path to VCF file to benchmark</p></li><li><p class=\"text-node\"><strong>caller:</strong> Variant calling method name</p></li></ul><h2 class=\"heading-node\">🎯 Analysis Types</h2><h3 class=\"heading-node\">Germline Analysis</h3><p class=\"text-node\">Evaluate variants from inherited genomic variation:</p><ul class=\"list-node\"><li><p class=\"text-node\">Gold standard: Genome in a Bottle (GIAB) reference samples</p></li><li><p class=\"text-node\">Samples: HG002, HG003, HG004, NA12878</p></li><li><p class=\"text-node\">Metrics: Precision, recall, F1-score, genotype concordance</p></li></ul><h3 class=\"heading-node\">Somatic Analysis</h3><p class=\"text-node\">Benchmark tumor-specific variants:</p><ul class=\"list-node\"><li><p class=\"text-node\">Gold standard: SEQC2 reference samples</p></li><li><p class=\"text-node\">Comparison: Tumor/normal pairs</p></li><li><p class=\"text-node\">Metrics: Somatic variant precision, sensitivity, allele frequency accuracy</p></li></ul><h2 class=\"heading-node\">📈 Output Reports</h2><h3 class=\"heading-node\">Accuracy Metrics</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>True Positives (TP):</strong> Correctly identified variants</p></li><li><p class=\"text-node\"><strong>False Positives (FP):</strong> Incorrectly called variants</p></li><li><p class=\"text-node\"><strong>False Negatives (FN):</strong> Missed true variants</p></li><li><p class=\"text-node\"><strong>Precision:</strong> TP / (TP + FP)</p></li><li><p class=\"text-node\"><strong>Recall/Sensitivity:</strong> TP / (TP + FN)</p></li><li><p class=\"text-node\"><strong>F1-Score:</strong> Harmonic mean of precision and recall</p></li></ul><h3 class=\"heading-node\">Comprehensive Reports</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📊 MultiQC Report:</strong> Interactive HTML dashboard with all metrics</p></li><li><p class=\"text-node\"><strong>📁 CSV Files:</strong> Detailed statistics for programmatic analysis</p></li><li><p class=\"text-node\"><strong>🔍 VCF Annotations:</strong> Annotated variants showing TP/FP/FN classifications</p></li><li><p class=\"text-node\"><strong>📈 Comparison Plots:</strong> Visual comparisons across multiple callers</p></li></ul><h2 class=\"heading-node\">🧬 Supported Reference Genomes</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Human:</strong> GRCh37, GRCh38, hg19, hg38</p></li><li><p class=\"text-node\"><strong>Mouse:</strong> GRCm38, GRCm39, mm10, mm39</p></li><li><p class=\"text-node\"><strong>Other organisms:</strong> Any species with reference genome and truth VCF</p></li></ul><h2 class=\"heading-node\">🎨 Use Cases</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔬 Method Validation:</strong> Compare accuracy of different variant callers</p></li><li><p class=\"text-node\"><strong>🧪 Pipeline Optimization:</strong> Test parameter settings and filtering strategies</p></li><li><p class=\"text-node\"><strong>📊 Quality Control:</strong> Validate clinical variant calling pipelines</p></li><li><p class=\"text-node\"><strong>🏥 Clinical Diagnostics:</strong> Ensure variant detection meets accuracy standards</p></li><li><p class=\"text-node\"><strong>📚 Research Validation:</strong> Benchmark novel variant calling methods</p></li><li><p class=\"text-node\"><strong>🎓 Training & Education:</strong> Teach variant calling evaluation</p></li></ul><h2 class=\"heading-node\">⚡ Key Features</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔄 Reproducible:</strong> Built with Nextflow and containerized tools (Docker/Singularity)</p></li><li><p class=\"text-node\"><strong>⚙️ Flexible:</strong> Support for custom truth sets and genomic regions</p></li><li><p class=\"text-node\"><strong>📊 Comprehensive:</strong> Multiple benchmarking tools for robust evaluation</p></li><li><p class=\"text-node\"><strong>🌐 Portable:</strong> Run on local machines, HPC clusters, or cloud platforms</p></li><li><p class=\"text-node\"><strong>📈 Scalable:</strong> Process multiple samples and callers in parallel</p></li></ul><p class=\"text-node\"><strong>Perfect for:</strong> Clinical genomics • Precision medicine • Cancer genomics • Population genetics • Method development • Quality assurance • Bioinformatics training</p><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/variantbenchmarking/\" target=\"_blank\">nf-core/variantbenchmarking</a> • Continuously tested • Community supported</p>",
   "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./variantbenchmarking-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "type": "Stash File",
+      "label": "Samplesheet (CSV)",
+      "name": "input",
+      "description": "CSV samplesheet with columns: id, test_vcf, caller. Each row represents a VCF file to benchmark.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv", ".tsv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory for benchmarking results, metrics, and reports.",
+      "defaultValue": "./variantbenchmarking-results",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome build for variant comparison.",
+      "defaultValue": "GRCh38",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {"label": "Human GRCh38 (NCBI)", "value": "GRCh38"},
+        {"label": "Human GRCh37 (Ensembl)", "value": "GRCh37"},
+        {"label": "Human hg38 (UCSC)", "value": "hg38"},
+        {"label": "Human hg19 (UCSC)", "value": "hg19"},
+        {"label": "Mouse GRCm39 (Ensembl)", "value": "GRCm39"},
+        {"label": "Mouse GRCm38 (Ensembl)", "value": "GRCm38"},
+        {"label": "Mouse mm39 (UCSC)", "value": "mm39"},
+        {"label": "Mouse mm10 (UCSC)", "value": "mm10"}
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Analysis Type",
+      "name": "analysis",
+      "description": "Type of variant analysis: germline (inherited variants) or somatic (tumor-specific variants).",
+      "defaultValue": "germline",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {"label": "Germline - Inherited Variants", "value": "germline"},
+        {"label": "Somatic - Tumor Variants", "value": "somatic"}
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Variant Type",
+      "name": "variant_type",
+      "description": "Type of variants to benchmark.",
+      "defaultValue": "small",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {"label": "Small Variants (SNVs & INDELs)", "value": "small"},
+        {"label": "SNVs Only", "value": "snv"},
+        {"label": "INDELs Only", "value": "indel"},
+        {"label": "Structural Variants (SVs)", "value": "structural"},
+        {"label": "Copy Number Variations (CNVs)", "value": "copynumber"}
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Benchmarking Method",
+      "name": "method",
+      "description": "Benchmarking tool to use for comparison.",
+      "defaultValue": "happy",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {"label": "hap.py - GIAB Standard (Small Variants)", "value": "happy"},
+        {"label": "som.py - Somatic Variants", "value": "sompy"},
+        {"label": "rtg vcfeval - RTG Tools", "value": "rtgtools"},
+        {"label": "Truvari - SV/CNV Benchmarking", "value": "truvari"},
+        {"label": "SVanalyzer - SV Analysis", "value": "svanalyzer"},
+        {"label": "Wittyer - CNV Evaluation", "value": "wittyer"}
+      ]
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "variantbenchmarking", "type": "task"}]
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": false,
+      "description": "Resource allocation for benchmarking analysis. Large recommended for comprehensive benchmarking.",
+      "options": [
+        {
+          "label": "Medium (32 CPUs, 180GB RAM) - Small datasets",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Large (64 CPUs, 360GB RAM) - Recommended",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLarge (96 CPUs, 540GB RAM) - Multiple samples",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {"name": "genomics", "type": "subfield"},
+    {"name": "benchmarking", "type": "task"},
+    {"name": "quality-control", "type": "task"},
+    {"name": "variant-calling", "type": "task"}
+  ]
 }

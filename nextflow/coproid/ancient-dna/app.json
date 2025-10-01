@@ -1,16 +1,97 @@
 {
   "name": "coproid-ancient-dna",
-  "title": "Coproid",
-  "description": " Ancient DNA from Coprolites",
+  "title": "Coprolite Host Identification (nf-core/coproid)",
+  "description": "Identify the host source of ancient coprolites and paleofeces using combined microbiome composition and host DNA content analysis. Uses machine learning to predict whether coprolites came from humans, dogs, or other animals - essential for archaeological and paleontological research.",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/coproid --input ${input} --outdir ${outdir} -r  Coprolite microbiome analysis:1.0.0 ",
+  "command": "nextflow run nf-core/coproid --input ${input} --outdir ${outdir} --genome_sheet ${genome_sheet} --kraken2_db ${kraken2_db} -r 1.1.1 ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/coproid/master/docs/images/nf-core-coproid_logo_light.png",
-  "content": "<h2><strong>Coproid</strong></h2><p> Ancient DNA from Coprolites</p>",
+  "content": "<h1>Coprolite Host Identification with CoproID</h1><h2>What This Analysis Does</h2><p>This pipeline identifies the host source of ancient coprolites (fossilized feces) and paleofeces by combining two powerful approaches: <strong>(A)</strong> comparative mapping of reads against candidate host genomes to measure host DNA content, and <strong>(B)</strong> metagenomic taxonomic profiling with machine learning to predict host source from gut microbiome composition. CoproID integrates both signals to determine whether ancient fecal samples came from humans, dogs, or other animals - answering the fundamental question: \"Who made this?\"</p><h2>When To Use This</h2><ul><li><strong>Archaeological Research:</strong> Identify the origin of coprolites from archaeological sites to understand human and animal presence, diet, and health in past populations</li><li><strong>Paleontological Studies:</strong> Determine host species of fossilized feces to reconstruct ancient ecosystems and species interactions</li><li><strong>Human Evolution:</strong> Study gut microbiome composition and diet in ancient human populations, Neanderthals, or archaic hominins</li><li><strong>Ancient Animal Studies:</strong> Identify domesticated vs. wild animal feces to trace domestication history and human-animal relationships</li><li><strong>Zooarchaeology:</strong> Distinguish between human and animal feces in mixed deposits to understand site usage and activities</li></ul><h2>How CoproID Works</h2><p>The pipeline uses a dual-approach strategy:</p><h3><strong>Approach A: Host DNA Mapping</strong></h3><p>Performs comparative mapping of all reads against 2-3 target genomes (e.g., human vs. dog vs. other mammals) and computes host-DNA species ratios. Ancient DNA from the host organism is preserved in coprolites, and the relative proportion of DNA matching each candidate host genome provides direct evidence of the source organism.</p><h3><strong>Approach B: Microbiome-Based Prediction</strong></h3><p>Conducts metagenomic taxonomic profiling of gut microbiome composition and uses machine learning to compare against reference microbiomes from modern samples of candidate host species. Different animals have characteristic gut microbial communities - humans, dogs, and herbivores each harbor distinct microbial signatures that persist in ancient samples.</p><h3><strong>Integration</strong></h3><p>CoproID combines both signals (host DNA ratio + microbiome prediction) to provide a confident host assignment, leveraging the strengths of both approaches for robust identification even in challenging ancient samples.</p><h2>What You Need</h2><h3>1. Sequencing Data (Sample Sheet CSV)</h3><p>Create a CSV file with your shotgun metagenomic sequencing data from coprolites:</p><pre>Sample_name,Library_ID,Lane,Colour_chemistry,SeqType,Organism,Strandedness,UDG_Treatment,R1,R2,BAM\ncoprolite_001,lib001,1,4,PE,coprolite,double,half,copro1_R1.fastq.gz,copro1_R2.fastq.gz,\ncoprolite_002,lib002,1,4,PE,coprolite,double,half,copro2_R1.fastq.gz,copro2_R2.fastq.gz,</pre><p><strong>Column Details:</strong></p><ul><li><strong>Sample_name:</strong> Unique sample identifier for your coprolite</li><li><strong>Library_ID:</strong> Sequencing library identifier</li><li><strong>Lane:</strong> Sequencing lane number</li><li><strong>Colour_chemistry:</strong> Illumina chemistry (2 or 4)</li><li><strong>SeqType:</strong> <code>PE</code> for paired-end, <code>SE</code> for single-end</li><li><strong>Organism:</strong> Use <code>coprolite</code> or specific if known</li><li><strong>Strandedness:</strong> <code>double</code> for double-stranded libraries (most common)</li><li><strong>UDG_Treatment:</strong> <code>half</code>, <code>full</code>, or <code>none</code> for ancient DNA damage repair</li><li><strong>R1, R2:</strong> Paths to FASTQ files (leave R2 empty for single-end)</li><li><strong>BAM:</strong> Optional pre-aligned BAM file (leave empty if using FASTQ)</li></ul><h3>2. Reference Genomes (Genome Sheet CSV)</h3><p>Specify candidate host genomes for comparative mapping:</p><pre>Alias,Species,Bowtie_index_folder,Malt_index_folder\nhuman,Homo_sapiens,/path/to/human_bowtie_index,\ndog,Canis_familiaris,/path/to/dog_bowtie_index,\npig,Sus_scrofa,/path/to/pig_bowtie_index,</pre><p><strong>Column Details:</strong></p><ul><li><strong>Alias:</strong> Short name for host (human, dog, cat, etc.)</li><li><strong>Species:</strong> Scientific name of candidate host</li><li><strong>Bowtie_index_folder:</strong> Path to Bowtie2 index for mapping</li><li><strong>Malt_index_folder:</strong> Optional MALT index (can leave empty)</li></ul><p><strong>Typical Candidates:</strong></p><ul><li><strong>Human vs. Dog:</strong> Most common for archaeological sites with human occupation and domesticated dogs</li><li><strong>Herbivores:</strong> Cattle, sheep, goat, horse for pastoral contexts</li><li><strong>Wild Mammals:</strong> Deer, boar, bear for paleontological or wilderness sites</li></ul><h3>3. Kraken2 Database</h3><p>Provide path to Kraken2 database for microbiome taxonomic profiling:</p><ul><li><strong>Standard DB:</strong> Includes bacteria, archaea, viruses (~50GB) - recommended for most analyses</li><li><strong>Custom DB:</strong> Specialized database if needed for specific organisms</li><li><strong>Download:</strong> Available from <a href='https://benlangmead.github.io/aws-indexes/k2' target='_blank'>Kraken2 databases</a></li></ul><h3>4. SourcePredict Reference Files</h3><p>Required for machine learning prediction:</p><ul><li><strong>Source References:</strong> Reference microbiome profiles from modern samples of candidate hosts</li><li><strong>Labels File:</strong> Labels linking taxonomic profiles to host species</li><li><strong>Note:</strong> Pre-trained models available in CoproID documentation, or train custom models</li></ul><h2>What You'll Get</h2><h3>Host Identification Results</h3><ul><li><strong>Host Assignment:</strong> Predicted host species with confidence scores</li><li><strong>DNA Ratio Tables:</strong> Proportion of DNA mapping to each candidate host genome</li><li><strong>Microbiome Predictions:</strong> Machine learning classification based on gut microbiome</li><li><strong>Combined Evidence:</strong> Integrated results from both approaches</li></ul><h3>Microbiome Analysis</h3><ul><li><strong>Taxonomic Profiles:</strong> Complete microbial community composition at all taxonomic levels</li><li><strong>Kraken2 Reports:</strong> Detailed classification showing bacterial, archaeal, and viral taxa</li><li><strong>Krona Charts:</strong> Interactive visualization of microbiome composition</li><li><strong>Abundance Tables:</strong> Relative abundances for downstream analysis</li></ul><h3>Ancient DNA Metrics</h3><ul><li><strong>DNA Damage Patterns:</strong> C-to-T deamination at read ends (hallmark of ancient DNA)</li><li><strong>Fragment Length Distribution:</strong> Short fragment profiles typical of ancient DNA</li><li><strong>Contamination Estimates:</strong> Assessment of modern contamination</li><li><strong>Mapping Statistics:</strong> Read mapping rates to each reference genome</li></ul><h3>Quality Control</h3><ul><li><strong>FastQC Reports:</strong> Sequencing quality metrics</li><li><strong>MultiQC Report:</strong> Comprehensive summary across all samples</li><li><strong>Coverage Statistics:</strong> Depth and breadth of coverage for host genomes</li></ul><h2>Expected Analysis Time</h2><ul><li><strong>Small dataset (1-3 samples, 5-10M reads):</strong> 2-4 hours</li><li><strong>Typical dataset (5-10 samples, 10-20M reads):</strong> 6-12 hours</li><li><strong>Large dataset (10+ samples, 20M+ reads):</strong> 12-24 hours</li><li><strong>Note:</strong> Time depends on number of reference genomes, database size, and ancient DNA damage assessment depth</li></ul><h2>Scientific Background</h2><p>CoproID was developed by Borry et al. (2020) and published in PeerJ. The method leverages the fact that ancient fecal samples preserve both host DNA (from shed intestinal cells) and microbial DNA (from gut microbiome). By combining quantitative measurement of host-DNA ratios with machine learning classification of microbiome composition, CoproID achieves high accuracy in identifying the host source of coprolites. This is critical for archaeological interpretation, as misidentification can lead to incorrect conclusions about human presence, diet, and ancient diseases.</p><p>The pipeline handles unique challenges of ancient DNA including short DNA fragments (typically 30-100bp), cytosine deamination damage, and low endogenous DNA content. The machine learning component uses taxonomic profiles trained on modern reference samples to predict host species, accounting for the fact that different animals have characteristically different gut microbial ecosystems.</p><h2>Key Applications</h2><ul><li><strong>Site Interpretation:</strong> Determine whether archaeological sites contain human vs. animal waste deposits</li><li><strong>Paleodiet Reconstruction:</strong> Study diet and subsistence after confirming host species</li><li><strong>Disease Studies:</strong> Identify ancient pathogens in confirmed human samples</li><li><strong>Domestication History:</strong> Track changes in dog gut microbiomes alongside human populations</li><li><strong>Megafauna Studies:</strong> Analyze extinct species coprolites from paleontological contexts</li></ul><h2>Citation</h2><p>If you use this pipeline, please cite:</p><blockquote><p><strong>Borry et al. (2020).</strong> \"CoproID predicts the source of coprolites and paleofeces using microbiome composition and host DNA content.\" <em>PeerJ</em> 8:e9001. DOI: 10.7717/peerj.9001</p></blockquote><p><a href='https://nf-co.re/coproid' target='_blank'>Advanced users: See full nf-core/coproid documentation</a></p>",
   "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./coproid-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV file with coprolite sequencing data. Columns: Sample_name, Library_ID, Lane, Colour_chemistry, SeqType, Organism, Strandedness, UDG_Treatment, R1, R2, BAM",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [".csv", ".tsv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Genome Sheet",
+      "name": "genome_sheet",
+      "description": "CSV file specifying candidate host reference genomes. Columns: Alias, Species, Bowtie_index_folder, Malt_index_folder. Include genomes for potential hosts (human, dog, etc.)",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [".csv", ".tsv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Kraken2 Database",
+      "name": "kraken2_db",
+      "description": "Path to Kraken2 database for metagenomic taxonomic profiling. Use standard database (~50GB) or custom database for specialized analysis.",
+      "required": true
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory where host identification results, microbiome profiles, and QC reports will be saved",
+      "defaultValue": "./coproid-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "coproid", "type": "task"}]
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "description": "Select compute resources based on dataset size. Start with MEDIUM for testing, scale up for production analyses with multiple samples.",
+      "options": [
+        {
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Small datasets (1-5 samples)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Standard datasets (5-15 samples)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE (128 CPUs, 360GB RAM) - Large datasets (15+ samples)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {"name": "metagenomics", "type": "subfield"},
+    {"name": "ancient-dna", "type": "task"},
+    {"name": "archaeology", "type": "field"},
+    {"name": "paleogenomics", "type": "subfield"}
+  ]
 }
