@@ -1,0 +1,65 @@
+{
+  "name": "design-golden-gate-oligos",
+  "title": "Design Golden Gate Oligos",
+  "description": "Design oligonucleotides for Golden Gate assembly with matching overhangs",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application designs oligos for Golden Gate assembly by identifying backbone overhangs and creating matching insert oligos.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Identifies restriction sites</li><li class=\"list-item-node\">Calculates overhangs</li><li class=\"list-item-node\">Designs matching oligos</li><li class=\"list-item-node\">Supports all Type IIS enzymes</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Backbone Sequence</strong>: Destination vector</li><li class=\"list-item-node\"><strong>Insert Sequence</strong>: DNA to insert</li><li class=\"list-item-node\"><strong>Enzyme</strong>: Type IIS enzyme to use</li><li class=\"list-item-node\"><strong>Topology</strong>: Circular or linear backbone</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">Returns forward and reverse oligos with detailed overhang information.</p>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && pip install -q biopython biomni && python prod_apps_clone/biomni/molecular_biology/design_golden_gate_oligos.py \"${backboneSequence}\" \"${insertSequence}\" \"${enzyme}\" ${linear} -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "String",
+      "name": "backboneSequence",
+      "label": "Backbone Sequence",
+      "description": "Destination vector or plasmid sequence",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "insertSequence",
+      "label": "Insert Sequence",
+      "description": "DNA sequence to insert",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "enzyme",
+      "label": "Type IIS Enzyme",
+      "description": "Enzyme to use (BsaI, BsmBI, BbsI, Esp3I, BtgZI, or SapI)",
+      "defaultValue": "BsaI"
+    },
+    {
+      "type": "String",
+      "name": "linear",
+      "label": "Linear Backbone",
+      "description": "Enter '--linear' if backbone is linear (leave empty for circular)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

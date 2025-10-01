@@ -1,0 +1,42 @@
+{
+  "name": "analyze_interaction_mechanisms",
+  "description": "Analyzes drug-drug interaction mechanisms for a specific drug pair",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "analyze_interaction_mechanisms.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "drug_pair",
+      "description": "Pair of drugs to analyze (array with 2 drug names)",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "detailed_analysis",
+      "description": "Include detailed mechanism analysis",
+      "type": "boolean",
+      "required": false,
+      "default": true
+    },
+    {
+      "name": "data_lake_path",
+      "description": "Path to data lake directory (optional)",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with interaction mechanism analysis"
+      }
+    }
+  }
+}

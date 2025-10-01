@@ -1,0 +1,41 @@
+{
+  "name": "Compare Protein Structures",
+  "description": "Compare two protein structures to identify structural differences and conformational changes using RMSD and per-residue distance analysis",
+  "install": "cd /tmp && git clone --depth 1 https://github.com/snap-stanford/Biomni.git biomni_repo && cd biomni_repo && pip install -e . && pip install biopython numpy",
+  "run": "python3 /Users/david/git/prod_apps/biomni/systems_biology/compare_protein_structures.py \"$PDB_FILE1\" \"$PDB_FILE2\" \"$CHAIN_ID1\" \"$CHAIN_ID2\" \"$OUTPUT_PREFIX\"",
+  "inputs": [
+    {
+      "name": "PDB_FILE1",
+      "description": "Path to the first PDB file",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "PDB_FILE2",
+      "description": "Path to the second PDB file",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "CHAIN_ID1",
+      "description": "Chain ID to analyze in the first structure",
+      "type": "text",
+      "required": false,
+      "default": "A"
+    },
+    {
+      "name": "CHAIN_ID2",
+      "description": "Chain ID to analyze in the second structure",
+      "type": "text",
+      "required": false,
+      "default": "A"
+    },
+    {
+      "name": "OUTPUT_PREFIX",
+      "description": "Prefix for output files",
+      "type": "text",
+      "required": false,
+      "default": "protein_comparison"
+    }
+  ]
+}

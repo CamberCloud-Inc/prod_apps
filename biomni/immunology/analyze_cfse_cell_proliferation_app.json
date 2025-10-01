@@ -1,0 +1,28 @@
+{
+  "name": "Analyze CFSE Cell Proliferation",
+  "description": "Analyze CFSE-labeled cell samples to quantify cell division and proliferation using flow cytometry data",
+  "category": "Immunology",
+  "subcategory": "Flow Cytometry",
+  "image": "davethesoftwaredev/biomni:latest",
+  "command": "python /app/biomni/immunology/analyze_cfse_cell_proliferation.py",
+  "params": [
+    {
+      "name": "fcs_file_path",
+      "type": "file",
+      "description": "Path to the FCS file containing CFSE-labeled cell data",
+      "required": true
+    },
+    {
+      "name": "cfse_channel",
+      "type": "string",
+      "description": "Flow cytometry channel name for CFSE fluorescence",
+      "default": "FL1-A"
+    },
+    {
+      "name": "lymphocyte_gate_json",
+      "type": "string",
+      "description": "Optional gating parameters for lymphocyte population (JSON object with 'fsc' and 'ssc' keys, leave blank for automatic gating)",
+      "default": "None"
+    }
+  ]
+}

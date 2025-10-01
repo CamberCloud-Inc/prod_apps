@@ -1,0 +1,53 @@
+{
+  "name": "query_pubmed",
+  "description": "Search PubMed for research papers based on the provided query. Automatically retries with simplified queries if no results are found.",
+  "version": "1.0.0",
+  "author": "Biomni Literature Tools",
+  "license": "MIT",
+  "input": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "description": "The search query string for PubMed"
+      },
+      "max_papers": {
+        "type": "integer",
+        "description": "The maximum number of papers to retrieve",
+        "default": 10
+      },
+      "max_retries": {
+        "type": "integer",
+        "description": "Maximum number of retry attempts with modified queries",
+        "default": 3
+      }
+    },
+    "required": ["query", "max_papers", "max_retries"]
+  },
+  "output": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean",
+        "description": "Whether the operation succeeded"
+      },
+      "result": {
+        "type": "string",
+        "description": "Formatted search results with titles, abstracts, and journals"
+      },
+      "error": {
+        "type": "string",
+        "description": "Error message if operation failed"
+      }
+    }
+  },
+  "execution": {
+    "command": "python3",
+    "args": [
+      "query_pubmed.py",
+      "{{query}}",
+      "{{max_papers}}",
+      "{{max_retries}}"
+    ]
+  }
+}

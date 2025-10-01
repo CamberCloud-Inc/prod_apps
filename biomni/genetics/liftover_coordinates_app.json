@@ -1,0 +1,81 @@
+{
+  "name": "liftover-coordinates",
+  "title": "Liftover Genomic Coordinates",
+  "description": "Convert genomic coordinates between hg19 and hg38 genome builds",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application performs liftover of genomic coordinates between hg19 and hg38 formats using the pyliftover library and UCSC chain files. It provides detailed intermediate steps and results for coordinate conversion.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Convert coordinates between hg19 and hg38 genome builds</li><li class=\"list-item-node\">Support for all chromosomes including sex chromosomes</li><li class=\"list-item-node\">Detailed step-by-step conversion process</li><li class=\"list-item-node\">Strand information included in results</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Chromosome</strong>: Chromosome number (e.g., '1', 'X')</li><li class=\"list-item-node\"><strong>Position</strong>: Genomic position</li><li class=\"list-item-node\"><strong>Input Format</strong>: Input genome build (hg19 or hg38)</li><li class=\"list-item-node\"><strong>Output Format</strong>: Output genome build (hg19 or hg38)</li><li class=\"list-item-node\"><strong>Data Path</strong>: Path to liftover chain files</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a text file with the converted coordinates including the original position, lifted position, chromosome, and strand information.</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python \"prod_apps/biomni/genetics/liftover_coordinates.py\" \"${chromosome}\" ${position} \"${inputFormat}\" \"${outputFormat}\" \"${dataPath}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "String",
+      "name": "chromosome",
+      "label": "Chromosome",
+      "description": "Chromosome number (e.g., '1', 'X')",
+      "defaultValue": "1"
+    },
+    {
+      "type": "Number",
+      "name": "position",
+      "label": "Position",
+      "description": "Genomic position",
+      "defaultValue": 100000
+    },
+    {
+      "type": "Select",
+      "name": "inputFormat",
+      "label": "Input Format",
+      "description": "Input genome build",
+      "options": [
+        {"label": "hg19", "value": "hg19"},
+        {"label": "hg38", "value": "hg38"}
+      ],
+      "defaultValue": "hg19"
+    },
+    {
+      "type": "Select",
+      "name": "outputFormat",
+      "label": "Output Format",
+      "description": "Output genome build",
+      "options": [
+        {"label": "hg19", "value": "hg19"},
+        {"label": "hg38", "value": "hg38"}
+      ],
+      "defaultValue": "hg38"
+    },
+    {
+      "type": "String",
+      "name": "dataPath",
+      "label": "Data Path",
+      "description": "Path to liftover chain files directory",
+      "defaultValue": "/data"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

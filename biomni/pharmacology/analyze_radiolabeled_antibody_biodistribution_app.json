@@ -1,0 +1,35 @@
+{
+  "name": "analyze_radiolabeled_antibody_biodistribution",
+  "description": "Analyzes radiolabeled antibody biodistribution across tissues",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "analyze_radiolabeled_antibody_biodistribution.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "time_points",
+      "description": "Time points for biodistribution measurements",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "tissue_data",
+      "description": "Tissue distribution data",
+      "type": "object",
+      "required": true
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with biodistribution analysis"
+      }
+    }
+  }
+}

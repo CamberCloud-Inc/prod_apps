@@ -1,0 +1,66 @@
+{
+  "name": "identify-tf-binding-sites",
+  "title": "Identify Transcription Factor Binding Sites",
+  "description": "Identify binding sites for specific transcription factors in genomic sequences",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application identifies binding sites for specific transcription factors in genomic DNA sequences using Position Weight Matrices (PWMs) from the JASPAR database. It scans sequences for potential binding sites and reports their locations, scores, and sequences.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Automatic PWM retrieval from JASPAR database</li><li class=\"list-item-node\">Configurable score threshold for binding site detection</li><li class=\"list-item-node\">Strand-specific binding site identification</li><li class=\"list-item-node\">Position-specific scoring matrix (PSSM) analysis</li><li class=\"list-item-node\">Tabular results with position, strand, sequence, and scores</li><li class=\"list-item-node\">Export results to TSV format</li></ul><h3 class=\"heading-node\">Analysis Steps</h3><ul class=\"list-node\"><li class=\"list-item-node\">Retrieve transcription factor PWM from JASPAR</li><li class=\"list-item-node\">Calculate position-specific scoring matrix</li><li class=\"list-item-node\">Scan sequence for binding sites above threshold</li><li class=\"list-item-node\">Report binding sites with positions and scores</li><li class=\"list-item-node\">Generate summary statistics</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Sequence</strong>: Genomic DNA sequence file to analyze</li><li class=\"list-item-node\"><strong>TF Name</strong>: Transcription factor name (e.g., \"Hsf1\", \"GATA1\")</li><li class=\"list-item-node\"><strong>Threshold</strong>: Minimum score threshold (0.0-1.0, default: 0.8)</li><li class=\"list-item-node\"><strong>Output Filename</strong>: Name for TSV results file</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a TSV file with identified binding sites (position, strand, sequence, scores) and a comprehensive analysis log with summary statistics.</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python \"prod_apps/biomni/genetics/identify_transcription_factor_binding_sites.py\" \"${sequence}\" \"${tfName}\" -t ${threshold} -f \"${outputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "sequence",
+      "label": "Genomic Sequence",
+      "description": "Upload file with genomic DNA sequence to analyze",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "tfName",
+      "label": "Transcription Factor Name",
+      "description": "Name of the transcription factor to search for (e.g., 'Hsf1', 'GATA1')",
+      "defaultValue": "GATA1"
+    },
+    {
+      "type": "Number",
+      "name": "threshold",
+      "label": "Score Threshold",
+      "description": "Minimum score threshold for reporting binding sites (0.0-1.0)",
+      "defaultValue": 0.8
+    },
+    {
+      "type": "String",
+      "name": "outputFile",
+      "label": "Output Filename",
+      "description": "Name for TSV results file (will be auto-generated if left empty)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

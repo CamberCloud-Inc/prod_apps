@@ -1,0 +1,42 @@
+{
+  "name": "retrieve_topk_repurposing_drugs_from_disease_txgnn",
+  "description": "Predicts top K drug repurposing candidates for a given disease using TxGNN",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "retrieve_topk_repurposing_drugs_from_disease_txgnn.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "disease_name",
+      "description": "Name of the disease to find drug candidates for",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "data_lake_path",
+      "description": "Path to the data lake directory",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "k",
+      "description": "Number of top drug candidates to return",
+      "type": "integer",
+      "required": false,
+      "default": 5
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with drug predictions"
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "query_uniprot",
+  "title": "Query Uniprot",
+  "description": "Query the UniProt REST API using either natural language or a direct endpoint.\n\n    Parameters\n    ----------\n    prompt (str, required): Natural language query about proteins (e.g., \"Find information",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "prompt",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: prompt"
+    },
+    {
+      "name": "endpoint",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: endpoint"
+    },
+    {
+      "name": "max_results",
+      "type": "integer",
+      "required": false,
+      "description": "Parameter: max_results"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "query_uniprot.py",
+    "args": [
+      "--prompt",
+      "${prompt}",
+      "--endpoint",
+      "${endpoint}",
+      "--max_results",
+      "${max_results}"
+    ]
+  }
+}

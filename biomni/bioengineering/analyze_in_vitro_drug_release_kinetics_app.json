@@ -1,0 +1,66 @@
+{
+  "name": "analyze-in-vitro-drug-release-kinetics",
+  "title": "Analyze Drug Release Kinetics",
+  "description": "Analyze in vitro drug release kinetics from biomaterial formulations",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application analyzes in vitro drug release kinetics from biomaterial formulations. Built using <a class=\"link\" href=\"https://github.com/snap-stanford/Biomni\" target=\"_blank\">Biomni</a>, it fits release data to multiple kinetic models and identifies the best-fitting mechanism.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Fits data to zero-order, first-order, Higuchi, and Korsmeyer-Peppas models</li><li class=\"list-item-node\">Calculates R² values to identify best-fitting model</li><li class=\"list-item-node\">Computes half-life (t50%) and release rates</li><li class=\"list-item-node\">Generates cumulative release and rate plots</li><li class=\"list-item-node\">Provides mechanistic interpretation of release</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Time Points</strong>: Comma-separated time points in hours (e.g., 0,1,2,4,8,24)</li><li class=\"list-item-node\"><strong>Concentration Data</strong>: Comma-separated drug concentrations at each time point</li><li class=\"list-item-node\"><strong>Drug Name</strong>: Name of the drug being analyzed</li><li class=\"list-item-node\"><strong>Total Drug Loaded</strong>: Initial drug amount (optional, defaults to max concentration)</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates PNG plots of release profiles, CSV files with data, and a detailed research log with kinetic analysis.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Drug delivery system characterization</li><li class=\"list-item-node\">Biomaterial formulation optimization</li><li class=\"list-item-node\">Release mechanism identification</li><li class=\"list-item-node\">Quality control testing</li></ul>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python \"prod_apps/biomni/bioengineering/analyze_in_vitro_drug_release_kinetics.py\" \"${timePoints}\" \"${concentrationData}\" --drug-name \"${drugName}\" ${totalDrugLoaded:+--total-drug-loaded ${totalDrugLoaded}} -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Text",
+      "name": "timePoints",
+      "label": "Time Points (hours)",
+      "description": "Comma-separated time points when measurements were taken (e.g., 0,1,2,4,8,24,48)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Text",
+      "name": "concentrationData",
+      "label": "Concentration Data",
+      "description": "Comma-separated drug concentrations at each time point (e.g., 0,15,28,45,62,85,95)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Text",
+      "name": "drugName",
+      "label": "Drug Name",
+      "description": "Name of the drug being analyzed",
+      "defaultValue": "Drug"
+    },
+    {
+      "type": "Number",
+      "name": "totalDrugLoaded",
+      "label": "Total Drug Loaded (optional)",
+      "description": "Total amount of drug initially loaded. Leave empty to use max concentration as 100%",
+      "defaultValue": null
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

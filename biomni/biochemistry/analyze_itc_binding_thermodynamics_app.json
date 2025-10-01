@@ -1,0 +1,48 @@
+{
+  "name": "analyze_itc_binding_thermodynamics",
+  "description": "Analyzes isothermal titration calorimetry (ITC) data to determine binding affinity and thermodynamic parameters.",
+  "icon": "🌡️",
+  "container": {
+    "image": "python:3.9-slim",
+    "setup_commands": [
+      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "itc_data_path",
+      "description": "Path to CSV or TSV file containing ITC thermogram data with columns: 'injection', 'volume', 'heat' (optional)",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "itc_data",
+      "description": "Raw ITC thermogram data as an array (shape: [n_injections, 3]) (optional, for backward compatibility)",
+      "type": "array",
+      "required": false
+    },
+    {
+      "name": "temperature",
+      "description": "Temperature in Kelvin at which the experiment was conducted (default: 298.15 K / 25°C)",
+      "type": "float",
+      "required": false,
+      "default": 298.15
+    },
+    {
+      "name": "protein_concentration",
+      "description": "Initial concentration of protein in the cell in molar (M) (optional, required for accurate fitting)",
+      "type": "float",
+      "required": false
+    },
+    {
+      "name": "ligand_concentration",
+      "description": "Concentration of ligand in the syringe in molar (M) (optional, required for accurate fitting)",
+      "type": "float",
+      "required": false
+    }
+  ],
+  "output": {
+    "type": "string",
+    "description": "Research log with binding affinity (Kd), binding enthalpy (ΔH), binding entropy (ΔS), and Gibbs free energy (ΔG)"
+  }
+}

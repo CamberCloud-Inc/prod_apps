@@ -1,0 +1,43 @@
+{
+  "name": "Count Bacterial Colonies",
+  "description": "Count bacterial colonies from an image of agar plate using computer vision techniques",
+  "image": "python:3.11-slim",
+  "run": [
+    "sh",
+    "-c",
+    "git clone --depth 1 https://github.com/snap-stanford/Biomni /tmp/biomni && pip install -q -e /tmp/biomni && python /mnt/code/count_bacterial_colonies.py"
+  ],
+  "fields": [
+    {
+      "name": "image_path",
+      "displayName": "Image Path",
+      "type": "short_text",
+      "description": "Path to the image file containing bacterial colonies on agar plate",
+      "required": true
+    },
+    {
+      "name": "dilution_factor",
+      "displayName": "Dilution Factor",
+      "type": "number",
+      "description": "Dilution factor of the plated sample",
+      "required": false,
+      "default": 1
+    },
+    {
+      "name": "plate_area_cm2",
+      "displayName": "Plate Area (cm²)",
+      "type": "number",
+      "description": "Area of the agar plate in square centimeters",
+      "required": false,
+      "default": 65.0
+    },
+    {
+      "name": "output_dir",
+      "displayName": "Output Directory",
+      "type": "short_text",
+      "description": "Directory to save output images and results",
+      "required": false,
+      "default": "./output"
+    }
+  ]
+}

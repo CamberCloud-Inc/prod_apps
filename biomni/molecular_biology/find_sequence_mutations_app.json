@@ -1,0 +1,58 @@
+{
+  "name": "find-sequence-mutations",
+  "title": "Find Sequence Mutations",
+  "description": "Identify mutations by comparing query and reference sequences",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application compares a query sequence against a reference sequence to identify all mutations.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Position-by-position comparison</li><li class=\"list-item-node\">Standard mutation notation</li><li class=\"list-item-node\">Ignores gaps in alignment</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Query Sequence</strong>: Sequence to analyze for mutations</li><li class=\"list-item-node\"><strong>Reference Sequence</strong>: Wild-type or reference sequence</li><li class=\"list-item-node\"><strong>Query Start</strong>: Starting position (optional)</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">Returns mutations in RefAA_Position_QueryAA format (e.g., A123T).</p>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && pip install -q biopython biomni && python prod_apps_clone/biomni/molecular_biology/find_sequence_mutations.py \"${querySequence}\" \"${referenceSequence}\" --query-start ${queryStart} -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "String",
+      "name": "querySequence",
+      "label": "Query Sequence",
+      "description": "Sequence to analyze for mutations",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "referenceSequence",
+      "label": "Reference Sequence",
+      "description": "Reference sequence to compare against",
+      "defaultValue": ""
+    },
+    {
+      "type": "Number",
+      "name": "queryStart",
+      "label": "Query Start Position",
+      "description": "Start position of query sequence",
+      "defaultValue": 1
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

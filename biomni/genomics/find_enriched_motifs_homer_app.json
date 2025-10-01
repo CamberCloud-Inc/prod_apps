@@ -1,0 +1,55 @@
+{
+  "name": "biomni-find-enriched-motifs-homer",
+  "title": "Biomni: Find Enriched Motifs with HOMER",
+  "description": "Discover DNA sequence motifs enriched in genomic regions using HOMER motif discovery",
+  "content": "<h3>Overview</h3><p>Uses HOMER (Hypergeometric Optimization of Motif EnRichment) to discover de novo DNA sequence motifs that are enriched in your genomic regions compared to background sequences.</p><h3>Features</h3><ul><li>De novo motif discovery</li><li>Known motif enrichment analysis</li><li>Comparison with transcription factor databases</li><li>Background correction for accurate enrichment</li><li>HTML output with motif logos</li></ul><h3>Genome Options</h3><ul><li>hg38, hg19 (human)</li><li>mm10, mm9 (mouse)</li><li>rn6 (rat)</li><li>dm6 (fly)</li><li>ce11 (worm)</li></ul><h3>Input</h3><p>BED file containing genomic regions (e.g., ChIP-seq peaks)</p><h3>Output</h3><p>Motif PWMs, logos, enrichment statistics, and HTML report</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genomics/find_enriched_motifs_homer.py \"${peakFile}\" --genome \"${genome}\" --motif-length \"${motifLength}\" --num-motifs ${numMotifs} --threads ${threads} -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {"nodeCount": "1", "coresPerNode": "4"}
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "peakFile",
+      "label": "Peak BED File",
+      "description": "Upload BED file with genomic regions",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "genome",
+      "label": "Reference Genome",
+      "description": "Genome assembly (hg38, hg19, mm10, etc.)",
+      "defaultValue": "hg38"
+    },
+    {
+      "type": "String",
+      "name": "motifLength",
+      "label": "Motif Lengths",
+      "description": "Comma-separated motif lengths to discover",
+      "defaultValue": "8,10,12"
+    },
+    {
+      "type": "Integer",
+      "name": "numMotifs",
+      "label": "Number of Motifs",
+      "description": "Number of motifs to find",
+      "defaultValue": "10"
+    },
+    {
+      "type": "Integer",
+      "name": "threads",
+      "label": "CPU Threads",
+      "description": "Number of threads to use",
+      "defaultValue": "4"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select output folder",
+      "defaultValue": "./"
+    }
+  ]
+}

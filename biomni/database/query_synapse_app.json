@@ -1,0 +1,69 @@
+{
+  "name": "query_synapse",
+  "title": "Query Synapse",
+  "description": "Query Synapse REST API for biomedical datasets and files.\n\n    Synapse is a platform for sharing and analyzing biomedical data, particularly\n    genomics and clinical research datasets. Supports optio",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "prompt",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: prompt"
+    },
+    {
+      "name": "query_term",
+      "type": "array",
+      "required": false,
+      "description": "Parameter: query_term"
+    },
+    {
+      "name": "return_fields",
+      "type": "array",
+      "required": false,
+      "description": "Parameter: return_fields"
+    },
+    {
+      "name": "max_results",
+      "type": "integer",
+      "required": false,
+      "description": "Parameter: max_results"
+    },
+    {
+      "name": "query_type",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: query_type"
+    },
+    {
+      "name": "verbose",
+      "type": "boolean",
+      "required": false,
+      "description": "Parameter: verbose"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "query_synapse.py",
+    "args": [
+      "--prompt",
+      "${prompt}",
+      "--query_term",
+      "${query_term}",
+      "--return_fields",
+      "${return_fields}",
+      "--max_results",
+      "${max_results}",
+      "--query_type",
+      "${query_type}",
+      "--verbose",
+      "${verbose}"
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "check_fda_drug_recalls",
+  "description": "Checks FDA drug recalls database for safety information",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "check_fda_drug_recalls.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "drug_name",
+      "description": "Name of the drug to check for recalls",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "classification",
+      "description": "Filter by recall classification levels",
+      "type": "array",
+      "required": false
+    },
+    {
+      "name": "date_range",
+      "description": "Date range for the query as [start_date, end_date]",
+      "type": "array",
+      "required": false
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with FDA drug recall information"
+      }
+    }
+  }
+}

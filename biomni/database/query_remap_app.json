@@ -1,0 +1,45 @@
+{
+  "name": "query_remap",
+  "title": "Query Remap",
+  "description": "Query the ReMap database for regulatory elements and transcription factor binding sites.\n\n    Parameters\n    ----------\n    prompt (str, required): Natural language query about transcription factors a",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "prompt",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: prompt"
+    },
+    {
+      "name": "endpoint",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: endpoint"
+    },
+    {
+      "name": "verbose",
+      "type": "boolean",
+      "required": false,
+      "description": "Parameter: verbose"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "query_remap.py",
+    "args": [
+      "--prompt",
+      "${prompt}",
+      "--endpoint",
+      "${endpoint}",
+      "--verbose",
+      "${verbose}"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "Analyze CNS Lesion Histology",
+  "description": "Analyze histological images of CNS lesions to quantify immune cell infiltration and tissue damage",
+  "category": "Immunology",
+  "subcategory": "Histology",
+  "image": "davethesoftwaredev/biomni:latest",
+  "command": "python /app/biomni/immunology/analyze_cns_lesion_histology.py",
+  "params": [
+    {
+      "name": "image_path",
+      "type": "file",
+      "description": "Path to the histological image file (supports common formats like PNG, JPEG, TIFF)",
+      "required": true
+    },
+    {
+      "name": "output_dir",
+      "type": "string",
+      "description": "Directory to save output files and analysis results",
+      "default": "./histology_results"
+    },
+    {
+      "name": "cell_markers_json",
+      "type": "string",
+      "description": "Optional list of cell markers to analyze (JSON array, e.g., '[\"CD3\", \"CD8\", \"GFAP\"]', leave blank for default markers)",
+      "default": "None"
+    },
+    {
+      "name": "pixel_size_um",
+      "type": "number",
+      "description": "Pixel size in micrometers for spatial measurements",
+      "default": 0.5
+    }
+  ]
+}

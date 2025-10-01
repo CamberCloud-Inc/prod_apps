@@ -1,0 +1,45 @@
+{
+  "name": "query_kegg",
+  "title": "Query Kegg",
+  "description": "Take a natural language prompt and convert it to a structured KEGG API query.\n\n    Parameters\n    ----------\n    prompt (str): Natural language query about KEGG data (e.g., \"Find human pathways relate",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "prompt",
+      "type": "string",
+      "required": true,
+      "description": "Parameter: prompt"
+    },
+    {
+      "name": "endpoint",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: endpoint"
+    },
+    {
+      "name": "verbose",
+      "type": "boolean",
+      "required": false,
+      "description": "Parameter: verbose"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "query_kegg.py",
+    "args": [
+      "--prompt",
+      "${prompt}",
+      "--endpoint",
+      "${endpoint}",
+      "--verbose",
+      "${verbose}"
+    ]
+  }
+}

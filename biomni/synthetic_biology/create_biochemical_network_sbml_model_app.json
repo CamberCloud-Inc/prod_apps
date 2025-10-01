@@ -1,0 +1,47 @@
+{
+  "name": "Create Biochemical Network SBML Model",
+  "description": "Generate a mathematical model of a biochemical network in SBML format",
+  "version": "1.0.0",
+  "author": "Biomni Synthetic Biology Tools",
+  "repository": "https://github.com/snap-stanford/Biomni",
+  "license": "MIT",
+  "runtime": {
+    "type": "python",
+    "version": "3.8+",
+    "entrypoint": "create_biochemical_network_sbml_model.py"
+  },
+  "dependencies": {
+    "pip": [
+      "biomni",
+      "python-libsbml"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "reaction_network",
+      "type": "array",
+      "description": "List of dictionaries, each representing a reaction with keys: id, name, reactants, products, reversible",
+      "required": true
+    },
+    {
+      "name": "kinetic_parameters",
+      "type": "object",
+      "description": "Dictionary mapping reaction IDs to their kinetic law parameters (law_type, parameters)",
+      "required": true
+    },
+    {
+      "name": "output_file",
+      "type": "string",
+      "description": "File path to save the SBML model",
+      "required": false,
+      "default": "biochemical_model.xml"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string",
+      "description": "Research log summarizing the model creation process"
+    }
+  ]
+}

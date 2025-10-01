@@ -1,0 +1,65 @@
+{
+  "name": "golden-gate-assembly",
+  "title": "Golden Gate Assembly Simulation",
+  "description": "Simulate Golden Gate assembly to predict final construct sequences",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application simulates Golden Gate assembly by predicting the final assembled sequence from backbone and insert fragments.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Multi-fragment assembly</li><li class=\"list-item-node\">Overhang matching</li><li class=\"list-item-node\">Fragment order determination</li><li class=\"list-item-node\">Full sequence prediction</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Backbone Sequence</strong>: Destination vector</li><li class=\"list-item-node\"><strong>Enzyme</strong>: Type IIS enzyme used</li><li class=\"list-item-node\"><strong>Fragments File</strong>: JSON file with fragment definitions</li><li class=\"list-item-node\"><strong>Topology</strong>: Circular or linear backbone</li></ul><h3 class=\"heading-node\">Fragment Format</h3><p class=\"text-node\">Upload a JSON file with fragment definitions. Each fragment should have either:<br/>(1) \"name\", \"fwd_oligo\", \"rev_oligo\" keys, OR<br/>(2) \"name\", \"sequence\" keys (for double-stranded fragments)</p><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">Returns assembled sequence and assembly details including fragment order and success status.</p>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && pip install -q biopython biomni && python prod_apps_clone/biomni/molecular_biology/golden_gate_assembly.py \"${backboneSequence}\" \"${enzyme}\" \"${fragmentsFile}\" ${linear} -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "String",
+      "name": "backboneSequence",
+      "label": "Backbone Sequence",
+      "description": "Complete backbone/vector sequence",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "enzyme",
+      "label": "Type IIS Enzyme",
+      "description": "Enzyme used for assembly (BsaI, BsmBI, BbsI, Esp3I, BtgZI, or SapI)",
+      "defaultValue": "BsaI"
+    },
+    {
+      "type": "Stash File",
+      "name": "fragmentsFile",
+      "label": "Fragments JSON File",
+      "description": "Upload JSON file with fragment definitions",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "linear",
+      "label": "Linear Backbone",
+      "description": "Enter '--linear' if backbone is linear (leave empty for circular)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

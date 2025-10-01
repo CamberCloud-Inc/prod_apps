@@ -1,0 +1,68 @@
+{
+  "name": "Analyze Barcode Sequencing Data",
+  "description": "Analyze sequencing data to extract, quantify and determine lineage relationships of barcodes",
+  "version": "1.0.0",
+  "author": "Biomni Synthetic Biology Tools",
+  "repository": "https://github.com/snap-stanford/Biomni",
+  "license": "MIT",
+  "runtime": {
+    "type": "python",
+    "version": "3.8+",
+    "entrypoint": "analyze_barcode_sequencing_data.py"
+  },
+  "dependencies": {
+    "pip": [
+      "biomni",
+      "biopython",
+      "numpy",
+      "scipy"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "input_file",
+      "type": "file",
+      "description": "Path to the input sequencing file in FASTQ or FASTA format",
+      "required": true
+    },
+    {
+      "name": "barcode_pattern",
+      "type": "string",
+      "description": "Regular expression pattern to identify barcodes. If None, will use flanking sequences",
+      "required": false
+    },
+    {
+      "name": "flanking_seq_5prime",
+      "type": "string",
+      "description": "5' flanking sequence of the barcode region",
+      "required": false
+    },
+    {
+      "name": "flanking_seq_3prime",
+      "type": "string",
+      "description": "3' flanking sequence of the barcode region",
+      "required": false
+    },
+    {
+      "name": "min_count",
+      "type": "integer",
+      "description": "Minimum count threshold for considering a barcode",
+      "required": false,
+      "default": 5
+    },
+    {
+      "name": "output_dir",
+      "type": "string",
+      "description": "Directory to save output files",
+      "required": false,
+      "default": "./results"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string",
+      "description": "Research log summarizing the analysis steps and results"
+    }
+  ]
+}

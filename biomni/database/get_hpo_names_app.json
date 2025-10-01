@@ -1,0 +1,37 @@
+{
+  "name": "get_hpo_names",
+  "title": "Get Hpo Names",
+  "description": "Helper function to query LLMs for generating API calls based on natural language prompts.\n\n    Supports multiple model providers including Claude, Gemini, GPT, and others via the unified get_llm inter",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "hpo_terms",
+      "type": "array",
+      "required": true,
+      "description": "Parameter: hpo_terms"
+    },
+    {
+      "name": "data_lake_path",
+      "type": "array",
+      "required": true,
+      "description": "Parameter: data_lake_path"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "get_hpo_names.py",
+    "args": [
+      "--hpo_terms",
+      "${hpo_terms}",
+      "--data_lake_path",
+      "${data_lake_path}"
+    ]
+  }
+}

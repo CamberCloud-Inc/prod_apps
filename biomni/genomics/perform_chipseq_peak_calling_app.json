@@ -1,0 +1,48 @@
+{
+  "name": "biomni-chipseq-peak-calling",
+  "title": "Biomni: ChIP-seq Peak Calling with MACS2",
+  "description": "Identify genomic regions with significant protein binding using MACS2 peak calling",
+  "content": "<h3>Overview</h3><p>Performs ChIP-seq peak calling using MACS2 (Model-based Analysis of ChIP-Seq) to identify genomic regions with significant transcription factor or histone modification enrichment.</p><h3>Features</h3><ul><li>Statistical peak calling with FDR control</li><li>Broad and narrow peak detection</li><li>Background correction using control samples</li><li>Summit calling for precise binding site localization</li></ul><h3>Genome Sizes</h3><ul><li>hs: Homo sapiens (human)</li><li>mm: Mus musculus (mouse)</li><li>ce: C. elegans</li><li>dm: D. melanogaster</li></ul><h3>Input</h3><ul><li>ChIP-seq alignment file (BAM or BED)</li><li>Control/input alignment file (BAM or BED)</li></ul><h3>Output</h3><p>Peak files, summit files, and statistical summaries</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genomics/perform_chipseq_peak_calling.py \"${chipseqFile}\" \"${controlFile}\" --genome-size \"${genomeSize}\" --q-value ${qValue} -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {"nodeCount": "1", "coresPerNode": "4"}
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "chipseqFile",
+      "label": "ChIP-seq Data File",
+      "description": "Upload ChIP-seq alignment file (BAM or BED)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "controlFile",
+      "label": "Control Data File",
+      "description": "Upload control/input alignment file (BAM or BED)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "genomeSize",
+      "label": "Genome Size",
+      "description": "Genome size code: hs (human), mm (mouse), ce, dm",
+      "defaultValue": "hs"
+    },
+    {
+      "type": "Float",
+      "name": "qValue",
+      "label": "Q-value Cutoff",
+      "description": "Minimum FDR cutoff for peak calling",
+      "defaultValue": "0.05"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select output folder",
+      "defaultValue": "./"
+    }
+  ]
+}

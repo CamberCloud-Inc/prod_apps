@@ -1,0 +1,43 @@
+{
+  "name": "Segment and Analyze Microbial Cells",
+  "description": "Segment and analyze microbial cells in microscopy images using image processing techniques",
+  "image": "python:3.11-slim",
+  "run": [
+    "sh",
+    "-c",
+    "git clone --depth 1 https://github.com/snap-stanford/Biomni /tmp/biomni && pip install -q -e /tmp/biomni && python /mnt/code/segment_and_analyze_microbial_cells.py"
+  ],
+  "fields": [
+    {
+      "name": "image_path",
+      "displayName": "Image Path",
+      "type": "short_text",
+      "description": "Path to the microscopy image file",
+      "required": true
+    },
+    {
+      "name": "output_dir",
+      "displayName": "Output Directory",
+      "type": "short_text",
+      "description": "Directory to save output images and results",
+      "required": false,
+      "default": "./output"
+    },
+    {
+      "name": "min_cell_size",
+      "displayName": "Minimum Cell Size",
+      "type": "number",
+      "description": "Minimum cell size in pixels to be considered",
+      "required": false,
+      "default": 50
+    },
+    {
+      "name": "max_cell_size",
+      "displayName": "Maximum Cell Size",
+      "type": "number",
+      "description": "Maximum cell size in pixels to be considered",
+      "required": false,
+      "default": 5000
+    }
+  ]
+}

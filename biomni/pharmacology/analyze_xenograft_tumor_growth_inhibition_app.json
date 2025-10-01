@@ -1,0 +1,60 @@
+{
+  "name": "analyze_xenograft_tumor_growth_inhibition",
+  "description": "Analyzes xenograft tumor growth inhibition data from preclinical studies",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "analyze_xenograft_tumor_growth_inhibition.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "data_path",
+      "description": "Path to tumor growth data file",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "time_column",
+      "description": "Name of the time column in the data",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "volume_column",
+      "description": "Name of the tumor volume column in the data",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "group_column",
+      "description": "Name of the treatment group column in the data",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "subject_column",
+      "description": "Name of the subject/animal ID column in the data",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "output_dir",
+      "description": "Directory to save analysis results",
+      "type": "string",
+      "required": false,
+      "default": "./results"
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with tumor growth analysis"
+      }
+    }
+  }
+}

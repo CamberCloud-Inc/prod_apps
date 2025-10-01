@@ -1,0 +1,30 @@
+{
+  "name": "Analyze Flow Cytometry Immunophenotyping",
+  "description": "Analyze flow cytometry data to identify and quantify specific cell populations based on surface markers. Applies sequential gating strategies to identify cell populations, with optional compensation for fluorescence spillover.",
+  "spec": {
+    "fcs_file_path": {
+      "type": "string",
+      "description": "Path to the FCS file containing flow cytometry data"
+    },
+    "gating_strategy": {
+      "type": "object",
+      "description": "Dictionary defining the gating strategy. Each key is a population name, and each value is a list of tuples (marker, operator, threshold). For example: {'HSCs': [['Lin', '<', 100], ['Sca1', '>', 1000]]}"
+    },
+    "compensation_matrix": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        }
+      },
+      "description": "Spillover/compensation matrix to correct for fluorescence overlap (optional)"
+    },
+    "output_dir": {
+      "type": "string",
+      "description": "Directory to save the results",
+      "default": "./results"
+    }
+  },
+  "instructions": "git clone https://github.com/snap-stanford/Biomni.git /tmp/Biomni && cd /tmp/Biomni && pip install -e . && cd /Users/david/git/prod_apps/biomni/cell_biology && python analyze_flow_cytometry_immunophenotyping.py"
+}

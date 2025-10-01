@@ -1,0 +1,17 @@
+{
+  "name": "Biomni: Analyze Cell Senescence and Apoptosis",
+  "description": "Analyze flow cytometry data to quantify senescent and apoptotic cell populations. Processes FCS files containing measurements for senescence-associated β-galactosidase (SA-β-Gal) and Annexin V/7-AAD staining.",
+  "input": {
+    "fcs_file_path": {
+      "type": "string",
+      "description": "Path to the FCS file containing flow cytometry data with measurements for senescence-associated β-galactosidase (SA-β-Gal) and Annexin V/7-AAD staining"
+    }
+  },
+  "output": {
+    "type": "string",
+    "description": "Research log summarizing the analysis steps and results, including percentages of senescent and apoptotic cell populations"
+  },
+  "tags": ["biomni", "cancer-biology", "flow-cytometry", "senescence", "apoptosis", "cell-analysis"],
+  "author": "Biomni",
+  "repository": "https://github.com/snap-stanford/Biomni"
+}

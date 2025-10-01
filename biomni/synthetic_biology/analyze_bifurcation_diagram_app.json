@@ -1,0 +1,56 @@
+{
+  "name": "Analyze Bifurcation Diagram",
+  "description": "Performs bifurcation analysis on a dynamical system and generates a bifurcation diagram",
+  "version": "1.0.0",
+  "author": "Biomni Synthetic Biology Tools",
+  "repository": "https://github.com/snap-stanford/Biomni",
+  "license": "MIT",
+  "runtime": {
+    "type": "python",
+    "version": "3.8+",
+    "entrypoint": "analyze_bifurcation_diagram.py"
+  },
+  "dependencies": {
+    "pip": [
+      "biomni",
+      "numpy",
+      "scipy",
+      "matplotlib"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "time_series_data",
+      "type": "array",
+      "description": "A 2D array where each row represents a time series for a specific parameter value. Shape should be (n_parameter_values, n_time_points)",
+      "required": true
+    },
+    {
+      "name": "parameter_values",
+      "type": "array",
+      "description": "1D array of parameter values corresponding to each time series. Shape should be (n_parameter_values,)",
+      "required": true
+    },
+    {
+      "name": "system_name",
+      "type": "string",
+      "description": "Name of the dynamical system being analyzed, used for plot titles",
+      "required": false,
+      "default": "Dynamical System"
+    },
+    {
+      "name": "output_dir",
+      "type": "string",
+      "description": "Directory to save the output files",
+      "required": false,
+      "default": "./"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string",
+      "description": "Research log summarizing the bifurcation analysis process and results"
+    }
+  ]
+}

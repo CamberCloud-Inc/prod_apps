@@ -1,0 +1,36 @@
+{
+  "name": "analyze_hemodynamic_data",
+  "description": "Analyzes raw blood pressure data to calculate key hemodynamic parameters.",
+  "icon": "❤️",
+  "container": {
+    "image": "python:3.9-slim",
+    "setup_commands": [
+      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "pressure_data",
+      "description": "Raw blood pressure measurements in mmHg",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "sampling_rate",
+      "description": "Data acquisition rate in Hz (samples per second)",
+      "type": "float",
+      "required": true
+    },
+    {
+      "name": "output_file",
+      "description": "Filename to save the calculated parameters",
+      "type": "string",
+      "required": false,
+      "default": "hemodynamic_results.csv"
+    }
+  ],
+  "output": {
+    "type": "string",
+    "description": "Research log summarizing the analysis steps and results"
+  }
+}

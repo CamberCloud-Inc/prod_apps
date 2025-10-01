@@ -1,0 +1,41 @@
+{
+  "name": "read_function_source_code",
+  "description": "Read the source code of a function from any module path. Provide the fully qualified function name (e.g., 'biomni.tool.support_tools.run_python_repl').",
+  "version": "1.0.0",
+  "author": "Biomni Support Tools",
+  "license": "MIT",
+  "input": {
+    "type": "object",
+    "properties": {
+      "function_name": {
+        "type": "string",
+        "description": "Fully qualified function name (e.g., 'biomni.tool.support_tools.run_python_repl')"
+      }
+    },
+    "required": ["function_name"]
+  },
+  "output": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean",
+        "description": "Whether the operation succeeded"
+      },
+      "result": {
+        "type": "string",
+        "description": "The source code of the function"
+      },
+      "error": {
+        "type": "string",
+        "description": "Error message if operation failed"
+      }
+    }
+  },
+  "execution": {
+    "command": "python3",
+    "args": [
+      "read_function_source_code.py",
+      "{{function_name}}"
+    ]
+  }
+}

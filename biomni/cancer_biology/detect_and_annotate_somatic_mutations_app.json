@@ -1,0 +1,34 @@
+{
+  "name": "Biomni: Detect and Annotate Somatic Mutations",
+  "description": "Detects and annotates somatic mutations in tumor samples compared to matched normal samples. Uses GATK Mutect2 for variant calling, GATK FilterMutectCalls for filtering, and SnpEff for functional annotation of somatic mutations.",
+  "input": {
+    "tumor_bam": {
+      "type": "string",
+      "description": "Path to the tumor sample BAM file"
+    },
+    "normal_bam": {
+      "type": "string",
+      "description": "Path to the matched normal sample BAM file"
+    },
+    "reference_genome": {
+      "type": "string",
+      "description": "Path to the reference genome FASTA file"
+    },
+    "output_prefix": {
+      "type": "string",
+      "description": "Prefix for output files"
+    },
+    "snpeff_database": {
+      "type": "string",
+      "description": "SnpEff database to use for annotation",
+      "default": "GRCh38.105"
+    }
+  },
+  "output": {
+    "type": "string",
+    "description": "Research log summarizing the steps performed and results obtained"
+  },
+  "tags": ["biomni", "cancer-biology", "somatic-mutations", "variant-calling", "gatk", "snpeff", "genomics"],
+  "author": "Biomni",
+  "repository": "https://github.com/snap-stanford/Biomni"
+}

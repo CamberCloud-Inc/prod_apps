@@ -1,0 +1,92 @@
+{
+  "name": "Quick Rigid Registration",
+  "description": "Quick rigid registration of medical images using SimpleITK",
+  "class": "bioimaging",
+  "entrypoint": "quick_rigid_registration.py",
+  "parameters": {
+    "fixed_image_path": {
+      "type": "file",
+      "description": "Path to reference image",
+      "required": true
+    },
+    "moving_image_path": {
+      "type": "file",
+      "description": "Path to image to register",
+      "required": true
+    },
+    "output_dir": {
+      "type": "string",
+      "description": "Directory to save results",
+      "required": true
+    },
+    "metric": {
+      "type": "string",
+      "description": "Similarity metric (mutual_information, mean_squares, correlation, normalized_correlation)",
+      "required": false,
+      "default": "mutual_information"
+    },
+    "optimizer": {
+      "type": "string",
+      "description": "Optimization method (gradient_descent, lbfgsb, powell, amoeba)",
+      "required": false,
+      "default": "gradient_descent"
+    },
+    "preprocess": {
+      "type": "boolean",
+      "description": "Whether to preprocess images",
+      "required": false,
+      "default": true
+    },
+    "create_visualizations": {
+      "type": "boolean",
+      "description": "Whether to create visualizations",
+      "required": false,
+      "default": true
+    },
+    "learning_rate": {
+      "type": "number",
+      "description": "Learning rate for optimizer",
+      "required": false,
+      "default": 0.01
+    },
+    "number_of_iterations": {
+      "type": "integer",
+      "description": "Maximum iterations",
+      "required": false,
+      "default": 100
+    },
+    "gradient_convergence_tolerance": {
+      "type": "number",
+      "description": "Convergence tolerance",
+      "required": false,
+      "default": 1e-6
+    }
+  },
+  "returns": {
+    "registered_image_path": {
+      "type": "string",
+      "description": "Path to registered image"
+    },
+    "transform_path": {
+      "type": "string",
+      "description": "Path to transform file"
+    },
+    "metrics_before": {
+      "type": "object",
+      "description": "Similarity metrics before registration"
+    },
+    "metrics_after": {
+      "type": "object",
+      "description": "Similarity metrics after registration"
+    },
+    "registration_type": {
+      "type": "string",
+      "description": "Type of registration performed"
+    }
+  },
+  "setup_commands": [
+    "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni 2>/dev/null || (cd /tmp/biomni && git pull)",
+    "pip install -e /tmp/biomni",
+    "pip install nibabel numpy SimpleITK torch matplotlib requests"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "name": "analyze_ciliary_beat_frequency",
+  "description": "Analyze ciliary beat frequency from high-speed video microscopy data using FFT analysis.",
+  "icon": "🔬",
+  "container": {
+    "image": "python:3.9-slim",
+    "setup_commands": [
+      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "video_path",
+      "description": "Path to the high-speed video microscopy file of ciliary beating",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "roi_count",
+      "description": "Number of regions of interest to analyze",
+      "type": "integer",
+      "required": false,
+      "default": 5
+    },
+    {
+      "name": "min_freq",
+      "description": "Minimum frequency to consider in Hz",
+      "type": "float",
+      "required": false,
+      "default": 0
+    },
+    {
+      "name": "max_freq",
+      "description": "Maximum frequency to consider in Hz",
+      "type": "float",
+      "required": false,
+      "default": 30
+    },
+    {
+      "name": "output_dir",
+      "description": "Directory to save output files",
+      "type": "string",
+      "required": false,
+      "default": "./"
+    }
+  ],
+  "output": {
+    "type": "string",
+    "description": "Research log summarizing the analysis steps and results"
+  }
+}

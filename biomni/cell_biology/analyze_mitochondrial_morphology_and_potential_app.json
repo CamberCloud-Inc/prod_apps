@@ -1,0 +1,20 @@
+{
+  "name": "Analyze Mitochondrial Morphology and Potential",
+  "description": "Quantifies metrics of mitochondrial morphology and membrane potential from fluorescence microscopy images. Analyzes network connectivity, fragmentation, junction points, and TMRE intensity to assess mitochondrial health and function.",
+  "spec": {
+    "morphology_image_path": {
+      "type": "string",
+      "description": "Path to the fluorescence microscopy image showing mitochondrial morphology (e.g., MTS-GFP)"
+    },
+    "potential_image_path": {
+      "type": "string",
+      "description": "Path to the fluorescence microscopy image showing mitochondrial membrane potential (e.g., TMRE staining)"
+    },
+    "output_dir": {
+      "type": "string",
+      "description": "Directory to save output files",
+      "default": "./output"
+    }
+  },
+  "instructions": "git clone https://github.com/snap-stanford/Biomni.git /tmp/Biomni && cd /tmp/Biomni && pip install -e . && cd /Users/david/git/prod_apps/biomni/cell_biology && python analyze_mitochondrial_morphology_and_potential.py"
+}

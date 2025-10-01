@@ -1,0 +1,77 @@
+{
+  "name": "fit-genomic-prediction-model",
+  "title": "Fit Genomic Prediction Model",
+  "description": "Fit linear mixed model for genomic prediction using genotype and phenotype data",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application fits a linear mixed model for genomic prediction using genotype and phenotype data. It estimates variance components, calculates heritability, computes breeding values (BLUPs), and assesses prediction accuracy.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Additive and additive-dominance genetic models</li><li class=\"list-item-node\">Genomic relationship matrix (GRM) construction</li><li class=\"list-item-node\">REML-based variance component estimation</li><li class=\"list-item-node\">Heritability calculation (narrow-sense and broad-sense)</li><li class=\"list-item-node\">BLUP breeding value predictions</li><li class=\"list-item-node\">Prediction accuracy metrics</li><li class=\"list-item-node\">Support for fixed effects adjustment</li></ul><h3 class=\"heading-node\">Model Types</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Additive</strong>: Standard additive genetic model with additive genetic variance and residual variance</li><li class=\"list-item-node\"><strong>Additive-Dominance</strong>: Extended model including both additive and dominance genetic effects</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Genotypes</strong>: Matrix file (.npy) with individuals in rows, markers in columns (coded as 0, 1, 2)</li><li class=\"list-item-node\"><strong>Phenotypes</strong>: Vector/matrix file (.npy) with phenotype values</li><li class=\"list-item-node\"><strong>Fixed Effects</strong>: Optional matrix file (.npy) with fixed effects (e.g., environment)</li><li class=\"list-item-node\"><strong>Model Type</strong>: Additive or additive-dominance</li><li class=\"list-item-node\"><strong>Output Filename</strong>: Name for CSV results file</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a CSV file with individual predictions, breeding values, and dominance deviations (if applicable), plus a detailed analysis log with variance components, heritability estimates, and prediction accuracy.</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python \"prod_apps/biomni/genetics/fit_genomic_prediction_model.py\" \"${genotypes}\" \"${phenotypes}\" ${fixedEffects} -m \"${modelType}\" -p \"${outputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Small CPU",
+          "value": "small_cpu",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "small_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "genotypes",
+      "label": "Genotype Data",
+      "description": "Upload genotype matrix file (.npy format) with individuals in rows and markers in columns",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "phenotypes",
+      "label": "Phenotype Data",
+      "description": "Upload phenotype data file (.npy format) with phenotype values",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "fixedEffects",
+      "label": "Fixed Effects (Optional)",
+      "description": "Path to fixed effects file (.npy format) - leave empty if not needed",
+      "defaultValue": ""
+    },
+    {
+      "type": "Select",
+      "name": "modelType",
+      "label": "Model Type",
+      "description": "Type of genetic model to fit",
+      "options": [
+        {"label": "Additive", "value": "additive"},
+        {"label": "Additive-Dominance", "value": "additive_dominance"}
+      ],
+      "defaultValue": "additive"
+    },
+    {
+      "type": "String",
+      "name": "outputFile",
+      "label": "Output Filename",
+      "description": "Name for CSV results file",
+      "defaultValue": "genomic_prediction_results.csv"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

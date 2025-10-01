@@ -1,0 +1,45 @@
+{
+  "name": "analyze-calcium-imaging-data",
+  "title": "Analyze Calcium Imaging Data",
+  "description": "Quantify neuronal activity metrics from calcium imaging microscopy data",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application analyzes calcium imaging data to quantify neuronal activity. Built using <a class=\"link\" href=\"https://github.com/snap-stanford/Biomni\" target=\"_blank\">Biomni</a>, it processes fluorescence microscopy images of GCaMP-labeled neurons to extract event rates, decay times, and signal-to-noise ratios.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Automated neuron segmentation using watershed</li><li class=\"list-item-node\">Time-series fluorescence extraction</li><li class=\"list-item-node\">Calcium event detection and quantification</li><li class=\"list-item-node\">Decay time constant calculation</li><li class=\"list-item-node\">Signal-to-noise ratio analysis</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Image Stack Path</strong>: Path to time-series TIFF stack of calcium imaging data</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates CSV files with neuron activity metrics and time-series data for each detected neuron.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Neuronal activity analysis</li><li class=\"list-item-node\">GCaMP calcium imaging studies</li><li class=\"list-item-node\">Network activity quantification</li><li class=\"list-item-node\">Drug response screening</li></ul>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python \"prod_apps/biomni/bioengineering/analyze_calcium_imaging_data.py\" \"${imageStackPath}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Small CPU",
+          "value": "small_cpu",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "small_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "imageStackPath",
+      "label": "Image Stack Path",
+      "description": "Path to the time-series stack of fluorescence microscopy images (TIFF format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

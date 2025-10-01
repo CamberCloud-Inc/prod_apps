@@ -1,0 +1,22 @@
+{
+  "name": "Analyze Cytokine Production in CD4+ T Cells",
+  "description": "Analyze cytokine production in CD4+ T cells after antigen stimulation using intracellular flow cytometry",
+  "category": "Immunology",
+  "subcategory": "Flow Cytometry",
+  "image": "davethesoftwaredev/biomni:latest",
+  "command": "python /app/biomni/immunology/analyze_cytokine_production_in_cd4_tcells.py",
+  "params": [
+    {
+      "name": "fcs_files_dict_json",
+      "type": "string",
+      "description": "Dictionary mapping condition names to FCS file paths (JSON object, e.g., '{\"control\": \"/path/to/control.fcs\", \"stimulated\": \"/path/to/stimulated.fcs\"}')",
+      "required": true
+    },
+    {
+      "name": "output_dir",
+      "type": "string",
+      "description": "Directory to save output files",
+      "default": "./results"
+    }
+  ]
+}

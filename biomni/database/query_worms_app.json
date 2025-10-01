@@ -1,0 +1,45 @@
+{
+  "name": "query_worms",
+  "title": "Query Worms",
+  "description": "Query the World Register of Marine Species (WoRMS) REST API using natural language or a direct endpoint.\n\n    Parameters\n    ----------\n    prompt (str, required): Natural language query about marine ",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "prompt",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: prompt"
+    },
+    {
+      "name": "endpoint",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: endpoint"
+    },
+    {
+      "name": "verbose",
+      "type": "boolean",
+      "required": false,
+      "description": "Parameter: verbose"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "query_worms.py",
+    "args": [
+      "--prompt",
+      "${prompt}",
+      "--endpoint",
+      "${endpoint}",
+      "--verbose",
+      "${verbose}"
+    ]
+  }
+}

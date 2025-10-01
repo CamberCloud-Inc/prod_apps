@@ -1,0 +1,42 @@
+{
+  "name": "run_autosite",
+  "description": "Runs AutoSite to identify potential binding sites in a protein",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "run_autosite.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "pdb_file",
+      "description": "Path to the protein PDB file",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "output_dir",
+      "description": "Directory to save output files",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "spacing",
+      "description": "Grid spacing for AutoSite",
+      "type": "number",
+      "required": false,
+      "default": 1.0
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with binding site details"
+      }
+    }
+  }
+}

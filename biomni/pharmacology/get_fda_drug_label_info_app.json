@@ -1,0 +1,35 @@
+{
+  "name": "get_fda_drug_label_info",
+  "description": "Retrieves FDA drug label information from the OpenFDA database",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "get_fda_drug_label_info.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "drug_name",
+      "description": "Name of the drug to query",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "sections",
+      "description": "Specific label sections to retrieve (optional)",
+      "type": "array",
+      "required": false
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with FDA drug label information"
+      }
+    }
+  }
+}

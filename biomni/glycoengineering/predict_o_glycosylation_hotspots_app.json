@@ -1,0 +1,51 @@
+{
+  "name": "predict_o_glycosylation_hotspots",
+  "description": "Heuristic O-glycosylation hotspot scoring",
+  "version": "1.0.0",
+  "author": "Biomni Integration",
+  "license": "MIT",
+  "runtime": {
+    "type": "python",
+    "version": "3.8+",
+    "entrypoint": "predict_o_glycosylation_hotspots.py",
+    "requirements": [
+      "git+https://github.com/snap-stanford/Biomni.git"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "sequence",
+      "type": "string",
+      "required": true,
+      "description": "Protein sequence to analyze for O-glycosylation hotspots"
+    },
+    {
+      "name": "window",
+      "type": "integer",
+      "required": false,
+      "default": 7,
+      "description": "Window size for scanning"
+    },
+    {
+      "name": "min_st_fraction",
+      "type": "number",
+      "required": false,
+      "default": 0.4,
+      "description": "Minimum fraction of serine/threonine residues in window"
+    },
+    {
+      "name": "disallow_proline_next",
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "Disallow proline in next position"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string",
+      "description": "O-glycosylation hotspot prediction results"
+    }
+  ]
+}

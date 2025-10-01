@@ -1,0 +1,41 @@
+{
+  "name": "run_python_repl",
+  "description": "Executes the provided Python command in a persistent environment and returns the output. Variables defined in one execution will be available in subsequent executions.",
+  "version": "1.0.0",
+  "author": "Biomni Support Tools",
+  "license": "MIT",
+  "input": {
+    "type": "object",
+    "properties": {
+      "command": {
+        "type": "string",
+        "description": "The Python command to execute in the persistent environment"
+      }
+    },
+    "required": ["command"]
+  },
+  "output": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean",
+        "description": "Whether the operation succeeded"
+      },
+      "result": {
+        "type": "string",
+        "description": "Output from the Python REPL execution"
+      },
+      "error": {
+        "type": "string",
+        "description": "Error message if operation failed"
+      }
+    }
+  },
+  "execution": {
+    "command": "python3",
+    "args": [
+      "run_python_repl.py",
+      "{{command}}"
+    ]
+  }
+}

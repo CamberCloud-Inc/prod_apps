@@ -1,0 +1,29 @@
+{
+  "name": "analyze_rna_secondary_structure_features",
+  "description": "Calculate numeric values for various structural features of an RNA secondary structure.",
+  "icon": "🧬",
+  "container": {
+    "image": "python:3.9-slim",
+    "setup_commands": [
+      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "dot_bracket_structure",
+      "description": "RNA secondary structure in dot-bracket notation (e.g., '(((...)))'). Parentheses represent base pairs, dots represent unpaired bases.",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "sequence",
+      "description": "The RNA sequence corresponding to the structure. If provided, sequence-dependent energy calculations will be performed.",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "output": {
+    "type": "string",
+    "description": "Research log summarizing the calculated structural features and analysis steps"
+  }
+}

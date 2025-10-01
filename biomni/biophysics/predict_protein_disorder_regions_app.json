@@ -1,0 +1,37 @@
+{
+  "name": "predict_protein_disorder_regions",
+  "description": "Predicts intrinsically disordered regions (IDRs) in a protein sequence using IUPred2A.",
+  "icon": "🧬",
+  "container": {
+    "image": "python:3.9-slim",
+    "setup_commands": [
+      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "protein_sequence",
+      "description": "Protein sequence to analyze for disordered regions",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "threshold",
+      "description": "Threshold for disorder prediction (default: 0.5)",
+      "type": "float",
+      "required": false,
+      "default": 0.5
+    },
+    {
+      "name": "output_file",
+      "description": "Output file path for results (default: disorder_prediction_results.csv)",
+      "type": "string",
+      "required": false,
+      "default": "disorder_prediction_results.csv"
+    }
+  ],
+  "output": {
+    "type": "file",
+    "path": "disorder_prediction_results.csv"
+  }
+}

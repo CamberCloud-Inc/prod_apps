@@ -1,0 +1,36 @@
+{
+  "name": "predict_admet_properties",
+  "description": "Predicts ADMET (Absorption, Distribution, Metabolism, Excretion, Toxicity) properties for a list of compounds",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "predict_admet_properties.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "smiles_list",
+      "description": "List of SMILES strings for compounds to analyze",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "ADMET_model_type",
+      "description": "Type of ADMET model to use",
+      "type": "string",
+      "required": false,
+      "default": "MPNN"
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with ADMET predictions"
+      }
+    }
+  }
+}

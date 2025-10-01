@@ -1,0 +1,65 @@
+{
+  "name": "design-knockout-sgrna",
+  "title": "Design CRISPR Knockout sgRNAs",
+  "description": "Design optimized sgRNAs for CRISPR-Cas9 gene knockout",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application designs sgRNAs for CRISPR knockout by searching pre-computed sgRNA libraries with ranked guides.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Pre-computed sgRNA libraries</li><li class=\"list-item-node\">Supports human and mouse</li><li class=\"list-item-node\">Returns top-ranked guides</li><li class=\"list-item-node\">Optimized for knockout efficiency</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Gene Name</strong>: Target gene symbol</li><li class=\"list-item-node\"><strong>Data Lake Path</strong>: Path to sgRNA library files</li><li class=\"list-item-node\"><strong>Species</strong>: human or mouse</li><li class=\"list-item-node\"><strong>Number of Guides</strong>: How many to return</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">Returns optimized sgRNA sequences for the target gene.</p>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && pip install -q biopython biomni pandas && python prod_apps_clone/biomni/molecular_biology/design_knockout_sgrna.py \"${geneName}\" \"${dataLakePath}\" --species \"${species}\" --num-guides ${numGuides} -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "String",
+      "name": "geneName",
+      "label": "Gene Name",
+      "description": "Target gene symbol (e.g., EGFR, TP53, BRCA1)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "dataLakePath",
+      "label": "Data Lake Path",
+      "description": "Path to sgRNA library data directory",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "species",
+      "label": "Species",
+      "description": "Target species (human or mouse)",
+      "defaultValue": "human"
+    },
+    {
+      "type": "Number",
+      "name": "numGuides",
+      "label": "Number of Guides",
+      "description": "Number of sgRNAs to return",
+      "defaultValue": 1
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

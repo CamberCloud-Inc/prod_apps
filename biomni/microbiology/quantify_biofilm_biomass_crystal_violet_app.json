@@ -1,0 +1,33 @@
+{
+  "name": "Quantify Biofilm Biomass Crystal Violet",
+  "description": "Quantify biofilm biomass using the crystal violet staining method",
+  "image": "python:3.11-slim",
+  "run": [
+    "sh",
+    "-c",
+    "git clone --depth 1 https://github.com/snap-stanford/Biomni /tmp/biomni && pip install -q -e /tmp/biomni && python /mnt/code/quantify_biofilm_biomass_crystal_violet.py"
+  ],
+  "fields": [
+    {
+      "name": "absorbance_readings",
+      "displayName": "Absorbance Readings",
+      "type": "json_array",
+      "description": "List of absorbance readings at 590nm for each well",
+      "required": true
+    },
+    {
+      "name": "control_wells",
+      "displayName": "Control Wells",
+      "type": "json_array",
+      "description": "List of absorbance readings for control wells (no bacteria)",
+      "required": true
+    },
+    {
+      "name": "sample_names",
+      "displayName": "Sample Names",
+      "type": "json_array",
+      "description": "List of sample names corresponding to absorbance readings",
+      "required": false
+    }
+  ]
+}

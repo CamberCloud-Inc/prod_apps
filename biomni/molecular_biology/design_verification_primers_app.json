@@ -1,0 +1,79 @@
+{
+  "name": "design-verification-primers",
+  "title": "Design Verification Primers",
+  "description": "Design Sanger sequencing primers to verify plasmid regions",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application designs primers for Sanger sequencing to verify specific regions in a plasmid, using existing primers when possible.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Uses existing primer library</li><li class=\"list-item-node\">Designs new primers as needed</li><li class=\"list-item-node\">Ensures complete coverage</li><li class=\"list-item-node\">Optimizes for Sanger sequencing</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Plasmid Sequence</strong>: Complete plasmid</li><li class=\"list-item-node\"><strong>Target Region</strong>: Start and end positions</li><li class=\"list-item-node\"><strong>Coverage Length</strong>: Typical read length</li><li class=\"list-item-node\"><strong>Primer Length</strong>: For newly designed primers</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">Returns recommended primers with coverage map showing how each primer covers the target region.</p>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && pip install -q biopython biomni && python prod_apps_clone/biomni/molecular_biology/design_verification_primers.py \"${plasmidSequence}\" ${start} ${end} ${linear} --coverage-length ${coverageLength} --primer-length ${primerLength} -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "String",
+      "name": "plasmidSequence",
+      "label": "Plasmid Sequence",
+      "description": "Complete plasmid sequence",
+      "defaultValue": ""
+    },
+    {
+      "type": "Number",
+      "name": "start",
+      "label": "Target Region Start",
+      "description": "Start position of region to verify (0-based)",
+      "defaultValue": 0
+    },
+    {
+      "type": "Number",
+      "name": "end",
+      "label": "Target Region End",
+      "description": "End position of region to verify",
+      "defaultValue": 1000
+    },
+    {
+      "type": "String",
+      "name": "linear",
+      "label": "Linear Plasmid",
+      "description": "Enter '--linear' if plasmid is linear (leave empty for circular)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Number",
+      "name": "coverageLength",
+      "label": "Coverage Length",
+      "description": "Typical Sanger read length in bp",
+      "defaultValue": 800
+    },
+    {
+      "type": "Number",
+      "name": "primerLength",
+      "label": "Primer Length",
+      "description": "Length for newly designed primers",
+      "defaultValue": 20
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

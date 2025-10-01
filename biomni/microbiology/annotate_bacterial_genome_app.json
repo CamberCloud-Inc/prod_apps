@@ -1,0 +1,55 @@
+{
+  "name": "Annotate Bacterial Genome",
+  "description": "Annotate a bacterial genome using Prokka to identify genes, proteins, and functional features",
+  "image": "python:3.11-slim",
+  "run": [
+    "sh",
+    "-c",
+    "git clone --depth 1 https://github.com/snap-stanford/Biomni /tmp/biomni && pip install -q -e /tmp/biomni && python /mnt/code/annotate_bacterial_genome.py"
+  ],
+  "fields": [
+    {
+      "name": "genome_file_path",
+      "displayName": "Genome File Path",
+      "type": "short_text",
+      "description": "Path to the assembled genome sequence file in FASTA format",
+      "required": true
+    },
+    {
+      "name": "output_dir",
+      "displayName": "Output Directory",
+      "type": "short_text",
+      "description": "Directory where annotation results will be saved",
+      "required": false,
+      "default": "annotation_results"
+    },
+    {
+      "name": "genus",
+      "displayName": "Genus",
+      "type": "short_text",
+      "description": "Genus name for the organism",
+      "required": false
+    },
+    {
+      "name": "species",
+      "displayName": "Species",
+      "type": "short_text",
+      "description": "Species name for the organism",
+      "required": false
+    },
+    {
+      "name": "strain",
+      "displayName": "Strain",
+      "type": "short_text",
+      "description": "Strain identifier",
+      "required": false
+    },
+    {
+      "name": "prefix",
+      "displayName": "Prefix",
+      "type": "short_text",
+      "description": "Prefix for output files",
+      "required": false
+    }
+  ]
+}

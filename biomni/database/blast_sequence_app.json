@@ -1,0 +1,45 @@
+{
+  "name": "blast_sequence",
+  "title": "Blast Sequence",
+  "description": "Query the Reactome database using natural language or a direct endpoint.\n\n    Parameters\n    ----------\n    prompt (str, required): Natural language query about biological pathways\n    endpoint (str, ",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "sequence",
+      "type": "string",
+      "required": true,
+      "description": "Parameter: sequence"
+    },
+    {
+      "name": "database",
+      "type": "string",
+      "required": true,
+      "description": "Parameter: database"
+    },
+    {
+      "name": "program",
+      "type": "number",
+      "required": true,
+      "description": "Parameter: program"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "blast_sequence.py",
+    "args": [
+      "--sequence",
+      "${sequence}",
+      "--database",
+      "${database}",
+      "--program",
+      "${program}"
+    ]
+  }
+}

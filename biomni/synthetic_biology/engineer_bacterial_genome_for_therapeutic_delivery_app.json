@@ -1,0 +1,41 @@
+{
+  "name": "Engineer Bacterial Genome for Therapeutic Delivery",
+  "description": "Engineer a bacterial genome by integrating therapeutic genetic parts for therapeutic delivery",
+  "version": "1.0.0",
+  "author": "Biomni Synthetic Biology Tools",
+  "repository": "https://github.com/snap-stanford/Biomni",
+  "license": "MIT",
+  "runtime": {
+    "type": "python",
+    "version": "3.8+",
+    "entrypoint": "engineer_bacterial_genome_for_therapeutic_delivery.py"
+  },
+  "dependencies": {
+    "pip": [
+      "biomni",
+      "biopython",
+      "reportlab"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "bacterial_genome_file",
+      "type": "file",
+      "description": "Path to the file containing the bacterial genome sequence in FASTA format",
+      "required": true
+    },
+    {
+      "name": "genetic_parts",
+      "type": "object",
+      "description": "Dictionary containing genetic parts to be integrated (promoters, genes, terminators, cargo)",
+      "required": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string",
+      "description": "Research log summarizing the engineering process, including the filename of the engineered genome and plasmid map"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "name": "query_reactome",
+  "title": "Query Reactome",
+  "description": "Query the Reactome database using natural language or a direct endpoint.\n\n    Parameters\n    ----------\n    prompt (str, required): Natural language query about biological pathways\n    endpoint (str, ",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "prompt",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: prompt"
+    },
+    {
+      "name": "endpoint",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: endpoint"
+    },
+    {
+      "name": "download",
+      "type": "boolean",
+      "required": false,
+      "description": "Parameter: download"
+    },
+    {
+      "name": "output_dir",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: output_dir"
+    },
+    {
+      "name": "verbose",
+      "type": "boolean",
+      "required": false,
+      "description": "Parameter: verbose"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "query_reactome.py",
+    "args": [
+      "--prompt",
+      "${prompt}",
+      "--endpoint",
+      "${endpoint}",
+      "--download",
+      "${download}",
+      "--output_dir",
+      "${output_dir}",
+      "--verbose",
+      "${verbose}"
+    ]
+  }
+}

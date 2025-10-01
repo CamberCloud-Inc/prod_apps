@@ -1,0 +1,59 @@
+{
+  "name": "get-gene-coding-sequence",
+  "title": "Get Gene Coding Sequence from NCBI",
+  "description": "Retrieve coding sequences for genes from NCBI Entrez database",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application retrieves the coding sequence(s) of a specified gene from the NCBI Entrez database using gene name and organism.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Searches NCBI gene database</li><li class=\"list-item-node\">Returns RefSeq ID and sequence</li><li class=\"list-item-node\">Extracts coding sequences (exons only)</li><li class=\"list-item-node\">Supports any organism in NCBI</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Gene Name</strong>: Gene symbol (e.g., TP53, BRCA1)</li><li class=\"list-item-node\"><strong>Organism</strong>: Species name (e.g., \"Homo sapiens\", \"Mus musculus\")</li><li class=\"list-item-node\"><strong>Email</strong>: Email for NCBI (optional but recommended)</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">Returns a JSON file with RefSeq IDs and coding sequences for the specified gene.</p>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && pip install -q biopython biomni && python prod_apps_clone/biomni/molecular_biology/get_gene_coding_sequence.py \"${geneName}\" \"${organism}\" ${email} -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "String",
+      "name": "geneName",
+      "label": "Gene Name",
+      "description": "Gene symbol (e.g., TP53, BRCA1, EGFR)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "organism",
+      "label": "Organism",
+      "description": "Species name (e.g., \"Homo sapiens\", \"Mus musculus\")",
+      "defaultValue": "Homo sapiens"
+    },
+    {
+      "type": "String",
+      "name": "email",
+      "label": "Email (Optional)",
+      "description": "Email address for NCBI (enter '--email your@email.com' or leave empty)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

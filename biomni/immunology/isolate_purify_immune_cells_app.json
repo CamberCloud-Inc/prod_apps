@@ -1,0 +1,40 @@
+{
+  "name": "Isolate and Purify Immune Cells",
+  "description": "Simulate isolation and purification of immune cells from tissue samples using enzymatic digestion and MACS",
+  "category": "Immunology",
+  "subcategory": "Cell Biology",
+  "image": "davethesoftwaredev/biomni:latest",
+  "command": "python /app/biomni/immunology/isolate_purify_immune_cells.py",
+  "params": [
+    {
+      "name": "tissue_type",
+      "type": "string",
+      "description": "Type of tissue sample (e.g., 'adipose', 'kidney', 'liver', 'lung', 'spleen')",
+      "required": true
+    },
+    {
+      "name": "target_cell_type",
+      "type": "string",
+      "description": "Immune cell population to isolate (e.g., 'macrophages', 'leukocytes', 'T cells', 'B cells')",
+      "required": true
+    },
+    {
+      "name": "enzyme_type",
+      "type": "string",
+      "description": "Enzyme used for tissue digestion",
+      "default": "collagenase"
+    },
+    {
+      "name": "macs_antibody",
+      "type": "string",
+      "description": "Specific antibody for magnetic-assisted cell sorting (leave blank for auto-selection based on cell type)",
+      "default": "None"
+    },
+    {
+      "name": "digestion_time_min",
+      "type": "number",
+      "description": "Digestion time in minutes",
+      "default": 45
+    }
+  ]
+}

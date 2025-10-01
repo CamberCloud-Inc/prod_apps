@@ -1,0 +1,60 @@
+{
+  "name": "analyze_circular_dichroism_spectra",
+  "description": "Analyzes circular dichroism (CD) spectroscopy data to determine secondary structure and thermal stability.",
+  "icon": "📊",
+  "container": {
+    "image": "python:3.9-slim",
+    "setup_commands": [
+      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "sample_name",
+      "description": "Name of the biomolecule sample (e.g., 'Znf706', 'G-quadruplex')",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "sample_type",
+      "description": "Type of biomolecule ('protein' or 'nucleic_acid')",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "wavelength_data",
+      "description": "Wavelength values in nm for CD spectrum (list or array)",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "cd_signal_data",
+      "description": "CD signal intensity values (typically in mdeg or Δε)",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "temperature_data",
+      "description": "Temperature values (°C) for thermal denaturation experiment (optional)",
+      "type": "array",
+      "required": false
+    },
+    {
+      "name": "thermal_cd_data",
+      "description": "CD signal values at specific wavelength across different temperatures (optional)",
+      "type": "array",
+      "required": false
+    },
+    {
+      "name": "output_dir",
+      "description": "Directory to save result files (default: ./)",
+      "type": "string",
+      "required": false,
+      "default": "./"
+    }
+  ],
+  "output": {
+    "type": "string",
+    "description": "Research log summarizing the CD analysis steps and results"
+  }
+}

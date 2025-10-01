@@ -1,0 +1,45 @@
+{
+  "name": "query_gnomad",
+  "title": "Query Gnomad",
+  "description": "Query gnomAD for variants in a gene using natural language or direct gene symbol.\n\n    Parameters\n    ----------\n    prompt (str, required): Natural language query about genetic variants\n    gene_symb",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "prompt",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: prompt"
+    },
+    {
+      "name": "gene_symbol",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: gene_symbol"
+    },
+    {
+      "name": "verbose",
+      "type": "boolean",
+      "required": false,
+      "description": "Parameter: verbose"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "query_gnomad.py",
+    "args": [
+      "--prompt",
+      "${prompt}",
+      "--gene_symbol",
+      "${gene_symbol}",
+      "--verbose",
+      "${verbose}"
+    ]
+  }
+}

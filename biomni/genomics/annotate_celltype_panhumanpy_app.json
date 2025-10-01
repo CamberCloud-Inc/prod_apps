@@ -1,0 +1,27 @@
+{
+  "name": "biomni-annotate-celltype-panhumanpy",
+  "title": "Biomni: Annotate Cell Type with PanhumanPy",
+  "description": "Hierarchical cell type annotation using panhumanpy and Azimuth Neural Network",
+  "content": "<h3>Overview</h3><p>Performs hierarchical cell type annotation on single-cell RNA-seq data using the panhumanpy package and Azimuth Neural Network. Provides multi-level cell type labels with confidence scores.</p><h3>Features</h3><ul><li>Hierarchical annotation at multiple resolutions</li><li>Confidence scores for predictions</li><li>Optional label refinement for consistent granularity</li><li>UMAP visualization with annotations</li></ul><h3>Input</h3><p>AnnData H5AD file containing scRNA-seq data</p><h3>Output</h3><p>Annotated H5AD file with cell type labels and visualization plots</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genomics/annotate_celltype_panhumanpy.py \"${adataFile}\" -o \"${outputDir}\" ${additionalParams}",
+  "engineType": "MPI",
+  "jobConfig": [
+    {"nodeCount": "1", "coresPerNode": "4"}
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "adataFile",
+      "label": "AnnData H5AD File",
+      "description": "Upload scRNA-seq data in H5AD format",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select output folder",
+      "defaultValue": "./"
+    }
+  ]
+}

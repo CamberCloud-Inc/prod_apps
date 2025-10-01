@@ -1,0 +1,49 @@
+{
+  "name": "Simulate Generalized Lotka-Volterra Dynamics",
+  "description": "Simulate microbial community dynamics using the generalized Lotka-Volterra model",
+  "image": "python:3.11-slim",
+  "run": [
+    "sh",
+    "-c",
+    "git clone --depth 1 https://github.com/snap-stanford/Biomni /tmp/biomni && pip install -q -e /tmp/biomni && python /mnt/code/simulate_generalized_lotka_volterra_dynamics.py"
+  ],
+  "fields": [
+    {
+      "name": "initial_populations",
+      "displayName": "Initial Populations",
+      "type": "json_array",
+      "description": "List of initial population sizes for each species",
+      "required": true
+    },
+    {
+      "name": "growth_rates",
+      "displayName": "Growth Rates",
+      "type": "json_array",
+      "description": "List of intrinsic growth rates for each species",
+      "required": true
+    },
+    {
+      "name": "interaction_matrix",
+      "displayName": "Interaction Matrix",
+      "type": "json_array",
+      "description": "Interaction matrix showing how species affect each other",
+      "required": true
+    },
+    {
+      "name": "simulation_time",
+      "displayName": "Simulation Time",
+      "type": "number",
+      "description": "Total simulation time",
+      "required": false,
+      "default": 100
+    },
+    {
+      "name": "time_step",
+      "displayName": "Time Step",
+      "type": "number",
+      "description": "Time step for simulation output",
+      "required": false,
+      "default": 0.1
+    }
+  ]
+}

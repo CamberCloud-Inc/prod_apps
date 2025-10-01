@@ -1,0 +1,34 @@
+{
+  "name": "biomni-create-harmony-embeddings",
+  "title": "Biomni: Create Harmony Embeddings",
+  "description": "Generate Harmony batch-corrected embeddings for single-cell RNA-seq data",
+  "content": "<h3>Overview</h3><p>Creates batch-corrected embeddings using Harmony, a fast integration method that removes batch effects while preserving biological variation. Harmony operates on PCA embeddings to produce integrated representations.</p><h3>Features</h3><ul><li>Fast batch effect correction</li><li>Preserves biological variation</li><li>Works with multiple batches simultaneously</li><li>Suitable for large datasets</li></ul><h3>Input</h3><p>AnnData H5AD file with X_pca embeddings and batch information</p><h3>Output</h3><p>H5AD file with X_harmony embeddings in obsm</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genomics/create_harmony_embeddings.py \"${adataFile}\" --batch-key \"${batchKey}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {"nodeCount": "1", "coresPerNode": "4"}
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "adataFile",
+      "label": "AnnData H5AD File",
+      "description": "Upload scRNA-seq data in H5AD format with X_pca",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "batchKey",
+      "label": "Batch Key",
+      "description": "Column name in adata.obs for batch information",
+      "defaultValue": "batch"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select output folder",
+      "defaultValue": "./"
+    }
+  ]
+}

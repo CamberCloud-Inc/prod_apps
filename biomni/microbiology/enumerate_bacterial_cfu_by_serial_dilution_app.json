@@ -1,0 +1,60 @@
+{
+  "name": "Enumerate Bacterial CFU by Serial Dilution",
+  "description": "Quantify bacterial concentration (CFU/mL) using serial dilutions and spot plating",
+  "image": "python:3.11-slim",
+  "run": [
+    "sh",
+    "-c",
+    "git clone --depth 1 https://github.com/snap-stanford/Biomni /tmp/biomni && pip install -q -e /tmp/biomni && python /mnt/code/enumerate_bacterial_cfu_by_serial_dilution.py"
+  ],
+  "fields": [
+    {
+      "name": "initial_sample_volume_ml",
+      "displayName": "Initial Sample Volume (mL)",
+      "type": "number",
+      "description": "Volume of the initial bacterial sample in milliliters",
+      "required": false,
+      "default": 1.0
+    },
+    {
+      "name": "estimated_concentration",
+      "displayName": "Estimated Concentration",
+      "type": "number",
+      "description": "Estimated concentration of bacteria in the initial sample (CFU/mL)",
+      "required": false,
+      "default": 100000000
+    },
+    {
+      "name": "dilution_factor",
+      "displayName": "Dilution Factor",
+      "type": "number",
+      "description": "Factor by which each dilution reduces the concentration",
+      "required": false,
+      "default": 10
+    },
+    {
+      "name": "num_dilutions",
+      "displayName": "Number of Dilutions",
+      "type": "number",
+      "description": "Number of serial dilutions to perform",
+      "required": false,
+      "default": 8
+    },
+    {
+      "name": "spots_per_dilution",
+      "displayName": "Spots Per Dilution",
+      "type": "number",
+      "description": "Number of replicate spots to plate for each dilution",
+      "required": false,
+      "default": 3
+    },
+    {
+      "name": "output_file",
+      "displayName": "Output File",
+      "type": "short_text",
+      "description": "Filename to save the CFU enumeration results",
+      "required": false,
+      "default": "cfu_enumeration_results.csv"
+    }
+  ]
+}

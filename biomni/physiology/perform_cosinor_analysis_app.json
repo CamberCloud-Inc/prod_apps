@@ -1,0 +1,36 @@
+{
+  "name": "perform_cosinor_analysis",
+  "description": "Performs cosinor analysis on physiological time series data to characterize circadian rhythms.",
+  "icon": "🌙",
+  "container": {
+    "image": "python:3.9-slim",
+    "setup_commands": [
+      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "time_data",
+      "description": "Time points of the measurements in hours",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "physiological_data",
+      "description": "Physiological measurements corresponding to each time point",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "period",
+      "description": "Period of the rhythm in hours, default is 24 hours for circadian rhythms",
+      "type": "float",
+      "required": false,
+      "default": 24.0
+    }
+  ],
+  "output": {
+    "type": "string",
+    "description": "A research log summarizing the cosinor analysis process and results"
+  }
+}

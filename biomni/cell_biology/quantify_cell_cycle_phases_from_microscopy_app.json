@@ -1,0 +1,19 @@
+{
+  "name": "Quantify Cell Cycle Phases from Microscopy",
+  "description": "Quantify the percentage of cells in each cell cycle phase using Calcofluor white stained microscopy images. Processes microscopy images where cell walls/septa are stained with Calcofluor white, segments individual cells, extracts features, and classifies each cell into G1, S, or G2/M phase.",
+  "spec": {
+    "image_paths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of file paths to microscopy images of cells stained with Calcofluor white"
+    },
+    "output_dir": {
+      "type": "string",
+      "description": "Directory to save results",
+      "default": "./results"
+    }
+  },
+  "instructions": "git clone https://github.com/snap-stanford/Biomni.git /tmp/Biomni && cd /tmp/Biomni && pip install -e . && cd /Users/david/git/prod_apps/biomni/cell_biology && python quantify_cell_cycle_phases_from_microscopy.py"
+}

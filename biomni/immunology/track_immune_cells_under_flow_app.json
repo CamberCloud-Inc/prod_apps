@@ -1,0 +1,40 @@
+{
+  "name": "Track Immune Cells Under Flow",
+  "description": "Track immune cells under flow conditions and classify their behaviors (rolling, firm adhesion, detachment)",
+  "category": "Immunology",
+  "subcategory": "Microscopy",
+  "image": "davethesoftwaredev/biomni:latest",
+  "command": "python /app/biomni/immunology/track_immune_cells_under_flow.py",
+  "params": [
+    {
+      "name": "image_sequence_path",
+      "type": "file",
+      "description": "Path to image sequence directory or video file",
+      "required": true
+    },
+    {
+      "name": "output_dir",
+      "type": "string",
+      "description": "Directory to save output files",
+      "default": "./output"
+    },
+    {
+      "name": "pixel_size_um",
+      "type": "number",
+      "description": "Pixel size in micrometers",
+      "default": 1.0
+    },
+    {
+      "name": "time_interval_sec",
+      "type": "number",
+      "description": "Time interval between frames in seconds",
+      "default": 1.0
+    },
+    {
+      "name": "flow_direction",
+      "type": "string",
+      "description": "Direction of flow (right, left, up, down)",
+      "default": "right"
+    }
+  ]
+}

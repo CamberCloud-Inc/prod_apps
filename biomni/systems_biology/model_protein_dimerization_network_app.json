@@ -1,0 +1,26 @@
+{
+  "name": "Model Protein Dimerization Network",
+  "description": "Model protein dimerization networks to find equilibrium concentrations of dimers using ODE-based simulation",
+  "install": "cd /tmp && git clone --depth 1 https://github.com/snap-stanford/Biomni.git biomni_repo && cd biomni_repo && pip install -e . && pip install numpy scipy",
+  "run": "python3 /Users/david/git/prod_apps/biomni/systems_biology/model_protein_dimerization_network.py \"$MONOMER_CONCENTRATIONS\" \"$DIMERIZATION_AFFINITIES\" \"$NETWORK_TOPOLOGY\"",
+  "inputs": [
+    {
+      "name": "MONOMER_CONCENTRATIONS",
+      "description": "JSON dictionary mapping monomer names to their initial concentrations (format: {\"A\": 1.0, \"B\": 2.0})",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "DIMERIZATION_AFFINITIES",
+      "description": "JSON dictionary mapping dimer names to their association constants Ka (format: {\"A-B\": 1000000.0})",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "NETWORK_TOPOLOGY",
+      "description": "JSON list of monomer pairs that can form dimers (format: [[\"A\", \"B\"], [\"B\", \"C\"]])",
+      "type": "text",
+      "required": true
+    }
+  ]
+}

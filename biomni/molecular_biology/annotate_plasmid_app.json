@@ -1,0 +1,52 @@
+{
+  "name": "annotate-plasmid",
+  "title": "Annotate Plasmid with pLannotate",
+  "description": "Annotate DNA sequences using pLannotate's comprehensive plasmid feature database",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application uses pLannotate to automatically annotate plasmid sequences by identifying common features such as promoters, genes, terminators, and origins of replication.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Comprehensive annotation database</li><li class=\"list-item-node\">Supports both circular and linear sequences</li><li class=\"list-item-node\">Identifies promoters, ORFs, terminators, and more</li><li class=\"list-item-node\">Provides detailed feature information</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>DNA Sequence</strong>: Plasmid sequence to annotate</li><li class=\"list-item-node\"><strong>Topology</strong>: Specify if sequence is linear (default is circular)</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">Returns a JSON file with detailed annotations including feature names, types, positions, and descriptions.</p>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && pip install -q biopython biomni plannotate && python prod_apps_clone/biomni/molecular_biology/annotate_plasmid.py \"${sequence}\" ${linear} -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "String",
+      "name": "sequence",
+      "label": "DNA Sequence",
+      "description": "Plasmid sequence to annotate",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "linear",
+      "label": "Linear Sequence",
+      "description": "Enter '--linear' if sequence is linear (leave empty for circular)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

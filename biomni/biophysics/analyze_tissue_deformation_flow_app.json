@@ -1,0 +1,37 @@
+{
+  "name": "analyze_tissue_deformation_flow",
+  "description": "Quantify tissue deformation and flow dynamics from microscopy image sequence.",
+  "icon": "🧫",
+  "container": {
+    "image": "python:3.9-slim",
+    "setup_commands": [
+      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "image_sequence",
+      "description": "Path pattern or directory containing microscopy image sequence (e.g., 'frames/*.png')",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "output_dir",
+      "description": "Directory for output results (default: results)",
+      "type": "string",
+      "required": false,
+      "default": "results"
+    },
+    {
+      "name": "pixel_scale",
+      "description": "Pixel scale for physical measurements (default: 1.0)",
+      "type": "float",
+      "required": false,
+      "default": 1.0
+    }
+  ],
+  "output": {
+    "type": "directory",
+    "path": "results"
+  }
+}

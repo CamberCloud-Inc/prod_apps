@@ -1,0 +1,45 @@
+{
+  "name": "query_pdb",
+  "title": "Query Pdb",
+  "description": "Query the RCSB PDB database using natural language or a direct structured query.\n\n    Parameters\n    ----------\n    prompt (str, required): Natural language query about protein structures\n    query (d",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "prompt",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: prompt"
+    },
+    {
+      "name": "query",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: query"
+    },
+    {
+      "name": "max_results",
+      "type": "integer",
+      "required": false,
+      "description": "Parameter: max_results"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "query_pdb.py",
+    "args": [
+      "--prompt",
+      "${prompt}",
+      "--query",
+      "${query}",
+      "--max_results",
+      "${max_results}"
+    ]
+  }
+}

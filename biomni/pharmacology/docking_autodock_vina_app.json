@@ -1,0 +1,54 @@
+{
+  "name": "docking_autodock_vina",
+  "description": "Performs docking using AutoDock Vina with specified parameters",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "docking_autodock_vina.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "smiles_list",
+      "description": "List of SMILES strings for ligands to dock",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "receptor_pdb_file",
+      "description": "Path to the receptor PDB file",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "box_center",
+      "description": "Center coordinates of the docking box [x, y, z]",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "box_size",
+      "description": "Size of the docking box [x, y, z]",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "ncpu",
+      "description": "Number of CPUs to use",
+      "type": "integer",
+      "required": false,
+      "default": 1
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with docking scores"
+      }
+    }
+  }
+}

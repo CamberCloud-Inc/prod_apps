@@ -1,0 +1,61 @@
+{
+  "name": "query_stringdb",
+  "title": "Query Stringdb",
+  "description": "Query the STRING protein interaction database using natural language or direct endpoint.\n\n    Parameters\n    ----------\n    prompt (str, required): Natural language query about protein interactions\n  ",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "prompt",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: prompt"
+    },
+    {
+      "name": "endpoint",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: endpoint"
+    },
+    {
+      "name": "download_image",
+      "type": "boolean",
+      "required": false,
+      "description": "Parameter: download_image"
+    },
+    {
+      "name": "output_dir",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: output_dir"
+    },
+    {
+      "name": "verbose",
+      "type": "boolean",
+      "required": false,
+      "description": "Parameter: verbose"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "query_stringdb.py",
+    "args": [
+      "--prompt",
+      "${prompt}",
+      "--endpoint",
+      "${endpoint}",
+      "--download_image",
+      "${download_image}",
+      "--output_dir",
+      "${output_dir}",
+      "--verbose",
+      "${verbose}"
+    ]
+  }
+}

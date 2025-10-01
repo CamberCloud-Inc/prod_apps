@@ -1,0 +1,117 @@
+{
+  "name": "query_clinicaltrials",
+  "title": "Query Clinicaltrials",
+  "description": "Query ClinicalTrials.gov API for clinical studies.\n\n    Modes:\n    - Direct URL: set `endpoint` to a full URL or a path (e.g., \"/studies?query.term=breast%20cancer\").\n    - Structured params: provide ",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "prompt",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: prompt"
+    },
+    {
+      "name": "endpoint",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: endpoint"
+    },
+    {
+      "name": "term",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: term"
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: status"
+    },
+    {
+      "name": "condition",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: condition"
+    },
+    {
+      "name": "intervention",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: intervention"
+    },
+    {
+      "name": "location",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: location"
+    },
+    {
+      "name": "phase",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: phase"
+    },
+    {
+      "name": "page_size",
+      "type": "integer",
+      "required": false,
+      "description": "Parameter: page_size"
+    },
+    {
+      "name": "max_pages",
+      "type": "integer",
+      "required": false,
+      "description": "Parameter: max_pages"
+    },
+    {
+      "name": "page_token",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: page_token"
+    },
+    {
+      "name": "verbose",
+      "type": "boolean",
+      "required": false,
+      "description": "Parameter: verbose"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "query_clinicaltrials.py",
+    "args": [
+      "--prompt",
+      "${prompt}",
+      "--endpoint",
+      "${endpoint}",
+      "--term",
+      "${term}",
+      "--status",
+      "${status}",
+      "--condition",
+      "${condition}",
+      "--intervention",
+      "${intervention}",
+      "--location",
+      "${location}",
+      "--phase",
+      "${phase}",
+      "--page_size",
+      "${page_size}",
+      "--max_pages",
+      "${max_pages}",
+      "--page_token",
+      "${page_token}",
+      "--verbose",
+      "${verbose}"
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "name": "predict_binding_affinity_protein_1d_sequence",
+  "description": "Predicts protein-ligand binding affinity using amino acid sequence",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "predict_binding_affinity_protein_1d_sequence.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "smiles_list",
+      "description": "List of SMILES strings for ligands",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "amino_acid_sequence",
+      "description": "Protein amino acid sequence",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "affinity_model_type",
+      "description": "Type of affinity model to use",
+      "type": "string",
+      "required": false,
+      "default": "MPNN-CNN"
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with binding affinity predictions"
+      }
+    }
+  }
+}

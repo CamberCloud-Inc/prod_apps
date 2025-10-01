@@ -1,0 +1,35 @@
+{
+  "name": "Biomni: Detect and Characterize Structural Variations",
+  "description": "Detects and characterizes structural variations (SVs) in genomic sequencing data. Uses LUMPY for SV detection followed by annotation with COSMIC and/or ClinVar databases to identify deletions, inversions, translocations, and duplications.",
+  "input": {
+    "bam_file_path": {
+      "type": "string",
+      "description": "Path to the aligned sequencing data in BAM format"
+    },
+    "reference_genome_path": {
+      "type": "string",
+      "description": "Path to the reference genome in FASTA format"
+    },
+    "output_dir": {
+      "type": "string",
+      "description": "Directory where results will be saved"
+    },
+    "cosmic_db_path": {
+      "type": "string",
+      "description": "Path to the COSMIC database for cancer annotation (optional)",
+      "optional": true
+    },
+    "clinvar_db_path": {
+      "type": "string",
+      "description": "Path to the ClinVar database for clinical annotation (optional)",
+      "optional": true
+    }
+  },
+  "output": {
+    "type": "string",
+    "description": "Research log summarizing the steps performed and results obtained"
+  },
+  "tags": ["biomni", "cancer-biology", "structural-variations", "lumpy", "genomics", "cosmic", "clinvar"],
+  "author": "Biomni",
+  "repository": "https://github.com/snap-stanford/Biomni"
+}

@@ -1,0 +1,29 @@
+{
+  "name": "calculate_physicochemical_properties",
+  "description": "Calculates physicochemical properties of molecules from SMILES strings",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "calculate_physicochemical_properties.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "smiles_string",
+      "description": "SMILES string of the molecule to analyze",
+      "type": "string",
+      "required": true
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with physicochemical properties"
+      }
+    }
+  }
+}

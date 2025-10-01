@@ -1,0 +1,42 @@
+{
+  "name": "calculate_brain_adc_map",
+  "description": "Calculate Apparent Diffusion Coefficient (ADC) map from diffusion-weighted MRI data.",
+  "icon": "🧠",
+  "container": {
+    "image": "python:3.9-slim",
+    "setup_commands": [
+      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "dwi_file_path",
+      "description": "Path to the 4D NIfTI file containing diffusion-weighted MRI data, where the 4th dimension corresponds to different b-values",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "b_values",
+      "description": "List of b-values corresponding to each volume in the 4D DWI data",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "output_path",
+      "description": "Path where the output ADC map will be saved",
+      "type": "string",
+      "required": false,
+      "default": "adc_map.nii.gz"
+    },
+    {
+      "name": "mask_file_path",
+      "description": "Path to a binary mask file to limit ADC calculation to brain regions (optional)",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "output": {
+    "type": "string",
+    "description": "Research log summarizing the ADC mapping process and results"
+  }
+}

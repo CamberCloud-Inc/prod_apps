@@ -1,0 +1,51 @@
+{
+  "name": "quantify_amyloid_beta_plaques",
+  "description": "Quantifies amyloid-beta plaques in microscopy images using image segmentation and analysis.",
+  "icon": "🧠",
+  "container": {
+    "image": "python:3.9-slim",
+    "setup_commands": [
+      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "image_path",
+      "description": "Path to the microscopy image file containing amyloid-beta plaques",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "output_dir",
+      "description": "Directory to save output files",
+      "type": "string",
+      "required": false,
+      "default": "./results"
+    },
+    {
+      "name": "threshold_method",
+      "description": "Method for thresholding images ('otsu', 'adaptive', or 'manual')",
+      "type": "string",
+      "required": false,
+      "default": "otsu"
+    },
+    {
+      "name": "min_plaque_size",
+      "description": "Minimum plaque size in pixels to be counted",
+      "type": "integer",
+      "required": false,
+      "default": 50
+    },
+    {
+      "name": "manual_threshold",
+      "description": "Threshold value for manual thresholding (used only if threshold_method is 'manual')",
+      "type": "integer",
+      "required": false,
+      "default": 127
+    }
+  ],
+  "output": {
+    "type": "string",
+    "description": "Research log with plaque quantification results and statistics"
+  }
+}

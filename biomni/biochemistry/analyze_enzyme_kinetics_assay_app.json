@@ -1,0 +1,54 @@
+{
+  "name": "analyze_enzyme_kinetics_assay",
+  "description": "Performs in vitro enzyme kinetics assay and analyzes the dose-dependent effects of modulators.",
+  "icon": "🧪",
+  "container": {
+    "image": "python:3.9-slim",
+    "setup_commands": [
+      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "enzyme_name",
+      "description": "Name of the purified enzyme being tested",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "substrate_concentrations",
+      "description": "List of substrate concentrations in μM for kinetic analysis",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "enzyme_concentration",
+      "description": "Concentration of the enzyme in nM",
+      "type": "float",
+      "required": true
+    },
+    {
+      "name": "modulators",
+      "description": "Dictionary of modulators where keys are modulator names and values are lists of concentrations in μM (optional)",
+      "type": "object",
+      "required": false
+    },
+    {
+      "name": "time_points",
+      "description": "Time points in minutes for time-course measurements (optional, default: [0, 5, 10, 15, 20, 30, 45, 60])",
+      "type": "array",
+      "required": false
+    },
+    {
+      "name": "output_dir",
+      "description": "Directory to save output files (default: ./)",
+      "type": "string",
+      "required": false,
+      "default": "./"
+    }
+  ],
+  "output": {
+    "type": "string",
+    "description": "Research log summarizing the enzyme kinetics assay procedure and results"
+  }
+}

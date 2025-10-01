@@ -1,0 +1,21 @@
+{
+  "name": "Quantify and Cluster Cell Motility",
+  "description": "Quantify cell motility features from time-lapse microscopy images and cluster cells based on motility patterns. Tracks cells across time frames, calculates speed, directionality, and mean squared displacement, then performs k-means clustering to identify distinct motility patterns.",
+  "spec": {
+    "image_sequence_path": {
+      "type": "string",
+      "description": "Path to directory containing time-lapse microscopy images in sequential order"
+    },
+    "output_dir": {
+      "type": "string",
+      "description": "Directory to save output files",
+      "default": "./results"
+    },
+    "num_clusters": {
+      "type": "integer",
+      "description": "Number of motility pattern clusters to identify",
+      "default": 3
+    }
+  },
+  "instructions": "git clone https://github.com/snap-stanford/Biomni.git /tmp/Biomni && cd /tmp/Biomni && pip install -e . && cd /Users/david/git/prod_apps/biomni/cell_biology && python quantify_and_cluster_cell_motility.py"
+}

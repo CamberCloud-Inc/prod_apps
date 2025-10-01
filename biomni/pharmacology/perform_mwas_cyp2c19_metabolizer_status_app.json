@@ -1,0 +1,55 @@
+{
+  "name": "perform_mwas_cyp2c19_metabolizer_status",
+  "description": "Performs methylation-wide association study (MWAS) for CYP2C19 metabolizer status",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "perform_mwas_cyp2c19_metabolizer_status.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "methylation_data_path",
+      "description": "Path to methylation data file",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "metabolizer_status_path",
+      "description": "Path to metabolizer status data file",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "covariates_path",
+      "description": "Path to covariates data file (optional)",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "pvalue_threshold",
+      "description": "P-value threshold for significance",
+      "type": "number",
+      "required": false,
+      "default": 0.05
+    },
+    {
+      "name": "output_file",
+      "description": "Output file path for significant CpG sites",
+      "type": "string",
+      "required": false,
+      "default": "significant_cpg_sites.csv"
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with MWAS results"
+      }
+    }
+  }
+}

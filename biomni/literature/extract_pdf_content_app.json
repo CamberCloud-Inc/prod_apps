@@ -1,0 +1,41 @@
+{
+  "name": "extract_pdf_content",
+  "description": "Extract text content from a PDF file given its URL. Automatically handles both direct PDF URLs and web pages containing PDF links.",
+  "version": "1.0.0",
+  "author": "Biomni Literature Tools",
+  "license": "MIT",
+  "input": {
+    "type": "object",
+    "properties": {
+      "url": {
+        "type": "string",
+        "description": "URL of the PDF file or webpage containing PDF link"
+      }
+    },
+    "required": ["url"]
+  },
+  "output": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean",
+        "description": "Whether the operation succeeded"
+      },
+      "result": {
+        "type": "string",
+        "description": "Extracted text content from the PDF"
+      },
+      "error": {
+        "type": "string",
+        "description": "Error message if operation failed"
+      }
+    }
+  },
+  "execution": {
+    "command": "python3",
+    "args": [
+      "extract_pdf_content.py",
+      "{{url}}"
+    ]
+  }
+}

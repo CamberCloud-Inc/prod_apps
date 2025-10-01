@@ -1,0 +1,23 @@
+{
+  "name": "list_glycoengineering_resources",
+  "description": "Curate and summarize external glycoengineering tools and resources",
+  "version": "1.0.0",
+  "author": "Biomni Integration",
+  "license": "MIT",
+  "runtime": {
+    "type": "python",
+    "version": "3.8+",
+    "entrypoint": "list_glycoengineering_resources.py",
+    "requirements": [
+      "git+https://github.com/snap-stanford/Biomni.git"
+    ]
+  },
+  "inputs": [],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string",
+      "description": "Curated list of glycoengineering resources"
+    }
+  ]
+}

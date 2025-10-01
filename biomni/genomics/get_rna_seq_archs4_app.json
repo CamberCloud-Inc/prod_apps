@@ -1,0 +1,34 @@
+{
+  "name": "biomni-get-rna-seq-archs4",
+  "title": "Biomni: Get RNA-seq from ARCHS4",
+  "description": "Fetch RNA-seq expression data for a gene from the ARCHS4 database",
+  "content": "<h3>Overview</h3><p>Retrieves RNA-seq expression data for a specific gene from the ARCHS4 database, returning the top K tissues with highest expression levels (median TPM values).</p><h3>Input</h3><p>Provide a gene name (e.g., 'TP53', 'BRCA1')</p><h3>Output</h3><p>Returns median transcripts-per-million (TPM) values per tissue, ranked by expression level</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genomics/get_rna_seq_archs4.py \"${geneName}\" --top-k ${topK} -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {"nodeCount": "1", "coresPerNode": "2"}
+  ],
+  "spec": [
+    {
+      "type": "String",
+      "name": "geneName",
+      "label": "Gene Name",
+      "description": "Gene name to query (e.g., TP53, BRCA1)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Integer",
+      "name": "topK",
+      "label": "Top K Tissues",
+      "description": "Number of top tissues to return",
+      "defaultValue": "10"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select output folder",
+      "defaultValue": "./"
+    }
+  ]
+}

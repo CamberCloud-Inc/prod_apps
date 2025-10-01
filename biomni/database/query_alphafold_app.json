@@ -1,0 +1,85 @@
+{
+  "name": "query_alphafold",
+  "title": "Query Alphafold",
+  "description": "Query the AlphaFold Database API for protein structure predictions.\n\n    Parameters\n    ----------\n    uniprot_id (str): UniProt accession ID (e.g., \"P12345\")\n    endpoint (str, optional): Specific Al",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "uniprot_id",
+      "type": "string",
+      "required": true,
+      "description": "Parameter: uniprot_id"
+    },
+    {
+      "name": "endpoint",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: endpoint"
+    },
+    {
+      "name": "residue_range",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: residue_range"
+    },
+    {
+      "name": "download",
+      "type": "boolean",
+      "required": false,
+      "description": "Parameter: download"
+    },
+    {
+      "name": "output_dir",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: output_dir"
+    },
+    {
+      "name": "file_format",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: file_format"
+    },
+    {
+      "name": "model_version",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: model_version"
+    },
+    {
+      "name": "model_number",
+      "type": "integer",
+      "required": false,
+      "description": "Parameter: model_number"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "query_alphafold.py",
+    "args": [
+      "--uniprot_id",
+      "${uniprot_id}",
+      "--endpoint",
+      "${endpoint}",
+      "--residue_range",
+      "${residue_range}",
+      "--download",
+      "${download}",
+      "--output_dir",
+      "${output_dir}",
+      "--file_format",
+      "${file_format}",
+      "--model_version",
+      "${model_version}",
+      "--model_number",
+      "${model_number}"
+    ]
+  }
+}

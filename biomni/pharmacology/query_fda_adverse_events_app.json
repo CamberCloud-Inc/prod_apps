@@ -1,0 +1,54 @@
+{
+  "name": "query_fda_adverse_events",
+  "description": "Queries FDA adverse events database (FAERS) for drug safety information",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "query_fda_adverse_events.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "drug_name",
+      "description": "Name of the drug to query",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "date_range",
+      "description": "Date range for the query as [start_date, end_date]",
+      "type": "array",
+      "required": false
+    },
+    {
+      "name": "severity_filter",
+      "description": "Filter by severity levels",
+      "type": "array",
+      "required": false
+    },
+    {
+      "name": "outcome_filter",
+      "description": "Filter by outcome types",
+      "type": "array",
+      "required": false
+    },
+    {
+      "name": "limit",
+      "description": "Maximum number of results to return",
+      "type": "integer",
+      "required": false,
+      "default": 100
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with FDA adverse events data"
+      }
+    }
+  }
+}

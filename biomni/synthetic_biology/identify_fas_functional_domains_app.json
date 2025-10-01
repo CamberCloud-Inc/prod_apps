@@ -1,0 +1,49 @@
+{
+  "name": "Identify FAS Functional Domains",
+  "description": "Identifies functional domains within a Fatty Acid Synthase (FAS) sequence and predicts their roles",
+  "version": "1.0.0",
+  "author": "Biomni Synthetic Biology Tools",
+  "repository": "https://github.com/snap-stanford/Biomni",
+  "license": "MIT",
+  "runtime": {
+    "type": "python",
+    "version": "3.8+",
+    "entrypoint": "identify_fas_functional_domains.py"
+  },
+  "dependencies": {
+    "pip": [
+      "biomni",
+      "biopython",
+      "requests"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "sequence",
+      "type": "string",
+      "description": "The nucleotide or protein sequence of a FAS gene",
+      "required": true
+    },
+    {
+      "name": "sequence_type",
+      "type": "string",
+      "description": "Type of sequence provided - 'protein' or 'nucleotide'",
+      "required": false,
+      "default": "protein"
+    },
+    {
+      "name": "output_file",
+      "type": "string",
+      "description": "Name of the output file to save the detailed domain report",
+      "required": false,
+      "default": "fas_domains_report.txt"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string",
+      "description": "Research log summarizing the steps taken and results of the domain analysis"
+    }
+  ]
+}

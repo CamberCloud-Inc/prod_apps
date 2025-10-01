@@ -1,0 +1,45 @@
+{
+  "name": "query_pride",
+  "title": "Query Pride",
+  "description": "Query the PRIDE (PRoteomics IDEntifications) database using natural language or a direct endpoint.\n\n    Parameters\n    ----------\n    prompt (str, required): Natural language query about proteomics da",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "prompt",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: prompt"
+    },
+    {
+      "name": "endpoint",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: endpoint"
+    },
+    {
+      "name": "max_results",
+      "type": "integer",
+      "required": false,
+      "description": "Parameter: max_results"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "query_pride.py",
+    "args": [
+      "--prompt",
+      "${prompt}",
+      "--endpoint",
+      "${endpoint}",
+      "--max_results",
+      "${max_results}"
+    ]
+  }
+}

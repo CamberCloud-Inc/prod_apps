@@ -1,0 +1,49 @@
+{
+  "name": "region_to_ccre_screen",
+  "title": "Region To Ccre Screen",
+  "description": "Wrapper for region_to_ccre_screen from biomni.tool.database",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "coord_chrom",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "coord_start",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "name": "coord_end",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "name": "assembly",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "region_to_ccre_screen.py",
+    "args": [
+      "--coord_chrom",
+      "${coord_chrom}",
+      "--coord_start",
+      "${coord_start}",
+      "--coord_end",
+      "${coord_end}",
+      "--assembly",
+      "${assembly}"
+    ]
+  }
+}

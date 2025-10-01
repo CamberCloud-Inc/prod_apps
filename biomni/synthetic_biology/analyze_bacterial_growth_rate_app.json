@@ -1,0 +1,56 @@
+{
+  "name": "Analyze Bacterial Growth Rate",
+  "description": "Analyze bacterial growth data and extract growth parameters from OD600 measurements",
+  "version": "1.0.0",
+  "author": "Biomni Synthetic Biology Tools",
+  "repository": "https://github.com/snap-stanford/Biomni",
+  "license": "MIT",
+  "runtime": {
+    "type": "python",
+    "version": "3.8+",
+    "entrypoint": "analyze_bacterial_growth_rate.py"
+  },
+  "dependencies": {
+    "pip": [
+      "biomni",
+      "numpy",
+      "scipy",
+      "matplotlib"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "time_points",
+      "type": "array",
+      "description": "Time points at which OD600 measurements were taken (in hours)",
+      "required": true
+    },
+    {
+      "name": "od_measurements",
+      "type": "array",
+      "description": "Optical density (OD600) measurements corresponding to each time point",
+      "required": true
+    },
+    {
+      "name": "strain_name",
+      "type": "string",
+      "description": "Name of the bacterial strain being analyzed",
+      "required": false,
+      "default": "Unknown strain"
+    },
+    {
+      "name": "output_dir",
+      "type": "string",
+      "description": "Directory where to save the output files",
+      "required": false,
+      "default": "./"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string",
+      "description": "Research log summarizing the analysis steps, fitted parameters, and results"
+    }
+  ]
+}

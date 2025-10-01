@@ -1,0 +1,61 @@
+{
+  "name": "Simulate Gene Circuit with Growth Feedback",
+  "description": "Simulate gene regulatory circuit dynamics with growth feedback",
+  "version": "1.0.0",
+  "author": "Biomni Synthetic Biology Tools",
+  "repository": "https://github.com/snap-stanford/Biomni",
+  "license": "MIT",
+  "runtime": {
+    "type": "python",
+    "version": "3.8+",
+    "entrypoint": "simulate_gene_circuit_with_growth_feedback.py"
+  },
+  "dependencies": {
+    "pip": [
+      "biomni",
+      "numpy",
+      "scipy"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "circuit_topology",
+      "type": "array",
+      "description": "Adjacency matrix representing the gene circuit topology. Positive values indicate activation, negative values indicate repression. Shape should be (n_genes, n_genes)",
+      "required": true
+    },
+    {
+      "name": "kinetic_params",
+      "type": "object",
+      "description": "Dictionary containing kinetic parameters: basal_rates, degradation_rates, hill_coefficients, threshold_constants",
+      "required": true
+    },
+    {
+      "name": "growth_params",
+      "type": "object",
+      "description": "Dictionary containing growth-related parameters: max_growth_rate, growth_inhibition, gene_growth_weights",
+      "required": true
+    },
+    {
+      "name": "simulation_time",
+      "type": "number",
+      "description": "Total simulation time",
+      "required": false,
+      "default": 100
+    },
+    {
+      "name": "time_points",
+      "type": "integer",
+      "description": "Number of time points to sample",
+      "required": false,
+      "default": 1000
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string",
+      "description": "Research log summarizing the simulation and results with file names of saved data"
+    }
+  ]
+}

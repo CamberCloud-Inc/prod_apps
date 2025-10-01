@@ -1,0 +1,27 @@
+{
+  "name": "Query ChatNT",
+  "description": "Call ChatNT to answer a question about a DNA sequence using transformer-based language model",
+  "install": "cd /tmp && git clone --depth 1 https://github.com/snap-stanford/Biomni.git biomni_repo && cd biomni_repo && pip install -e . && pip install transformers torch",
+  "run": "python3 /Users/david/git/prod_apps/biomni/systems_biology/query_chatnt.py \"$QUESTION\" \"$SEQUENCE\" \"$DEVICE\"",
+  "inputs": [
+    {
+      "name": "QUESTION",
+      "description": "Question to ask about the DNA sequence",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "SEQUENCE",
+      "description": "DNA sequence to analyze",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "DEVICE",
+      "description": "Device to use for the ChatNT model (-1 for CPU, 0+ for GPU)",
+      "type": "text",
+      "required": true,
+      "default": "-1"
+    }
+  ]
+}

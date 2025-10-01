@@ -1,0 +1,34 @@
+{
+  "name": "Analyze Bacterial Growth Curve",
+  "description": "Analyze bacterial growth curve data to determine growth parameters including doubling time and lag phase",
+  "category": "Immunology",
+  "subcategory": "Microbiology",
+  "image": "davethesoftwaredev/biomni:latest",
+  "command": "python /app/biomni/immunology/analyze_bacterial_growth_curve.py",
+  "params": [
+    {
+      "name": "time_points_json",
+      "type": "string",
+      "description": "Time points of measurements in hours (JSON array, e.g., '[0, 1, 2, 3, 4]')",
+      "required": true
+    },
+    {
+      "name": "od_values_json",
+      "type": "string",
+      "description": "Optical density measurements corresponding to each time point (JSON array, e.g., '[0.1, 0.2, 0.4, 0.8, 1.2]')",
+      "required": true
+    },
+    {
+      "name": "strain_name",
+      "type": "string",
+      "description": "Name of the bacterial strain being analyzed",
+      "required": true
+    },
+    {
+      "name": "output_dir",
+      "type": "string",
+      "description": "Directory where output files will be saved",
+      "default": "."
+    }
+  ]
+}

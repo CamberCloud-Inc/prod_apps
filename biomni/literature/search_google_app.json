@@ -1,0 +1,53 @@
+{
+  "name": "search_google",
+  "description": "Perform Google web search and return results with titles, URLs, and descriptions.",
+  "version": "1.0.0",
+  "author": "Biomni Literature Tools",
+  "license": "MIT",
+  "input": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "description": "The search query (e.g., protocol text or search question)"
+      },
+      "num_results": {
+        "type": "integer",
+        "description": "Number of results to return",
+        "default": 3
+      },
+      "language": {
+        "type": "string",
+        "description": "Language code for search results (e.g., 'en', 'es', 'fr')",
+        "default": "en"
+      }
+    },
+    "required": ["query", "num_results", "language"]
+  },
+  "output": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean",
+        "description": "Whether the operation succeeded"
+      },
+      "result": {
+        "type": "string",
+        "description": "Formatted search results with titles, URLs, and descriptions"
+      },
+      "error": {
+        "type": "string",
+        "description": "Error message if operation failed"
+      }
+    }
+  },
+  "execution": {
+    "command": "python3",
+    "args": [
+      "search_google.py",
+      "{{query}}",
+      "{{num_results}}",
+      "{{language}}"
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Biomni: Perform Gene Expression NMF Analysis",
+  "description": "Perform Non-negative Matrix Factorization (NMF) on gene expression data to identify expression signatures and patterns. Decomposes gene expression matrix into interpretable components representing biological processes or cell types.",
+  "input": {
+    "expression_data_path": {
+      "type": "string",
+      "description": "Path to gene expression data file (CSV format with genes as rows, samples as columns)"
+    },
+    "n_components": {
+      "type": "integer",
+      "description": "Number of NMF components to extract",
+      "default": 5
+    },
+    "output_dir": {
+      "type": "string",
+      "description": "Directory to save output files",
+      "default": "./results"
+    }
+  },
+  "output": {
+    "type": "string",
+    "description": "Research log summarizing the NMF analysis steps and identified expression signatures"
+  },
+  "tags": ["biomni", "cancer-biology", "gene-expression", "nmf", "matrix-factorization", "dimensionality-reduction"],
+  "author": "Biomni",
+  "repository": "https://github.com/snap-stanford/Biomni"
+}

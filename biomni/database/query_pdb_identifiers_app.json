@@ -1,0 +1,53 @@
+{
+  "name": "query_pdb_identifiers",
+  "title": "Query Pdb Identifiers",
+  "description": "Retrieve detailed data and/or download files for PDB identifiers.\n\n    Parameters\n    ----------\n    identifiers (list): List of PDB identifiers (from query_pdb)\n    return_type (str): Type of results",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "identifiers",
+      "type": "string",
+      "required": true,
+      "description": "Parameter: identifiers"
+    },
+    {
+      "name": "return_type",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: return_type"
+    },
+    {
+      "name": "download",
+      "type": "boolean",
+      "required": false,
+      "description": "Parameter: download"
+    },
+    {
+      "name": "attributes",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: attributes"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "query_pdb_identifiers.py",
+    "args": [
+      "--identifiers",
+      "${identifiers}",
+      "--return_type",
+      "${return_type}",
+      "--download",
+      "${download}",
+      "--attributes",
+      "${attributes}"
+    ]
+  }
+}

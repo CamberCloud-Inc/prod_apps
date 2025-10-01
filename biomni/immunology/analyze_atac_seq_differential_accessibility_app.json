@@ -1,0 +1,46 @@
+{
+  "name": "Analyze ATAC-seq Differential Accessibility",
+  "description": "Perform ATAC-seq peak calling and differential accessibility analysis using MACS2",
+  "category": "Immunology",
+  "subcategory": "Genomics",
+  "image": "davethesoftwaredev/biomni:latest",
+  "command": "python /app/biomni/immunology/analyze_atac_seq_differential_accessibility.py",
+  "params": [
+    {
+      "name": "treatment_bam",
+      "type": "file",
+      "description": "Path to the treatment condition BAM file with aligned ATAC-seq reads",
+      "required": true
+    },
+    {
+      "name": "control_bam",
+      "type": "file",
+      "description": "Path to the control condition BAM file with aligned ATAC-seq reads",
+      "required": true
+    },
+    {
+      "name": "output_dir",
+      "type": "string",
+      "description": "Directory to save output files",
+      "default": "./atac_results"
+    },
+    {
+      "name": "genome_size",
+      "type": "string",
+      "description": "Genome size parameter for MACS2 (e.g., 'hs' for human, 'mm' for mouse)",
+      "default": "hs"
+    },
+    {
+      "name": "q_value",
+      "type": "number",
+      "description": "q-value cutoff for peak detection",
+      "default": 0.05
+    },
+    {
+      "name": "name_prefix",
+      "type": "string",
+      "description": "Prefix for output file names",
+      "default": "atac"
+    }
+  ]
+}

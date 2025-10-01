@@ -1,0 +1,40 @@
+{
+  "name": "Simulate Metabolic Network Perturbation",
+  "description": "Construct and simulate kinetic models of metabolic networks and analyze their responses to perturbations",
+  "install": "cd /tmp && git clone --depth 1 https://github.com/snap-stanford/Biomni.git biomni_repo && cd biomni_repo && pip install -e . && pip install cobra numpy scipy pandas",
+  "run": "python3 /Users/david/git/prod_apps/biomni/systems_biology/simulate_metabolic_network_perturbation.py \"$MODEL_FILE\" \"$INITIAL_CONCENTRATIONS\" \"$PERTURBATION_PARAMS\" \"$SIMULATION_TIME\" \"$TIME_POINTS\"",
+  "inputs": [
+    {
+      "name": "MODEL_FILE",
+      "description": "Path to the COBRA model file (SBML format)",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "INITIAL_CONCENTRATIONS",
+      "description": "JSON dictionary mapping metabolite IDs to their initial concentrations (format: {\"glc__D_e\": 10.0})",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "PERTURBATION_PARAMS",
+      "description": "JSON dictionary with perturbation parameters: time, metabolite, and factor (format: {\"time\": 50, \"metabolite\": \"glc__D_e\", \"factor\": 2.0})",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "SIMULATION_TIME",
+      "description": "Total simulation time",
+      "type": "text",
+      "required": false,
+      "default": "100"
+    },
+    {
+      "name": "TIME_POINTS",
+      "description": "Number of time points to simulate",
+      "type": "text",
+      "required": false,
+      "default": "1000"
+    }
+  ]
+}

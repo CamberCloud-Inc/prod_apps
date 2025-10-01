@@ -1,0 +1,26 @@
+{
+  "name": "Biomni: Analyze DDR Network in Cancer",
+  "description": "Analyze DNA Damage Response (DDR) network alterations and dependencies in cancer samples. Reconstructs the DDR network from genomic data, identifies disruptions in the network, and analyzes dependencies between DDR pathway components in cancer.",
+  "input": {
+    "expression_data_path": {
+      "type": "string",
+      "description": "Path to gene expression data file (CSV format with genes as rows, samples as columns)"
+    },
+    "mutation_data_path": {
+      "type": "string",
+      "description": "Path to mutation data file (CSV format with genes as rows, samples as columns, values indicating mutation status)"
+    },
+    "output_dir": {
+      "type": "string",
+      "description": "Directory to save output files",
+      "default": "./results"
+    }
+  },
+  "output": {
+    "type": "string",
+    "description": "Research log summarizing the DDR network analysis, findings about disruptions, and potential therapeutic vulnerabilities"
+  },
+  "tags": ["biomni", "cancer-biology", "dna-damage-response", "network-analysis", "genomics"],
+  "author": "Biomni",
+  "repository": "https://github.com/snap-stanford/Biomni"
+}

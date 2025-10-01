@@ -1,0 +1,44 @@
+{
+  "name": "Optimize Anaerobic Digestion Process",
+  "description": "Optimize anaerobic digestion process conditions to maximize VFA production or methane yield",
+  "image": "python:3.11-slim",
+  "run": [
+    "sh",
+    "-c",
+    "git clone --depth 1 https://github.com/snap-stanford/Biomni /tmp/biomni && pip install -q -e /tmp/biomni && python /mnt/code/optimize_anaerobic_digestion_process.py"
+  ],
+  "fields": [
+    {
+      "name": "waste_characteristics",
+      "displayName": "Waste Characteristics",
+      "type": "json_object",
+      "description": "Dictionary containing waste characteristics (total_solids, volatile_solids, cod)",
+      "required": true
+    },
+    {
+      "name": "operational_parameters",
+      "displayName": "Operational Parameters",
+      "type": "json_object",
+      "description": "Dictionary containing operational parameters and their ranges (hrt, olr, if_ratio, temperature, ph)",
+      "required": true
+    },
+    {
+      "name": "target_output",
+      "displayName": "Target Output",
+      "type": "select",
+      "options": ["vfa_production", "methane_yield"],
+      "description": "Target output to maximize",
+      "required": false,
+      "default": "methane_yield"
+    },
+    {
+      "name": "optimization_method",
+      "displayName": "Optimization Method",
+      "type": "select",
+      "options": ["rsm", "genetic"],
+      "description": "Method used for optimization (rsm or genetic)",
+      "required": false,
+      "default": "rsm"
+    }
+  ]
+}

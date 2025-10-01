@@ -1,0 +1,41 @@
+{
+  "name": "extract_url_content",
+  "description": "Extract cleaned text content from a webpage using requests and BeautifulSoup. Removes scripts, styles, navigation, and other non-content elements.",
+  "version": "1.0.0",
+  "author": "Biomni Literature Tools",
+  "license": "MIT",
+  "input": {
+    "type": "object",
+    "properties": {
+      "url": {
+        "type": "string",
+        "description": "Webpage URL to extract content from"
+      }
+    },
+    "required": ["url"]
+  },
+  "output": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean",
+        "description": "Whether the operation succeeded"
+      },
+      "result": {
+        "type": "string",
+        "description": "Cleaned text content of the webpage"
+      },
+      "error": {
+        "type": "string",
+        "description": "Error message if operation failed"
+      }
+    }
+  },
+  "execution": {
+    "command": "python3",
+    "args": [
+      "extract_url_content.py",
+      "{{url}}"
+    ]
+  }
+}

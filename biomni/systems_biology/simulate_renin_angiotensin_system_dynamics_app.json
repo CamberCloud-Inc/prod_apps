@@ -1,0 +1,40 @@
+{
+  "name": "Simulate Renin-Angiotensin System Dynamics",
+  "description": "Simulate the time-dependent concentrations of renin-angiotensin system (RAS) components using ODE-based kinetic modeling",
+  "install": "cd /tmp && git clone --depth 1 https://github.com/snap-stanford/Biomni.git biomni_repo && cd biomni_repo && pip install -e . && pip install numpy scipy pandas",
+  "run": "python3 /Users/david/git/prod_apps/biomni/systems_biology/simulate_renin_angiotensin_system_dynamics.py \"$INITIAL_CONCENTRATIONS\" \"$RATE_CONSTANTS\" \"$FEEDBACK_PARAMS\" \"$SIMULATION_TIME\" \"$TIME_POINTS\"",
+  "inputs": [
+    {
+      "name": "INITIAL_CONCENTRATIONS",
+      "description": "JSON dictionary of initial concentrations with keys: renin, angiotensinogen, angiotensin_I, angiotensin_II, ACE2_angiotensin_II, angiotensin_1_7 (format: {\"renin\": 1.0, \"angiotensinogen\": 10.0, \"angiotensin_I\": 0.5, \"angiotensin_II\": 0.2, \"ACE2_angiotensin_II\": 0.1, \"angiotensin_1_7\": 0.05})",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "RATE_CONSTANTS",
+      "description": "JSON dictionary of kinetic rate constants with keys: k_ren, k_agt, k_ace, k_ace2, k_at1r, k_mas (format: {\"k_ren\": 0.5, \"k_agt\": 1.0, \"k_ace\": 0.8, \"k_ace2\": 0.3, \"k_at1r\": 0.2, \"k_mas\": 0.15})",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "FEEDBACK_PARAMS",
+      "description": "JSON dictionary of feedback mechanism parameters with keys: fb_ang_II, fb_ace2 (format: {\"fb_ang_II\": 0.5, \"fb_ace2\": 0.3})",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "SIMULATION_TIME",
+      "description": "Total simulation time in hours",
+      "type": "text",
+      "required": false,
+      "default": "48"
+    },
+    {
+      "name": "TIME_POINTS",
+      "description": "Number of time points to evaluate",
+      "type": "text",
+      "required": false,
+      "default": "100"
+    }
+  ]
+}

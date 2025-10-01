@@ -1,0 +1,29 @@
+{
+  "name": "grade_adverse_events_using_vcog_ctcae",
+  "description": "Grades adverse events using VCOG-CTCAE (Veterinary Cooperative Oncology Group - Common Terminology Criteria for Adverse Events) criteria",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "grade_adverse_events_using_vcog_ctcae.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "clinical_data_file",
+      "description": "Path to clinical data file containing adverse event information",
+      "type": "string",
+      "required": true
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with graded adverse events"
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "name": "run_3d_chondrogenic_aggregate_assay",
+  "description": "Runs 3D chondrogenic aggregate assay for cartilage research",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "run_3d_chondrogenic_aggregate_assay.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "chondrocyte_cells",
+      "description": "Chondrocyte cell information",
+      "type": "object",
+      "required": true
+    },
+    {
+      "name": "test_compounds",
+      "description": "Test compounds to evaluate",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "culture_duration_days",
+      "description": "Culture duration in days",
+      "type": "integer",
+      "required": false,
+      "default": 21
+    },
+    {
+      "name": "measurement_intervals",
+      "description": "Measurement interval in days",
+      "type": "integer",
+      "required": false,
+      "default": 7
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with assay results"
+      }
+    }
+  }
+}

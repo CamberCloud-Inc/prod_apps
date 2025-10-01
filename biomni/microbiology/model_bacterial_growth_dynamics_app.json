@@ -1,0 +1,56 @@
+{
+  "name": "Model Bacterial Growth Dynamics",
+  "description": "Model bacterial population dynamics over time using ordinary differential equations",
+  "image": "python:3.11-slim",
+  "run": [
+    "sh",
+    "-c",
+    "git clone --depth 1 https://github.com/snap-stanford/Biomni /tmp/biomni && pip install -q -e /tmp/biomni && python /mnt/code/model_bacterial_growth_dynamics.py"
+  ],
+  "fields": [
+    {
+      "name": "initial_population",
+      "displayName": "Initial Population",
+      "type": "number",
+      "description": "Initial bacterial population size (CFU/ml or cells)",
+      "required": true
+    },
+    {
+      "name": "growth_rate",
+      "displayName": "Growth Rate",
+      "type": "number",
+      "description": "Bacterial growth rate (per hour)",
+      "required": true
+    },
+    {
+      "name": "clearance_rate",
+      "displayName": "Clearance Rate",
+      "type": "number",
+      "description": "Rate at which bacteria are cleared from the system (per hour)",
+      "required": true
+    },
+    {
+      "name": "niche_size",
+      "displayName": "Niche Size",
+      "type": "number",
+      "description": "Maximum carrying capacity of the environment (CFU/ml or cells)",
+      "required": true
+    },
+    {
+      "name": "simulation_time",
+      "displayName": "Simulation Time (hours)",
+      "type": "number",
+      "description": "Total simulation time in hours",
+      "required": false,
+      "default": 24
+    },
+    {
+      "name": "time_step",
+      "displayName": "Time Step",
+      "type": "number",
+      "description": "Time step for simulation output",
+      "required": false,
+      "default": 0.1
+    }
+  ]
+}

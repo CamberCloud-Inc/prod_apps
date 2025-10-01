@@ -1,0 +1,101 @@
+{
+  "name": "pcr-gel-electrophoresis",
+  "title": "PCR and Gel Electrophoresis Simulation",
+  "description": "Simulate PCR amplification and visualize results using agarose gel electrophoresis",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application simulates PCR amplification of target DNA sequences and visualizes the results using agarose gel electrophoresis. It identifies primer binding sites, calculates amplicon sizes, and generates gel images with DNA ladder comparison.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">PCR amplification simulation with primer binding</li><li class=\"list-item-node\">Automatic primer design based on target region</li><li class=\"list-item-node\">Amplicon size calculation</li><li class=\"list-item-node\">Agarose gel electrophoresis visualization</li><li class=\"list-item-node\">DNA ladder for size comparison</li><li class=\"list-item-node\">Amplicon sequence output in FASTA format</li></ul><h3 class=\"heading-node\">PCR Process</h3><ul class=\"list-node\"><li class=\"list-item-node\">Template DNA loading</li><li class=\"list-item-node\">Primer design or validation</li><li class=\"list-item-node\">PCR amplification with configurable parameters</li><li class=\"list-item-node\">Gel electrophoresis separation</li><li class=\"list-item-node\">Results interpretation</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Genomic DNA</strong>: FASTA file or DNA sequence string</li><li class=\"list-item-node\"><strong>Forward Primer</strong>: Forward primer sequence (optional, auto-designed if not provided)</li><li class=\"list-item-node\"><strong>Reverse Primer</strong>: Reverse primer sequence (optional, auto-designed if not provided)</li><li class=\"list-item-node\"><strong>Target Region</strong>: Target region coordinates as \"start,end\" (required if primers not provided)</li><li class=\"list-item-node\"><strong>Annealing Temperature</strong>: PCR annealing temperature in °C (default: 58)</li><li class=\"list-item-node\"><strong>Extension Time</strong>: PCR extension time in seconds (default: 30)</li><li class=\"list-item-node\"><strong>Cycles</strong>: Number of PCR cycles (default: 35)</li><li class=\"list-item-node\"><strong>Gel Percentage</strong>: Agarose gel percentage (default: 2.0)</li><li class=\"list-item-node\"><strong>Output Prefix</strong>: Prefix for output files</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a gel image (PNG), amplicon sequence (FASTA), and a detailed PCR log with procedure steps and results interpretation.</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python \"prod_apps/biomni/genetics/perform_pcr_and_gel_electrophoresis.py\" \"${genomicDna}\" ${forwardPrimer} ${reversePrimer} ${targetRegion} -a ${annealingTemp} -e ${extensionTime} -c ${cycles} -g ${gelPercentage} -p \"${outputPrefix}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "genomicDna",
+      "label": "Genomic DNA",
+      "description": "Upload genomic DNA file (FASTA format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "forwardPrimer",
+      "label": "Forward Primer (Optional)",
+      "description": "Forward primer sequence (leave empty for auto-design)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "reversePrimer",
+      "label": "Reverse Primer (Optional)",
+      "description": "Reverse primer sequence (leave empty for auto-design)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "targetRegion",
+      "label": "Target Region (Optional)",
+      "description": "Target region as 'start,end' (e.g., '100,500') - required if primers not provided",
+      "defaultValue": ""
+    },
+    {
+      "type": "Number",
+      "name": "annealingTemp",
+      "label": "Annealing Temperature (°C)",
+      "description": "PCR annealing temperature in degrees Celsius",
+      "defaultValue": 58
+    },
+    {
+      "type": "Number",
+      "name": "extensionTime",
+      "label": "Extension Time (seconds)",
+      "description": "PCR extension time in seconds",
+      "defaultValue": 30
+    },
+    {
+      "type": "Number",
+      "name": "cycles",
+      "label": "Number of Cycles",
+      "description": "Number of PCR cycles",
+      "defaultValue": 35
+    },
+    {
+      "type": "Number",
+      "name": "gelPercentage",
+      "label": "Gel Percentage",
+      "description": "Agarose gel percentage",
+      "defaultValue": 2.0
+    },
+    {
+      "type": "String",
+      "name": "outputPrefix",
+      "label": "Output Prefix",
+      "description": "Prefix for output files",
+      "defaultValue": "pcr_result"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

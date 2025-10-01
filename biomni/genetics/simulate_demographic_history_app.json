@@ -1,0 +1,119 @@
+{
+  "name": "simulate-demographic-history",
+  "title": "Simulate Demographic History",
+  "description": "Simulate DNA sequences with specified demographic and coalescent histories using msprime",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application simulates DNA sequences with specified demographic and coalescent histories using msprime. It supports various demographic models (constant, bottleneck, expansion, contraction, sawtooth) and coalescent models (Kingman, Beta-coalescent).</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Multiple demographic models for population dynamics</li><li class=\"list-item-node\">Standard Kingman and Beta-coalescent models</li><li class=\"list-item-node\">Customizable recombination and mutation rates</li><li class=\"list-item-node\">VCF output format for downstream analysis</li><li class=\"list-item-node\">Reproducible simulations with random seed</li><li class=\"list-item-node\">Statistics including nucleotide diversity and tree counts</li></ul><h3 class=\"heading-node\">Demographic Models</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Constant</strong>: Constant population size over time</li><li class=\"list-item-node\"><strong>Bottleneck</strong>: Population bottleneck event</li><li class=\"list-item-node\"><strong>Expansion</strong>: Population expansion from small to large</li><li class=\"list-item-node\"><strong>Contraction</strong>: Population contraction from large to small</li><li class=\"list-item-node\"><strong>Sawtooth</strong>: Oscillating population size changes</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Number of Samples</strong>: Sample sequences to simulate (default: 10)</li><li class=\"list-item-node\"><strong>Sequence Length</strong>: Length in base pairs (default: 100000)</li><li class=\"list-item-node\"><strong>Recombination Rate</strong>: Per-base recombination rate (default: 1e-8)</li><li class=\"list-item-node\"><strong>Mutation Rate</strong>: Per-base mutation rate (default: 1e-8)</li><li class=\"list-item-node\"><strong>Demographic Model</strong>: Type of demographic model</li><li class=\"list-item-node\"><strong>Demographic Params</strong>: Optional JSON file with model-specific parameters</li><li class=\"list-item-node\"><strong>Coalescent Model</strong>: Kingman or Beta-coalescent</li><li class=\"list-item-node\"><strong>Beta Parameter</strong>: Parameter for Beta-coalescent (if selected)</li><li class=\"list-item-node\"><strong>Random Seed</strong>: Seed for reproducibility (optional)</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a VCF file with simulated sequences, and a detailed log with simulation parameters, statistics (nucleotide diversity, number of segregating sites, tree count), and runtime information.</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python \"prod_apps/biomni/genetics/simulate_demographic_history.py\" -n ${numSamples} -l ${sequenceLength} -r ${recombinationRate} -m ${mutationRate} -d \"${demographicModel}\" ${demographicParams} -c \"${coalescentModel}\" ${betaParam} ${randomSeed} -f \"${outputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Small CPU",
+          "value": "small_cpu",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "small_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Number",
+      "name": "numSamples",
+      "label": "Number of Samples",
+      "description": "Number of sample sequences to simulate",
+      "defaultValue": 10
+    },
+    {
+      "type": "Number",
+      "name": "sequenceLength",
+      "label": "Sequence Length",
+      "description": "Length of simulated sequence in base pairs",
+      "defaultValue": 100000
+    },
+    {
+      "type": "Number",
+      "name": "recombinationRate",
+      "label": "Recombination Rate",
+      "description": "Per-base recombination rate",
+      "defaultValue": 0.00000001
+    },
+    {
+      "type": "Number",
+      "name": "mutationRate",
+      "label": "Mutation Rate",
+      "description": "Per-base mutation rate",
+      "defaultValue": 0.00000001
+    },
+    {
+      "type": "Select",
+      "name": "demographicModel",
+      "label": "Demographic Model",
+      "description": "Type of demographic model to simulate",
+      "options": [
+        {"label": "Constant", "value": "constant"},
+        {"label": "Bottleneck", "value": "bottleneck"},
+        {"label": "Expansion", "value": "expansion"},
+        {"label": "Contraction", "value": "contraction"},
+        {"label": "Sawtooth", "value": "sawtooth"}
+      ],
+      "defaultValue": "constant"
+    },
+    {
+      "type": "String",
+      "name": "demographicParams",
+      "label": "Demographic Parameters (Optional)",
+      "description": "Path to JSON file with demographic parameters (leave empty for defaults)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Select",
+      "name": "coalescentModel",
+      "label": "Coalescent Model",
+      "description": "Type of coalescent model to use",
+      "options": [
+        {"label": "Kingman", "value": "kingman"},
+        {"label": "Beta", "value": "beta"}
+      ],
+      "defaultValue": "kingman"
+    },
+    {
+      "type": "String",
+      "name": "betaParam",
+      "label": "Beta Parameter (Optional)",
+      "description": "Parameter for Beta-coalescent model (required if Beta selected)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "randomSeed",
+      "label": "Random Seed (Optional)",
+      "description": "Seed for random number generator (for reproducibility)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "outputFile",
+      "label": "Output Filename",
+      "description": "Filename for VCF output",
+      "defaultValue": "simulated_sequences.vcf"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

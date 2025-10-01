@@ -1,0 +1,48 @@
+{
+  "name": "biomni-generate-gene-embeddings",
+  "title": "Biomni: Generate Gene Embeddings with ESM",
+  "description": "Generate protein embeddings for Ensembl gene IDs using ESM language models",
+  "content": "<h3>Overview</h3><p>Generates average protein embeddings for a list of Ensembl gene IDs using ESM (Evolutionary Scale Modeling) protein language models. Memory-friendly implementation with rolling averages and batch processing.</p><h3>Models</h3><ul><li>esm2_t6_8M_UR50D (default, 8M parameters)</li><li>esm2_t12_35M_UR50D (35M parameters)</li><li>esm2_t30_150M_UR50D (150M parameters)</li><li>esm2_t33_650M_UR50D (650M parameters)</li></ul><h3>Input Format</h3><p>JSON array of ENSEMBL gene IDs, e.g., [\"ENSG00000012048\", \"ENSG00000139618\"]</p><h3>Output</h3><p>PyTorch .pt file containing gene embeddings dictionary</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genomics/generate_gene_embeddings.py \"${geneIdsFile}\" --model-name \"${modelName}\" --layer ${layer} --batch-size ${batchSize} -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {"nodeCount": "1", "coresPerNode": "4"}
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "geneIdsFile",
+      "label": "Gene IDs JSON File",
+      "description": "Upload JSON file with array of ENSEMBL gene IDs",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "modelName",
+      "label": "ESM Model Name",
+      "description": "ESM model to use for embedding generation",
+      "defaultValue": "esm2_t6_8M_UR50D"
+    },
+    {
+      "type": "Integer",
+      "name": "layer",
+      "label": "Layer Number",
+      "description": "Layer to extract embeddings from",
+      "defaultValue": "6"
+    },
+    {
+      "type": "Integer",
+      "name": "batchSize",
+      "label": "Batch Size",
+      "description": "Number of sequences to process at once",
+      "defaultValue": "1"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select output folder",
+      "defaultValue": "./"
+    }
+  ]
+}

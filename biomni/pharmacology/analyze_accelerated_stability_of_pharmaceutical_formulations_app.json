@@ -1,0 +1,41 @@
+{
+  "name": "analyze_accelerated_stability_of_pharmaceutical_formulations",
+  "description": "Analyzes accelerated stability of pharmaceutical formulations",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "analyze_accelerated_stability_of_pharmaceutical_formulations.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "formulations",
+      "description": "List of pharmaceutical formulations to analyze",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "storage_conditions",
+      "description": "Storage conditions for stability testing",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "time_points",
+      "description": "Time points for stability measurements",
+      "type": "array",
+      "required": true
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with stability analysis results"
+      }
+    }
+  }
+}

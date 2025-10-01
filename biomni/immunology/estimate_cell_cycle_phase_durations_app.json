@@ -1,0 +1,22 @@
+{
+  "name": "Estimate Cell Cycle Phase Durations",
+  "description": "Estimate cell cycle phase durations using dual-nucleoside pulse labeling data and mathematical modeling",
+  "category": "Immunology",
+  "subcategory": "Cell Biology",
+  "image": "davethesoftwaredev/biomni:latest",
+  "command": "python /app/biomni/immunology/estimate_cell_cycle_phase_durations.py",
+  "params": [
+    {
+      "name": "flow_cytometry_data_json",
+      "type": "string",
+      "description": "Flow cytometry data with EdU and BrdU labeling (JSON object with keys: time_points, edu_positive, brdu_positive, double_positive)",
+      "required": true
+    },
+    {
+      "name": "initial_estimates_json",
+      "type": "string",
+      "description": "Initial estimates for cell cycle phases (JSON object with keys: g1_duration, s_duration, g2m_duration, death_rate)",
+      "required": true
+    }
+  ]
+}

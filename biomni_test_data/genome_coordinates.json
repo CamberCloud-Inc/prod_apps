@@ -1,0 +1,6 @@
+{
+  "chromosome": "chr1",
+  "position": 100000,
+  "source_build": "hg19",
+  "target_build": "hg38"
+}

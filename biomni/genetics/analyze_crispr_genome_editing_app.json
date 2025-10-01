@@ -1,0 +1,66 @@
+{
+  "name": "analyze-crispr-genome-editing",
+  "title": "Analyze CRISPR Genome Editing",
+  "description": "Analyze CRISPR-Cas9 genome editing results by comparing original and edited sequences",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application analyzes CRISPR-Cas9 genome editing results by comparing original and edited DNA sequences to identify mutations and assess editing success. It detects substitutions, insertions, deletions, and evaluates on-target editing efficiency.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Sequence alignment and mutation detection</li><li class=\"list-item-node\">Identification of substitutions, insertions, and deletions</li><li class=\"list-item-node\">On-target editing assessment</li><li class=\"list-item-node\">Support for homology-directed repair (HDR) analysis</li><li class=\"list-item-node\">Detection of non-homologous end joining (NHEJ) events</li></ul><h3 class=\"heading-node\">Analysis Steps</h3><ul class=\"list-node\"><li class=\"list-item-node\">Identify target site in original sequence</li><li class=\"list-item-node\">Align original and edited sequences</li><li class=\"list-item-node\">Detect and categorize mutations</li><li class=\"list-item-node\">Analyze mutations relative to target site</li><li class=\"list-item-node\">Check for repair template incorporation (if provided)</li><li class=\"list-item-node\">Overall editing assessment</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Original Sequence</strong>: DNA sequence before CRISPR-Cas9 editing (file or text)</li><li class=\"list-item-node\"><strong>Edited Sequence</strong>: DNA sequence after CRISPR-Cas9 editing (file or text)</li><li class=\"list-item-node\"><strong>Guide RNA</strong>: CRISPR guide RNA (crRNA) sequence</li><li class=\"list-item-node\"><strong>Repair Template</strong>: Optional HDR template sequence</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a comprehensive analysis report including identified mutations, on-target editing assessment, and HDR evaluation if applicable.</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python \"prod_apps/biomni/genetics/analyze_crispr_genome_editing.py\" \"${originalSequence}\" \"${editedSequence}\" \"${guideRna}\" ${repairTemplate} -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "originalSequence",
+      "label": "Original Sequence",
+      "description": "Upload file with original DNA sequence before CRISPR editing",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "editedSequence",
+      "label": "Edited Sequence",
+      "description": "Upload file with edited DNA sequence after CRISPR editing",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "guideRna",
+      "label": "Guide RNA",
+      "description": "CRISPR guide RNA (crRNA) sequence used for targeting",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "repairTemplate",
+      "label": "Repair Template (Optional)",
+      "description": "Homology-directed repair template sequence (leave empty if not used)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

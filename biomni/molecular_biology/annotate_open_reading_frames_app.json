@@ -1,0 +1,66 @@
+{
+  "name": "annotate-open-reading-frames",
+  "title": "Annotate Open Reading Frames (ORFs)",
+  "description": "Find all Open Reading Frames (ORFs) in a DNA sequence using Biopython",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application identifies all Open Reading Frames (ORFs) in a DNA sequence. ORFs are sequences of DNA that start with a start codon (ATG) and end with a stop codon (TAA, TAG, or TGA) in the same reading frame.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Searches all three forward reading frames</li><li class=\"list-item-node\">Optional reverse complement strand search</li><li class=\"list-item-node\">Filters nested ORFs (optional)</li><li class=\"list-item-node\">Provides amino acid translations</li><li class=\"list-item-node\">Includes summary statistics</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>DNA Sequence</strong>: Input DNA sequence to analyze</li><li class=\"list-item-node\"><strong>Minimum Length</strong>: Minimum ORF length in nucleotides (typically 30-300)</li><li class=\"list-item-node\"><strong>Search Reverse</strong>: Enable to search reverse complement strand</li><li class=\"list-item-node\"><strong>Filter Subsets</strong>: Enable to remove nested ORFs</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">Returns a JSON file containing summary statistics and detailed information for each ORF including sequence, amino acid translation, position, strand, and reading frame.</p>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && pip install -q biopython biomni && python prod_apps_clone/biomni/molecular_biology/annotate_open_reading_frames.py \"${sequence}\" ${minLength} ${searchReverse} ${filterSubsets} -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "String",
+      "name": "sequence",
+      "label": "DNA Sequence",
+      "description": "Input DNA sequence to analyze for ORFs",
+      "defaultValue": ""
+    },
+    {
+      "type": "Number",
+      "name": "minLength",
+      "label": "Minimum ORF Length (bp)",
+      "description": "Minimum length of ORF in nucleotides",
+      "defaultValue": 100
+    },
+    {
+      "type": "String",
+      "name": "searchReverse",
+      "label": "Search Reverse Complement",
+      "description": "Search reverse complement strand (enter '--search-reverse' to enable, leave empty to disable)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "filterSubsets",
+      "label": "Filter Nested ORFs",
+      "description": "Filter out nested ORFs (enter '--filter-subsets' to enable, leave empty to disable)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

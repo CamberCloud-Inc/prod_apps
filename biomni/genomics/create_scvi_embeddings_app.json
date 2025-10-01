@@ -1,0 +1,41 @@
+{
+  "name": "biomni-create-scvi-embeddings",
+  "title": "Biomni: Create scVI Embeddings",
+  "description": "Generate scVI and scANVI latent representations for single-cell RNA-seq data",
+  "content": "<h3>Overview</h3><p>Creates deep learning-based embeddings using scVI (single-cell Variational Inference) and scANVI models. These embeddings capture biological variation while correcting for technical batch effects.</p><h3>Features</h3><ul><li>Batch effect correction with scVI</li><li>Semi-supervised learning with scANVI</li><li>Latent representations suitable for downstream analysis</li><li>Compatible with labeled and unlabeled cells</li></ul><h3>Input</h3><p>AnnData H5AD file with batch and cell type information</p><h3>Output</h3><p>H5AD file with X_scVI and X_scANVI embeddings in obsm</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/genomics/create_scvi_embeddings.py \"${adataFile}\" --batch-key \"${batchKey}\" --label-key \"${labelKey}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {"nodeCount": "1", "coresPerNode": "4"}
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "adataFile",
+      "label": "AnnData H5AD File",
+      "description": "Upload scRNA-seq data in H5AD format",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "batchKey",
+      "label": "Batch Key",
+      "description": "Column name in adata.obs for batch information",
+      "defaultValue": "batch"
+    },
+    {
+      "type": "String",
+      "name": "labelKey",
+      "label": "Label Key",
+      "description": "Column name in adata.obs for cell type labels",
+      "defaultValue": "cell_type"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select output folder",
+      "defaultValue": "./"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "name": "analyze_abr_waveform_p1_metrics",
+  "description": "Extracts P1 amplitude and latency from Auditory Brainstem Response (ABR) waveform data.",
+  "icon": "👂",
+  "container": {
+    "image": "python:3.9-slim",
+    "setup_commands": [
+      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "time_ms",
+      "description": "Time points of the ABR recording in milliseconds",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "amplitude_uv",
+      "description": "Amplitude values of the ABR recording in microvolts",
+      "type": "array",
+      "required": true
+    }
+  ],
+  "output": {
+    "type": "string",
+    "description": "Research log summarizing the analysis steps and results, including P1 amplitude and latency"
+  }
+}

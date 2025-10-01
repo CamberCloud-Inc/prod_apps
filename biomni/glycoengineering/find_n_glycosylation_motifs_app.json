@@ -1,0 +1,37 @@
+{
+  "name": "find_n_glycosylation_motifs",
+  "description": "Scan a protein sequence for N-linked glycosylation sequons (N-X-[S/T])",
+  "version": "1.0.0",
+  "author": "Biomni Integration",
+  "license": "MIT",
+  "runtime": {
+    "type": "python",
+    "version": "3.8+",
+    "entrypoint": "find_n_glycosylation_motifs.py",
+    "requirements": [
+      "git+https://github.com/snap-stanford/Biomni.git"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "sequence",
+      "type": "string",
+      "required": true,
+      "description": "Protein sequence to scan for N-glycosylation motifs"
+    },
+    {
+      "name": "allow_overlap",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Allow overlapping motifs"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string",
+      "description": "Glycosylation motif analysis results"
+    }
+  ]
+}

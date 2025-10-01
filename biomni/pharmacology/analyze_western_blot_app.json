@@ -1,0 +1,54 @@
+{
+  "name": "analyze_western_blot",
+  "description": "Analyzes western blot images for protein quantification",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "analyze_western_blot.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "blot_image_path",
+      "description": "Path to the western blot image file",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "target_bands",
+      "description": "Information about target protein bands",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "loading_control_band",
+      "description": "Information about the loading control band",
+      "type": "object",
+      "required": true
+    },
+    {
+      "name": "antibody_info",
+      "description": "Information about antibodies used",
+      "type": "object",
+      "required": true
+    },
+    {
+      "name": "output_dir",
+      "description": "Directory to save analysis results",
+      "type": "string",
+      "required": false,
+      "default": "./results"
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with western blot analysis"
+      }
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "name": "analyze-cas9-mutation-outcomes",
+  "title": "Analyze Cas9 Mutation Outcomes",
+  "description": "Analyze and categorize mutations induced by Cas9 at target sites",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application analyzes and categorizes mutations induced by Cas9 genome editing at target sites. It processes reference and edited sequences to identify different types of mutations including deletions, insertions, and indels.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Categorize mutations by type and size</li><li class=\"list-item-node\">Support for multiple target sites and reads</li><li class=\"list-item-node\">Cell line-specific analysis</li><li class=\"list-item-node\">Detailed mutation distribution statistics</li><li class=\"list-item-node\">CSV output for further analysis</li></ul><h3 class=\"heading-node\">Mutation Categories</h3><ul class=\"list-node\"><li class=\"list-item-node\">No mutation detected</li><li class=\"list-item-node\">Short deletion (1-10 bp)</li><li class=\"list-item-node\">Medium deletion (11-30 bp)</li><li class=\"list-item-node\">Long deletion (>30 bp)</li><li class=\"list-item-node\">Single base insertion</li><li class=\"list-item-node\">Longer insertion (>1 bp)</li><li class=\"list-item-node\">Insertion and deletion (indel)</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Reference Sequences</strong>: JSON file mapping sequence IDs to reference DNA sequences</li><li class=\"list-item-node\"><strong>Edited Sequences</strong>: JSON file with nested dict {sequence_id: {read_id: sequence}}</li><li class=\"list-item-node\"><strong>Cell Line Info</strong>: Optional JSON file with cell line information</li><li class=\"list-item-node\"><strong>Output Prefix</strong>: Prefix for output files</li><li class=\"list-item-node\"><strong>Output Directory</strong>: Select or create a stash folder for output</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates detailed results CSV, summary CSV with mutation distributions, and a comprehensive analysis log.</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python \"prod_apps/biomni/genetics/analyze_cas9_mutation_outcomes.py\" \"${referenceSequences}\" \"${editedSequences}\" ${cellLineInfo} -p \"${outputPrefix}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Small CPU",
+          "value": "small_cpu",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "small_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "referenceSequences",
+      "label": "Reference Sequences File",
+      "description": "Upload JSON file with reference sequences (dict mapping seq_id to sequence)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "editedSequences",
+      "label": "Edited Sequences File",
+      "description": "Upload JSON file with edited sequences (nested dict: {seq_id: {read_id: sequence}})",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "cellLineInfo",
+      "label": "Cell Line Info (Optional)",
+      "description": "Path to JSON file with cell line information (leave empty if not needed)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "outputPrefix",
+      "label": "Output Prefix",
+      "description": "Prefix for output files",
+      "defaultValue": "cas9_mutation_analysis"
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

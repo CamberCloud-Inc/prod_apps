@@ -1,0 +1,35 @@
+{
+  "name": "clear_captured_plots",
+  "description": "Clear all captured matplotlib plots from memory. Use this to free up memory or reset the plot capture state.",
+  "version": "1.0.0",
+  "author": "Biomni Support Tools",
+  "license": "MIT",
+  "input": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "output": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean",
+        "description": "Whether the operation succeeded"
+      },
+      "result": {
+        "type": "string",
+        "description": "Confirmation message"
+      },
+      "error": {
+        "type": "string",
+        "description": "Error message if operation failed"
+      }
+    }
+  },
+  "execution": {
+    "command": "python3",
+    "args": [
+      "clear_captured_plots.py"
+    ]
+  }
+}

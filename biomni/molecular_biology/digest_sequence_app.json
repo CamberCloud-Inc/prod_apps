@@ -1,0 +1,59 @@
+{
+  "name": "digest-sequence",
+  "title": "Restriction Enzyme Digestion",
+  "description": "Simulate restriction enzyme digestion and predict DNA fragments",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application simulates restriction enzyme digestion using Biopython's catalyze method and returns the resulting DNA fragments.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Supports multiple enzymes</li><li class=\"list-item-node\">Works with circular and linear DNA</li><li class=\"list-item-node\">Reports fragment sizes and positions</li><li class=\"list-item-node\">Lists all cut positions</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>DNA Sequence</strong>: Sequence to digest</li><li class=\"list-item-node\"><strong>Enzymes</strong>: Space-separated enzyme names (e.g., EcoRI BamHI)</li><li class=\"list-item-node\"><strong>Topology</strong>: Specify if linear (default is circular)</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">Returns a JSON file with fragment sequences, sizes, positions, and digestion information.</p>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && pip install -q biopython biomni && python prod_apps_clone/biomni/molecular_biology/digest_sequence.py \"${dnaSequence}\" ${enzymes} ${linear} -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "String",
+      "name": "dnaSequence",
+      "label": "DNA Sequence",
+      "description": "DNA sequence to digest",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "enzymes",
+      "label": "Restriction Enzymes",
+      "description": "Space-separated enzyme names (e.g., EcoRI BamHI HindIII)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "linear",
+      "label": "Linear DNA",
+      "description": "Enter '--linear' if sequence is linear (leave empty for circular)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

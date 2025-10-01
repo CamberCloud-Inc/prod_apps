@@ -1,0 +1,42 @@
+{
+  "name": "analyze_fda_safety_signals",
+  "description": "Analyzes FDA safety signals for drugs using pharmacovigilance data",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "analyze_fda_safety_signals.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "drug_list",
+      "description": "List of drugs to analyze for safety signals",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "comparison_period",
+      "description": "Time period for comparison as [start_date, end_date]",
+      "type": "array",
+      "required": false
+    },
+    {
+      "name": "signal_threshold",
+      "description": "Threshold value for safety signal detection",
+      "type": "number",
+      "required": false,
+      "default": 2.0
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with FDA safety signal analysis"
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "name": "run_diffdock_with_smiles",
+  "description": "Runs DiffDock inference for molecular docking using a Docker container",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "run_diffdock_with_smiles.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "pdb_path",
+      "description": "Path to the protein PDB file",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "smiles_string",
+      "description": "SMILES string of the ligand molecule",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "local_output_dir",
+      "description": "Local directory to save output files",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "gpu_device",
+      "description": "GPU device ID to use",
+      "type": "integer",
+      "required": false,
+      "default": 0
+    },
+    {
+      "name": "use_gpu",
+      "description": "Whether to use GPU acceleration",
+      "type": "boolean",
+      "required": false,
+      "default": true
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log summarizing the docking process"
+      }
+    }
+  }
+}

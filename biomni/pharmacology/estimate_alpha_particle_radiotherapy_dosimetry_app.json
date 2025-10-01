@@ -1,0 +1,42 @@
+{
+  "name": "estimate_alpha_particle_radiotherapy_dosimetry",
+  "description": "Estimates alpha particle radiotherapy dosimetry for targeted radionuclide therapy",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "estimate_alpha_particle_radiotherapy_dosimetry.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "biodistribution_data",
+      "description": "Biodistribution data for dosimetry calculation",
+      "type": "object",
+      "required": true
+    },
+    {
+      "name": "radiation_parameters",
+      "description": "Radiation parameters for alpha particles",
+      "type": "object",
+      "required": true
+    },
+    {
+      "name": "output_file",
+      "description": "Output file path for dosimetry results",
+      "type": "string",
+      "required": false,
+      "default": "dosimetry_results.csv"
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with dosimetry calculations"
+      }
+    }
+  }
+}

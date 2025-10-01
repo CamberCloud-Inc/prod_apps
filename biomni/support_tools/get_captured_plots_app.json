@@ -1,0 +1,35 @@
+{
+  "name": "get_captured_plots",
+  "description": "Get all captured matplotlib plots from previous Python REPL executions. Returns a list of base64-encoded plot images.",
+  "version": "1.0.0",
+  "author": "Biomni Support Tools",
+  "license": "MIT",
+  "input": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "output": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean",
+        "description": "Whether the operation succeeded"
+      },
+      "result": {
+        "type": "array",
+        "description": "List of base64-encoded plot images in data URI format"
+      },
+      "error": {
+        "type": "string",
+        "description": "Error message if operation failed"
+      }
+    }
+  },
+  "execution": {
+    "command": "python3",
+    "args": [
+      "get_captured_plots.py"
+    ]
+  }
+}

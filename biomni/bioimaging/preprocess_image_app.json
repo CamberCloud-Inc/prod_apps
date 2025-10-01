@@ -1,0 +1,41 @@
+{
+  "name": "Preprocess Image",
+  "description": "Preprocess medical images with denoising and normalization",
+  "class": "bioimaging",
+  "entrypoint": "preprocess_image.py",
+  "parameters": {
+    "image_path": {
+      "type": "file",
+      "description": "Path to input image",
+      "required": true
+    },
+    "output_path": {
+      "type": "string",
+      "description": "Path to save preprocessed image",
+      "required": true
+    },
+    "denoise": {
+      "type": "boolean",
+      "description": "Whether to apply denoising (default: true)",
+      "required": false,
+      "default": true
+    },
+    "normalize": {
+      "type": "boolean",
+      "description": "Whether to apply normalization (default: true)",
+      "required": false,
+      "default": true
+    }
+  },
+  "returns": {
+    "output_path": {
+      "type": "string",
+      "description": "Path to the saved preprocessed image"
+    }
+  },
+  "setup_commands": [
+    "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni 2>/dev/null || (cd /tmp/biomni && git pull)",
+    "pip install -e /tmp/biomni",
+    "pip install nibabel numpy SimpleITK torch matplotlib requests"
+  ]
+}

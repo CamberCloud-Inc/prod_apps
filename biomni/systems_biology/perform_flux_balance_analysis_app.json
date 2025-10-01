@@ -1,0 +1,33 @@
+{
+  "name": "Perform Flux Balance Analysis",
+  "description": "Perform Flux Balance Analysis (FBA) on a genome-scale metabolic network model to predict metabolic flux distributions",
+  "install": "cd /tmp && git clone --depth 1 https://github.com/snap-stanford/Biomni.git biomni_repo && cd biomni_repo && pip install -e . && pip install cobra pandas",
+  "run": "python3 /Users/david/git/prod_apps/biomni/systems_biology/perform_flux_balance_analysis.py \"$MODEL_FILE\" \"$CONSTRAINTS\" \"$OBJECTIVE_REACTION\" \"$OUTPUT_FILE\"",
+  "inputs": [
+    {
+      "name": "MODEL_FILE",
+      "description": "Path to the metabolic model file (SBML or JSON format)",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "CONSTRAINTS",
+      "description": "JSON dictionary of reaction constraints (format: {\"reaction_id\": [lower_bound, upper_bound]})",
+      "type": "text",
+      "required": false
+    },
+    {
+      "name": "OBJECTIVE_REACTION",
+      "description": "Reaction ID to use as the objective function (e.g., biomass reaction)",
+      "type": "text",
+      "required": false
+    },
+    {
+      "name": "OUTPUT_FILE",
+      "description": "File name to save the flux distribution results",
+      "type": "text",
+      "required": false,
+      "default": "fba_results.csv"
+    }
+  ]
+}

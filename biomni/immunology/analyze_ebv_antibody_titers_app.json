@@ -1,0 +1,22 @@
+{
+  "name": "Analyze EBV Antibody Titers",
+  "description": "Quantify Epstein-Barr Virus (EBV) antibody titers in plasma/serum samples using ELISA optical density values",
+  "category": "Immunology",
+  "subcategory": "Serology",
+  "image": "davethesoftwaredev/biomni:latest",
+  "command": "python /app/biomni/immunology/analyze_ebv_antibody_titers.py",
+  "params": [
+    {
+      "name": "sample_data_json",
+      "type": "string",
+      "description": "Sample data containing EBV antibody optical density values (JSON array of objects with keys: sample_id, vca_igg_od, ea_igg_od, ebna_igg_od)",
+      "required": true
+    },
+    {
+      "name": "output_dir",
+      "type": "string",
+      "description": "Directory where output files will be saved",
+      "default": "."
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "name": "query_drug_interactions",
+  "description": "Queries drug-drug interactions from the DDInter database",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "query_drug_interactions.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "drug_names",
+      "description": "List of drug names to check for interactions",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "interaction_types",
+      "description": "Filter by specific interaction types (optional)",
+      "type": "array",
+      "required": false
+    },
+    {
+      "name": "severity_levels",
+      "description": "Filter by severity levels (optional)",
+      "type": "array",
+      "required": false
+    },
+    {
+      "name": "data_lake_path",
+      "description": "Path to data lake directory (optional)",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with drug interaction information"
+      }
+    }
+  }
+}

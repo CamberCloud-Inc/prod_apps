@@ -1,0 +1,49 @@
+{
+  "name": "check_drug_combination_safety",
+  "description": "Checks safety of drug combinations by analyzing potential interactions",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "check_drug_combination_safety.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "drug_list",
+      "description": "List of drugs to check for combination safety",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "include_mechanisms",
+      "description": "Include interaction mechanisms in the results",
+      "type": "boolean",
+      "required": false,
+      "default": true
+    },
+    {
+      "name": "include_management",
+      "description": "Include management strategies in the results",
+      "type": "boolean",
+      "required": false,
+      "default": true
+    },
+    {
+      "name": "data_lake_path",
+      "description": "Path to data lake directory (optional)",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with drug combination safety analysis"
+      }
+    }
+  }
+}

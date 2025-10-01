@@ -1,0 +1,31 @@
+{
+  "name": "Biomni: Analyze Copy Number, Purity, Ploidy and Focal Events",
+  "description": "Perform comprehensive copy number variation (CNV) analysis, estimate tumor purity and ploidy, and detect focal amplification/deletion events in cancer samples. Provides insights into genomic instability and oncogenic drivers.",
+  "input": {
+    "tumor_bam": {
+      "type": "string",
+      "description": "Path to the tumor sample BAM file"
+    },
+    "reference_genome": {
+      "type": "string",
+      "description": "Path to the reference genome FASTA file"
+    },
+    "output_dir": {
+      "type": "string",
+      "description": "Directory to save output files",
+      "default": "./results"
+    },
+    "normal_bam": {
+      "type": "string",
+      "description": "Path to the matched normal sample BAM file (optional)",
+      "optional": true
+    }
+  },
+  "output": {
+    "type": "string",
+    "description": "Research log summarizing the copy number analysis, purity/ploidy estimates, and focal events detected"
+  },
+  "tags": ["biomni", "cancer-biology", "copy-number-variation", "cnv", "tumor-purity", "ploidy", "genomics"],
+  "author": "Biomni",
+  "repository": "https://github.com/snap-stanford/Biomni"
+}

@@ -1,0 +1,53 @@
+{
+  "name": "query_opentarget",
+  "title": "Query Opentarget",
+  "description": "Query the OpenTargets Platform API using natural language or a direct GraphQL query.\n\n    Parameters\n    ----------\n    prompt (str, required): Natural language query about drug targets, diseases, and",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "prompt",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: prompt"
+    },
+    {
+      "name": "query",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: query"
+    },
+    {
+      "name": "variables",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: variables"
+    },
+    {
+      "name": "verbose",
+      "type": "boolean",
+      "required": false,
+      "description": "Parameter: verbose"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "query_opentarget.py",
+    "args": [
+      "--prompt",
+      "${prompt}",
+      "--query",
+      "${query}",
+      "--variables",
+      "${variables}",
+      "--verbose",
+      "${verbose}"
+    ]
+  }
+}

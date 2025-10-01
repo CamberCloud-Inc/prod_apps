@@ -1,0 +1,53 @@
+{
+  "name": "get_genes_near_ccre",
+  "title": "Get Genes Near Ccre",
+  "description": "Query the ReMap database for regulatory elements and transcription factor binding sites.\n\n    Parameters\n    ----------\n    prompt (str, required): Natural language query about transcription factors a",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "accession",
+      "type": "string",
+      "required": true,
+      "description": "Parameter: accession"
+    },
+    {
+      "name": "assembly",
+      "type": "string",
+      "required": true,
+      "description": "Parameter: assembly"
+    },
+    {
+      "name": "chromosome",
+      "type": "string",
+      "required": true,
+      "description": "Parameter: chromosome"
+    },
+    {
+      "name": "k",
+      "type": "integer",
+      "required": false,
+      "description": "Parameter: k"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "get_genes_near_ccre.py",
+    "args": [
+      "--accession",
+      "${accession}",
+      "--assembly",
+      "${assembly}",
+      "--chromosome",
+      "${chromosome}",
+      "--k",
+      "${k}"
+    ]
+  }
+}

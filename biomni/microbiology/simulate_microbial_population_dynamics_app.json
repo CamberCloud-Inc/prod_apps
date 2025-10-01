@@ -1,0 +1,42 @@
+{
+  "name": "Simulate Microbial Population Dynamics",
+  "description": "Simulate microbial population dynamics with multiple interacting species",
+  "image": "python:3.11-slim",
+  "run": [
+    "sh",
+    "-c",
+    "git clone --depth 1 https://github.com/snap-stanford/Biomni /tmp/biomni && pip install -q -e /tmp/biomni && python /mnt/code/simulate_microbial_population_dynamics.py"
+  ],
+  "fields": [
+    {
+      "name": "species_params",
+      "displayName": "Species Parameters",
+      "type": "json_array",
+      "description": "List of dictionaries containing parameters for each species",
+      "required": true
+    },
+    {
+      "name": "interactions",
+      "displayName": "Interactions",
+      "type": "json_array",
+      "description": "List of dictionaries describing interactions between species",
+      "required": true
+    },
+    {
+      "name": "simulation_time",
+      "displayName": "Simulation Time",
+      "type": "number",
+      "description": "Total simulation time",
+      "required": false,
+      "default": 100
+    },
+    {
+      "name": "time_step",
+      "displayName": "Time Step",
+      "type": "number",
+      "description": "Time step for simulation output",
+      "required": false,
+      "default": 0.1
+    }
+  ]
+}

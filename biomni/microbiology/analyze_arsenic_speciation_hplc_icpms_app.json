@@ -1,0 +1,34 @@
+{
+  "name": "Analyze Arsenic Speciation HPLC-ICP-MS",
+  "description": "Analyzes arsenic speciation in liquid samples using HPLC-ICP-MS technique",
+  "image": "python:3.11-slim",
+  "run": [
+    "sh",
+    "-c",
+    "git clone --depth 1 https://github.com/snap-stanford/Biomni /tmp/biomni && pip install -q -e /tmp/biomni && python /mnt/code/analyze_arsenic_speciation_hplc_icpms.py"
+  ],
+  "fields": [
+    {
+      "name": "sample_data",
+      "displayName": "Sample Data",
+      "type": "json_object",
+      "description": "Dictionary containing sample data with retention times and signal intensities",
+      "required": true
+    },
+    {
+      "name": "sample_name",
+      "displayName": "Sample Name",
+      "type": "short_text",
+      "description": "Name of the sample being analyzed",
+      "required": false,
+      "default": "Unknown Sample"
+    },
+    {
+      "name": "calibration_data",
+      "displayName": "Calibration Data",
+      "type": "json_object",
+      "description": "Dictionary containing calibration standards data",
+      "required": false
+    }
+  ]
+}

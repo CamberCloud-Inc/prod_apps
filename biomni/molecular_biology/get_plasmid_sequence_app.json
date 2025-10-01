@@ -1,0 +1,52 @@
+{
+  "name": "get-plasmid-sequence",
+  "title": "Get Plasmid Sequence",
+  "description": "Retrieve plasmid sequences from Addgene or NCBI databases",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application retrieves plasmid sequences from either Addgene (using plasmid ID) or NCBI (using plasmid name).</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Searches Addgene by plasmid ID</li><li class=\"list-item-node\">Searches NCBI by plasmid name</li><li class=\"list-item-node\">Auto-detects source based on identifier</li><li class=\"list-item-node\">Returns complete plasmid sequence</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Identifier</strong>: Plasmid ID (numeric for Addgene) or name (for NCBI)</li><li class=\"list-item-node\"><strong>Source</strong>: Optionally force Addgene or NCBI lookup</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">Returns a JSON file with the plasmid sequence, source database, and identifier.</p>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && pip install -q biopython biomni requests beautifulsoup4 && python prod_apps_clone/biomni/molecular_biology/get_plasmid_sequence.py \"${identifier}\" ${source} -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "String",
+      "name": "identifier",
+      "label": "Plasmid Identifier",
+      "description": "Addgene ID (e.g., 12345) or NCBI plasmid name (e.g., pUC19)",
+      "defaultValue": ""
+    },
+    {
+      "type": "String",
+      "name": "source",
+      "label": "Force Source (Optional)",
+      "description": "Enter '--addgene' or '--ncbi' to force specific database (leave empty for auto-detect)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where results will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}

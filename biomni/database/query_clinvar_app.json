@@ -1,0 +1,45 @@
+{
+  "name": "query_clinvar",
+  "title": "Query Clinvar",
+  "description": "Take a natural language prompt and convert it to a structured ClinVar query.\n\n    Parameters\n    ----------\n    prompt (str): Natural language query about genetic variants (e.g., \"Find pathogenic BRCA",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "prompt",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: prompt"
+    },
+    {
+      "name": "search_term",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: search_term"
+    },
+    {
+      "name": "max_results",
+      "type": "integer",
+      "required": false,
+      "description": "Parameter: max_results"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "query_clinvar.py",
+    "args": [
+      "--prompt",
+      "${prompt}",
+      "--search_term",
+      "${search_term}",
+      "--max_results",
+      "${max_results}"
+    ]
+  }
+}

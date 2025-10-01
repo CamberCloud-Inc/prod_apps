@@ -1,0 +1,45 @@
+{
+  "name": "query_dbsnp",
+  "title": "Query Dbsnp",
+  "description": "Query the NCBI dbSNP database using natural language or a direct search term.\n\n    Parameters\n    ----------\n    prompt (str, required): Natural language query about genetic variants/SNPs\n    search_t",
+  "category": "Biomni Database Tools",
+  "inputs": [
+    {
+      "name": "prompt",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: prompt"
+    },
+    {
+      "name": "search_term",
+      "type": "string",
+      "required": false,
+      "description": "Parameter: search_term"
+    },
+    {
+      "name": "max_results",
+      "type": "integer",
+      "required": false,
+      "description": "Parameter: max_results"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "object",
+      "description": "Query results"
+    }
+  ],
+  "command": {
+    "type": "python",
+    "script": "query_dbsnp.py",
+    "args": [
+      "--prompt",
+      "${prompt}",
+      "--search_term",
+      "${search_term}",
+      "--max_results",
+      "${max_results}"
+    ]
+  }
+}

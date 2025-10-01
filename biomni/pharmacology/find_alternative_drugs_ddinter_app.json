@@ -1,0 +1,47 @@
+{
+  "name": "find_alternative_drugs_ddinter",
+  "description": "Finds alternative drugs to avoid contraindicated drug-drug interactions",
+  "version": "1.0.0",
+  "type": "python",
+  "entrypoint": "find_alternative_drugs_ddinter.py",
+  "install": {
+    "pip": [
+      "biomni"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "target_drug",
+      "description": "The drug for which to find alternatives",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "contraindicated_drugs",
+      "description": "List of drugs that have contraindicated interactions",
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "therapeutic_class",
+      "description": "Therapeutic class to filter alternatives (optional)",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "data_lake_path",
+      "description": "Path to data lake directory (optional)",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "result": {
+        "type": "string",
+        "description": "Research log with alternative drug recommendations"
+      }
+    }
+  }
+}

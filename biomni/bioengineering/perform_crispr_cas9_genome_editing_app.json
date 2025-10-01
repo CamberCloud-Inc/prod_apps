@@ -1,0 +1,52 @@
+{
+  "name": "perform-crispr-cas9-genome-editing",
+  "title": "CRISPR-Cas9 Genome Editing Simulator",
+  "description": "Simulate CRISPR-Cas9 genome editing including guide RNA design, delivery, and analysis",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application simulates the CRISPR-Cas9 genome editing process. Built using <a class=\"link\" href=\"https://github.com/snap-stanford/Biomni\" target=\"_blank\">Biomni</a>, it validates guide RNAs, identifies target sites, simulates delivery and editing outcomes.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Validates guide RNA sequences and checks GC content</li><li class=\"list-item-node\">Identifies target sites and PAM sequences</li><li class=\"list-item-node\">Simulates cell-specific delivery efficiency</li><li class=\"list-item-node\">Predicts editing outcomes and indel formation</li><li class=\"list-item-node\">Generates detailed research logs</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Guide RNA Sequences</strong>: Comma-separated list of 20-nucleotide guide RNAs</li><li class=\"list-item-node\"><strong>Target Genomic Loci</strong>: Target genomic sequence containing guide RNA sites</li><li class=\"list-item-node\"><strong>Cell/Tissue Type</strong>: Type of cell being edited (affects delivery efficiency)</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">The application generates a detailed research log and saves original and modified sequences to <code class=\"inline\" spellcheck=\"false\">crispr_results/</code> directory.</p><h3 class=\"heading-node\">Use Cases</h3><ul class=\"list-node\"><li class=\"list-item-node\">Planning CRISPR experiments</li><li class=\"list-item-node\">Guide RNA validation</li><li class=\"list-item-node\">Predicting editing outcomes</li><li class=\"list-item-node\">Teaching genome editing concepts</li></ul>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python \"prod_apps/biomni/bioengineering/perform_crispr_cas9_genome_editing.py\" \"${guideRnaSequences}\" \"${targetGenomicLoci}\" \"${cellTissueType}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Text",
+      "name": "guideRnaSequences",
+      "label": "Guide RNA Sequences",
+      "description": "Comma-separated list of guide RNA sequences (20 nucleotides each, e.g., AGCTTAGCCATGGATCATCG,TCGATCGATCGATCGATCGA)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Text",
+      "name": "targetGenomicLoci",
+      "label": "Target Genomic Loci",
+      "description": "Target genomic sequence to be edited (should contain the guide RNA target sites with PAM)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Text",
+      "name": "cellTissueType",
+      "label": "Cell/Tissue Type",
+      "description": "Type of cell or tissue (e.g., HEK293, HeLa, iPSC, primary_neuron)",
+      "defaultValue": "HEK293"
+    }
+  ]
+}

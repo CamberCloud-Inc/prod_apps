@@ -1,0 +1,44 @@
+{
+  "name": "reconstruct_3d_face_from_mri",
+  "description": "Generate a 3D model of facial anatomy from MRI scans of the head and neck.",
+  "icon": "🧠",
+  "container": {
+    "image": "python:3.9-slim",
+    "setup_commands": [
+      "git clone --depth 1 https://github.com/snap-stanford/Biomni.git /tmp/biomni && cd /tmp/biomni && pip install -e . && rm -rf .git"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "mri_file_path",
+      "description": "Path to the MRI scan file (NIfTI format: .nii or .nii.gz)",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "output_dir",
+      "description": "Directory where output files will be saved",
+      "type": "string",
+      "required": false,
+      "default": "./output"
+    },
+    {
+      "name": "subject_id",
+      "description": "Identifier for the subject, used in output filenames",
+      "type": "string",
+      "required": false,
+      "default": "subject"
+    },
+    {
+      "name": "threshold_value",
+      "description": "Threshold value for initial segmentation of facial tissues",
+      "type": "integer",
+      "required": false,
+      "default": 300
+    }
+  ],
+  "output": {
+    "type": "string",
+    "description": "Research log detailing the reconstruction process and output file locations"
+  }
+}

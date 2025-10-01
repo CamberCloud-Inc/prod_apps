@@ -1,0 +1,51 @@
+{
+  "name": "get-bacterial-transformation-protocol",
+  "title": "Bacterial Transformation Protocol",
+  "description": "Get standard protocol for transforming DNA into competent E. coli cells",
+  "content": "<h3 class=\"heading-node\">Overview</h3><p class=\"text-node\">This application provides a detailed bacterial transformation protocol optimized for your specific needs.</p><h3 class=\"heading-node\">Features</h3><ul class=\"list-node\"><li class=\"list-item-node\">Standard heat shock protocol</li><li class=\"list-item-node\">Customized for antibiotic selection</li><li class=\"list-item-node\">Special handling for repetitive sequences</li><li class=\"list-item-node\">Complete step-by-step instructions</li></ul><h3 class=\"heading-node\">Parameters</h3><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Antibiotic</strong>: Selection marker (e.g., ampicillin, kanamycin)</li><li class=\"list-item-node\"><strong>Repetitive</strong>: Specify if sequence contains repeats</li></ul><h3 class=\"heading-node\">Output</h3><p class=\"text-node\">Returns complete transformation protocol with timing, temperatures, and helpful notes.</p>",
+  "command": "git clone https://github.com/CamberCloud-Inc/prod_apps.git prod_apps_clone 2>/dev/null || (cd prod_apps_clone && git pull) && pip install -q biopython biomni && python prod_apps_clone/biomni/molecular_biology/get_bacterial_transformation_protocol.py --antibiotic \"${antibiotic}\" ${repetitive} -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "String",
+      "name": "antibiotic",
+      "label": "Selection Antibiotic",
+      "description": "Antibiotic for selection (e.g., ampicillin, kanamycin, chloramphenicol)",
+      "defaultValue": "ampicillin"
+    },
+    {
+      "type": "String",
+      "name": "repetitive",
+      "label": "Repetitive Sequence",
+      "description": "Enter '--repetitive' if sequence contains repetitive elements (leave empty otherwise)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Select or create a stash folder where protocol will be saved",
+      "defaultValue": "./"
+    }
+  ]
+}
