@@ -1,29 +1,32 @@
 {
   "name": "genomeannotator-eukaryote-annotation",
-  "title": "Genome Annotator - Eukaryotic Annotation",
-  "description": "nf-core/genomeannotator is a bioinformatics pipeline for comprehensive annotation of eukaryotic genomes. It preprocesses genome assemblies, aligns protein and transcript evidence, builds gene models using AUGUSTUS and PASA, and generates consensus gene annotations with EvidenceModeler.",
+  "title": "Eukaryotic Gene Annotation",
+  "description": "Comprehensive annotation pipeline for eukaryotic genomes with focus on metazoans. Integrates protein and transcript evidence, performs ab initio prediction with AUGUSTUS and PASA, and generates consensus gene models using EvidenceModeler. Essential for genome projects and comparative genomics. Samplesheet format: `counts,lengths,exon`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/genomeannotator --input ${input} --outdir ${outdir} -r dev",
+  "command": "nextflow run nf-core/genomeannotator --input ${input} --outdir ${outdir} -r dev ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/genomeannotator/master/docs/images/nf-core-genomeannotator_logo_light.png",
-  "content": "<h2 class=\"heading-node\"><strong>Genome Annotator - Eukaryotic Annotation Pipeline</strong></h2><p class=\"text-node\"><strong>nf-core/genomeannotator</strong> is a bioinformatics best-practice analysis pipeline for the annotation of eukaryotic genomes, with a primary focus on metazoans. It provides a comprehensive workflow for identifying and structuring genes in draft genomes.</p><h3 class=\"heading-node\"><strong>Key Features</strong></h3><ul class=\"list-node\"><li class=\"list-item-node\">Built with <strong>Nextflow DSL2</strong>, using containerized processes (Docker/Singularity) for reproducibility and portability</li><li class=\"list-item-node\">Preprocessing and filtering of genome assembly contigs</li><li class=\"list-item-node\">Alignment of protein and transcript evidence to the genome</li><li class=\"list-item-node\">Gene model construction using <strong>AUGUSTUS</strong> and <strong>PASA</strong></li><li class=\"list-item-node\">Consensus gene build generation with <strong>EvidenceModeler</strong></li><li class=\"list-item-node\">Optional de-novo transcriptome assembly with <strong>Trinity</strong></li><li class=\"list-item-node\">Optional annotation mapping from related genomes using <strong>Satsuma2</strong> and <strong>Kraken</strong></li></ul><h3 class=\"heading-node\"><strong>Pipeline Workflow</strong></h3><ol class=\"list-node\"><li class=\"list-item-node\"><strong>Assembly Preparation</strong>: Filter and clean genome assembly contigs</li><li class=\"list-item-node\"><strong>Evidence Alignment</strong>: Align proteins, transcripts, and RNA-seq data to the genome</li><li class=\"list-item-node\"><strong>Annotation Support</strong>: Convert alignments to annotation evidence</li><li class=\"list-item-node\"><strong>Gene Modeling</strong>: Build gene models using multiple prediction tools</li><li class=\"list-item-node\"><strong>Consensus Building</strong>: Generate final consensus gene annotations</li></ol><h3 class=\"heading-node\"><strong>Input Requirements</strong></h3><p class=\"text-node\">Provide a samplesheet (CSV or TSV format) containing:</p><ul class=\"list-node\"><li class=\"list-item-node\">Genome assembly file (FASTA format)</li><li class=\"list-item-node\">Optional: Protein evidence sequences</li><li class=\"list-item-node\">Optional: Transcript evidence sequences</li><li class=\"list-item-node\">Optional: RNA-seq reads for de-novo transcriptome assembly</li></ul><h3 class=\"heading-node\"><strong>Supported Organisms</strong></h3><p class=\"text-node\">Primarily designed for <strong>metazoans</strong> (animals), but adaptable to other eukaryotic groups including fungi, plants, and protists with appropriate training data.</p><h3 class=\"heading-node\"><strong>Output</strong></h3><p class=\"text-node\">The pipeline generates comprehensive annotation results including:</p><ul class=\"list-node\"><li class=\"list-item-node\">Gene structure predictions in GFF3/GTF format</li><li class=\"list-item-node\">Protein and transcript sequences (FASTA)</li><li class=\"list-item-node\">Evidence alignment files</li><li class=\"list-item-node\">Quality control reports</li><li class=\"list-item-node\">MultiQC summary report</li></ul><h3 class=\"heading-node\"><strong>Use Cases</strong></h3><ul class=\"list-node\"><li class=\"list-item-node\">Annotating newly sequenced eukaryotic genomes</li><li class=\"list-item-node\">Improving existing genome annotations with new evidence</li><li class=\"list-item-node\">Preparing genomes for NCBI GenBank submission</li><li class=\"list-item-node\">Comparative genomics studies requiring consistent annotation</li><li class=\"list-item-node\">Integration of multiple evidence sources for robust gene prediction</li></ul><blockquote class=\"block-node\"><p class=\"text-node\"><strong><em>Note:</em></strong><em> This pipeline is part of the nf-core community-driven bioinformatics pipeline collection, ensuring best practices, rigorous testing, and continuous improvement.</em></p></blockquote>",
+  "content": "<h2><strong>Genome Annotator - Eukaryotic Gene Annotation</strong></h2><p>A comprehensive bioinformatics pipeline for annotating eukaryotic genomes, with primary focus on metazoans (animals). Identifies gene structures, predicts coding sequences, and integrates multiple lines of evidence to produce high-quality consensus gene annotations.</p><h3><strong>What is Genome Annotation?</strong></h3><blockquote><p><strong>Genome annotation</strong> is the process of identifying functional elements in DNA sequences, including genes, regulatory regions, and non-coding RNAs. For protein-coding genes, annotation defines exon-intron boundaries, coding sequences, and UTRs - transforming raw genome assemblies into biologically meaningful information.</p></blockquote><h3><strong>Key Features</strong></h3><ul><li><strong>Multi-Evidence Integration</strong>: Combines protein homology, RNA-seq transcripts, and ab initio predictions</li><li><strong>AUGUSTUS Prediction</strong>: State-of-the-art ab initio gene prediction for eukaryotes</li><li><strong>PASA Pipeline</strong>: Transcript-based annotation from RNA-seq and ESTs</li><li><strong>EvidenceModeler Consensus</strong>: Weighted integration of all evidence sources</li><li><strong>Optional Trinity Assembly</strong>: De novo transcriptome assembly from RNA-seq</li><li><strong>Optional Annotation Transfer</strong>: Map annotations from related genomes using Satsuma2</li><li><strong>Quality Control</strong>: Comprehensive assessment and reporting</li></ul><h3><strong>Pipeline Workflow</strong></h3><ol><li><strong>Assembly Preprocessing</strong>: Filter and clean genome contigs, assess quality</li><li><strong>Evidence Alignment</strong>: Map proteins and transcripts to genome using BLAST/GMAP</li><li><strong>Ab Initio Prediction</strong>: Predict genes with AUGUSTUS using species-specific training</li><li><strong>Transcript Assembly (Optional)</strong>: Assemble full-length transcripts with PASA from RNA-seq</li><li><strong>Evidence Integration</strong>: Combine all evidence with weighted consensus in EvidenceModeler</li><li><strong>Annotation Transfer (Optional)</strong>: Map genes from closely related genomes</li><li><strong>Gene Model Construction</strong>: Generate final gene structures (exons, introns, UTRs)</li><li><strong>Quality Assessment</strong>: Evaluate completeness with BUSCO, generate reports</li></ol><h3><strong>Evidence Types</strong></h3><h4><strong>Protein Homology Evidence</strong></h4><ul><li>Protein sequences from related species</li><li>UniProt/RefSeq databases</li><li>Conserved protein domains</li><li>Provides evolutionary support for gene structures</li></ul><h4><strong>Transcript Evidence</strong></h4><ul><li>RNA-seq reads assembled into transcripts</li><li>ESTs (expressed sequence tags)</li><li>Full-length cDNAs</li><li>Direct experimental validation of gene expression</li></ul><h4><strong>Ab Initio Predictions</strong></h4><ul><li>AUGUSTUS gene predictions based on statistical models</li><li>Species-specific training for accuracy</li><li>Identifies genes without external evidence</li><li>Particularly important for species-specific or novel genes</li></ul><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Genome Projects</strong>: Primary annotation for newly sequenced genomes</li><li><strong>Re-annotation</strong>: Improve existing annotations with new evidence</li><li><strong>Comparative Genomics</strong>: Consistent gene models across related species</li><li><strong>Transcriptomics</strong>: Integrate RNA-seq data for expression-informed annotation</li><li><strong>GenBank Submission</strong>: Generate submission-ready annotation files</li><li><strong>Non-Model Organisms</strong>: Annotate understudied species</li><li><strong>Evolutionary Studies</strong>: Track gene gain/loss and structural evolution</li></ul><h3><strong>Target Organisms</strong></h3><h4><strong>Primary Focus: Metazoans</strong></h4><ul><li>Mammals (humans, mice, livestock)</li><li>Insects (Drosophila, agricultural pests, vectors)</li><li>Fish and aquatic animals</li><li>Birds and reptiles</li><li>Invertebrates (nematodes, mollusks, crustaceans)</li></ul><h4><strong>Adaptable to Other Eukaryotes</strong></h4><ul><li>Fungi (yeasts, filamentous fungi)</li><li>Plants (with appropriate training data)</li><li>Protists (single-celled eukaryotes)</li><li>Note: Requires species-appropriate AUGUSTUS training parameters</li></ul><h3><strong>Input Requirements</strong></h3><p>Provide a CSV or TSV samplesheet with:</p><pre>sample,assembly,proteins,transcripts,rnaseq_reads\nspecies1,genome.fasta,proteins.fasta,transcripts.fasta,\nspecies2,genome.fasta,proteins.fasta,,rnaseq_R1.fq.gz;rnaseq_R2.fq.gz</pre><h4><strong>Required Inputs</strong></h4><ul><li><strong>Genome Assembly</strong>: FASTA file with scaffolds or chromosomes</li><li><strong>Sample Identifier</strong>: Unique name for the annotation project</li></ul><h4><strong>Optional Evidence (Highly Recommended)</strong></h4><ul><li><strong>Protein Sequences</strong>: FASTA of related species proteins (enhances accuracy)</li><li><strong>Transcript Sequences</strong>: FASTA of known transcripts/cDNAs</li><li><strong>RNA-seq Reads</strong>: FASTQ files for de novo transcript assembly</li><li><strong>Related Genome Annotations</strong>: GFF/GTF from close relatives for transfer</li></ul><h3><strong>Main Outputs</strong></h3><ul><li><strong>Gene Annotations</strong>: GFF3/GTF format with complete gene structures</li><li><strong>Protein Sequences</strong>: FASTA of predicted protein sequences</li><li><strong>Transcript Sequences</strong>: FASTA of mRNA sequences</li><li><strong>CDS Sequences</strong>: FASTA of coding sequences</li><li><strong>Evidence Alignments</strong>: BAM files of protein/transcript alignments</li><li><strong>BUSCO Assessment</strong>: Gene completeness metrics</li><li><strong>Statistics Tables</strong>: Gene counts, lengths, exon numbers</li><li><strong>MultiQC Report</strong>: Comprehensive quality control summary</li></ul><h3><strong>Annotation Quality Metrics</strong></h3><h4><strong>BUSCO Completeness</strong></h4><ul><li>Percentage of conserved single-copy orthologs identified</li><li>High-quality annotations: >90% complete BUSCOs</li><li>Indicates annotation coverage and accuracy</li></ul><h4><strong>Gene Model Statistics</strong></h4><ul><li>Number of genes (compare to related species)</li><li>Average gene and CDS lengths</li><li>Exon count distributions</li><li>Alternative splicing detection</li></ul><h4><strong>Evidence Support</strong></h4><ul><li>Percentage of genes with protein evidence</li><li>Percentage with transcript support</li><li>Genes supported by multiple evidence types</li><li>Ab initio-only genes requiring validation</li></ul><h3><strong>EvidenceModeler Integration</strong></h3><p>EvidenceModeler (EVM) combines predictions from multiple sources using configurable weights:</p><ul><li><strong>Protein Alignments</strong>: Typically highest weight (evolutionary conservation)</li><li><strong>Transcript Alignments</strong>: High weight (direct expression evidence)</li><li><strong>PASA Assemblies</strong>: Very high weight (experimentally validated)</li><li><strong>AUGUSTUS</strong>: Moderate weight (statistical predictions)</li><li><strong>Consensus Building</strong>: Resolves conflicts and creates unified gene set</li></ul><h3><strong>Optional Advanced Features</strong></h3><h4><strong>Trinity De Novo Assembly</strong></h4><ul><li>Assemble transcripts directly from RNA-seq without reference</li><li>Discover novel isoforms and alternative splicing</li><li>Identify transcripts from repetitive regions</li><li>Computationally intensive but comprehensive</li></ul><h4><strong>Annotation Transfer with Satsuma2</strong></h4><ul><li>Map annotations from closely related annotated genome</li><li>Useful when reference annotations are high-quality</li><li>Accelerates annotation of closely related species</li><li>Requires synteny between genomes</li></ul><h3><strong>Typical Annotation Workflow</strong></h3><h4><strong>Minimum Viable Annotation</strong></h4><ol><li>Genome assembly only</li><li>Ab initio prediction with AUGUSTUS</li><li>Basic gene models without evidence support</li><li>Time: Few hours</li></ol><h4><strong>Standard Annotation (Recommended)</strong></h4><ol><li>Genome assembly</li><li>Protein evidence from related species</li><li>AUGUSTUS prediction</li><li>EvidenceModeler integration</li><li>Time: 6-24 hours</li></ol><h4><strong>Gold Standard Annotation</strong></h4><ol><li>Genome assembly</li><li>Protein evidence</li><li>RNA-seq data</li><li>Trinity assembly</li><li>PASA transcript annotation</li><li>AUGUSTUS prediction</li><li>EvidenceModeler consensus</li><li>Time: 1-3 days</li></ol><h3><strong>Performance Expectations</strong></h3><ul><li><strong>Small genome (100-300 Mb, insect):</strong> 6-12 hours</li><li><strong>Medium genome (500 Mb - 1 Gb, fish):</strong> 12-24 hours</li><li><strong>Large genome (2-3 Gb, mammal):</strong> 1-3 days</li><li><strong>With Trinity assembly:</strong> Add 12-36 hours</li><li><em>Time depends on genome size, evidence amount, and RNA-seq depth</em></li></ul><h3><strong>Best Practices</strong></h3><ul><li><strong>Use Multiple Evidence Types</strong>: Combine proteins, transcripts, and ab initio for best results</li><li><strong>Select Appropriate AUGUSTUS Training</strong>: Use closely related species parameters</li><li><strong>Quality Genome Assembly</strong>: Better assemblies yield better annotations</li><li><strong>Adequate RNA-seq Coverage</strong>: 50-100M reads minimum for transcript assembly</li><li><strong>Validate Results</strong>: Check BUSCO scores and compare to related species</li></ul><blockquote><p><strong>Perfect for:</strong> Genome Projects • Re-annotation • Comparative Genomics • Non-Model Organisms • GenBank Submission • Evolutionary Studies</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
       "label": "Input Samplesheet",
       "name": "input",
-      "description": "CSV/TSV file containing genome assembly and evidence data paths",
+      "description": "CSV/TSV with columns: sample, assembly (genome FASTA), proteins (optional), transcripts (optional), rnaseq_reads (optional). Multiple evidence types improve annotation quality.",
       "required": true,
       "restrictions": {
         "allow_files": true,
-        "allowed_file_types": [".csv", ".tsv"]
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
       }
     },
     {
       "type": "Stash File",
       "label": "Output Directory",
       "name": "outdir",
-      "description": "Directory where annotation results will be saved",
+      "description": "Directory for annotation results including GFF3/GTF gene models, protein/transcript sequences, and quality reports.",
       "defaultValue": "./genomeannotator-results",
       "required": true,
       "restrictions": {
@@ -37,13 +40,31 @@
       "type": "Select",
       "label": "System Size",
       "name": "system_size",
-      "description": "Select the compute resources for annotation. LARGE recommended for most eukaryotic genomes.",
+      "description": "Select compute resources. LARGE recommended for most eukaryotic genomes. XLARGE for mammalian-sized genomes with RNA-seq.",
       "options": [
         {
-          "label": "LARGE",
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Small genomes (<500 Mb)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Recommended for most genomes",
           "value": "large",
           "mapValue": {
             "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE (96 CPUs, 540GB RAM) - Large genomes (>2 Gb) with RNA-seq",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
             "numNodes": 1,
             "withGpu": false
           }
@@ -54,16 +75,24 @@
   ],
   "tags": [
     {
-      "name": "genomeannotator",
+      "name": "genome-annotation",
       "type": "task"
     },
     {
-      "name": "annotation",
+      "name": "gene-prediction",
       "type": "task"
     },
     {
-      "name": "eukaryote",
-      "type": "task"
+      "name": "eukaryotes",
+      "type": "subfield"
+    },
+    {
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "name": "biology",
+      "type": "field"
     }
   ]
 }

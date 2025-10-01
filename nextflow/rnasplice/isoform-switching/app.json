@@ -1,12 +1,12 @@
 {
   "name": "rnasplice-isoform-switching",
   "title": "RNA Splice: Isoform Switching Analysis",
-  "description": "Isoform switch detection with functional consequence prediction. Identifies transcript isoforms with opposite regulation and predicts protein domain changes, NMD sensitivity, and clinical implications.",
+  "description": "Isoform switch detection with functional consequence prediction. Identifies transcript isoforms with opposite regulation and predicts protein domain changes, NMD sensitivity, and clinical implications. Samplesheet format: `sample,fastq_1,fastq_2,strandedness,condition`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/rnasplice --input ${input} --outdir ${outdir} --contrasts ${contrasts} --genome ${genome} --source ${source} -r 1.0.4 ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/rnasplice/master/docs/images/nf-core-rnasplice_logo_light.png",
-  "content": "<h2><strong>RNA Splice: Isoform Switching</strong></h2><p><strong>Isoform switching</strong> occurs when the dominant transcript isoform changes between conditions - a key regulatory mechanism where gene-level expression may be unchanged but protein function dramatically differs.</p><h3><strong>What is an Isoform Switch?</strong></h3><blockquote><p>When comparing two conditions, an <strong>isoform switch</strong> means:</p><ul><li>One isoform significantly increases (e.g., isoform A goes from 30% → 70%)</li><li>Another decreases (e.g., isoform B goes from 70% → 30%)</li><li>Total gene expression may be similar</li><li>But protein function/localization/stability changes dramatically</li></ul></blockquote><h3><strong>Why Isoform Switches Matter</strong></h3><ul><li><strong>Protein Function</strong>: Gain/loss of protein domains</li><li><strong>Localization</strong>: Nuclear vs cytoplasmic targeting</li><li><strong>Stability</strong>: NMD-sensitive vs stable isoforms</li><li><strong>Drug Targets</strong>: Kinase domain inclusion/exclusion</li><li><strong>Disease Mechanisms</strong>: Pro-apoptotic ↔ anti-apoptotic switches</li></ul><h3><strong>Functional Consequences Analyzed</strong></h3><p><strong>Protein Coding Potential</strong>:</p><ul><li>Coding vs non-coding isoform switches</li><li>Premature stop codons</li><li>Truncated proteins</li></ul><p><strong>Protein Domains (Pfam)</strong>:</p><ul><li>Gain/loss of functional domains</li><li>Kinase domains, DNA-binding domains</li><li>Transmembrane regions, signal peptides</li></ul><p><strong>Signal Peptides</strong>:</p><ul><li>Secreted vs intracellular</li><li>Membrane targeting</li></ul><p><strong>NMD Sensitivity</strong>:</p><ul><li>Nonsense-mediated decay targeting</li><li>Isoforms with PTCs >50nt upstream of last exon junction</li></ul><p><strong>Intrinsically Disordered Regions (IDRs)</strong>:</p><ul><li>Protein-protein interaction sites</li><li>Regulatory regions</li></ul><h3><strong>Example Isoform Switches</strong></h3><p><strong>BCL-X (BCL2L1)</strong>:</p><ul><li>BCL-XL (long): Anti-apoptotic, blocks cell death</li><li>BCL-XS (short): Pro-apoptotic, promotes cell death</li><li>Cancer: Shift to BCL-XL promotes survival</li><li>Therapy: Splice-switching oligonucleotides (SSO) shift to BCL-XS</li></ul><p><strong>CD44</strong>:</p><ul><li>Standard form (CD44s): Cell adhesion</li><li>Variant forms (CD44v): Include variable exons, promote metastasis</li><li>Cancer: Switch to CD44v isoforms in EMT, invasion</li></ul><p><strong>VEGF-A</strong>:</p><ul><li>VEGF165: Pro-angiogenic (standard)</li><li>VEGF165b: Anti-angiogenic (distal splice site in exon 8)</li><li>Cancer: Balance shifted to pro-angiogenic</li></ul><p><strong>Ron (MST1R)</strong>:</p><ul><li>Full-length Ron: Normal receptor signaling</li><li>ΔRON (Δexon11): Constitutively active, oncogenic</li><li>Cancer: Switch to ΔRON in breast, colon cancer</li></ul><h3><strong>Pipeline Analysis Steps</strong></h3><ol><li><strong>Transcript Quantification</strong>: Salmon TPM for all isoforms</li><li><strong>Switch Detection</strong>: IsoformSwitchAnalyzeR identifies opposite regulation</li><li><strong>ORF Prediction</strong>: Identify coding sequences (CPAT, ORFfinder)</li><li><strong>Domain Annotation</strong>: Pfam domain search</li><li><strong>Signal Peptide</strong>: SignalP prediction</li><li><strong>NMD Prediction</strong>: Identify PTC-containing isoforms</li><li><strong>Functional Impact</strong>: Score consequence severity</li></ol><h3><strong>Switch Detection Criteria</strong></h3><p>Typical thresholds:</p><ul><li><strong>dIF (delta Isoform Fraction) > 0.1</strong>: 10% shift in usage</li><li><strong>FDR < 0.05</strong>: Statistical significance</li><li><strong>Opposite regulation</strong>: One isoform up, another down</li><li><strong>Functional consequence</strong>: Domain/NMD/signal peptide changes</li></ul><h3><strong>Clinical Applications</strong></h3><p><strong>Cancer Biomarkers</strong>:</p><ul><li>BCL-X isoform ratio predicts chemotherapy response</li><li>CD44 variants mark cancer stem cells</li><li>FGFR2-IIIc expression predicts metastasis</li></ul><p><strong>Therapeutic Targets</strong>:</p><ul><li>Splice-switching oligonucleotides (SSOs)</li><li>Small molecule splicing modulators</li><li><strong>Spinraza (nusinersen)</strong>: SSO for SMA (SMN2 exon 7 inclusion)</li><li><strong>Risdiplam</strong>: Small molecule for SMN2</li></ul><p><strong>Drug Response</strong>:</p><ul><li>Kinase isoforms with/without inhibitor-binding domains</li><li>Receptor isoforms affecting antibody binding</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Switch Analysis</strong>: Genes with significant isoform switches</li><li><strong>Consequence Predictions</strong>: Domain, NMD, signal peptide changes</li><li><strong>Switch Plots</strong>: Isoform fraction changes visualized</li><li><strong>Functional Annotations</strong>: Pfam, SignalP, CPAT results</li><li><strong>Top Candidates</strong>: Prioritized switches with functional impact</li></ul><blockquote><p><strong>Perfect for:</strong> Cancer isoform biomarkers • Therapeutic target discovery • Functional isoform annotation • Splice therapy development • Disease mechanisms</p></blockquote>",
+  "content": "<h2><strong>RNA Splice: Isoform Switching</strong></h2><p><strong>Isoform switching</strong> occurs when the dominant transcript isoform changes between conditions - a key regulatory mechanism where gene-level expression may be unchanged but protein function dramatically differs.</p><h3><strong>What is an Isoform Switch?</strong></h3><blockquote><p>When comparing two conditions, an <strong>isoform switch</strong> means:</p><ul><li>One isoform significantly increases (e.g., isoform A goes from 30% \u2192 70%)</li><li>Another decreases (e.g., isoform B goes from 70% \u2192 30%)</li><li>Total gene expression may be similar</li><li>But protein function/localization/stability changes dramatically</li></ul></blockquote><h3><strong>Why Isoform Switches Matter</strong></h3><ul><li><strong>Protein Function</strong>: Gain/loss of protein domains</li><li><strong>Localization</strong>: Nuclear vs cytoplasmic targeting</li><li><strong>Stability</strong>: NMD-sensitive vs stable isoforms</li><li><strong>Drug Targets</strong>: Kinase domain inclusion/exclusion</li><li><strong>Disease Mechanisms</strong>: Pro-apoptotic \u2194 anti-apoptotic switches</li></ul><h3><strong>Functional Consequences Analyzed</strong></h3><p><strong>Protein Coding Potential</strong>:</p><ul><li>Coding vs non-coding isoform switches</li><li>Premature stop codons</li><li>Truncated proteins</li></ul><p><strong>Protein Domains (Pfam)</strong>:</p><ul><li>Gain/loss of functional domains</li><li>Kinase domains, DNA-binding domains</li><li>Transmembrane regions, signal peptides</li></ul><p><strong>Signal Peptides</strong>:</p><ul><li>Secreted vs intracellular</li><li>Membrane targeting</li></ul><p><strong>NMD Sensitivity</strong>:</p><ul><li>Nonsense-mediated decay targeting</li><li>Isoforms with PTCs >50nt upstream of last exon junction</li></ul><p><strong>Intrinsically Disordered Regions (IDRs)</strong>:</p><ul><li>Protein-protein interaction sites</li><li>Regulatory regions</li></ul><h3><strong>Example Isoform Switches</strong></h3><p><strong>BCL-X (BCL2L1)</strong>:</p><ul><li>BCL-XL (long): Anti-apoptotic, blocks cell death</li><li>BCL-XS (short): Pro-apoptotic, promotes cell death</li><li>Cancer: Shift to BCL-XL promotes survival</li><li>Therapy: Splice-switching oligonucleotides (SSO) shift to BCL-XS</li></ul><p><strong>CD44</strong>:</p><ul><li>Standard form (CD44s): Cell adhesion</li><li>Variant forms (CD44v): Include variable exons, promote metastasis</li><li>Cancer: Switch to CD44v isoforms in EMT, invasion</li></ul><p><strong>VEGF-A</strong>:</p><ul><li>VEGF165: Pro-angiogenic (standard)</li><li>VEGF165b: Anti-angiogenic (distal splice site in exon 8)</li><li>Cancer: Balance shifted to pro-angiogenic</li></ul><p><strong>Ron (MST1R)</strong>:</p><ul><li>Full-length Ron: Normal receptor signaling</li><li>\u0394RON (\u0394exon11): Constitutively active, oncogenic</li><li>Cancer: Switch to \u0394RON in breast, colon cancer</li></ul><h3><strong>Pipeline Analysis Steps</strong></h3><ol><li><strong>Transcript Quantification</strong>: Salmon TPM for all isoforms</li><li><strong>Switch Detection</strong>: IsoformSwitchAnalyzeR identifies opposite regulation</li><li><strong>ORF Prediction</strong>: Identify coding sequences (CPAT, ORFfinder)</li><li><strong>Domain Annotation</strong>: Pfam domain search</li><li><strong>Signal Peptide</strong>: SignalP prediction</li><li><strong>NMD Prediction</strong>: Identify PTC-containing isoforms</li><li><strong>Functional Impact</strong>: Score consequence severity</li></ol><h3><strong>Switch Detection Criteria</strong></h3><p>Typical thresholds:</p><ul><li><strong>dIF (delta Isoform Fraction) > 0.1</strong>: 10% shift in usage</li><li><strong>FDR < 0.05</strong>: Statistical significance</li><li><strong>Opposite regulation</strong>: One isoform up, another down</li><li><strong>Functional consequence</strong>: Domain/NMD/signal peptide changes</li></ul><h3><strong>Clinical Applications</strong></h3><p><strong>Cancer Biomarkers</strong>:</p><ul><li>BCL-X isoform ratio predicts chemotherapy response</li><li>CD44 variants mark cancer stem cells</li><li>FGFR2-IIIc expression predicts metastasis</li></ul><p><strong>Therapeutic Targets</strong>:</p><ul><li>Splice-switching oligonucleotides (SSOs)</li><li>Small molecule splicing modulators</li><li><strong>Spinraza (nusinersen)</strong>: SSO for SMA (SMN2 exon 7 inclusion)</li><li><strong>Risdiplam</strong>: Small molecule for SMN2</li></ul><p><strong>Drug Response</strong>:</p><ul><li>Kinase isoforms with/without inhibitor-binding domains</li><li>Receptor isoforms affecting antibody binding</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Switch Analysis</strong>: Genes with significant isoform switches</li><li><strong>Consequence Predictions</strong>: Domain, NMD, signal peptide changes</li><li><strong>Switch Plots</strong>: Isoform fraction changes visualized</li><li><strong>Functional Annotations</strong>: Pfam, SignalP, CPAT results</li><li><strong>Top Candidates</strong>: Prioritized switches with functional impact</li></ul><blockquote><p><strong>Perfect for:</strong> Cancer isoform biomarkers \u2022 Therapeutic target discovery \u2022 Functional isoform annotation \u2022 Splice therapy development \u2022 Disease mechanisms</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -17,7 +17,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -29,7 +31,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -40,8 +44,14 @@
       "defaultValue": "GRCh38",
       "required": true,
       "options": [
-        {"label": "Human GRCh38", "value": "GRCh38"},
-        {"label": "Mouse GRCm39", "value": "GRCm39"}
+        {
+          "label": "Human GRCh38",
+          "value": "GRCh38"
+        },
+        {
+          "label": "Mouse GRCm39",
+          "value": "GRCm39"
+        }
       ]
     },
     {
@@ -52,8 +62,14 @@
       "defaultValue": "gencode",
       "required": true,
       "options": [
-        {"label": "GENCODE (Comprehensive)", "value": "gencode"},
-        {"label": "RefSeq", "value": "refseq"}
+        {
+          "label": "GENCODE (Comprehensive)",
+          "value": "gencode"
+        },
+        {
+          "label": "RefSeq",
+          "value": "refseq"
+        }
       ]
     },
     {
@@ -76,14 +92,31 @@
       "name": "system_size",
       "hidden": false,
       "options": [
-        {"label": "LARGE (Recommended)", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}
+        {
+          "label": "LARGE (Recommended)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
       ],
       "defaultValue": "large"
     }
   ],
   "tags": [
-    {"name": "splicing", "type": "field"},
-    {"name": "isoform-switching", "type": "task"},
-    {"name": "functional-prediction", "type": "task"}
+    {
+      "name": "splicing",
+      "type": "field"
+    },
+    {
+      "name": "isoform-switching",
+      "type": "task"
+    },
+    {
+      "name": "functional-prediction",
+      "type": "task"
+    }
   ]
 }

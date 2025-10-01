@@ -1,12 +1,12 @@
 {
   "name": "scdownstream-clustering",
   "title": "Single-Cell Clustering & QC",
-  "description": "Comprehensive QC, dimensionality reduction, and unsupervised clustering of scRNA-seq data. Identify cell populations and generate interactive visualizations.",
+  "description": "Comprehensive QC, dimensionality reduction, and unsupervised clustering of scRNA-seq data. Identify cell populations and generate interactive visualizations. Samplesheet format: `sample,h5ad`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/scdownstream --input ${input} --outdir ${outdir} -r dev ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/scdownstream/master/docs/images/nf-core-scdownstream_logo_light.png",
-  "content": "<h2><strong>Unsupervised Cell Clustering</strong></h2><p>Discover cell populations through quality control, normalization, dimensionality reduction, and graph-based clustering. Generate publication-ready visualizations and marker gene lists.</p><h3><strong>Why Clustering?</strong></h3><blockquote><ul><li><strong>Cell Type Discovery</strong>: Unsupervised identification of populations</li><li><strong>Heterogeneity</strong>: Reveal cellular diversity within tissues</li><li><strong>Rare Populations</strong>: Detect low-frequency cell types</li><li><strong>Subtype Identification</strong>: Discover subtypes within known cell types</li><li><strong>Quality Control</strong>: Remove doublets and low-quality cells</li><li><strong>Exploration</strong>: Interactive data visualization</li></ul></blockquote><h3><strong>Clustering Pipeline</strong></h3><ol><li><strong>Quality Control</strong>:<ul><li>Filter cells: nGenes, nUMI, %mitochondrial</li><li>Doublet detection (Scrublet, DoubletFinder)</li><li>Remove low-quality cells</li></ul></li><li><strong>Normalization</strong>:<ul><li>Log-normalization</li><li>SCTransform (variance stabilization)</li><li>Pearson residuals</li></ul></li><li><strong>Feature Selection</strong>:<ul><li>Highly variable genes (HVGs)</li><li>Typically 2000-5000 genes</li></ul></li><li><strong>Dimensionality Reduction</strong>:<ul><li>PCA (linear)</li><li>UMAP (non-linear, visualization)</li><li>t-SNE (alternative visualization)</li></ul></li><li><strong>Clustering</strong>:<ul><li>Graph construction (k-NN)</li><li>Louvain or Leiden algorithm</li><li>Multiple resolutions</li></ul></li><li><strong>Marker Discovery</strong>:<ul><li>Differential expression per cluster</li><li>Wilcoxon rank-sum test</li><li>Top marker genes</li></ul></li></ol><h3><strong>Clustering Algorithms</strong></h3><ul><li><strong>Louvain</strong>: Fast, widely used</li><li><strong>Leiden</strong>: Improved Louvain, better quality</li><li><strong>Hierarchical</strong>: Tree-based relationships</li><li><strong>K-means</strong>: Partition-based (less common)</li></ul><h3><strong>Resolution Selection</strong></h3><blockquote><p><strong>Low Resolution (0.1-0.5)</strong>: Broad cell types</p><p><strong>Medium Resolution (0.6-1.0)</strong>: Cell subtypes</p><p><strong>High Resolution (1.5-3.0)</strong>: Fine-grained states</p></blockquote><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Tissue Atlases</strong>: Catalog all cell types in an organ</li><li><strong>Development</strong>: Identify cell states along differentiation</li><li><strong>Disease</strong>: Discover disease-associated cell populations</li><li><strong>Drug Response</strong>: Cell type-specific drug effects</li><li><strong>Cancer</strong>: Tumor heterogeneity, rare malignant clones</li><li><strong>Immunology</strong>: T/B cell diversity, activation states</li></ul><h3><strong>Quality Control Metrics</strong></h3><ul><li><strong>nGene</strong>: Number of genes detected (500-7000 typical)</li><li><strong>nUMI</strong>: Total UMI counts (1000-50000)</li><li><strong>%Mito</strong>: Mitochondrial fraction (<10-20%)</li><li><strong>Doublet Score</strong>: Likelihood of cell doublet</li><li><strong>Cell Cycle</strong>: G1, S, G2M phase assignment</li></ul><h3><strong>Visualization</strong></h3><ul><li><strong>UMAP/t-SNE</strong>: 2D embedding of cells</li><li><strong>Heatmaps</strong>: Top marker genes per cluster</li><li><strong>Violin Plots</strong>: Gene expression distributions</li><li><strong>Dot Plots</strong>: Marker expression across clusters</li><li><strong>Feature Plots</strong>: Individual gene overlays</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with scRNA-seq matrices (outputs from CellRanger, STARsolo, Alevin, etc.)</p><h3><strong>Key Outputs</strong></h3><ul><li><strong>Clustered h5ad</strong>: Annotated single-cell object</li><li><strong>UMAP/t-SNE</strong>: Interactive and static plots</li><li><strong>Marker Gene Tables</strong>: Top genes per cluster</li><li><strong>QC Report</strong>: HTML with metrics and plots</li><li><strong>Cluster Proportions</strong>: Cell counts per cluster</li><li><strong>Expression Matrices</strong>: Normalized counts</li></ul><blockquote><p><strong>Perfect for:</strong> Cell type discovery • Exploratory analysis • QC filtering • Marker identification • Publication figures</p></blockquote>",
+  "content": "<h2><strong>Unsupervised Cell Clustering</strong></h2><p>Discover cell populations through quality control, normalization, dimensionality reduction, and graph-based clustering. Generate publication-ready visualizations and marker gene lists.</p><h3><strong>Why Clustering?</strong></h3><blockquote><ul><li><strong>Cell Type Discovery</strong>: Unsupervised identification of populations</li><li><strong>Heterogeneity</strong>: Reveal cellular diversity within tissues</li><li><strong>Rare Populations</strong>: Detect low-frequency cell types</li><li><strong>Subtype Identification</strong>: Discover subtypes within known cell types</li><li><strong>Quality Control</strong>: Remove doublets and low-quality cells</li><li><strong>Exploration</strong>: Interactive data visualization</li></ul></blockquote><h3><strong>Clustering Pipeline</strong></h3><ol><li><strong>Quality Control</strong>:<ul><li>Filter cells: nGenes, nUMI, %mitochondrial</li><li>Doublet detection (Scrublet, DoubletFinder)</li><li>Remove low-quality cells</li></ul></li><li><strong>Normalization</strong>:<ul><li>Log-normalization</li><li>SCTransform (variance stabilization)</li><li>Pearson residuals</li></ul></li><li><strong>Feature Selection</strong>:<ul><li>Highly variable genes (HVGs)</li><li>Typically 2000-5000 genes</li></ul></li><li><strong>Dimensionality Reduction</strong>:<ul><li>PCA (linear)</li><li>UMAP (non-linear, visualization)</li><li>t-SNE (alternative visualization)</li></ul></li><li><strong>Clustering</strong>:<ul><li>Graph construction (k-NN)</li><li>Louvain or Leiden algorithm</li><li>Multiple resolutions</li></ul></li><li><strong>Marker Discovery</strong>:<ul><li>Differential expression per cluster</li><li>Wilcoxon rank-sum test</li><li>Top marker genes</li></ul></li></ol><h3><strong>Clustering Algorithms</strong></h3><ul><li><strong>Louvain</strong>: Fast, widely used</li><li><strong>Leiden</strong>: Improved Louvain, better quality</li><li><strong>Hierarchical</strong>: Tree-based relationships</li><li><strong>K-means</strong>: Partition-based (less common)</li></ul><h3><strong>Resolution Selection</strong></h3><blockquote><p><strong>Low Resolution (0.1-0.5)</strong>: Broad cell types</p><p><strong>Medium Resolution (0.6-1.0)</strong>: Cell subtypes</p><p><strong>High Resolution (1.5-3.0)</strong>: Fine-grained states</p></blockquote><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Tissue Atlases</strong>: Catalog all cell types in an organ</li><li><strong>Development</strong>: Identify cell states along differentiation</li><li><strong>Disease</strong>: Discover disease-associated cell populations</li><li><strong>Drug Response</strong>: Cell type-specific drug effects</li><li><strong>Cancer</strong>: Tumor heterogeneity, rare malignant clones</li><li><strong>Immunology</strong>: T/B cell diversity, activation states</li></ul><h3><strong>Quality Control Metrics</strong></h3><ul><li><strong>nGene</strong>: Number of genes detected (500-7000 typical)</li><li><strong>nUMI</strong>: Total UMI counts (1000-50000)</li><li><strong>%Mito</strong>: Mitochondrial fraction (<10-20%)</li><li><strong>Doublet Score</strong>: Likelihood of cell doublet</li><li><strong>Cell Cycle</strong>: G1, S, G2M phase assignment</li></ul><h3><strong>Visualization</strong></h3><ul><li><strong>UMAP/t-SNE</strong>: 2D embedding of cells</li><li><strong>Heatmaps</strong>: Top marker genes per cluster</li><li><strong>Violin Plots</strong>: Gene expression distributions</li><li><strong>Dot Plots</strong>: Marker expression across clusters</li><li><strong>Feature Plots</strong>: Individual gene overlays</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with scRNA-seq matrices (outputs from CellRanger, STARsolo, Alevin, etc.)</p><h3><strong>Key Outputs</strong></h3><ul><li><strong>Clustered h5ad</strong>: Annotated single-cell object</li><li><strong>UMAP/t-SNE</strong>: Interactive and static plots</li><li><strong>Marker Gene Tables</strong>: Top genes per cluster</li><li><strong>QC Report</strong>: HTML with metrics and plots</li><li><strong>Cluster Proportions</strong>: Cell counts per cluster</li><li><strong>Expression Matrices</strong>: Normalized counts</li></ul><blockquote><p><strong>Perfect for:</strong> Cell type discovery \u2022 Exploratory analysis \u2022 QC filtering \u2022 Marker identification \u2022 Publication figures</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -17,7 +17,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -40,14 +42,31 @@
       "name": "system_size",
       "hidden": false,
       "options": [
-        {"label": "LARGE (Recommended)", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}
+        {
+          "label": "LARGE (Recommended)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
       ],
       "defaultValue": "large"
     }
   ],
   "tags": [
-    {"name": "single-cell", "type": "field"},
-    {"name": "clustering", "type": "task"},
-    {"name": "qc", "type": "task"}
+    {
+      "name": "single-cell",
+      "type": "field"
+    },
+    {
+      "name": "clustering",
+      "type": "task"
+    },
+    {
+      "name": "qc",
+      "type": "task"
+    }
   ]
 }

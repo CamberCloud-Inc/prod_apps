@@ -1,12 +1,12 @@
 {
   "name": "phageannotator-annotation",
   "title": "Phage Genome Identification & Annotation (nf-core/phageannotator)",
-  "description": "Identify, annotate, and quantify bacteriophage sequences from metagenomic or genomic assemblies. Predicts taxonomy, host specificity, lifestyle, and abundance of phages in microbial communities.",
+  "description": "Identify, annotate, and quantify bacteriophage sequences from metagenomic or genomic assemblies. Predicts taxonomy, host specificity, lifestyle, and abundance of phages in microbial communities. Samplesheet format: `sample,fasta`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/phageannotator --input ${input} --outdir ${outdir} -r dev ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/phageannotator/dev/docs/images/nf-core-phageannotator_logo_light.png",
-  "content": "<h2><strong>Phage Genome Identification & Annotation</strong></h2><p>The <strong>nf-core/phageannotator</strong> pipeline identifies and characterizes bacteriophage sequences from metagenomic assemblies, providing comprehensive annotation and quantification.</p><h3><strong>Scientific Applications</strong></h3><blockquote><ul><li><strong>Phage Ecology</strong>: Study viral diversity in microbiomes</li><li><strong>Phage Therapy</strong>: Identify therapeutic phage candidates</li><li><strong>Host-Phage Interactions</strong>: Predict bacterial hosts</li><li><strong>Virome Analysis</strong>: Characterize viral communities</li><li><strong>CRISPR-Phage Dynamics</strong>: Study bacterial immunity</li><li><strong>Prophage Detection</strong>: Identify integrated viral elements</li></ul></blockquote><h3><strong>Pipeline Features</strong></h3><ul><li><strong>Phage Identification</strong>: De novo detection from assemblies</li><li><strong>Quality Filtering</strong>: CheckV quality assessment</li><li><strong>ANI Clustering</strong>: Dereplicate related phages</li><li><strong>Taxonomic Classification</strong>: Assign phage taxonomy</li><li><strong>Host Prediction</strong>: Identify bacterial hosts</li><li><strong>Lifestyle Prediction</strong>: Lytic vs lysogenic classification</li><li><strong>Gene Annotation</strong>: Predict protein-coding genes</li><li><strong>Abundance Quantification</strong>: Estimate phage abundance</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet:</p><ul><li><code>sample</code>: Sample identifier</li><li><code>assembly</code>: Path to assembly FASTA file</li></ul><p>Assemblies can be from:</p><ul><li>nf-core/mag (metagenome assemblies)</li><li>nf-core/bacass (bacterial genomes)</li><li>Any other assembly pipeline</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Phage Sequences</strong>: Identified viral contigs</li><li><strong>Taxonomic Assignments</strong>: Phage classification</li><li><strong>Host Predictions</strong>: Likely bacterial hosts</li><li><strong>Lifestyle Classification</strong>: Lytic/lysogenic predictions</li><li><strong>Gene Annotations</strong>: Protein functions</li><li><strong>Abundance Tables</strong>: Quantification across samples</li></ul><blockquote><p><strong>Perfect for:</strong> Microbiologists • Phage biologists • Virome researchers • Metagenomics • Phage therapy</p></blockquote>",
+  "content": "<h2><strong>Phage Genome Identification & Annotation</strong></h2><p>The <strong>nf-core/phageannotator</strong> pipeline identifies and characterizes bacteriophage sequences from metagenomic assemblies, providing comprehensive annotation and quantification.</p><h3><strong>Scientific Applications</strong></h3><blockquote><ul><li><strong>Phage Ecology</strong>: Study viral diversity in microbiomes</li><li><strong>Phage Therapy</strong>: Identify therapeutic phage candidates</li><li><strong>Host-Phage Interactions</strong>: Predict bacterial hosts</li><li><strong>Virome Analysis</strong>: Characterize viral communities</li><li><strong>CRISPR-Phage Dynamics</strong>: Study bacterial immunity</li><li><strong>Prophage Detection</strong>: Identify integrated viral elements</li></ul></blockquote><h3><strong>Pipeline Features</strong></h3><ul><li><strong>Phage Identification</strong>: De novo detection from assemblies</li><li><strong>Quality Filtering</strong>: CheckV quality assessment</li><li><strong>ANI Clustering</strong>: Dereplicate related phages</li><li><strong>Taxonomic Classification</strong>: Assign phage taxonomy</li><li><strong>Host Prediction</strong>: Identify bacterial hosts</li><li><strong>Lifestyle Prediction</strong>: Lytic vs lysogenic classification</li><li><strong>Gene Annotation</strong>: Predict protein-coding genes</li><li><strong>Abundance Quantification</strong>: Estimate phage abundance</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet:</p><ul><li><code>sample</code>: Sample identifier</li><li><code>assembly</code>: Path to assembly FASTA file</li></ul><p>Assemblies can be from:</p><ul><li>nf-core/mag (metagenome assemblies)</li><li>nf-core/bacass (bacterial genomes)</li><li>Any other assembly pipeline</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Phage Sequences</strong>: Identified viral contigs</li><li><strong>Taxonomic Assignments</strong>: Phage classification</li><li><strong>Host Predictions</strong>: Likely bacterial hosts</li><li><strong>Lifestyle Classification</strong>: Lytic/lysogenic predictions</li><li><strong>Gene Annotations</strong>: Protein functions</li><li><strong>Abundance Tables</strong>: Quantification across samples</li></ul><blockquote><p><strong>Perfect for:</strong> Microbiologists \u2022 Phage biologists \u2022 Virome researchers \u2022 Metagenomics \u2022 Phage therapy</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -17,7 +17,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -40,15 +42,40 @@
       "name": "system_size",
       "hidden": false,
       "options": [
-        {"label": "MEDIUM (Few samples)", "value": "medium", "mapValue": {"nodeSize": "MEDIUM", "numNodes": 1, "withGpu": false}},
-        {"label": "LARGE (Many samples)", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}
+        {
+          "label": "MEDIUM (Few samples)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (Many samples)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
       ],
       "defaultValue": "medium"
     }
   ],
   "tags": [
-    {"name": "microbiology", "type": "field"},
-    {"name": "phage", "type": "task"},
-    {"name": "viromics", "type": "task"}
+    {
+      "name": "microbiology",
+      "type": "field"
+    },
+    {
+      "name": "phage",
+      "type": "task"
+    },
+    {
+      "name": "viromics",
+      "type": "task"
+    }
   ]
 }

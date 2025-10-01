@@ -1,12 +1,12 @@
 {
   "name": "scnanoseq-isoform-diversity",
   "title": "Single-Cell Isoform Diversity Analysis",
-  "description": "Discover cell type-specific isoform usage and splice variants using long-read scRNA-seq. Quantify isoform diversity and identify novel transcripts at single-cell resolution.",
+  "description": "Discover cell type-specific isoform usage and splice variants using long-read scRNA-seq. Quantify isoform diversity and identify novel transcripts at single-cell resolution. Samplesheet format: `sample,fastq,type`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/scnanoseq --input ${input} --outdir ${outdir} --genome_fasta ${genome_fasta} --transcript_fasta ${transcript_fasta} --gtf ${gtf} --quantifier ${quantifier} --barcode_format ${barcode_format} -r dev ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/scnanoseq/master/docs/images/nf-core-scnanoseq_logo_light.png",
-  "content": "<h2><strong>Cell Type-Specific Isoform Analysis</strong></h2><p>Measure transcript isoform diversity across cell types using single-cell long-read sequencing. Discover which cell types use which splice variants and identify cell type-specific alternative splicing.</p><h3><strong>Why Isoform Diversity?</strong></h3><blockquote><ul><li><strong>Cell Identity</strong>: Isoform usage defines cell types</li><li><strong>Functional Diversity</strong>: Same gene, different proteins</li><li><strong>Developmental Transitions</strong>: Isoform switching during differentiation</li><li><strong>Disease Mechanisms</strong>: Aberrant splicing in disease</li><li><strong>Drug Targets</strong>: Isoform-specific therapies</li><li><strong>Evolutionary Innovation</strong>: Species-specific isoforms</li></ul></blockquote><h3><strong>Isoform Diversity Measures</strong></h3><p><strong>Per Gene</strong>:</p><ul><li><strong>Isoform Count</strong>: Number of detected isoforms</li><li><strong>Shannon Entropy</strong>: Evenness of isoform usage</li><li><strong>Dominant Isoform</strong>: Most abundant per cell type</li><li><strong>Isoform Switching</strong>: Changes between cell types</li></ul><p><strong>Per Cell Type</strong>:</p><ul><li><strong>Unique Isoforms</strong>: Cell type-specific transcripts</li><li><strong>Splice Patterns</strong>: Exon inclusion/exclusion profiles</li><li><strong>UTR Variability</strong>: 3'/5' UTR length differences</li></ul><h3><strong>Scientific Questions</strong></h3><ul><li><strong>Cell Type Definition</strong>: Do neurons vs glia have different CD44 isoforms?</li><li><strong>Differentiation</strong>: How does splicing change from stem → differentiated?</li><li><strong>Activation States</strong>: Resting vs activated immune cell isoforms?</li><li><strong>Disease States</strong>: Cancer-specific isoforms per cell?</li><li><strong>Spatial Patterns</strong>: Do cortical layers have distinct isoforms?</li></ul><h3><strong>Applications</strong></h3><ul><li><strong>Neuroscience</strong>: Neuron subtype isoform markers</li><li><strong>Immunology</strong>: T cell activation isoforms (CD45, etc.)</li><li><strong>Cancer</strong>: Tumor cell isoform heterogeneity</li><li><strong>Development</strong>: Stage-specific splicing programs</li><li><strong>Stem Cell</strong>: Pluripotency isoform signatures</li><li><strong>Drug Discovery</strong>: Targetable isoform differences</li></ul><h3><strong>Isoform Switching Examples</strong></h3><blockquote><p><strong>CD44</strong>: Standard (CD44s) vs variant exons (CD44v)</p><ul><li>Stem cells: CD44s</li><li>Cancer stem cells: CD44v6</li></ul><p><strong>PKM</strong>: PKM1 (constitutive) vs PKM2 (cancer)</p><ul><li>Differentiated cells: PKM1</li><li>Proliferating cells: PKM2</li></ul><p><strong>FGFR2</strong>: IIIb (epithelial) vs IIIc (mesenchymal)</p><ul><li>Epithelial: IIIb isoform</li><li>Mesenchymal: IIIc isoform</li></ul></blockquote><h3><strong>Pipeline Analysis</strong></h3><ol><li><strong>Isoform Quantification</strong>: Count UMIs per isoform per cell</li><li><strong>Cell Type Clustering</strong>: Group cells by expression</li><li><strong>Isoform Assignment</strong>: Map reads to reference transcripts</li><li><strong>Diversity Calculation</strong>: Shannon entropy, counts</li><li><strong>Differential Usage</strong>: Compare isoform ratios between cell types</li><li><strong>Novel Detection</strong>: Identify unannotated isoforms</li></ol><h3><strong>Input Requirements</strong></h3><p>Same as scnanoseq-long-read:</p><ul><li>CSV samplesheet with Nanopore FASTQs</li><li>Reference genome + transcriptome + GTF</li><li>10X barcode format</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Isoform × Cell Matrix</strong>: UMI counts per isoform per cell</li><li><strong>Isoform Diversity Scores</strong>: Shannon entropy per gene per cell type</li><li><strong>Differential Isoform Usage</strong>: Switching events between cell types</li><li><strong>Cell Type Markers (Isoform Level)</strong>: Isoform-specific markers</li><li><strong>Novel Isoforms</strong>: Unannotated transcripts</li><li><strong>Splice Junction Atlas</strong>: All detected junctions</li></ul><blockquote><p><strong>Perfect for:</strong> Isoform switching • Cell type splicing • Developmental isoforms • Cancer heterogeneity • Drug target discovery</p></blockquote>",
+  "content": "<h2><strong>Cell Type-Specific Isoform Analysis</strong></h2><p>Measure transcript isoform diversity across cell types using single-cell long-read sequencing. Discover which cell types use which splice variants and identify cell type-specific alternative splicing.</p><h3><strong>Why Isoform Diversity?</strong></h3><blockquote><ul><li><strong>Cell Identity</strong>: Isoform usage defines cell types</li><li><strong>Functional Diversity</strong>: Same gene, different proteins</li><li><strong>Developmental Transitions</strong>: Isoform switching during differentiation</li><li><strong>Disease Mechanisms</strong>: Aberrant splicing in disease</li><li><strong>Drug Targets</strong>: Isoform-specific therapies</li><li><strong>Evolutionary Innovation</strong>: Species-specific isoforms</li></ul></blockquote><h3><strong>Isoform Diversity Measures</strong></h3><p><strong>Per Gene</strong>:</p><ul><li><strong>Isoform Count</strong>: Number of detected isoforms</li><li><strong>Shannon Entropy</strong>: Evenness of isoform usage</li><li><strong>Dominant Isoform</strong>: Most abundant per cell type</li><li><strong>Isoform Switching</strong>: Changes between cell types</li></ul><p><strong>Per Cell Type</strong>:</p><ul><li><strong>Unique Isoforms</strong>: Cell type-specific transcripts</li><li><strong>Splice Patterns</strong>: Exon inclusion/exclusion profiles</li><li><strong>UTR Variability</strong>: 3'/5' UTR length differences</li></ul><h3><strong>Scientific Questions</strong></h3><ul><li><strong>Cell Type Definition</strong>: Do neurons vs glia have different CD44 isoforms?</li><li><strong>Differentiation</strong>: How does splicing change from stem \u2192 differentiated?</li><li><strong>Activation States</strong>: Resting vs activated immune cell isoforms?</li><li><strong>Disease States</strong>: Cancer-specific isoforms per cell?</li><li><strong>Spatial Patterns</strong>: Do cortical layers have distinct isoforms?</li></ul><h3><strong>Applications</strong></h3><ul><li><strong>Neuroscience</strong>: Neuron subtype isoform markers</li><li><strong>Immunology</strong>: T cell activation isoforms (CD45, etc.)</li><li><strong>Cancer</strong>: Tumor cell isoform heterogeneity</li><li><strong>Development</strong>: Stage-specific splicing programs</li><li><strong>Stem Cell</strong>: Pluripotency isoform signatures</li><li><strong>Drug Discovery</strong>: Targetable isoform differences</li></ul><h3><strong>Isoform Switching Examples</strong></h3><blockquote><p><strong>CD44</strong>: Standard (CD44s) vs variant exons (CD44v)</p><ul><li>Stem cells: CD44s</li><li>Cancer stem cells: CD44v6</li></ul><p><strong>PKM</strong>: PKM1 (constitutive) vs PKM2 (cancer)</p><ul><li>Differentiated cells: PKM1</li><li>Proliferating cells: PKM2</li></ul><p><strong>FGFR2</strong>: IIIb (epithelial) vs IIIc (mesenchymal)</p><ul><li>Epithelial: IIIb isoform</li><li>Mesenchymal: IIIc isoform</li></ul></blockquote><h3><strong>Pipeline Analysis</strong></h3><ol><li><strong>Isoform Quantification</strong>: Count UMIs per isoform per cell</li><li><strong>Cell Type Clustering</strong>: Group cells by expression</li><li><strong>Isoform Assignment</strong>: Map reads to reference transcripts</li><li><strong>Diversity Calculation</strong>: Shannon entropy, counts</li><li><strong>Differential Usage</strong>: Compare isoform ratios between cell types</li><li><strong>Novel Detection</strong>: Identify unannotated isoforms</li></ol><h3><strong>Input Requirements</strong></h3><p>Same as scnanoseq-long-read:</p><ul><li>CSV samplesheet with Nanopore FASTQs</li><li>Reference genome + transcriptome + GTF</li><li>10X barcode format</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Isoform \u00d7 Cell Matrix</strong>: UMI counts per isoform per cell</li><li><strong>Isoform Diversity Scores</strong>: Shannon entropy per gene per cell type</li><li><strong>Differential Isoform Usage</strong>: Switching events between cell types</li><li><strong>Cell Type Markers (Isoform Level)</strong>: Isoform-specific markers</li><li><strong>Novel Isoforms</strong>: Unannotated transcripts</li><li><strong>Splice Junction Atlas</strong>: All detected junctions</li></ul><blockquote><p><strong>Perfect for:</strong> Isoform switching \u2022 Cell type splicing \u2022 Developmental isoforms \u2022 Cancer heterogeneity \u2022 Drug target discovery</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -17,7 +17,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -29,7 +31,12 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".fa", ".fasta", ".fa.gz", ".fasta.gz"]
+        "allowed_file_types": [
+          ".fa",
+          ".fasta",
+          ".fa.gz",
+          ".fasta.gz"
+        ]
       }
     },
     {
@@ -41,7 +48,12 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".fa", ".fasta", ".fa.gz", ".fasta.gz"]
+        "allowed_file_types": [
+          ".fa",
+          ".fasta",
+          ".fa.gz",
+          ".fasta.gz"
+        ]
       }
     },
     {
@@ -53,7 +65,10 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".gtf", ".gtf.gz"]
+        "allowed_file_types": [
+          ".gtf",
+          ".gtf.gz"
+        ]
       }
     },
     {
@@ -64,9 +79,18 @@
       "defaultValue": "isoquant,oarfish",
       "required": true,
       "options": [
-        {"label": "IsoQuant + Oarfish (Both)", "value": "isoquant,oarfish"},
-        {"label": "IsoQuant only", "value": "isoquant"},
-        {"label": "Oarfish only", "value": "oarfish"}
+        {
+          "label": "IsoQuant + Oarfish (Both)",
+          "value": "isoquant,oarfish"
+        },
+        {
+          "label": "IsoQuant only",
+          "value": "isoquant"
+        },
+        {
+          "label": "Oarfish only",
+          "value": "oarfish"
+        }
       ]
     },
     {
@@ -77,9 +101,18 @@
       "defaultValue": "10X_3v3",
       "required": true,
       "options": [
-        {"label": "10X Chromium v3", "value": "10X_3v3"},
-        {"label": "10X Chromium v2", "value": "10X_3v2"},
-        {"label": "10X 5' v2", "value": "10X_5v2"}
+        {
+          "label": "10X Chromium v3",
+          "value": "10X_3v3"
+        },
+        {
+          "label": "10X Chromium v2",
+          "value": "10X_3v2"
+        },
+        {
+          "label": "10X 5' v2",
+          "value": "10X_5v2"
+        }
       ]
     },
     {
@@ -102,14 +135,31 @@
       "name": "system_size",
       "hidden": false,
       "options": [
-        {"label": "XLARGE (Recommended)", "value": "xlarge", "mapValue": {"nodeSize": "XLARGE", "numNodes": 1, "withGpu": false}}
+        {
+          "label": "XLARGE (Recommended)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
       ],
       "defaultValue": "xlarge"
     }
   ],
   "tags": [
-    {"name": "single-cell", "type": "field"},
-    {"name": "isoforms", "type": "task"},
-    {"name": "alternative-splicing", "type": "task"}
+    {
+      "name": "single-cell",
+      "type": "field"
+    },
+    {
+      "name": "isoforms",
+      "type": "task"
+    },
+    {
+      "name": "alternative-splicing",
+      "type": "task"
+    }
   ]
 }

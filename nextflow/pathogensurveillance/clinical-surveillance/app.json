@@ -1,7 +1,7 @@
 {
   "name": "pathogensurveillance-clinical-surveillance",
-  "title": "Pathogen Surveillance: Clinical Outbreak Detection",
-  "description": "Population genomics pipeline for pathogen identification, variant detection, and biosurveillance. Automatically analyzes sequencing data to detect outbreaks, track transmission, and identify antimicrobial resistance markers in bacterial and viral pathogens.",
+  "title": "Clinical Outbreak Detection",
+  "description": "Population genomics pipeline for pathogen identification, variant detection, and biosurveillance. Automatically analyzes sequencing data to detect outbreaks, track transmission, and identify antimicrobial resistance markers in bacterial and viral pathogens. Samplesheet format: `sample,fastq_1,fastq_2`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/pathogensurveillance --input ${input} --outdir ${outdir} -r 1.0.0",
@@ -16,7 +16,10 @@
       "required": true,
       "restrictions": {
         "allow_files": true,
-        "allowed_file_types": [".csv", ".tsv"]
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
       }
     },
     {
@@ -72,10 +75,25 @@
     }
   ],
   "tags": [
-    {"name": "pathogen-surveillance", "type": "task"},
-    {"name": "outbreak-detection", "type": "task"},
-    {"name": "clinical-genomics", "type": "field"},
-    {"name": "public-health", "type": "field"},
-    {"name": "antimicrobial-resistance", "type": "task"}
+    {
+      "name": "pathogen-surveillance",
+      "type": "task"
+    },
+    {
+      "name": "outbreak-detection",
+      "type": "task"
+    },
+    {
+      "name": "clinical-genomics",
+      "type": "field"
+    },
+    {
+      "name": "public-health",
+      "type": "field"
+    },
+    {
+      "name": "antimicrobial-resistance",
+      "type": "task"
+    }
   ]
 }

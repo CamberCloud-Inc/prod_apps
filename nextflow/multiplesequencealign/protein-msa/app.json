@@ -1,12 +1,12 @@
 {
   "name": "multiplesequencealign-protein-msa",
-  "title": "Protein Multiple Sequence Alignment: Systematic Evaluation and Benchmarking",
-  "description": "Advanced protein multiple sequence alignment (MSA) pipeline for running and systematically evaluating popular MSA tools including FAMSA, FOLDMASON, CLUSTALO, MAFFT, MUSCLE5, and T-COFFEE. Supports both sequence-based and structure-based alignment methods with comprehensive benchmarking metrics.",
+  "title": "Systematic Evaluation and Benchmarking",
+  "description": "Advanced protein multiple sequence alignment (MSA) pipeline for running and systematically evaluating popular MSA tools including FAMSA, FOLDMASON, CLUSTALO, MAFFT, MUSCLE5, and T-COFFEE. Supports both sequence-based and structure-based alignment methods with comprehensive benchmarking metrics. Samplesheet format: `id,fasta,reference,optional_data,template`",
   "version": "1.1.1",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/multiplesequencealign --input ${input} --tools ${tools} --outdir ${outdir} --aligner ${aligner} -r 1.1.1",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/multiplesequencealign/master/docs/images/nf-core-multiplesequencealign_logo_light.png",
-  "content": "<h1 class=\"heading-node\">Protein Multiple Sequence Alignment: Systematic Evaluation and Benchmarking</h1><p class=\"text-node\"><strong>Deploy and Benchmark Popular MSA Tools for Protein Analysis</strong></p><p class=\"text-node\">Multiple Sequence Alignment (MSA) is a fundamental technique in computational biology for comparing three or more protein or nucleotide sequences to identify conserved regions, evolutionary relationships, and functional domains. This pipeline provides a systematic framework for running and evaluating multiple MSA methods with comprehensive quality metrics.</p><img src=\"https://raw.githubusercontent.com/nf-core/multiplesequencealign/master/docs/images/nf-core-multiplesequencealign_logo_light.png\" alt=\"nf-core/multiplesequencealign logo\" width=\"500\" height=\"200\"><h2 class=\"heading-node\">Key Features</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Multiple Alignment Tools:</strong> Deploy one or many popular MSA tools including FAMSA, FOLDMASON, CLUSTALO, MAFFT, MUSCLE5, TCOFFEE, and more</p></li><li><p class=\"text-node\"><strong>Systematic Benchmarking:</strong> Compare alignment quality across different methods using standardized evaluation metrics</p></li><li><p class=\"text-node\"><strong>Structure-Based Alignment:</strong> Support for protein structure-based alignments using tools like 3DCOFFEE, MTMALIGN, and FOLDMASON</p></li><li><p class=\"text-node\"><strong>Guide Tree Options:</strong> Flexible guide tree generation with multiple algorithms</p></li><li><p class=\"text-node\"><strong>Comprehensive Reporting:</strong> MultiQC reports with alignment statistics and quality metrics</p></li></ul><h2 class=\"heading-node\">Supported Alignment Methods</h2><h3 class=\"heading-node\">Sequence-Based Aligners</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>FAMSA:</strong> Fast and accurate multiple sequence alignment</p></li><li><p class=\"text-node\"><strong>CLUSTALO:</strong> Clustal Omega - widely used general-purpose MSA tool</p></li><li><p class=\"text-node\"><strong>MAFFT:</strong> Multiple alignment using Fast Fourier Transform</p></li><li><p class=\"text-node\"><strong>MUSCLE5:</strong> Latest version of MUSCLE alignment algorithm</p></li><li><p class=\"text-node\"><strong>TCOFFEE:</strong> T-Coffee alignment with consistency-based scoring</p></li><li><p class=\"text-node\"><strong>KALIGN:</strong> Fast and accurate multiple sequence alignment</p></li></ul><h3 class=\"heading-node\">Structure-Based Aligners</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>3DCOFFEE:</strong> Structure-aware version of T-Coffee</p></li><li><p class=\"text-node\"><strong>MTMALIGN:</strong> Multiple structure alignment using TM-align</p></li><li><p class=\"text-node\"><strong>FOLDMASON:</strong> Protein structure alignment using Foldseek</p></li></ul><h2 class=\"heading-node\">Input Requirements</h2><h3 class=\"heading-node\">Samplesheet Format (CSV)</h3><p class=\"text-node\">Define input sequences and optional reference alignments:</p><pre class=\"block-node\"><code>id,fasta,reference,optional_data,template\nmy_alignment,sequences.fasta,reference.aln,,\nstructure_based,proteins.fasta,ref.aln,structures.pdb,template.pdb</code></pre><p class=\"text-node\"><strong>Columns:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>id:</strong> Unique identifier for the alignment dataset</p></li><li><p class=\"text-node\"><strong>fasta:</strong> Path to input FASTA file with sequences</p></li><li><p class=\"text-node\"><strong>reference:</strong> Optional reference alignment for benchmarking</p></li><li><p class=\"text-node\"><strong>optional_data:</strong> Additional data (e.g., PDB structures for structure-based methods)</p></li><li><p class=\"text-node\"><strong>template:</strong> Template structure for structure-guided alignment</p></li></ul><h3 class=\"heading-node\">Toolsheet Format (CSV)</h3><p class=\"text-node\">Specify which alignment tools and parameters to use:</p><pre class=\"block-node\"><code>tree,args_tree,aligner,args_aligner\nFAMSA,,FAMSA,\nNONE,,CLUSTALO,--threads=4\nFAMSA,,MAFFT,--maxiterate 1000</code></pre><p class=\"text-node\"><strong>Columns:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>tree:</strong> Guide tree tool (FAMSA, CLUSTALO, MAFFT, NONE)</p></li><li><p class=\"text-node\"><strong>args_tree:</strong> Additional arguments for tree generation</p></li><li><p class=\"text-node\"><strong>aligner:</strong> Alignment tool to use</p></li><li><p class=\"text-node\"><strong>args_aligner:</strong> Tool-specific alignment parameters</p></li></ul><h2 class=\"heading-node\">Pipeline Workflow</h2><ol class=\"list-node\"><li><p class=\"text-node\"><strong>Input File Summary:</strong> Optional statistics on input sequences (length, composition, etc.)</p></li><li><p class=\"text-node\"><strong>Guide Tree Generation:</strong> Optional phylogenetic tree to guide alignment process</p></li><li><p class=\"text-node\"><strong>Sequence Alignment:</strong> Run selected MSA tools on input sequences</p></li><li><p class=\"text-node\"><strong>Alignment Evaluation:</strong> Calculate quality metrics if reference alignment provided</p></li><li><p class=\"text-node\"><strong>Reporting:</strong> Generate MultiQC report summarizing all results</p></li></ol><h2 class=\"heading-node\">Key Parameters</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>--input:</strong> Path to samplesheet CSV defining datasets</p></li><li><p class=\"text-node\"><strong>--tools:</strong> Path to toolsheet CSV specifying alignment methods</p></li><li><p class=\"text-node\"><strong>--seqs:</strong> Direct path to FASTA file (alternative to samplesheet)</p></li><li><p class=\"text-node\"><strong>--aligner:</strong> Single aligner to use (if not using toolsheet)</p></li><li><p class=\"text-node\"><strong>--pdbs_dir:</strong> Directory containing PDB structure files for structure-based alignment</p></li><li><p class=\"text-node\"><strong>--skip_stats:</strong> Skip input file summary statistics</p></li><li><p class=\"text-node\"><strong>--calc_sim:</strong> Calculate sequence similarity (default: false)</p></li><li><p class=\"text-node\"><strong>--calc_seq_stats:</strong> Calculate general sequence statistics (default: true)</p></li></ul><h2 class=\"heading-node\">Output Files</h2><h3 class=\"heading-node\">Alignments</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Aligned sequences:</strong> Multiple sequence alignments in FASTA format</p></li><li><p class=\"text-node\"><strong>Guide trees:</strong> Phylogenetic trees used for alignment (if generated)</p></li></ul><h3 class=\"heading-node\">Evaluation Metrics</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Alignment scores:</strong> Quality metrics comparing to reference (if provided)</p></li><li><p class=\"text-node\"><strong>Sequence statistics:</strong> Length distributions, gap content, conservation scores</p></li></ul><h3 class=\"heading-node\">Reports</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>MultiQC Report:</strong> Comprehensive summary of all alignment runs and metrics</p></li><li><p class=\"text-node\"><strong>Tool comparisons:</strong> Benchmarking results across different MSA methods</p></li></ul><h2 class=\"heading-node\">Use Cases</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Comparative Genomics:</strong> Identify conserved regions across homologous proteins</p></li><li><p class=\"text-node\"><strong>Phylogenetic Analysis:</strong> Generate alignments for evolutionary tree construction</p></li><li><p class=\"text-node\"><strong>Protein Family Analysis:</strong> Study domain conservation and functional motifs</p></li><li><p class=\"text-node\"><strong>Structure Prediction:</strong> Create alignments for homology modeling</p></li><li><p class=\"text-node\"><strong>Tool Benchmarking:</strong> Systematically compare MSA algorithm performance</p></li><li><p class=\"text-node\"><strong>Method Development:</strong> Evaluate new alignment approaches against established tools</p></li></ul><h2 class=\"heading-node\">Best Practices</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Sequence Selection:</strong> Include sequences with >30% identity for reliable alignment</p></li><li><p class=\"text-node\"><strong>Dataset Size:</strong> Balance between comprehensiveness and computational time</p></li><li><p class=\"text-node\"><strong>Reference Alignments:</strong> Use curated reference alignments from databases like BALIBASE or PREFAB for benchmarking</p></li><li><p class=\"text-node\"><strong>Structure Information:</strong> Include PDB structures when available for structure-based methods</p></li><li><p class=\"text-node\"><strong>Tool Selection:</strong> Test multiple aligners as performance varies by sequence characteristics</p></li></ul><p class=\"text-node\"><strong>Perfect for Research in:</strong> Evolutionary biology • Structural bioinformatics • Protein engineering • Drug discovery • Functional genomics • Computational biology • Algorithm development</p><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/multiplesequencealign/1.1.1/\" target=\"_blank\">nf-core/multiplesequencealign v1.1.1</a> • Containerized execution • Continuous integration tested</p>",
+  "content": "<h1 class=\"heading-node\">Protein Multiple Sequence Alignment: Systematic Evaluation and Benchmarking</h1><p class=\"text-node\"><strong>Deploy and Benchmark Popular MSA Tools for Protein Analysis</strong></p><p class=\"text-node\">Multiple Sequence Alignment (MSA) is a fundamental technique in computational biology for comparing three or more protein or nucleotide sequences to identify conserved regions, evolutionary relationships, and functional domains. This pipeline provides a systematic framework for running and evaluating multiple MSA methods with comprehensive quality metrics.</p><img src=\"https://raw.githubusercontent.com/nf-core/multiplesequencealign/master/docs/images/nf-core-multiplesequencealign_logo_light.png\" alt=\"nf-core/multiplesequencealign logo\" width=\"500\" height=\"200\"><h2 class=\"heading-node\">Key Features</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Multiple Alignment Tools:</strong> Deploy one or many popular MSA tools including FAMSA, FOLDMASON, CLUSTALO, MAFFT, MUSCLE5, TCOFFEE, and more</p></li><li><p class=\"text-node\"><strong>Systematic Benchmarking:</strong> Compare alignment quality across different methods using standardized evaluation metrics</p></li><li><p class=\"text-node\"><strong>Structure-Based Alignment:</strong> Support for protein structure-based alignments using tools like 3DCOFFEE, MTMALIGN, and FOLDMASON</p></li><li><p class=\"text-node\"><strong>Guide Tree Options:</strong> Flexible guide tree generation with multiple algorithms</p></li><li><p class=\"text-node\"><strong>Comprehensive Reporting:</strong> MultiQC reports with alignment statistics and quality metrics</p></li></ul><h2 class=\"heading-node\">Supported Alignment Methods</h2><h3 class=\"heading-node\">Sequence-Based Aligners</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>FAMSA:</strong> Fast and accurate multiple sequence alignment</p></li><li><p class=\"text-node\"><strong>CLUSTALO:</strong> Clustal Omega - widely used general-purpose MSA tool</p></li><li><p class=\"text-node\"><strong>MAFFT:</strong> Multiple alignment using Fast Fourier Transform</p></li><li><p class=\"text-node\"><strong>MUSCLE5:</strong> Latest version of MUSCLE alignment algorithm</p></li><li><p class=\"text-node\"><strong>TCOFFEE:</strong> T-Coffee alignment with consistency-based scoring</p></li><li><p class=\"text-node\"><strong>KALIGN:</strong> Fast and accurate multiple sequence alignment</p></li></ul><h3 class=\"heading-node\">Structure-Based Aligners</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>3DCOFFEE:</strong> Structure-aware version of T-Coffee</p></li><li><p class=\"text-node\"><strong>MTMALIGN:</strong> Multiple structure alignment using TM-align</p></li><li><p class=\"text-node\"><strong>FOLDMASON:</strong> Protein structure alignment using Foldseek</p></li></ul><h2 class=\"heading-node\">Input Requirements</h2><h3 class=\"heading-node\">Samplesheet Format (CSV)</h3><p class=\"text-node\">Define input sequences and optional reference alignments:</p><pre class=\"block-node\"><code>id,fasta,reference,optional_data,template\nmy_alignment,sequences.fasta,reference.aln,,\nstructure_based,proteins.fasta,ref.aln,structures.pdb,template.pdb</code></pre><p class=\"text-node\"><strong>Columns:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>id:</strong> Unique identifier for the alignment dataset</p></li><li><p class=\"text-node\"><strong>fasta:</strong> Path to input FASTA file with sequences</p></li><li><p class=\"text-node\"><strong>reference:</strong> Optional reference alignment for benchmarking</p></li><li><p class=\"text-node\"><strong>optional_data:</strong> Additional data (e.g., PDB structures for structure-based methods)</p></li><li><p class=\"text-node\"><strong>template:</strong> Template structure for structure-guided alignment</p></li></ul><h3 class=\"heading-node\">Toolsheet Format (CSV)</h3><p class=\"text-node\">Specify which alignment tools and parameters to use:</p><pre class=\"block-node\"><code>tree,args_tree,aligner,args_aligner\nFAMSA,,FAMSA,\nNONE,,CLUSTALO,--threads=4\nFAMSA,,MAFFT,--maxiterate 1000</code></pre><p class=\"text-node\"><strong>Columns:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>tree:</strong> Guide tree tool (FAMSA, CLUSTALO, MAFFT, NONE)</p></li><li><p class=\"text-node\"><strong>args_tree:</strong> Additional arguments for tree generation</p></li><li><p class=\"text-node\"><strong>aligner:</strong> Alignment tool to use</p></li><li><p class=\"text-node\"><strong>args_aligner:</strong> Tool-specific alignment parameters</p></li></ul><h2 class=\"heading-node\">Pipeline Workflow</h2><ol class=\"list-node\"><li><p class=\"text-node\"><strong>Input File Summary:</strong> Optional statistics on input sequences (length, composition, etc.)</p></li><li><p class=\"text-node\"><strong>Guide Tree Generation:</strong> Optional phylogenetic tree to guide alignment process</p></li><li><p class=\"text-node\"><strong>Sequence Alignment:</strong> Run selected MSA tools on input sequences</p></li><li><p class=\"text-node\"><strong>Alignment Evaluation:</strong> Calculate quality metrics if reference alignment provided</p></li><li><p class=\"text-node\"><strong>Reporting:</strong> Generate MultiQC report summarizing all results</p></li></ol><h2 class=\"heading-node\">Key Parameters</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>--input:</strong> Path to samplesheet CSV defining datasets</p></li><li><p class=\"text-node\"><strong>--tools:</strong> Path to toolsheet CSV specifying alignment methods</p></li><li><p class=\"text-node\"><strong>--seqs:</strong> Direct path to FASTA file (alternative to samplesheet)</p></li><li><p class=\"text-node\"><strong>--aligner:</strong> Single aligner to use (if not using toolsheet)</p></li><li><p class=\"text-node\"><strong>--pdbs_dir:</strong> Directory containing PDB structure files for structure-based alignment</p></li><li><p class=\"text-node\"><strong>--skip_stats:</strong> Skip input file summary statistics</p></li><li><p class=\"text-node\"><strong>--calc_sim:</strong> Calculate sequence similarity (default: false)</p></li><li><p class=\"text-node\"><strong>--calc_seq_stats:</strong> Calculate general sequence statistics (default: true)</p></li></ul><h2 class=\"heading-node\">Output Files</h2><h3 class=\"heading-node\">Alignments</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Aligned sequences:</strong> Multiple sequence alignments in FASTA format</p></li><li><p class=\"text-node\"><strong>Guide trees:</strong> Phylogenetic trees used for alignment (if generated)</p></li></ul><h3 class=\"heading-node\">Evaluation Metrics</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Alignment scores:</strong> Quality metrics comparing to reference (if provided)</p></li><li><p class=\"text-node\"><strong>Sequence statistics:</strong> Length distributions, gap content, conservation scores</p></li></ul><h3 class=\"heading-node\">Reports</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>MultiQC Report:</strong> Comprehensive summary of all alignment runs and metrics</p></li><li><p class=\"text-node\"><strong>Tool comparisons:</strong> Benchmarking results across different MSA methods</p></li></ul><h2 class=\"heading-node\">Use Cases</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Comparative Genomics:</strong> Identify conserved regions across homologous proteins</p></li><li><p class=\"text-node\"><strong>Phylogenetic Analysis:</strong> Generate alignments for evolutionary tree construction</p></li><li><p class=\"text-node\"><strong>Protein Family Analysis:</strong> Study domain conservation and functional motifs</p></li><li><p class=\"text-node\"><strong>Structure Prediction:</strong> Create alignments for homology modeling</p></li><li><p class=\"text-node\"><strong>Tool Benchmarking:</strong> Systematically compare MSA algorithm performance</p></li><li><p class=\"text-node\"><strong>Method Development:</strong> Evaluate new alignment approaches against established tools</p></li></ul><h2 class=\"heading-node\">Best Practices</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Sequence Selection:</strong> Include sequences with >30% identity for reliable alignment</p></li><li><p class=\"text-node\"><strong>Dataset Size:</strong> Balance between comprehensiveness and computational time</p></li><li><p class=\"text-node\"><strong>Reference Alignments:</strong> Use curated reference alignments from databases like BALIBASE or PREFAB for benchmarking</p></li><li><p class=\"text-node\"><strong>Structure Information:</strong> Include PDB structures when available for structure-based methods</p></li><li><p class=\"text-node\"><strong>Tool Selection:</strong> Test multiple aligners as performance varies by sequence characteristics</p></li></ul><p class=\"text-node\"><strong>Perfect for Research in:</strong> Evolutionary biology \u2022 Structural bioinformatics \u2022 Protein engineering \u2022 Drug discovery \u2022 Functional genomics \u2022 Computational biology \u2022 Algorithm development</p><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> \u2022 Powered by <a class=\"link\" href=\"https://nf-co.re/multiplesequencealign/1.1.1/\" target=\"_blank\">nf-core/multiplesequencealign v1.1.1</a> \u2022 Containerized execution \u2022 Continuous integration tested</p>",
   "spec": [
     {
       "type": "Stash File",
@@ -19,7 +19,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -33,7 +35,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -46,15 +50,42 @@
       "hidden": false,
       "disabled": false,
       "options": [
-        {"label": "FAMSA - Fast and accurate MSA", "value": "FAMSA"},
-        {"label": "CLUSTALO - Clustal Omega", "value": "CLUSTALO"},
-        {"label": "MAFFT - Fast Fourier Transform alignment", "value": "MAFFT"},
-        {"label": "MUSCLE5 - Latest MUSCLE algorithm", "value": "MUSCLE5"},
-        {"label": "TCOFFEE - Consistency-based alignment", "value": "TCOFFEE"},
-        {"label": "KALIGN - Fast alignment", "value": "KALIGN"},
-        {"label": "3DCOFFEE - Structure-aware T-Coffee", "value": "3DCOFFEE"},
-        {"label": "MTMALIGN - Multiple structure alignment", "value": "MTMALIGN"},
-        {"label": "FOLDMASON - Foldseek structure alignment", "value": "FOLDMASON"}
+        {
+          "label": "FAMSA - Fast and accurate MSA",
+          "value": "FAMSA"
+        },
+        {
+          "label": "CLUSTALO - Clustal Omega",
+          "value": "CLUSTALO"
+        },
+        {
+          "label": "MAFFT - Fast Fourier Transform alignment",
+          "value": "MAFFT"
+        },
+        {
+          "label": "MUSCLE5 - Latest MUSCLE algorithm",
+          "value": "MUSCLE5"
+        },
+        {
+          "label": "TCOFFEE - Consistency-based alignment",
+          "value": "TCOFFEE"
+        },
+        {
+          "label": "KALIGN - Fast alignment",
+          "value": "KALIGN"
+        },
+        {
+          "label": "3DCOFFEE - Structure-aware T-Coffee",
+          "value": "3DCOFFEE"
+        },
+        {
+          "label": "MTMALIGN - Multiple structure alignment",
+          "value": "MTMALIGN"
+        },
+        {
+          "label": "FOLDMASON - Foldseek structure alignment",
+          "value": "FOLDMASON"
+        }
       ]
     },
     {
@@ -113,9 +144,21 @@
     }
   ],
   "tags": [
-    {"name": "bioinformatics", "type": "field"},
-    {"name": "alignment", "type": "task"},
-    {"name": "protein", "type": "subfield"},
-    {"name": "genomics", "type": "subfield"}
+    {
+      "name": "bioinformatics",
+      "type": "field"
+    },
+    {
+      "name": "alignment",
+      "type": "task"
+    },
+    {
+      "name": "protein",
+      "type": "subfield"
+    },
+    {
+      "name": "genomics",
+      "type": "subfield"
+    }
   ]
 }

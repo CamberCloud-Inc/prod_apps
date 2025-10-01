@@ -1,12 +1,12 @@
 {
   "name": "alleleexpression-ase-analysis",
-  "title": "Allele-Specific Expression Analysis",
-  "description": "Allele-specific expression (ASE) analysis pipeline using STAR-WASP alignment, UMI-tools deduplication, and phaser for haplotype phasing and ASE detection",
+  "title": "ASE Detection and Quantification",
+  "description": "Comprehensive allele-specific expression (ASE) analysis using STAR-WASP alignment, UMI deduplication, and Beagle phasing with phaser. Detects and quantifies differential expression between maternal and paternal alleles for studying imprinting, cis-regulatory variation, and parent-of-origin effects. Samplesheet format: `name,FASTQ`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/alleleexpression --input ${input} --outdir ${outdir} --genome ${genome} --chromosome ${chromosome} --beagle_ref ${beagle_ref} --beagle_map ${beagle_map} -r dev -profile singularity",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/alleleexpression/dev/docs/images/nf-core-alleleexpression_logo_light.png",
-  "content": "<h2><strong>Allele-Specific Expression Analysis</strong></h2><p>A comprehensive Nextflow pipeline for allele-specific expression (ASE) analysis using STAR-WASP for alignment, UMI-tools for deduplication, and phaser for haplotype phasing and ASE detection.</p><h3>Pipeline Features</h3><ul><li>STAR alignment with WASP mode for allele-specific mapping</li><li>UMI-based deduplication to remove PCR duplicates</li><li>Chromosome-specific analysis for focused processing</li><li>Beagle phasing integration for haplotype determination</li><li>Comprehensive QC reporting with MultiQC</li></ul><h3>Pipeline Steps</h3><ol><li>Input validation and VCF preparation</li><li>FastQC quality control for raw reads</li><li>STAR alignment with WASP filtering mode</li><li>WASP read filtering to remove mapping bias</li><li>UMI-based deduplication</li><li>BAM file sorting and indexing</li><li>VCF chromosome extraction</li><li>Beagle haplotype phasing</li><li>Haplotype-level expression analysis with phaser</li><li>Gene-level ASE detection</li><li>ASE gene extraction and reporting</li><li>MultiQC quality report generation</li></ol><h3>Required Inputs</h3><ul><li>Input samplesheet (CSV format with sample information)</li><li>Reference genome (FASTA) and annotation (GTF) files</li><li>STAR genome index directory</li><li>Beagle reference panel (VCF file)</li><li>Beagle genetic map file</li></ul><h3>Output Structure</h3><ul><li><strong>fastqc/</strong>: FastQC quality control reports</li><li><strong>star/</strong>: STAR alignment results</li><li><strong>wasp/</strong>: WASP-filtered BAM files</li><li><strong>umi/</strong>: UMI-deduplicated BAM files</li><li><strong>beagle/</strong>: Phased VCF files</li><li><strong>phaser/</strong>: Phaser haplotype analysis results</li><li><strong>ase/</strong>: Allele-specific expression results</li><li><strong>multiqc/</strong>: Comprehensive quality report</li></ul><p><strong>Note:</strong> This pipeline is currently under active development. Please refer to the <a href='https://nf-co.re/alleleexpression/dev/' target='_blank'>nf-core documentation</a> for the latest updates and usage information.</p>",
+  "content": "<h2><strong>Allele-Specific Expression - ASE Detection and Quantification</strong></h2><p>Analyzes RNA sequencing data to detect and quantify differences in gene expression between maternal and paternal alleles. Uses WASP filtering to remove mapping bias, phaser for haplotype reconstruction, and UMI deduplication for accurate quantification of allele-specific transcription.</p><h3><strong>What is Allele-Specific Expression?</strong></h3><blockquote><p><strong>Allele-Specific Expression (ASE)</strong> occurs when the two copies of a gene (maternal and paternal alleles) are expressed at different levels. ASE can result from genomic imprinting, cis-regulatory variation, random monoallelic expression, or X-chromosome inactivation. Detecting ASE reveals how genetic variation affects gene regulation and contributes to phenotypic diversity.</p></blockquote><h3><strong>Key Features</strong></h3><ul><li><strong>STAR-WASP Alignment</strong>: Removes reference allele mapping bias for unbiased quantification</li><li><strong>UMI Deduplication</strong>: Eliminates PCR duplicates for accurate molecule counting</li><li><strong>Beagle Phasing</strong>: Statistical haplotype phasing using reference panels</li><li><strong>Phaser Analysis</strong>: Haplotype-level and gene-level ASE detection</li><li><strong>Chromosome-Specific Processing</strong>: Focused analysis on specific chromosomes</li></ul><h3><strong>Pipeline Workflow</strong></h3><ol><li><strong>Input Validation</strong>: Prepare VCF files and samplesheet</li><li><strong>Quality Control</strong>: FastQC assessment of raw sequencing reads</li><li><strong>STAR Alignment with WASP</strong>: Map reads while filtering mapping-biased reads</li><li><strong>WASP Filtering</strong>: Remove reads with allelic mapping bias</li><li><strong>UMI Deduplication</strong>: Collapse PCR duplicates using molecular barcodes</li><li><strong>BAM Processing</strong>: Sort and index alignment files</li><li><strong>Chromosome Extraction</strong>: Extract variants for target chromosome</li><li><strong>Beagle Phasing</strong>: Phase heterozygous variants into haplotypes</li><li><strong>Phaser Analysis</strong>: Quantify allele-specific expression at haplotype and gene levels</li><li><strong>ASE Gene Identification</strong>: Statistical testing for significant allelic imbalance</li><li><strong>Report Generation</strong>: MultiQC summary of quality metrics</li></ol><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Genomic Imprinting</strong>: Identify parent-of-origin expression patterns</li><li><strong>eQTL Studies</strong>: Map cis-regulatory genetic variants affecting expression</li><li><strong>Cancer Genomics</strong>: Detect loss of imprinting in tumor samples</li><li><strong>Personalized Medicine</strong>: Understand individual variation in drug metabolism genes</li><li><strong>X-Inactivation Studies</strong>: Analyze X-chromosome silencing patterns</li><li><strong>Complex Trait Genetics</strong>: Link regulatory variation to phenotypes</li></ul><h3><strong>Input Requirements</strong></h3><ul><li><strong>Sample Sheet</strong>: CSV with sample name, FASTQ files (R1/R2), and VCF file paths</li><li><strong>Reference Genome</strong>: FASTA and GTF annotation (or iGenomes reference)</li><li><strong>STAR Index</strong>: Pre-built genome index for STAR aligner</li><li><strong>Beagle Reference Panel</strong>: Population VCF for accurate phasing</li><li><strong>Beagle Genetic Map</strong>: Recombination map for phasing accuracy</li><li><strong>Sample VCF</strong>: Individual genotypes with heterozygous SNPs</li></ul><h3><strong>Main Outputs</strong></h3><ul><li><strong>ASE Gene List</strong>: Genes with significant allelic imbalance and statistical support</li><li><strong>Phaser Haplotype Data</strong>: Allele-specific read counts per haplotype block</li><li><strong>Phased VCF</strong>: Beagle-phased genotypes with haplotype information</li><li><strong>WASP-Filtered BAM</strong>: Alignment files with mapping bias removed</li><li><strong>UMI-Deduplicated BAM</strong>: Molecular-count accurate alignments</li><li><strong>MultiQC Report</strong>: Comprehensive quality control summary</li></ul><blockquote><p><strong>Perfect for:</strong> Imprinting Studies • eQTL Mapping • Regulatory Variation • Parent-of-Origin Effects • X-Inactivation • Cancer ASE • Personalized Genomics</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -16,7 +16,10 @@
       "helpText": "CSV file containing sample information with columns for sample name, FASTQ files, and VCF file paths",
       "restrictions": {
         "allow_files": true,
-        "allowed_file_types": [".csv", ".tsv"]
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
       }
     },
     {
@@ -32,19 +35,19 @@
       }
     },
     {
-      "type": "String",
+      "type": "Input",
       "label": "Genome Reference",
       "name": "genome",
       "required": false,
-      "helpText": "Name of iGenomes reference (e.g., GRCh38, GRCm39) or leave empty to specify custom genome files",
+      "description": "Name of iGenomes reference (e.g., GRCh38, GRCm39) or leave empty to specify custom genome files",
       "defaultValue": ""
     },
     {
-      "type": "String",
+      "type": "Input",
       "label": "Chromosome",
       "name": "chromosome",
       "required": false,
-      "helpText": "Specific chromosome to analyze (e.g., chr1, chr2). Leave empty to analyze all chromosomes",
+      "description": "Specific chromosome to analyze (e.g., chr1, chr2). Leave empty to analyze all chromosomes",
       "defaultValue": ""
     },
     {
@@ -55,7 +58,10 @@
       "helpText": "Beagle reference panel VCF file for haplotype phasing",
       "restrictions": {
         "allow_files": true,
-        "allowed_file_types": [".vcf", ".vcf.gz"]
+        "allowed_file_types": [
+          ".vcf",
+          ".vcf.gz"
+        ]
       }
     },
     {
@@ -66,7 +72,10 @@
       "helpText": "Beagle genetic map file for phasing accuracy",
       "restrictions": {
         "allow_files": true,
-        "allowed_file_types": [".map", ".txt"]
+        "allowed_file_types": [
+          ".map",
+          ".txt"
+        ]
       }
     }
   ],
@@ -108,9 +117,21 @@
     }
   ],
   "tags": [
-    {"name": "alleleexpression", "type": "task"},
-    {"name": "rnaseq", "type": "task"},
-    {"name": "ase", "type": "task"},
-    {"name": "genomics", "type": "task"}
+    {
+      "name": "alleleexpression",
+      "type": "task"
+    },
+    {
+      "name": "rnaseq",
+      "type": "task"
+    },
+    {
+      "name": "ase",
+      "type": "task"
+    },
+    {
+      "name": "genomics",
+      "type": "field"
+    }
   ]
 }

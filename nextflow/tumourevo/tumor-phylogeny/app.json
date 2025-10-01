@@ -1,7 +1,7 @@
 {
   "name": "tumourevo-tumor-phylogeny",
   "title": "Tumor Clonal Evolution Analysis",
-  "description": "Comprehensive phylogenetic analysis to reconstruct tumor evolution from whole-genome sequencing data. Models clonal populations, mutational signatures, and evolutionary processes driving tumor development from variant and copy-number calls.",
+  "description": "Comprehensive phylogenetic analysis to reconstruct tumor evolution from whole-genome sequencing data. Models clonal populations, mutational signatures, and evolutionary processes driving tumor development from variant and copy-number calls. Samplesheet format: `Mutect2,Strelka2,or`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/tumourevo --input ${input} --outdir ${outdir} --tools ${tools} -r ${revision}",
@@ -16,7 +16,10 @@
       "required": true,
       "restrictions": {
         "allow_files": true,
-        "allowed_file_types": [".csv", ".tsv"]
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
       }
     },
     {

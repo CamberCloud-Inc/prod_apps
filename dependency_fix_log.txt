@@ -1,0 +1,114 @@
+Fixing missing dependencies based on biomni.tool imports...
+================================================================================
+✅ biomni/biophysics/analyze_cell_morphology_and_cytoskeleton.py: biomni, opencv-python, scipy
+✅ biomni/biophysics/analyze_tissue_deformation_flow.py: biomni, opencv-python, scipy
+✅ biomni/biophysics/predict_protein_disorder_regions.py: biomni, opencv-python, scipy
+✅ biomni/cancer_biology/analyze_cell_senescence_and_apoptosis.py: FlowCytometryTools, biomni, gseapy
+✅ biomni/cancer_biology/analyze_copy_number_purity_ploidy_and_focal_events.py: FlowCytometryTools, biomni, gseapy
+✅ biomni/cancer_biology/analyze_ddr_network_in_cancer.py: FlowCytometryTools, biomni, gseapy
+✅ biomni/cancer_biology/detect_and_annotate_somatic_mutations.py: FlowCytometryTools, biomni, gseapy
+✅ biomni/cancer_biology/detect_and_characterize_structural_variations.py: FlowCytometryTools, biomni, gseapy
+✅ biomni/cancer_biology/perform_gene_expression_nmf_analysis.py: FlowCytometryTools, biomni, gseapy
+✅ biomni/genetics/analyze_protein_phylogeny.py: biomni, biopython, torch
+✅ biomni/genetics/bayesian_finemapping_with_deep_vi.py: biomni, biopython, torch
+✅ biomni/genetics/fit_genomic_prediction_model.py: biomni, biopython, torch
+✅ biomni/genetics/identify_transcription_factor_binding_sites.py: biomni, biopython, torch
+✅ biomni/genetics/liftover_coordinates.py: biomni, biopython, torch
+✅ biomni/genetics/perform_pcr_and_gel_electrophoresis.py: biomni, biopython, torch
+✅ biomni/genetics/simulate_demographic_history.py: biomni, biopython, torch
+✅ biomni/literature/advanced_web_search_claude.py: PyPDF2, biomni
+✅ biomni/literature/extract_pdf_content.py: PyPDF2, biomni
+✅ biomni/literature/extract_url_content.py: PyPDF2, biomni
+✅ biomni/literature/fetch_supplementary_info_from_doi.py: PyPDF2, biomni
+✅ biomni/literature/query_arxiv.py: PyPDF2, biomni
+✅ biomni/literature/query_pubmed.py: PyPDF2, biomni
+✅ biomni/literature/query_scholar.py: PyPDF2, biomni
+✅ biomni/literature/search_google.py: PyPDF2, biomni
+✅ biomni/molecular_biology/align_sequences.py: beautifulsoup4, biomni, biopython
+✅ biomni/molecular_biology/annotate_open_reading_frames.py: beautifulsoup4, biomni, biopython
+✅ biomni/molecular_biology/annotate_plasmid.py: beautifulsoup4, biomni, biopython
+✅ biomni/molecular_biology/design_golden_gate_oligos.py: beautifulsoup4, biomni, biopython
+✅ biomni/molecular_biology/design_knockout_sgrna.py: beautifulsoup4, biomni, biopython
+✅ biomni/molecular_biology/design_primer.py: beautifulsoup4, biomni, biopython
+✅ biomni/molecular_biology/design_verification_primers.py: beautifulsoup4, biomni, biopython
+✅ biomni/molecular_biology/digest_sequence.py: beautifulsoup4, biomni, biopython
+✅ biomni/molecular_biology/find_restriction_enzymes.py: beautifulsoup4, biomni, biopython
+✅ biomni/molecular_biology/find_restriction_sites.py: beautifulsoup4, biomni, biopython
+✅ biomni/molecular_biology/find_sequence_mutations.py: beautifulsoup4, biomni, biopython
+✅ biomni/molecular_biology/get_bacterial_transformation_protocol.py: beautifulsoup4, biomni, biopython
+✅ biomni/molecular_biology/get_gene_coding_sequence.py: beautifulsoup4, biomni, biopython
+✅ biomni/molecular_biology/get_golden_gate_assembly_protocol.py: beautifulsoup4, biomni, biopython
+✅ biomni/molecular_biology/get_oligo_annealing_protocol.py: beautifulsoup4, biomni, biopython
+✅ biomni/molecular_biology/get_plasmid_sequence.py: beautifulsoup4, biomni, biopython
+✅ biomni/molecular_biology/golden_gate_assembly.py: beautifulsoup4, biomni, biopython
+✅ biomni/molecular_biology/pcr_simple.py: beautifulsoup4, biomni, biopython
+✅ biomni/physiology/analyze_abr_waveform_p1_metrics.py: biomni, opencv-python, scikit-image, scipy
+✅ biomni/physiology/analyze_ciliary_beat_frequency.py: biomni, opencv-python, scikit-image, scipy
+✅ biomni/physiology/analyze_endolysosomal_calcium_dynamics.py: biomni, opencv-python, scikit-image, scipy
+✅ biomni/physiology/analyze_fatty_acid_composition_by_gc.py: biomni, opencv-python, scikit-image, scipy
+✅ biomni/physiology/analyze_hemodynamic_data.py: biomni, opencv-python, scikit-image, scipy
+✅ biomni/physiology/analyze_protein_colocalization.py: biomni, opencv-python, scikit-image, scipy
+✅ biomni/physiology/calculate_brain_adc_map.py: biomni, opencv-python, scikit-image, scipy
+✅ biomni/physiology/perform_cosinor_analysis.py: biomni, opencv-python, scikit-image, scipy
+✅ biomni/physiology/quantify_amyloid_beta_plaques.py: biomni, opencv-python, scikit-image, scipy
+✅ biomni/physiology/reconstruct_3d_face_from_mri.py: biomni, opencv-python, scikit-image, scipy
+✅ biomni/physiology/simulate_thyroid_hormone_pharmacokinetics.py: biomni, opencv-python, scikit-image, scipy
+
+================================================================================
+Modified 53 files
+================================================================================
+
+Files modified:
+  - biomni/biophysics/analyze_cell_morphology_and_cytoskeleton.py
+  - biomni/biophysics/analyze_tissue_deformation_flow.py
+  - biomni/biophysics/predict_protein_disorder_regions.py
+  - biomni/cancer_biology/analyze_cell_senescence_and_apoptosis.py
+  - biomni/cancer_biology/analyze_copy_number_purity_ploidy_and_focal_events.py
+  - biomni/cancer_biology/analyze_ddr_network_in_cancer.py
+  - biomni/cancer_biology/detect_and_annotate_somatic_mutations.py
+  - biomni/cancer_biology/detect_and_characterize_structural_variations.py
+  - biomni/cancer_biology/perform_gene_expression_nmf_analysis.py
+  - biomni/genetics/analyze_protein_phylogeny.py
+  - biomni/genetics/bayesian_finemapping_with_deep_vi.py
+  - biomni/genetics/fit_genomic_prediction_model.py
+  - biomni/genetics/identify_transcription_factor_binding_sites.py
+  - biomni/genetics/liftover_coordinates.py
+  - biomni/genetics/perform_pcr_and_gel_electrophoresis.py
+  - biomni/genetics/simulate_demographic_history.py
+  - biomni/literature/advanced_web_search_claude.py
+  - biomni/literature/extract_pdf_content.py
+  - biomni/literature/extract_url_content.py
+  - biomni/literature/fetch_supplementary_info_from_doi.py
+  - biomni/literature/query_arxiv.py
+  - biomni/literature/query_pubmed.py
+  - biomni/literature/query_scholar.py
+  - biomni/literature/search_google.py
+  - biomni/molecular_biology/align_sequences.py
+  - biomni/molecular_biology/annotate_open_reading_frames.py
+  - biomni/molecular_biology/annotate_plasmid.py
+  - biomni/molecular_biology/design_golden_gate_oligos.py
+  - biomni/molecular_biology/design_knockout_sgrna.py
+  - biomni/molecular_biology/design_primer.py
+  - biomni/molecular_biology/design_verification_primers.py
+  - biomni/molecular_biology/digest_sequence.py
+  - biomni/molecular_biology/find_restriction_enzymes.py
+  - biomni/molecular_biology/find_restriction_sites.py
+  - biomni/molecular_biology/find_sequence_mutations.py
+  - biomni/molecular_biology/get_bacterial_transformation_protocol.py
+  - biomni/molecular_biology/get_gene_coding_sequence.py
+  - biomni/molecular_biology/get_golden_gate_assembly_protocol.py
+  - biomni/molecular_biology/get_oligo_annealing_protocol.py
+  - biomni/molecular_biology/get_plasmid_sequence.py
+  - biomni/molecular_biology/golden_gate_assembly.py
+  - biomni/molecular_biology/pcr_simple.py
+  - biomni/physiology/analyze_abr_waveform_p1_metrics.py
+  - biomni/physiology/analyze_ciliary_beat_frequency.py
+  - biomni/physiology/analyze_endolysosomal_calcium_dynamics.py
+  - biomni/physiology/analyze_fatty_acid_composition_by_gc.py
+  - biomni/physiology/analyze_hemodynamic_data.py
+  - biomni/physiology/analyze_protein_colocalization.py
+  - biomni/physiology/calculate_brain_adc_map.py
+  - biomni/physiology/perform_cosinor_analysis.py
+  - biomni/physiology/quantify_amyloid_beta_plaques.py
+  - biomni/physiology/reconstruct_3d_face_from_mri.py
+  - biomni/physiology/simulate_thyroid_hormone_pharmacokinetics.py

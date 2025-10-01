@@ -1,10 +1,12 @@
 {
   "name": "molkart-spatial-multiomics",
-  "description": "A comprehensive pipeline for processing Molecular Cartography spatial transcriptomics data from Resolve Bioscience. Performs end-to-end analysis including image preprocessing, state-of-the-art cell segmentation, spot-to-cell assignment, and comprehensive quality control for combinatorial FISH data.",
-  "content": "The nf-core/molkart pipeline enables researchers to analyze spatial transcriptomics data by processing FISH spot positions (x,y,z,gene) alongside DAPI nuclear images and optional membrane staining images. The pipeline performs image preprocessing with grid pattern filling and contrast enhancement, applies multiple segmentation methods (Cellpose, Mesmer, ilastik, Stardist), assigns deduplicated spots to segmented cells, and generates detailed quality metrics including spot assignment rates, spots per cell statistics, and segmentation mask size distributions. This workflow produces a matched cell-by-transcript table essential for downstream spatial transcriptomics analysis, making it ideal for researchers working with Molecular Cartography or MERSCOPE targeted spatial data.",
+  "title": "Molecular Cartography Spatial Transcriptomics",
+  "description": "Comprehensive spatial transcriptomics analysis for Molecular Cartography combinatorial FISH data. Processes spot positions, performs cell segmentation, assigns transcripts to cells, and generates quality metrics for spatial gene expression mapping. Samplesheet format: `x,y,z`",
+  "version": "1.0.0",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/molkart/master/docs/images/molkart_metro_map.png",
   "command": "rm -rf prod_apps && git clone git@github.com:CamberCloud-Inc/prod_apps.git && cd ./prod_apps/nextflow/molkart/spatial-multiomics/ && sh run_molkart.sh",
   "engineType": "NEXTFLOW",
+  "content": "<h2><strong>Molkart - Molecular Cartography Spatial Transcriptomics</strong></h2><p>Analyzes combinatorial Fluorescence In Situ Hybridization (FISH) data from Resolve Bioscience's Molecular Cartography platform. Performs end-to-end processing from spot detection through cell segmentation to generate spatially-resolved single-cell transcriptomics data.</p><h3><strong>What is Molecular Cartography?</strong></h3><blockquote><p><strong>Molecular Cartography</strong> uses combinatorial barcoding to detect hundreds to thousands of genes simultaneously in tissue sections at single-molecule resolution. The technology provides spatial coordinates for individual mRNA transcripts, enabling reconstruction of gene expression within native tissue architecture.</p></blockquote><h3><strong>Key Features</strong></h3><ul><li><strong>Image Preprocessing</strong>: Grid pattern filling and contrast enhancement for optimal segmentation</li><li><strong>Multiple Segmentation Methods</strong>: Cellpose, Mesmer, ilastik, or Stardist</li><li><strong>Spot Deduplication</strong>: Identifies and removes duplicate spots near grid boundaries</li><li><strong>Transcript Assignment</strong>: Maps detected transcripts to segmented cells</li><li><strong>Quality Metrics</strong>: Comprehensive QC including spot assignment rates and cell statistics</li></ul><h3><strong>Pipeline Workflow</strong></h3><ol><li><strong>Image Preprocessing</strong>: Fill grid gaps and enhance contrast in nuclear/membrane images</li><li><strong>Cell Segmentation</strong>: Apply chosen segmentation algorithm to identify cell boundaries</li><li><strong>Spot Processing</strong>: Load transcript coordinates and detect duplicates</li><li><strong>Transcript-to-Cell Assignment</strong>: Map each transcript to its corresponding cell</li><li><strong>Quality Control</strong>: Generate comprehensive metrics and MultiQC report</li></ol><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Tissue Architecture Mapping</strong>: Visualize gene expression in spatial context</li><li><strong>Cell-Cell Interactions</strong>: Study communication between neighboring cells</li><li><strong>Tumor Microenvironment</strong>: Characterize immune infiltration and cancer cell states</li><li><strong>Developmental Biology</strong>: Track spatial gene expression patterns during development</li><li><strong>Neuroscience</strong>: Map neuronal populations and circuit organization</li></ul><h3><strong>Input Requirements</strong></h3><ul><li><strong>Sample Sheet</strong>: CSV with sample ID, nuclear image, spot locations, optional membrane image</li><li><strong>Nuclear Image</strong>: DAPI or equivalent nuclear staining (TIFF format)</li><li><strong>Spot Locations Table</strong>: Transcript positions with x, y, z coordinates and gene identities</li><li><strong>Membrane Image</strong>: Optional cytoplasmic/membrane staining for improved segmentation</li></ul><h3><strong>Main Outputs</strong></h3><ul><li><strong>Cell-by-Transcript Matrix</strong>: Single-cell expression data with spatial coordinates</li><li><strong>Segmentation Masks</strong>: Cell boundary images for visualization</li><li><strong>Preprocessed Images</strong>: Gap-filled and contrast-enhanced images</li><li><strong>QC Reports</strong>: Spot assignment rates, cells detected, transcripts per cell</li><li><strong>MultiQC Report</strong>: Comprehensive quality metrics across all samples</li></ul><blockquote><p><strong>Perfect for:</strong> Spatial Transcriptomics • Tissue Mapping • Single-Cell Resolution • Molecular Cartography • MERSCOPE Data • Combinatorial FISH</p></blockquote>",
   "jobConfig": [
     {
       "type": "Select",
@@ -303,6 +305,24 @@
       "required": false,
       "disabled": false,
       "type": "Multi Stash File"
+    }
+  ],
+  "tags": [
+    {
+      "name": "spatial-transcriptomics",
+      "type": "subfield"
+    },
+    {
+      "name": "imaging",
+      "type": "technique"
+    },
+    {
+      "name": "single-cell",
+      "type": "task"
+    },
+    {
+      "name": "biology",
+      "type": "field"
     }
   ]
 }

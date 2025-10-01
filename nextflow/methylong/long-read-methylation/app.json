@@ -1,7 +1,7 @@
 {
   "name": "methylong-long-read-methylation",
   "title": "Long-Read Methylation Analysis (ONT/PacBio)",
-  "description": "Extract methylation calls from long-read sequencing data (Oxford Nanopore Technologies and PacBio). Comprehensive analysis pipeline for DNA methylation profiling using modification-basecalled reads.",
+  "description": "Extract methylation calls from long-read sequencing data (Oxford Nanopore Technologies and PacBio). Comprehensive analysis pipeline for DNA methylation profiling using modification-basecalled reads. Samplesheet format: `reads,PacBio`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/methylong --input ${input} --outdir ${outdir} --fasta ${fasta} -r 1.0.0",
@@ -17,7 +17,10 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv", ".tsv"]
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
       }
     },
     {
@@ -29,7 +32,12 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".fasta", ".fa", ".fna", ".gz"]
+        "allowed_file_types": [
+          ".fasta",
+          ".fa",
+          ".fna",
+          ".gz"
+        ]
       }
     },
     {
@@ -53,17 +61,48 @@
       "description": "Select compute resources (LARGE recommended for long-read analysis)",
       "hidden": false,
       "options": [
-        {"label": "LARGE (Recommended)", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}},
-        {"label": "XLARGE (Large Datasets)", "value": "xlarge", "mapValue": {"nodeSize": "XLARGE", "numNodes": 1, "withGpu": false}}
+        {
+          "label": "LARGE (Recommended)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE (Large Datasets)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
       ],
       "defaultValue": "large"
     }
   ],
   "tags": [
-    {"name": "methylation", "type": "field"},
-    {"name": "long-read", "type": "task"},
-    {"name": "nanopore", "type": "task"},
-    {"name": "pacbio", "type": "task"},
-    {"name": "epigenomics", "type": "task"}
+    {
+      "name": "methylation",
+      "type": "field"
+    },
+    {
+      "name": "long-read",
+      "type": "task"
+    },
+    {
+      "name": "nanopore",
+      "type": "task"
+    },
+    {
+      "name": "pacbio",
+      "type": "task"
+    },
+    {
+      "name": "epigenomics",
+      "type": "task"
+    }
   ]
 }

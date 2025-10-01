@@ -1,0 +1,183 @@
+================================================================================
+NEXTFLOW APPS DEPLOYMENT - FINAL SUMMARY
+================================================================================
+
+Date: 2025-10-01
+Working Directory: /Users/david/git/prod_apps/nextflow
+
+OVERALL RESULTS
+================================================================================
+Total Apps Processed:     73 apps (Batches 14-21 + 3 already enhanced)
+Successfully Deployed:    59 apps (80.8%)
+Failed to Deploy:         14 apps (19.2%)
+
+DELETE OPERATIONS
+================================================================================
+All 73 apps encountered "API error: code=500, message=Failed to delete app"
+This likely means the apps didn't previously exist in Camber or the delete
+endpoint is experiencing issues. The script continued with create operations.
+
+CREATE OPERATIONS
+================================================================================
+
+SUCCESSFUL (59 apps):
+--------------------------------------------------------------------------------
+Batch 14 (7/8):
+  ✓ longraredisease/diagnostic-wgs → longraredisease-diagnostic-wgs
+  ✓ methylarray/clinical-ewas → methylarray-clinical-ewas
+  ✓ viralmetagenome/viral-discovery → viralmetagenome-viral-discovery
+  ✓ ddamsproteomics/tmt-labeling → ddamsproteomics-tmt-labeling
+  ✓ phaseimpute/genotype-imputation → phaseimpute-genotype-imputation
+  ✓ epitopeprediction/vaccine-design → epitopeprediction-vaccine-design
+
+Batch 15 (9/10):
+  ✓ imcyto/imaging-mass-cytometry → imcyto-imaging-mass-cytometry
+  ✓ cellpainting/phenotypic-profiling → cellpainting-phenotypic-profiling
+  ✓ molkart/spatial-multiomics → molkart-spatial-multiomics
+  ✓ pixelator/spatial-proteomics → pixelator-spatial-proteomics
+  ✓ diaproteomics/dia-discovery → diaproteomics-dia-discovery
+  ✓ hgtseq/horizontal-gene-transfer → hgtseq-horizontal-gene-transfer
+  ✓ rnadnavar/rna-editing-analysis → rnadnavar-rna-editing-analysis
+  ✓ pathogensurveillance/clinical-surveillance → pathogensurveillance-clinical-surveillance
+  ✓ variantbenchmarking/benchmark-analysis → variantbenchmarking-benchmark-analysis
+
+Batch 16 (7/10):
+  ✓ tumourevo/tumor-phylogeny → tumourevo-tumor-phylogeny
+  ✓ drop/rna-outliers → drop-rna-outliers
+  ✓ lncpipe/lncrna-discovery → lncpipe-lncrna-discovery
+  ✓ reportho/orthology-analysis → reportho-orthology-analysis
+  ✓ callingcards/tf-binding → callingcards-tf-binding
+  ✓ diseasemodulediscovery/disease-networks → diseasemodulediscovery-disease-networks
+  ✓ variantcatalogue/population-variants → variantcatalogue-population-variants
+  ✓ viralintegration/hpv-integration → viralintegration-hpv-integration
+
+Batch 17 (10/10):
+  ✓ multiplesequencealign/protein-msa → multiplesequencealign-protein-msa
+  ✓ pairgenomealign/synteny-analysis → pairgenomealign-synteny-analysis
+  ✓ denovotranscript/de-novo-transcriptome → denovotranscript-de-novo-transcriptome
+  ✓ denovohybrid/hybrid-assembly → denovohybrid-hybrid-assembly
+  ✓ ssds/single-strand-dna → ssds-single-strand-dna
+  ✓ tbanalyzer/tb-genomics → tbprofiler-tb-genomics
+  ✓ sammyseq/sammy-analysis → sammyseq-chromatin-analysis
+  ✓ readsimulator/ngs-simulation → readsimulator-ngs-simulation
+  ✓ seqinspector/sequencing-qc → seqinspector-sequencing-qc
+  ✓ rarevariantburden/rare-disease-burden → rarevariantburden-rare-disease-burden
+
+Batch 18 (10/10):
+  ✓ coproid/ancient-dna → coproid-ancient-dna
+  ✓ metapep/metaproteomics → metapep-epitope-prediction
+  ✓ mitodetect/mitochondrial-variants → mitodetect-mitochondrial-variants
+  ✓ proteinannotator/protein-annotation → proteinannotator-protein-annotation
+  ✓ proteinfamilies/protein-families → proteinfamilies-protein-families
+  ✓ genomeannotator/eukaryote-annotation → genomeannotator-eukaryote-annotation
+  ✓ genomeassembler/short-read-assembly → genomeassembler-long-read-assembly
+  ✓ genomeqc/genome-qc → genomeqc-genome-qc
+  ✓ genomeskim/organelle-genomes → genomeskim-organelle-genomes
+  ✓ omicsgenetraitassociation/multi-omics-gwas → omicsgenetraitassociation-multi-omics-gwas
+
+Batch 19 (4/10):
+  ✓ bamtofastq/bam-conversion → bamtofastq-bam-conversion
+  ✓ fastqrepair/fastq-repair → fastqrepair-fastq-repair
+  ✓ fastquorum/quality-filtering → fastquorum-quality-filtering
+  ✓ datasync/data-sync → datasync-data-sync
+  ✓ abotyper/blood-antigens → abotyper-blood-antigens
+
+Batch 20 (5/9):
+  ✓ ribomsqc/ribo-profiling-qc → riboseq-profiling-qc
+  ✓ lsmquant/label-free-ms → lsmquant-label-free-ms
+  ✓ radseq/rad-seq → radseq-variant-calling
+  ✓ mhcquant/immunopeptidomics → mhcquant-immunopeptidomics
+  ✓ methylong/long-read-methylation → methylong-long-read-methylation
+
+Batch 21 (3/3):
+  ✓ demo/demo-pipeline → demo-nfcore-demo
+  ✓ neutronstar/neutron-star-analysis → neutronstar-10x-assembly
+  ✓ rangeland/remote-sensing → rangeland-remote-sensing
+
+Already Enhanced (3/3):
+  ✓ hicar/enhancer-promoter-loops → hicar-enhancer-promoter-analysis
+  ✓ liverctanalysis/ct-analysis → liverctanalysis-ct-analysis
+  ✓ deepvariant/clinical-wgs → deepvariant-clinical-wgs
+
+FAILED (14 apps):
+================================================================================
+
+JSON PARSE ERRORS (4 apps) - HIGHEST PRIORITY:
+--------------------------------------------------------------------------------
+Invalid character '\n' in string literal - unescaped newlines in JSON strings
+
+  ✗ panoramaseq/panorama-analysis
+    File: /Users/david/git/prod_apps/nextflow/panoramaseq/panorama-analysis/app.json
+
+  ✗ troughgraph/tumor-heterogeneity
+    File: /Users/david/git/prod_apps/nextflow/troughgraph/tumor-heterogeneity/app.json
+
+  ✗ spinningjenny/spatial-transcriptomics
+    File: /Users/david/git/prod_apps/nextflow/spinningjenny/spatial-transcriptomics/app.json
+
+  ✗ marsseq/mars-seq
+    File: /Users/david/git/prod_apps/nextflow/marsseq/mars-seq/app.json
+
+VALIDATION ERRORS (10 apps) - Type field validation failed:
+--------------------------------------------------------------------------------
+Spec[].Type field contains invalid values not matching Camber's allowed types
+
+  ✗ scflow/cell-type-annotation (Spec indices: 8, 10-15)
+    File: /Users/david/git/prod_apps/nextflow/scflow/cell-type-annotation/app.json
+
+  ✗ tfactivity/tf-regulon-analysis (Spec indices: 4, 7)
+    File: /Users/david/git/prod_apps/nextflow/tfactivity/tf-regulon-analysis/app.json
+
+  ✗ alleleexpression/ase-analysis (Spec indices: 2, 3)
+    File: /Users/david/git/prod_apps/nextflow/alleleexpression/ase-analysis/app.json
+
+  ✗ drugresponseeval/drug-screening (Spec indices: 0, 1)
+    File: /Users/david/git/prod_apps/nextflow/drugresponseeval/drug-screening/app.json
+
+  ✗ createpanelrefs/reference-panels (Spec index: 1)
+    File: /Users/david/git/prod_apps/nextflow/createpanelrefs/reference-panels/app.json
+
+  ✗ createtaxdb/taxonomy-db (Spec index: 4)
+    File: /Users/david/git/prod_apps/nextflow/createtaxdb/taxonomy-db/app.json
+
+  ✗ references/reference-management (Spec index: 5)
+    File: /Users/david/git/prod_apps/nextflow/references/reference-management/app.json
+
+  ✗ deepmodeloptim/ml-optimization (Spec index: 4)
+    File: /Users/david/git/prod_apps/nextflow/deepmodeloptim/ml-optimization/app.json
+
+  ✗ stableexpression/housekeeping-genes (Spec indices: 0, 4, 5)
+    File: /Users/david/git/prod_apps/nextflow/stableexpression/housekeeping-genes/app.json
+
+DEFAULTVALUE ERROR (1 app):
+--------------------------------------------------------------------------------
+DefaultValue for type Stash File must be a string
+
+  ✗ evexplorer/molecular-evolution (Spec[0])
+    File: /Users/david/git/prod_apps/nextflow/evexplorer/molecular-evolution/app.json
+
+NEXT STEPS
+================================================================================
+1. Fix JSON parse errors (4 apps) - Find and escape/remove newlines in strings
+2. Fix Type validation errors (10 apps) - Correct invalid Type field values
+3. Fix DefaultValue error (1 app) - Convert to string format
+4. Re-run deployment script for the 14 failed apps
+5. Verify all 73 apps are live in Camber UI
+
+GENERATED FILES
+================================================================================
+- /Users/david/git/prod_apps/nextflow/process_apps_fixed.sh (deployment script)
+- /Users/david/git/prod_apps/nextflow/DEPLOYMENT_SUMMARY.md (detailed markdown report)
+- /Users/david/git/prod_apps/nextflow/DELETE_STATUS.md (delete operation analysis)
+- /Users/david/git/prod_apps/nextflow/DEPLOYMENT_FINAL_SUMMARY.txt (this file)
+
+COMMANDS TO RE-RUN DEPLOYMENT
+================================================================================
+# To re-run all 73 apps:
+cd /Users/david/git/prod_apps/nextflow
+./process_apps_fixed.sh
+
+# To test a single app:
+camber app create --file /Users/david/git/prod_apps/nextflow/[app-path]/app.json
+
+================================================================================

@@ -1,12 +1,12 @@
 {
   "name": "dualrnaseq-host-pathogen",
   "title": "Host-Pathogen Dual RNA-seq (nf-core/dualrnaseq)",
-  "description": "Analyze host-pathogen interactions through simultaneous RNA-seq of both organisms. Quantifies gene expression in both host (human, mouse) and bacterial pathogen during infection, revealing molecular mechanisms of infection and immune response.",
+  "description": "Analyze host-pathogen interactions through simultaneous RNA-seq of both organisms. Quantifies gene expression in both host (human, mouse) and bacterial pathogen during infection, revealing molecular mechanisms of infection and immune response. Samplesheet format: `sample,fastq_1,fastq_2,replicate`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/dualrnaseq --input ${input} --outdir ${outdir} --fasta_host ${fasta_host} --gff_host ${gff_host} --fasta_pathogen ${fasta_pathogen} --gff_pathogen ${gff_pathogen} -r 1.0.0 ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/dualrnaseq/master/docs/images/nf-core-dualrnaseq_logo_light.png",
-  "content": "<h2><strong>Host-Pathogen Dual RNA-seq</strong></h2><p>The <strong>nf-core/dualrnaseq</strong> pipeline analyzes RNA-seq data from infected samples containing both host and pathogen RNA. This reveals molecular interactions during infection by simultaneously quantifying gene expression in both organisms.</p><h3><strong>Scientific Applications</strong></h3><blockquote><ul><li><strong>Infection Biology</strong>: Study host immune response and pathogen virulence</li><li><strong>Drug Discovery</strong>: Identify therapeutic targets in host or pathogen</li><li><strong>Bacterial Pathogenesis</strong>: Understand mechanisms of infection</li><li><strong>Immune Response</strong>: Characterize host defense mechanisms</li><li><strong>Co-evolution</strong>: Study host-pathogen molecular adaptations</li></ul></blockquote><h3><strong>What Makes This Different</strong></h3><p>Regular RNA-seq analyzes one organism. Dual RNA-seq simultaneously:</p><ul><li>Maps reads to combined host + pathogen genomes</li><li>Separates and quantifies expression for each organism</li><li>Reveals coordinated gene expression changes during infection</li></ul><h3><strong>Input Requirements</strong></h3><p>Samplesheet + Reference genomes for both organisms:</p><ul><li>Host FASTA and GFF (human, mouse, etc.)</li><li>Pathogen FASTA and GFF (bacteria)</li><li>Sample sheet: standard RNA-seq format</li></ul><h3><strong>Key Outputs</strong></h3><ul><li>Separate expression tables for host and pathogen</li><li>QC reports for both organisms</li><li>Mapping statistics showing host/pathogen read distribution</li></ul><blockquote><p><strong>Perfect for:</strong> Infection biologists • Immunologists • Microbiologists • Drug discovery • Pathogen researchers</p></blockquote>",
+  "content": "<h2><strong>Host-Pathogen Dual RNA-seq</strong></h2><p>The <strong>nf-core/dualrnaseq</strong> pipeline analyzes RNA-seq data from infected samples containing both host and pathogen RNA. This reveals molecular interactions during infection by simultaneously quantifying gene expression in both organisms.</p><h3><strong>Scientific Applications</strong></h3><blockquote><ul><li><strong>Infection Biology</strong>: Study host immune response and pathogen virulence</li><li><strong>Drug Discovery</strong>: Identify therapeutic targets in host or pathogen</li><li><strong>Bacterial Pathogenesis</strong>: Understand mechanisms of infection</li><li><strong>Immune Response</strong>: Characterize host defense mechanisms</li><li><strong>Co-evolution</strong>: Study host-pathogen molecular adaptations</li></ul></blockquote><h3><strong>What Makes This Different</strong></h3><p>Regular RNA-seq analyzes one organism. Dual RNA-seq simultaneously:</p><ul><li>Maps reads to combined host + pathogen genomes</li><li>Separates and quantifies expression for each organism</li><li>Reveals coordinated gene expression changes during infection</li></ul><h3><strong>Input Requirements</strong></h3><p>Samplesheet + Reference genomes for both organisms:</p><ul><li>Host FASTA and GFF (human, mouse, etc.)</li><li>Pathogen FASTA and GFF (bacteria)</li><li>Sample sheet: standard RNA-seq format</li></ul><h3><strong>Key Outputs</strong></h3><ul><li>Separate expression tables for host and pathogen</li><li>QC reports for both organisms</li><li>Mapping statistics showing host/pathogen read distribution</li></ul><blockquote><p><strong>Perfect for:</strong> Infection biologists \u2022 Immunologists \u2022 Microbiologists \u2022 Drug discovery \u2022 Pathogen researchers</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -17,7 +17,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -68,15 +70,40 @@
       "name": "system_size",
       "hidden": false,
       "options": [
-        {"label": "MEDIUM (Recommended)", "value": "medium", "mapValue": {"nodeSize": "MEDIUM", "numNodes": 1, "withGpu": false}},
-        {"label": "LARGE (Many samples)", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}
+        {
+          "label": "MEDIUM (Recommended)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (Many samples)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
       ],
       "defaultValue": "medium"
     }
   ],
   "tags": [
-    {"name": "genomics", "type": "subfield"},
-    {"name": "rna", "type": "task"},
-    {"name": "host-pathogen", "type": "task"}
+    {
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "name": "rna",
+      "type": "task"
+    },
+    {
+      "name": "host-pathogen",
+      "type": "task"
+    }
   ]
 }

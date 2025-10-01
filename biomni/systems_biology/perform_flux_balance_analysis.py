@@ -12,7 +12,7 @@ def install_dependencies():
     """Install required dependencies"""
     import subprocess
     import sys
-    deps = ['biomni']
+    deps = ['biomni', 'cobra']
     print("Installing dependencies...")
     for dep in deps:
         subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],

@@ -1,12 +1,12 @@
 {
   "name": "oncoanalyser-comprehensive",
   "title": "Comprehensive Cancer Multi-Omics (WGS + RNA)",
-  "description": "Integrated DNA+RNA cancer analysis. Combines WGS somatic variants with RNA-seq gene fusions, expression, and allele-specific expression for complete molecular profiling.",
+  "description": "Integrated DNA+RNA cancer analysis. Combines WGS somatic variants with RNA-seq gene fusions, expression, and allele-specific expression for complete molecular profiling. Samplesheet format: `sample_id,sample_type,sequence_type,filetype,filepath`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/oncoanalyser --input ${input} --outdir ${outdir} --genome ${genome} --mode wgts -r 2.2.0 ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/oncoanalyser/master/docs/images/nf-core-oncoanalyser_logo_light.png",
-  "content": "<h2><strong>Multi-Omics Cancer Genomics</strong></h2><p>Integrates <strong>WGS + RNA-seq</strong> for the most comprehensive cancer molecular profiling. Combines somatic variants, gene fusions, expression, and allele-specific expression in one analysis.</p><h3><strong>Why DNA + RNA?</strong></h3><blockquote><ul><li><strong>Gene Fusions</strong>: RNA confirms DNA SV-predicted fusions</li><li><strong>Expression Context</strong>: Which mutations are transcribed?</li><li><strong>Allele-Specific Expression</strong>: Loss of heterozygosity validation</li><li><strong>Splice Variants</strong>: Oncogenic isoforms</li><li><strong>Viral Transcripts</strong>: Active viral gene expression</li><li><strong>Immune Signatures</strong>: Tumor microenvironment profiling</li></ul></blockquote><h3><strong>Integrated Analysis</strong></h3><p><strong>DNA Layer (WGS)</strong>:</p><ul><li>SNVs, indels (SAGE)</li><li>Structural variants (GRIDSS)</li><li>Copy number alterations (PURPLE)</li><li>Viral integrations (VIRUSBREAKEND)</li><li>Microsatellite instability</li></ul><p><strong>RNA Layer (RNA-seq)</strong>:</p><ul><li>Gene fusions (Arriba)</li><li>Gene expression (RSEM)</li><li>Splice variants</li><li>Allele-specific expression</li><li>Immune cell deconvolution</li></ul><p><strong>Integration</strong>:</p><ul><li>Fusion validation (DNA SV + RNA expression)</li><li>Expressed vs silent mutations</li><li>LOH validation (ASE)</li><li>Neoantigen prediction from expressed variants</li></ul><h3><strong>Clinical Advantages</strong></h3><ul><li><strong>Fusion Discovery</strong>: High confidence (DNA + RNA evidence)</li><li><strong>Actionable Targets</strong>: Know which mutations are expressed</li><li><strong>Neoantigen Load</strong>: Immunotherapy response prediction</li><li><strong>Drug Target Validation</strong>: Expression + variant context</li><li><strong>Resistance Mechanisms</strong>: Compensatory pathway activation</li><li><strong>Patient Stratification</strong>: Multi-dimensional molecular subtypes</li></ul><h3><strong>Use Cases</strong></h3><ul><li><strong>Fusion-Driven Cancers</strong>: Sarcomas, pediatric cancers, NSCLC</li><li><strong>Immunotherapy Selection</strong>: TMB + immune signatures</li><li><strong>Targeted Therapy</strong>: Validate targets are expressed</li><li><strong>Clinical Trials</strong>: Comprehensive molecular eligibility</li><li><strong>Precision Medicine</strong>: Most complete molecular profile</li><li><strong>Research</strong>: Systems biology of cancer</li></ul><h3><strong>Key Fusions Detected</strong></h3><blockquote><ul><li><strong>ALK</strong>: EML4-ALK (NSCLC)</li><li><strong>ROS1</strong>: CD74-ROS1 (NSCLC)</li><li><strong>NTRK</strong>: ETV6-NTRK3 (various)</li><li><strong>RET</strong>: CCDC6-RET (thyroid, lung)</li><li><strong>FGFR</strong>: FGFR3-TACC3 (bladder)</li><li><strong>BRAF</strong>: KIAA1549-BRAF (glioma)</li></ul></blockquote><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with tumor-normal DNA (WGS BAMs) + tumor RNA (RNA-seq BAM/FASTQ):</p><ul><li>Tumor DNA BAM</li><li>Normal DNA BAM</li><li>Tumor RNA BAM/FASTQ</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>All DNA Outputs</strong>: SNVs, SVs, CNVs, drivers</li><li><strong>Gene Fusions</strong>: High-confidence validated fusions</li><li><strong>Gene Expression</strong>: TPM/FPKM for all genes</li><li><strong>Expressed Variants</strong>: Which somatic mutations are transcribed</li><li><strong>Allele-Specific Expression</strong>: LOH validation</li><li><strong>Immune Profiling</strong>: Tumor microenvironment</li><li><strong>Integrated Report</strong>: Combined DNA+RNA findings</li></ul><blockquote><p><strong>Perfect for:</strong> Fusion cancers • Immunotherapy • Precision oncology • Clinical trials • Comprehensive profiling</p></blockquote>",
+  "content": "<h2><strong>Multi-Omics Cancer Genomics</strong></h2><p>Integrates <strong>WGS + RNA-seq</strong> for the most comprehensive cancer molecular profiling. Combines somatic variants, gene fusions, expression, and allele-specific expression in one analysis.</p><h3><strong>Why DNA + RNA?</strong></h3><blockquote><ul><li><strong>Gene Fusions</strong>: RNA confirms DNA SV-predicted fusions</li><li><strong>Expression Context</strong>: Which mutations are transcribed?</li><li><strong>Allele-Specific Expression</strong>: Loss of heterozygosity validation</li><li><strong>Splice Variants</strong>: Oncogenic isoforms</li><li><strong>Viral Transcripts</strong>: Active viral gene expression</li><li><strong>Immune Signatures</strong>: Tumor microenvironment profiling</li></ul></blockquote><h3><strong>Integrated Analysis</strong></h3><p><strong>DNA Layer (WGS)</strong>:</p><ul><li>SNVs, indels (SAGE)</li><li>Structural variants (GRIDSS)</li><li>Copy number alterations (PURPLE)</li><li>Viral integrations (VIRUSBREAKEND)</li><li>Microsatellite instability</li></ul><p><strong>RNA Layer (RNA-seq)</strong>:</p><ul><li>Gene fusions (Arriba)</li><li>Gene expression (RSEM)</li><li>Splice variants</li><li>Allele-specific expression</li><li>Immune cell deconvolution</li></ul><p><strong>Integration</strong>:</p><ul><li>Fusion validation (DNA SV + RNA expression)</li><li>Expressed vs silent mutations</li><li>LOH validation (ASE)</li><li>Neoantigen prediction from expressed variants</li></ul><h3><strong>Clinical Advantages</strong></h3><ul><li><strong>Fusion Discovery</strong>: High confidence (DNA + RNA evidence)</li><li><strong>Actionable Targets</strong>: Know which mutations are expressed</li><li><strong>Neoantigen Load</strong>: Immunotherapy response prediction</li><li><strong>Drug Target Validation</strong>: Expression + variant context</li><li><strong>Resistance Mechanisms</strong>: Compensatory pathway activation</li><li><strong>Patient Stratification</strong>: Multi-dimensional molecular subtypes</li></ul><h3><strong>Use Cases</strong></h3><ul><li><strong>Fusion-Driven Cancers</strong>: Sarcomas, pediatric cancers, NSCLC</li><li><strong>Immunotherapy Selection</strong>: TMB + immune signatures</li><li><strong>Targeted Therapy</strong>: Validate targets are expressed</li><li><strong>Clinical Trials</strong>: Comprehensive molecular eligibility</li><li><strong>Precision Medicine</strong>: Most complete molecular profile</li><li><strong>Research</strong>: Systems biology of cancer</li></ul><h3><strong>Key Fusions Detected</strong></h3><blockquote><ul><li><strong>ALK</strong>: EML4-ALK (NSCLC)</li><li><strong>ROS1</strong>: CD74-ROS1 (NSCLC)</li><li><strong>NTRK</strong>: ETV6-NTRK3 (various)</li><li><strong>RET</strong>: CCDC6-RET (thyroid, lung)</li><li><strong>FGFR</strong>: FGFR3-TACC3 (bladder)</li><li><strong>BRAF</strong>: KIAA1549-BRAF (glioma)</li></ul></blockquote><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with tumor-normal DNA (WGS BAMs) + tumor RNA (RNA-seq BAM/FASTQ):</p><ul><li>Tumor DNA BAM</li><li>Normal DNA BAM</li><li>Tumor RNA BAM/FASTQ</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>All DNA Outputs</strong>: SNVs, SVs, CNVs, drivers</li><li><strong>Gene Fusions</strong>: High-confidence validated fusions</li><li><strong>Gene Expression</strong>: TPM/FPKM for all genes</li><li><strong>Expressed Variants</strong>: Which somatic mutations are transcribed</li><li><strong>Allele-Specific Expression</strong>: LOH validation</li><li><strong>Immune Profiling</strong>: Tumor microenvironment</li><li><strong>Integrated Report</strong>: Combined DNA+RNA findings</li></ul><blockquote><p><strong>Perfect for:</strong> Fusion cancers \u2022 Immunotherapy \u2022 Precision oncology \u2022 Clinical trials \u2022 Comprehensive profiling</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -17,7 +17,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -28,8 +30,14 @@
       "defaultValue": "GRCh38_hmf",
       "required": true,
       "options": [
-        {"label": "Human GRCh38 (HMF)", "value": "GRCh38_hmf"},
-        {"label": "Human GRCh37 (HMF)", "value": "GRCh37_hmf"}
+        {
+          "label": "Human GRCh38 (HMF)",
+          "value": "GRCh38_hmf"
+        },
+        {
+          "label": "Human GRCh37 (HMF)",
+          "value": "GRCh37_hmf"
+        }
       ]
     },
     {
@@ -52,14 +60,31 @@
       "name": "system_size",
       "hidden": false,
       "options": [
-        {"label": "XLARGE (Required for WGS+RNA)", "value": "xlarge", "mapValue": {"nodeSize": "XLARGE", "numNodes": 1, "withGpu": false}}
+        {
+          "label": "XLARGE (Required for WGS+RNA)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
       ],
       "defaultValue": "xlarge"
     }
   ],
   "tags": [
-    {"name": "genomics", "type": "subfield"},
-    {"name": "cancer", "type": "task"},
-    {"name": "multi-omics", "type": "task"}
+    {
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "name": "cancer",
+      "type": "task"
+    },
+    {
+      "name": "multi-omics",
+      "type": "task"
+    }
   ]
 }

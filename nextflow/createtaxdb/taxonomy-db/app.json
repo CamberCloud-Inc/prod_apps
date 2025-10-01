@@ -1,7 +1,7 @@
 {
   "name": "createtaxdb-taxonomy-db",
   "title": "Custom Taxonomy Database Builder (Kraken2/DIAMOND/Kaiju)",
-  "description": "Build custom metagenomic classifier databases from reference genome sets using nf-core/createtaxdb. Supports Kraken2, Bracken, DIAMOND, Kaiju, and Centrifuge for taxonomic profiling applications. Parallelized construction from nucleotide and protein sequences with automated taxonomy integration.",
+  "description": "Build custom metagenomic classifier databases from reference genome sets using nf-core/createtaxdb. Supports Kraken2, Bracken, DIAMOND, Kaiju, and Centrifuge for taxonomic profiling applications. Parallelized construction from nucleotide and protein sequences with automated taxonomy integration. Samplesheet format: `name,strain`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/createtaxdb --input ${input} --outdir ${outdir} --accession2taxid ${accession2taxid} --nodesdmp ${nodesdmp} --namesdmp ${namesdmp} --dbname ${dbname} --build_kraken2 --build_bracken -r 1.0.0 -profile docker",
@@ -16,7 +16,10 @@
       "required": true,
       "restrictions": {
         "allow_files": true,
-        "allowed_file_types": [".csv", ".tsv"]
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
       }
     },
     {
@@ -41,7 +44,7 @@
       "required": true
     },
     {
-      "type": "Text",
+      "type": "Input",
       "label": "Database Name",
       "name": "dbname",
       "description": "Descriptive name for your custom database (e.g., gut_bacteria_v1, plant_pathogens_2024). Used in output files and database metadata.",
@@ -100,9 +103,21 @@
     }
   ],
   "tags": [
-    {"name": "metagenomics", "type": "subfield"},
-    {"name": "database-construction", "type": "task"},
-    {"name": "taxonomy", "type": "task"},
-    {"name": "biology", "type": "field"}
+    {
+      "name": "metagenomics",
+      "type": "subfield"
+    },
+    {
+      "name": "database-construction",
+      "type": "task"
+    },
+    {
+      "name": "taxonomy",
+      "type": "task"
+    },
+    {
+      "name": "biology",
+      "type": "field"
+    }
   ]
 }

@@ -1,12 +1,12 @@
 {
   "name": "riboseq-translation-efficiency",
   "title": "Translation Efficiency Analysis (Ribosome Profiling)",
-  "description": "Measure translation efficiency by comparing Ribo-seq and RNA-seq data. Quantifies which mRNAs are actively translated vs transcribed, revealing post-transcriptional regulation.",
+  "description": "Measure translation efficiency by comparing Ribo-seq and RNA-seq data. Quantifies which mRNAs are actively translated vs transcribed, revealing post-transcriptional regulation. Samplesheet format: `sample,fastq_1,fastq_2,replicate`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/riboseq --input ${input} --outdir ${outdir} --genome ${genome} -r 1.1.0 ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/riboseq/master/docs/images/nf-core-riboseq_logo_light.png",
-  "content": "<h2><strong>Translation Efficiency Analysis</strong></h2><p>Ribosome profiling (Ribo-seq) captures ribosome-protected RNA fragments to measure <strong>active translation</strong>, revealing which mRNAs are being translated into proteins.</p><h3><strong>What Translation Efficiency Reveals</strong></h3><blockquote><p>Translation efficiency = Ribo-seq signal / RNA-seq signal</p><ul><li><strong>Post-transcriptional Regulation</strong>: mRNA abundance vs protein production</li><li><strong>Translational Control</strong>: Stress response, development, disease</li><li><strong>Regulatory Elements</strong>: uORFs, IRES, codon optimality</li><li><strong>Drug Response</strong>: Translation inhibitor effects</li></ul></blockquote><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Cancer Research</strong>: Oncogene translation dysregulation</li><li><strong>Neuroscience</strong>: Synaptic local translation</li><li><strong>Viral Infection</strong>: Host shutoff and viral translation</li><li><strong>Drug Development</strong>: Translation inhibitor screening</li><li><strong>Disease Mechanisms</strong>: Ribosomopathies, neurodegeneration</li><li><strong>Quality Control</strong>: Ribosome stalling, nonsense-mediated decay</li></ul><h3><strong>Pipeline Features</strong></h3><ul><li><strong>Read Processing</strong>: Adapter trimming, rRNA depletion</li><li><strong>Alignment</strong>: Specialized for ribosome footprints</li><li><strong>ORF Prediction</strong>: Ribo-TISH, Ribotricer for translated regions</li><li><strong>uORF Detection</strong>: Upstream open reading frames</li><li><strong>Translation Efficiency</strong>: Ratio of Ribo-seq/RNA-seq</li><li><strong>Metagene Profiles</strong>: Ribosome positioning around start/stop codons</li><li><strong>Quality Metrics</strong>: Periodicity, frame preference</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with columns:</p><ul><li><code>sample</code>: Sample identifier</li><li><code>fastq_1</code>: Forward reads</li><li><code>fastq_2</code>: Reverse reads (if paired-end)</li><li><code>strandedness</code>: forward, reverse, or unstranded</li><li><code>type</code>: riboseq (for Ribo-seq) or rnaseq (for matched RNA-seq)</li></ul><p><strong>Best Practice</strong>: Include both Ribo-seq and RNA-seq samples for translation efficiency analysis.</p><h3><strong>Key Outputs</strong></h3><ul><li><strong>Translation Efficiency</strong>: Gene-level TE scores</li><li><strong>Predicted ORFs</strong>: Novel translated regions</li><li><strong>uORF Annotations</strong>: Upstream regulatory ORFs</li><li><strong>Metagene Plots</strong>: Ribosome positioning</li><li><strong>Quality Metrics</strong>: 3-nt periodicity, frame distribution</li></ul><blockquote><p><strong>Perfect for:</strong> Translation regulation • Post-transcriptional control • uORF discovery • Drug MOA studies • Disease mechanisms</p></blockquote>",
+  "content": "<h2><strong>Translation Efficiency Analysis</strong></h2><p>Ribosome profiling (Ribo-seq) captures ribosome-protected RNA fragments to measure <strong>active translation</strong>, revealing which mRNAs are being translated into proteins.</p><h3><strong>What Translation Efficiency Reveals</strong></h3><blockquote><p>Translation efficiency = Ribo-seq signal / RNA-seq signal</p><ul><li><strong>Post-transcriptional Regulation</strong>: mRNA abundance vs protein production</li><li><strong>Translational Control</strong>: Stress response, development, disease</li><li><strong>Regulatory Elements</strong>: uORFs, IRES, codon optimality</li><li><strong>Drug Response</strong>: Translation inhibitor effects</li></ul></blockquote><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Cancer Research</strong>: Oncogene translation dysregulation</li><li><strong>Neuroscience</strong>: Synaptic local translation</li><li><strong>Viral Infection</strong>: Host shutoff and viral translation</li><li><strong>Drug Development</strong>: Translation inhibitor screening</li><li><strong>Disease Mechanisms</strong>: Ribosomopathies, neurodegeneration</li><li><strong>Quality Control</strong>: Ribosome stalling, nonsense-mediated decay</li></ul><h3><strong>Pipeline Features</strong></h3><ul><li><strong>Read Processing</strong>: Adapter trimming, rRNA depletion</li><li><strong>Alignment</strong>: Specialized for ribosome footprints</li><li><strong>ORF Prediction</strong>: Ribo-TISH, Ribotricer for translated regions</li><li><strong>uORF Detection</strong>: Upstream open reading frames</li><li><strong>Translation Efficiency</strong>: Ratio of Ribo-seq/RNA-seq</li><li><strong>Metagene Profiles</strong>: Ribosome positioning around start/stop codons</li><li><strong>Quality Metrics</strong>: Periodicity, frame preference</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with columns:</p><ul><li><code>sample</code>: Sample identifier</li><li><code>fastq_1</code>: Forward reads</li><li><code>fastq_2</code>: Reverse reads (if paired-end)</li><li><code>strandedness</code>: forward, reverse, or unstranded</li><li><code>type</code>: riboseq (for Ribo-seq) or rnaseq (for matched RNA-seq)</li></ul><p><strong>Best Practice</strong>: Include both Ribo-seq and RNA-seq samples for translation efficiency analysis.</p><h3><strong>Key Outputs</strong></h3><ul><li><strong>Translation Efficiency</strong>: Gene-level TE scores</li><li><strong>Predicted ORFs</strong>: Novel translated regions</li><li><strong>uORF Annotations</strong>: Upstream regulatory ORFs</li><li><strong>Metagene Plots</strong>: Ribosome positioning</li><li><strong>Quality Metrics</strong>: 3-nt periodicity, frame distribution</li></ul><blockquote><p><strong>Perfect for:</strong> Translation regulation \u2022 Post-transcriptional control \u2022 uORF discovery \u2022 Drug MOA studies \u2022 Disease mechanisms</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -17,7 +17,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -28,10 +30,22 @@
       "defaultValue": "GRCh38",
       "required": true,
       "options": [
-        {"label": "Human GRCh38", "value": "GRCh38"},
-        {"label": "Human GRCh37", "value": "GRCh37"},
-        {"label": "Mouse GRCm39", "value": "GRCm39"},
-        {"label": "Mouse GRCm38", "value": "GRCm38"}
+        {
+          "label": "Human GRCh38",
+          "value": "GRCh38"
+        },
+        {
+          "label": "Human GRCh37",
+          "value": "GRCh37"
+        },
+        {
+          "label": "Mouse GRCm39",
+          "value": "GRCm39"
+        },
+        {
+          "label": "Mouse GRCm38",
+          "value": "GRCm38"
+        }
       ]
     },
     {
@@ -54,15 +68,40 @@
       "name": "system_size",
       "hidden": false,
       "options": [
-        {"label": "LARGE (Recommended)", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}},
-        {"label": "XLARGE (Many samples)", "value": "xlarge", "mapValue": {"nodeSize": "XLARGE", "numNodes": 1, "withGpu": false}}
+        {
+          "label": "LARGE (Recommended)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE (Many samples)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
       ],
       "defaultValue": "large"
     }
   ],
   "tags": [
-    {"name": "transcriptomics", "type": "field"},
-    {"name": "translation", "type": "task"},
-    {"name": "ribosome-profiling", "type": "task"}
+    {
+      "name": "transcriptomics",
+      "type": "field"
+    },
+    {
+      "name": "translation",
+      "type": "task"
+    },
+    {
+      "name": "ribosome-profiling",
+      "type": "task"
+    }
   ]
 }

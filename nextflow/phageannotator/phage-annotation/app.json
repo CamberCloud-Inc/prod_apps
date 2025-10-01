@@ -1,12 +1,12 @@
 {
   "name": "phageannotator-genome-annotation",
   "title": "Phageannotator: Bacteriophage Genome Annotation",
-  "description": "Specialized annotation of bacteriophage genomes. Identifies structural genes, DNA metabolism, lysis cassettes, and lifestyle prediction (lytic vs lysogenic). Ideal for phage genomics and therapy.",
+  "description": "Specialized annotation of bacteriophage genomes. Identifies structural genes, DNA metabolism, lysis cassettes, and lifestyle prediction (lytic vs lysogenic). Ideal for phage genomics and therapy. Samplesheet format: `sample,fasta`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/phageannotator --input ${input} --outdir ${outdir} -r 1.0.0 ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/phageannotator/master/docs/images/nf-core-phageannotator_logo_light.png",
-  "content": "<h2><strong>Phageannotator: Phage Genomics</strong></h2><p>Comprehensive bacteriophage genome annotation with specialized tools for viral genes. Predicts structural proteins, lysis genes, and phage lifestyle.</p><h3><strong>Applications</strong></h3><ul><li><strong>Phage Therapy</strong>: Characterize therapeutic phages</li><li><strong>Phage Discovery</strong>: Annotate novel phages from metagenomes</li><li><strong>Comparative Genomics</strong>: Phage diversity studies</li><li><strong>Safety Assessment</strong>: Check for toxins, AMR genes</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Gene Predictions</strong>: Structural, DNA metabolism, lysis</li><li><strong>Lifestyle Prediction</strong>: Lytic vs temperate/lysogenic</li><li><strong>tRNA Genes</strong>: Phage-encoded tRNAs</li><li><strong>Genome Maps</strong>: Annotated visualizations</li></ul><blockquote><p><strong>Perfect for:</strong> Phage therapy • Phage genomics • Metagenome phage mining • Comparative phage studies</p></blockquote>",
+  "content": "<h2><strong>Phageannotator: Phage Genomics</strong></h2><p>Comprehensive bacteriophage genome annotation with specialized tools for viral genes. Predicts structural proteins, lysis genes, and phage lifestyle.</p><h3><strong>Applications</strong></h3><ul><li><strong>Phage Therapy</strong>: Characterize therapeutic phages</li><li><strong>Phage Discovery</strong>: Annotate novel phages from metagenomes</li><li><strong>Comparative Genomics</strong>: Phage diversity studies</li><li><strong>Safety Assessment</strong>: Check for toxins, AMR genes</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Gene Predictions</strong>: Structural, DNA metabolism, lysis</li><li><strong>Lifestyle Prediction</strong>: Lytic vs temperate/lysogenic</li><li><strong>tRNA Genes</strong>: Phage-encoded tRNAs</li><li><strong>Genome Maps</strong>: Annotated visualizations</li></ul><blockquote><p><strong>Perfect for:</strong> Phage therapy \u2022 Phage genomics \u2022 Metagenome phage mining \u2022 Comparative phage studies</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -14,7 +14,13 @@
       "name": "input",
       "description": "CSV with phage FASTA genomes",
       "required": true,
-      "restrictions": {"allow_files": true, "allow_folders": false, "allowed_file_types": [".csv"]}
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".csv"
+        ]
+      }
     },
     {
       "type": "Stash File",
@@ -23,7 +29,10 @@
       "description": "Output directory",
       "defaultValue": "./phageannotator-results",
       "required": true,
-      "restrictions": {"allow_files": false, "allow_folders": true}
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
     }
   ],
   "jobConfig": [
@@ -32,9 +41,32 @@
       "label": "Compute Resources",
       "name": "system_size",
       "hidden": false,
-      "options": [{"label": "MEDIUM (Recommended)", "value": "medium", "mapValue": {"nodeSize": "MEDIUM", "numNodes": 1, "withGpu": false}}],
+      "options": [
+        {
+          "label": "MEDIUM (Recommended)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
       "defaultValue": "medium"
     }
   ],
-  "tags": [{"name": "phage-genomics", "type": "field"}, {"name": "bacteriophage", "type": "task"}, {"name": "viral-annotation", "type": "task"}]
+  "tags": [
+    {
+      "name": "phage-genomics",
+      "type": "field"
+    },
+    {
+      "name": "bacteriophage",
+      "type": "task"
+    },
+    {
+      "name": "viral-annotation",
+      "type": "task"
+    }
+  ]
 }

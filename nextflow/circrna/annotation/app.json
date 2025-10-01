@@ -1,12 +1,12 @@
 {
   "name": "circrna-annotation",
   "title": "Circular RNA Annotation & Discovery",
-  "description": "Comprehensive circRNA annotation pipeline. Identifies, quantifies, and annotates circular RNAs from RNA-seq data for genome-wide circRNA catalog creation.",
+  "description": "Comprehensive circRNA annotation pipeline. Identifies, quantifies, and annotates circular RNAs from RNA-seq data for genome-wide circRNA catalog creation. Samplesheet format: `sample,fastq_1,fastq_2`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/circrna --input ${input} --outdir ${outdir} --genome ${genome} --module circrna_discovery -r dev ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/circrna/master/docs/images/nf-core-circrna_logo_light.png",
-  "content": "<h2><strong>Circular RNA Annotation</strong></h2><p>Create comprehensive circRNA catalogs for any organism with a reference genome. Discovers and annotates all circular RNAs in your samples.</p><h3><strong>Applications</strong></h3><ul><li><strong>Genome Annotation</strong>: Add circRNAs to gene annotations</li><li><strong>Tissue Atlas</strong>: Tissue-specific circRNA expression</li><li><strong>Evolutionary Studies</strong>: Conservation of circRNAs</li><li><strong>Reference Building</strong>: Create circRNA databases</li><li><strong>Functional Genomics</strong>: circRNA regulatory networks</li></ul><h3><strong>Pipeline Features</strong></h3><ul><li><strong>Multi-Tool Detection</strong>: CIRCexplorer2, circRNA_finder, find_circ, DCC</li><li><strong>Robust Calling</strong>: Consensus circRNAs from multiple algorithms</li><li><strong>Annotation</strong>: Gene source, exon composition, splice sites</li><li><strong>Quantification</strong>: Back-splice junction (BSJ) counts</li><li><strong>Filtering</strong>: Remove false positives, low-confidence calls</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with RNA-seq data (ribo-depleted or total RNA).</p><h3><strong>Key Outputs</strong></h3><ul><li><strong>circRNA Annotations</strong>: BED, GTF formats</li><li><strong>Expression Matrix</strong>: Quantification across samples</li><li><strong>circRNA Metadata</strong>: Gene origin, genomic coordinates, splice patterns</li></ul><blockquote><p><strong>Perfect for:</strong> Genome annotation • circRNA catalogs • Tissue atlases • Reference databases</p></blockquote>",
+  "content": "<h2><strong>Circular RNA Annotation</strong></h2><p>Create comprehensive circRNA catalogs for any organism with a reference genome. Discovers and annotates all circular RNAs in your samples.</p><h3><strong>Applications</strong></h3><ul><li><strong>Genome Annotation</strong>: Add circRNAs to gene annotations</li><li><strong>Tissue Atlas</strong>: Tissue-specific circRNA expression</li><li><strong>Evolutionary Studies</strong>: Conservation of circRNAs</li><li><strong>Reference Building</strong>: Create circRNA databases</li><li><strong>Functional Genomics</strong>: circRNA regulatory networks</li></ul><h3><strong>Pipeline Features</strong></h3><ul><li><strong>Multi-Tool Detection</strong>: CIRCexplorer2, circRNA_finder, find_circ, DCC</li><li><strong>Robust Calling</strong>: Consensus circRNAs from multiple algorithms</li><li><strong>Annotation</strong>: Gene source, exon composition, splice sites</li><li><strong>Quantification</strong>: Back-splice junction (BSJ) counts</li><li><strong>Filtering</strong>: Remove false positives, low-confidence calls</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with RNA-seq data (ribo-depleted or total RNA).</p><h3><strong>Key Outputs</strong></h3><ul><li><strong>circRNA Annotations</strong>: BED, GTF formats</li><li><strong>Expression Matrix</strong>: Quantification across samples</li><li><strong>circRNA Metadata</strong>: Gene origin, genomic coordinates, splice patterns</li></ul><blockquote><p><strong>Perfect for:</strong> Genome annotation \u2022 circRNA catalogs \u2022 Tissue atlases \u2022 Reference databases</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -17,7 +17,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -28,8 +30,14 @@
       "defaultValue": "GRCh38",
       "required": true,
       "options": [
-        {"label": "Human GRCh38", "value": "GRCh38"},
-        {"label": "Mouse GRCm39", "value": "GRCm39"}
+        {
+          "label": "Human GRCh38",
+          "value": "GRCh38"
+        },
+        {
+          "label": "Mouse GRCm39",
+          "value": "GRCm39"
+        }
       ]
     },
     {
@@ -52,14 +60,31 @@
       "name": "system_size",
       "hidden": false,
       "options": [
-        {"label": "LARGE (Recommended)", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}
+        {
+          "label": "LARGE (Recommended)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
       ],
       "defaultValue": "large"
     }
   ],
   "tags": [
-    {"name": "transcriptomics", "type": "field"},
-    {"name": "circrna", "type": "task"},
-    {"name": "annotation", "type": "task"}
+    {
+      "name": "transcriptomics",
+      "type": "field"
+    },
+    {
+      "name": "circrna",
+      "type": "task"
+    },
+    {
+      "name": "annotation",
+      "type": "task"
+    }
   ]
 }

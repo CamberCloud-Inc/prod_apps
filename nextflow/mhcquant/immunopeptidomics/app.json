@@ -1,7 +1,7 @@
 {
   "name": "mhcquant-immunopeptidomics",
-  "title": "MHCquant: Immunopeptidomics Mass Spectrometry Analysis",
-  "description": "Automated and reproducible data analysis for immunopeptidomics. Identify and quantify MHC-eluted peptides from mass spectrometry data using OpenMS, with database search (Comet), MS2Rescore prediction, and Percolator FDR rescoring. Supports multiple spectrum file formats for clinical immunotherapy research.",
+  "title": "Immunopeptidomics Mass Spectrometry Analysis",
+  "description": "Automated and reproducible data analysis for immunopeptidomics. Identify and quantify MHC-eluted peptides from mass spectrometry data using OpenMS, with database search (Comet), MS2Rescore prediction, and Percolator FDR rescoring. Supports multiple spectrum file formats for clinical immunotherapy research. Samplesheet format: `Curated,high`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/mhcquant --input ${input} --outdir ${outdir} --fasta ${fasta} --skip_cellbender -c /etc/mpi/nextflow.camber.config -profile k8s -r 2.6.0",
@@ -20,7 +20,10 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv", ".tsv"]
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
       }
     },
     {
@@ -35,7 +38,12 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".fasta", ".fa", ".fasta.gz", ".fa.gz"]
+        "allowed_file_types": [
+          ".fasta",
+          ".fa",
+          ".fasta.gz",
+          ".fa.gz"
+        ]
       }
     },
     {
@@ -94,9 +102,21 @@
     }
   ],
   "tags": [
-    {"name": "proteomics", "type": "subfield"},
-    {"name": "immunopeptidomics", "type": "subfield"},
-    {"name": "mass-spectrometry", "type": "task"},
-    {"name": "biology", "type": "field"}
+    {
+      "name": "proteomics",
+      "type": "subfield"
+    },
+    {
+      "name": "immunopeptidomics",
+      "type": "subfield"
+    },
+    {
+      "name": "mass-spectrometry",
+      "type": "task"
+    },
+    {
+      "name": "biology",
+      "type": "field"
+    }
   ]
 }

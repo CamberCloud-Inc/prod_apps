@@ -11,7 +11,7 @@ import json
 
 def install_dependencies():
     """Install required dependencies"""
-    deps = ['biomni']
+    deps = ['biomni', 'cv2']
     for dep in deps:
         print(f"Installing {dep}...")
         subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])

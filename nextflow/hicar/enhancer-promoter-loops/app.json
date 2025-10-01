@@ -1,16 +1,61 @@
 {
   "name": "hicar-enhancer-promoter-analysis",
-  "title": "HiCAR: Chromatin Accessibility and Interaction Analysis",
-  "description": "Analyzes HiCAR data for simultaneous measurement of chromatin accessibility and cis-regulatory chromatin contacts without antibodies. Ideal for studying enhancer-promoter loops and gene regulation.",
+  "title": "Chromatin Accessibility and Interaction Analysis",
+  "description": "Analyzes HiCAR data for simultaneous measurement of chromatin accessibility and cis-regulatory chromatin contacts without antibodies. Ideal for studying enhancer-promoter loops and gene regulation. Samplesheet format: `hic,circos`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/hicar --input ${input} --outdir ${outdir} -r 1.0.0 ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/hicar/master/docs/images/nf-core-hicar_logo_light.png",
   "content": "<h2><strong>HiCAR - Chromatin Accessibility and Interaction Analysis</strong></h2><p>Analyzes HiCAR (HiC on Accessible Regulatory DNA) data for simultaneous measurement of chromatin accessibility and cis-regulatory chromatin contacts. Unlike immunoprecipitation-based methods, HiCAR does not require antibodies.</p><h3><strong>What is HiCAR?</strong></h3><blockquote><p><strong>HiCAR</strong> uses Transposase-Accessible Chromatin to anchor chromatin interactions, enabling researchers to study enhancer-promoter loops and regulatory networks without antibody requirements.</p></blockquote><h3><strong>Key Features</strong></h3><ul><li><strong>Antibody-Free</strong>: No immunoprecipitation required</li><li><strong>Multi-Omic Support</strong>: Handles HiCAR, HiChIP, ChIA-PET, PLAC-Seq</li><li><strong>Low Input Compatible</strong>: Works with limited sample material</li><li><strong>Comprehensive Analysis</strong>: From reads to interaction loops</li><li><strong>Extensive Visualization</strong>: Cooler, .hic, circos plots</li></ul><h3><strong>Pipeline Workflow</strong></h3><ol><li><strong>Quality Control</strong>: Read QC with FastQC</li><li><strong>Read Mapping</strong>: Align to reference genome</li><li><strong>Peak Calling</strong>: Identify accessible chromatin regions</li><li><strong>Loop Detection</strong>: Find genomic interaction loops</li><li><strong>Differential Analysis</strong>: Compare conditions</li><li><strong>Visualization</strong>: Generate interaction maps</li></ol><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Enhancer-Promoter Loops</strong>: Map regulatory interactions</li><li><strong>Gene Regulation</strong>: Understand transcriptional control</li><li><strong>3D Genome Architecture</strong>: Study chromatin organization</li><li><strong>Disease Mechanisms</strong>: Identify disrupted regulatory networks</li><li><strong>Development Studies</strong>: Track chromatin changes during differentiation</li></ul><h3><strong>Advantages Over Traditional Methods</strong></h3><ul><li><strong>No Antibodies Required</strong>: Reduces cost and experimental complexity</li><li><strong>Dual Information</strong>: Accessibility + interactions in one experiment</li><li><strong>Universal Application</strong>: Works across cell types and organisms</li><li><strong>Low Input</strong>: Suitable for limited samples</li></ul><h3><strong>Input Requirements</strong></h3><ul><li><strong>FASTQ Files</strong>: Paired-end sequencing data</li><li><strong>Sample Sheet</strong>: CSV with sample information</li><li><strong>Reference Genome</strong>: FASTA and annotations</li><li><strong>Optional</strong>: Mappability file for improved analysis</li></ul><h3><strong>Main Outputs</strong></h3><ul><li><strong>Interaction Loops</strong>: Enhancer-promoter connections</li><li><strong>Peak Files</strong>: Accessible chromatin regions</li><li><strong>Visualization Files</strong>: Cooler, .hic, circos plots</li><li><strong>QC Reports</strong>: Comprehensive MultiQC report</li><li><strong>Differential Results</strong>: Condition-specific interactions</li></ul><blockquote><p><strong>Perfect for:</strong> Enhancer-Promoter Mapping • Gene Regulation • 3D Genome • Chromatin Interactions • Low-Input Experiments</p></blockquote>",
   "spec": [
-    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./hicar-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "type": "Stash File",
+      "label": "Input",
+      "name": "input",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output",
+      "name": "outdir",
+      "defaultValue": "./hicar-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "hicar", "type": "task"}]
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Resources",
+      "name": "system_size",
+      "options": [
+        {
+          "label": "LARGE",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "name": "hicar",
+      "type": "task"
+    }
+  ]
 }

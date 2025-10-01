@@ -1,7 +1,7 @@
 {
   "name": "deepvariant-clinical-wgs",
-  "title": "DeepVariant: Deep Learning Variant Calling",
-  "description": "Deep learning-based pipeline for highly accurate genomic variant identification from whole genome and exome sequencing data. Uses Google's DeepVariant for superior accuracy.",
+  "title": "Deep Learning Variant Calling",
+  "description": "Deep learning-based pipeline for highly accurate genomic variant identification from whole genome and exome sequencing data. Uses Google's DeepVariant for superior accuracy. Samplesheet format: `sample,bam,bai`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/deepvariant --input ${input} --outdir ${outdir} -r 1.5.0 ",

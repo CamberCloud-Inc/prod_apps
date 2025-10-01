@@ -1,7 +1,7 @@
 {
   "name": "ssds-single-strand-dna",
-  "title": "SSDS: Single-Strand DNA Sequencing",
-  "description": "Analyze single-stranded DNA (ssDNA) in meiotic recombination hotspots. Map ssDNA formation during meiosis to identify recombination initiation sites, DSB hotspots, and strand-specific processes in mammalian genomes.",
+  "title": "Single-Strand DNA Sequencing",
+  "description": "Analyze single-stranded DNA (ssDNA) in meiotic recombination hotspots. Map ssDNA formation during meiosis to identify recombination initiation sites, DSB hotspots, and strand-specific processes in mammalian genomes. Samplesheet format: `sample,fastq_1,fastq_2`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/ssds --input ${input} --outdir ${outdir} --genome ${genome} -r dev",
@@ -17,7 +17,10 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv", ".tsv"]
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
       }
     },
     {
@@ -28,12 +31,30 @@
       "defaultValue": "mm10",
       "required": true,
       "options": [
-        {"label": "Mouse mm10/GRCm38 (most common for SSDS)", "value": "mm10"},
-        {"label": "Mouse mm39/GRCm39 (latest)", "value": "mm39"},
-        {"label": "Human hg38/GRCh38 (latest)", "value": "hg38"},
-        {"label": "Human hg19/GRCh37 (legacy)", "value": "hg19"},
-        {"label": "Rat rn6", "value": "rn6"},
-        {"label": "Rat rn7", "value": "rn7"}
+        {
+          "label": "Mouse mm10/GRCm38 (most common for SSDS)",
+          "value": "mm10"
+        },
+        {
+          "label": "Mouse mm39/GRCm39 (latest)",
+          "value": "mm39"
+        },
+        {
+          "label": "Human hg38/GRCh38 (latest)",
+          "value": "hg38"
+        },
+        {
+          "label": "Human hg19/GRCh37 (legacy)",
+          "value": "hg19"
+        },
+        {
+          "label": "Rat rn6",
+          "value": "rn6"
+        },
+        {
+          "label": "Rat rn7",
+          "value": "rn7"
+        }
       ]
     },
     {
@@ -79,10 +100,25 @@
     }
   ],
   "tags": [
-    {"name": "ssds", "type": "task"},
-    {"name": "recombination", "type": "task"},
-    {"name": "meiosis", "type": "task"},
-    {"name": "genomics", "type": "field"},
-    {"name": "reproductive-biology", "type": "field"}
+    {
+      "name": "ssds",
+      "type": "task"
+    },
+    {
+      "name": "recombination",
+      "type": "task"
+    },
+    {
+      "name": "meiosis",
+      "type": "task"
+    },
+    {
+      "name": "genomics",
+      "type": "field"
+    },
+    {
+      "name": "reproductive-biology",
+      "type": "field"
+    }
   ]
 }

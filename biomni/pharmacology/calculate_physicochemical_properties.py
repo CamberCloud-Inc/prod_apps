@@ -13,7 +13,7 @@ import json
 
 def install_dependencies():
     """Install required dependencies"""
-    deps = ['biomni']
+    deps = ['biomni', 'rdkit']
     print("Installing dependencies...")
     for dep in deps:
         subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],

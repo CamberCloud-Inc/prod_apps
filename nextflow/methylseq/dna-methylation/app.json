@@ -1,12 +1,12 @@
 {
   "name": "methylseq-dna-methylation",
   "title": "Bisulfite-seq DNA Methylation Profiling",
-  "description": "Genome-wide DNA methylation analysis using bisulfite sequencing. Maps cytosine methylation at single-base resolution for epigenetic studies.",
+  "description": "Genome-wide DNA methylation analysis using bisulfite sequencing. Maps cytosine methylation at single-base resolution for epigenetic studies. Samplesheet format: `sample,fastq_1,fastq_2`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/methylseq --input ${input} --outdir ${outdir} --genome ${genome} --aligner ${aligner} -r 4.1.0 ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/methylseq/master/docs/images/nf-core-methylseq_logo_light.png",
-  "content": "<h2><strong>Bisulfite-seq DNA Methylation</strong></h2><p><strong>DNA methylation</strong> is a key epigenetic modification where methyl groups are added to cytosines (5mC), primarily in CpG dinucleotides. Bisulfite sequencing is the gold standard for genome-wide methylation mapping at single-base resolution.</p><h3><strong>What is Bisulfite Sequencing?</strong></h3><blockquote><p><strong>The Technique</strong>:</p><ol><li><strong>Bisulfite Conversion</strong>: Unmethylated cytosines (C) → uracil (U)</li><li><strong>Methylated Cytosines Protected</strong>: 5-methylcytosine (5mC) remains as C</li><li><strong>PCR Amplification</strong>: Uracils become thymines (T)</li><li><strong>Sequencing</strong>: Compare to reference genome</li><li><strong>Analysis</strong>: C in read = methylated, T in read = unmethylated</li></ol></blockquote><h3><strong>Types of Bisulfite Sequencing</strong></h3><p><strong>WGBS</strong> (Whole Genome Bisulfite Sequencing):</p><ul><li>Complete methylome at single-base resolution</li><li>30-50X coverage needed</li><li>Expensive but comprehensive</li><li>~28 million CpG sites in human genome</li></ul><p><strong>RRBS</strong> (Reduced Representation Bisulfite Sequencing):</p><ul><li>Enriches for CpG-rich regions (MspI digestion)</li><li>Covers ~10% of CpGs but includes promoters/CpG islands</li><li>More affordable, lower coverage needs</li><li>Good for differential methylation studies</li></ul><p><strong>Targeted BS-seq</strong>:</p><ul><li>Specific regions (promoters, candidate genes)</li><li>Capture-based or PCR amplification</li><li>Deep coverage of selected regions</li></ul><h3><strong>Why Study DNA Methylation?</strong></h3><ul><li><strong>Gene Silencing</strong>: Promoter methylation → transcriptional repression</li><li><strong>Imprinting</strong>: Parent-of-origin gene expression</li><li><strong>X-Inactivation</strong>: Female mammals silence one X chromosome</li><li><strong>Development</strong>: Methylation patterns change during differentiation</li><li><strong>Cancer</strong>: Hypermethylation silences tumor suppressors</li><li><strong>Aging</strong>: Epigenetic clock based on methylation changes</li><li><strong>Disease</strong>: Aberrant methylation in neurodegeneration, metabolic disorders</li></ul><h3><strong>CpG Islands and Shores</strong></h3><blockquote><p><strong>CpG Islands</strong>:</p><ul><li>CG-rich regions (>500bp, >55% GC, Obs/Exp CpG >0.65)</li><li>~70% at gene promoters</li><li>Usually unmethylated in normal cells</li><li>Hypermethylation in cancer → gene silencing</li></ul><p><strong>CpG Shores</strong>:</p><ul><li>±2kb flanking CpG islands</li><li>Differential methylation often occurs here</li><li>Associated with gene expression changes</li></ul><p><strong>CpG Shelves</strong>:</p><ul><li>±2-4kb from CpG islands</li><li>Tissue-specific methylation</li></ul></blockquote><h3><strong>Methylation Patterns</strong></h3><p><strong>Hypomethylated Regions</strong>:</p><ul><li><strong>Active promoters</strong>: Transcriptionally active genes</li><li><strong>CpG islands</strong>: Default unmethylated state</li><li><strong>Enhancers</strong>: Active regulatory elements</li></ul><p><strong>Hypermethylated Regions</strong>:</p><ul><li><strong>Gene bodies</strong>: Paradoxically associated with transcription</li><li><strong>Repetitive elements</strong>: Transposon silencing</li><li><strong>Imprinted loci</strong>: Parental allele-specific</li><li><strong>Inactive X chromosome</strong>: Female X-inactivation</li><li><strong>Cancer genes</strong>: Tumor suppressor silencing</li></ul><h3><strong>Pipeline Analysis</strong></h3><ol><li><strong>Quality Control</strong>: FastQC, trim adapters</li><li><strong>Bisulfite Alignment</strong>: Bismark (or bwa-meth) maps converted reads</li><li><strong>Deduplication</strong>: Remove PCR duplicates</li><li><strong>Methylation Extraction</strong>: Call methylation at each CpG</li><li><strong>M-bias Correction</strong>: Remove end-repair bias</li><li><strong>CpG Context Analysis</strong>: Classify CpGs (islands, shores, shelves)</li><li><strong>Differential Methylation</strong>: DMRs (differentially methylated regions)</li><li><strong>Annotation</strong>: Genes/promoters with altered methylation</li></ol><h3><strong>Aligners</strong></h3><p><strong>Bismark</strong> (default):</p><ul><li>Gold standard for bisulfite sequencing</li><li>Handles both directional and non-directional libraries</li><li>Comprehensive methylation calling</li></ul><p><strong>bwa-meth</strong>:</p><ul><li>Faster alignment</li><li>Uses BWA-MEM algorithm</li><li>Good for large WGBS datasets</li></ul><h3><strong>Scientific Questions</strong></h3><ul><li><strong>Developmental Methylation</strong>: How does methylation change during differentiation?</li><li><strong>Cancer Epigenetics</strong>: Which tumor suppressors are hypermethylated?</li><li><strong>Aging Clock</strong>: Can we predict biological age from methylation?</li><li><strong>Environmental Effects</strong>: Does diet/stress alter methylation?</li><li><strong>Imprinting Disorders</strong>: Abnormal parental allele methylation</li><li><strong>Cell Identity</strong>: Tissue-specific methylation patterns</li></ul><h3><strong>Applications</strong></h3><ul><li><strong>Cancer</strong>: Hypermethylation of BRCA1, VHL, MLH1 in tumors</li><li><strong>Aging</strong>: Horvath clock (353 CpGs predict age)</li><li><strong>Stem Cells</strong>: Reprogramming erases methylation</li><li><strong>Neuroscience</strong>: Activity-dependent methylation, learning & memory</li><li><strong>Imprinting Disorders</strong>: Beckwith-Wiedemann, Angelman syndromes</li><li><strong>Pharmacology</strong>: DNMT inhibitors (5-azacytidine) reactivate silenced genes</li></ul><h3><strong>Key Metrics</strong></h3><ul><li><strong>Bisulfite Conversion Rate</strong>: Should be >99% (check unmethylated spike-in control)</li><li><strong>CpG Coverage</strong>: Number of CpGs with ≥10X coverage</li><li><strong>Global Methylation</strong>: % methylated CpGs genome-wide</li><li><strong>Duplication Rate</strong>: PCR duplicates (higher in RRBS)</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with columns:</p><ul><li><strong>sample</strong>: Sample name</li><li><strong>fastq_1</strong>: Path to R1 FASTQ</li><li><strong>fastq_2</strong>: Path to R2 FASTQ (for paired-end)</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Methylation Calls</strong>: Per-CpG methylation levels (bedGraph, BigWig)</li><li><strong>CpG Coverage</strong>: Number of reads per CpG</li><li><strong>Differential Methylation</strong>: DMRs between conditions</li><li><strong>M-bias Plots</strong>: QC for end-repair artifacts</li><li><strong>Bisulfite Conversion Report</strong>: Conversion efficiency</li><li><strong>Methylation Context</strong>: CpG islands, shores, shelves</li><li><strong>Gene Annotation</strong>: Methylated promoters, gene bodies</li><li><strong>QC Report</strong>: MultiQC summary</li></ul><blockquote><p><strong>Perfect for:</strong> DNA methylation • Epigenetics • Cancer • Aging • Development • Gene silencing • Imprinting</p></blockquote>",
+  "content": "<h2><strong>Bisulfite-seq DNA Methylation</strong></h2><p><strong>DNA methylation</strong> is a key epigenetic modification where methyl groups are added to cytosines (5mC), primarily in CpG dinucleotides. Bisulfite sequencing is the gold standard for genome-wide methylation mapping at single-base resolution.</p><h3><strong>What is Bisulfite Sequencing?</strong></h3><blockquote><p><strong>The Technique</strong>:</p><ol><li><strong>Bisulfite Conversion</strong>: Unmethylated cytosines (C) \u2192 uracil (U)</li><li><strong>Methylated Cytosines Protected</strong>: 5-methylcytosine (5mC) remains as C</li><li><strong>PCR Amplification</strong>: Uracils become thymines (T)</li><li><strong>Sequencing</strong>: Compare to reference genome</li><li><strong>Analysis</strong>: C in read = methylated, T in read = unmethylated</li></ol></blockquote><h3><strong>Types of Bisulfite Sequencing</strong></h3><p><strong>WGBS</strong> (Whole Genome Bisulfite Sequencing):</p><ul><li>Complete methylome at single-base resolution</li><li>30-50X coverage needed</li><li>Expensive but comprehensive</li><li>~28 million CpG sites in human genome</li></ul><p><strong>RRBS</strong> (Reduced Representation Bisulfite Sequencing):</p><ul><li>Enriches for CpG-rich regions (MspI digestion)</li><li>Covers ~10% of CpGs but includes promoters/CpG islands</li><li>More affordable, lower coverage needs</li><li>Good for differential methylation studies</li></ul><p><strong>Targeted BS-seq</strong>:</p><ul><li>Specific regions (promoters, candidate genes)</li><li>Capture-based or PCR amplification</li><li>Deep coverage of selected regions</li></ul><h3><strong>Why Study DNA Methylation?</strong></h3><ul><li><strong>Gene Silencing</strong>: Promoter methylation \u2192 transcriptional repression</li><li><strong>Imprinting</strong>: Parent-of-origin gene expression</li><li><strong>X-Inactivation</strong>: Female mammals silence one X chromosome</li><li><strong>Development</strong>: Methylation patterns change during differentiation</li><li><strong>Cancer</strong>: Hypermethylation silences tumor suppressors</li><li><strong>Aging</strong>: Epigenetic clock based on methylation changes</li><li><strong>Disease</strong>: Aberrant methylation in neurodegeneration, metabolic disorders</li></ul><h3><strong>CpG Islands and Shores</strong></h3><blockquote><p><strong>CpG Islands</strong>:</p><ul><li>CG-rich regions (>500bp, >55% GC, Obs/Exp CpG >0.65)</li><li>~70% at gene promoters</li><li>Usually unmethylated in normal cells</li><li>Hypermethylation in cancer \u2192 gene silencing</li></ul><p><strong>CpG Shores</strong>:</p><ul><li>\u00b12kb flanking CpG islands</li><li>Differential methylation often occurs here</li><li>Associated with gene expression changes</li></ul><p><strong>CpG Shelves</strong>:</p><ul><li>\u00b12-4kb from CpG islands</li><li>Tissue-specific methylation</li></ul></blockquote><h3><strong>Methylation Patterns</strong></h3><p><strong>Hypomethylated Regions</strong>:</p><ul><li><strong>Active promoters</strong>: Transcriptionally active genes</li><li><strong>CpG islands</strong>: Default unmethylated state</li><li><strong>Enhancers</strong>: Active regulatory elements</li></ul><p><strong>Hypermethylated Regions</strong>:</p><ul><li><strong>Gene bodies</strong>: Paradoxically associated with transcription</li><li><strong>Repetitive elements</strong>: Transposon silencing</li><li><strong>Imprinted loci</strong>: Parental allele-specific</li><li><strong>Inactive X chromosome</strong>: Female X-inactivation</li><li><strong>Cancer genes</strong>: Tumor suppressor silencing</li></ul><h3><strong>Pipeline Analysis</strong></h3><ol><li><strong>Quality Control</strong>: FastQC, trim adapters</li><li><strong>Bisulfite Alignment</strong>: Bismark (or bwa-meth) maps converted reads</li><li><strong>Deduplication</strong>: Remove PCR duplicates</li><li><strong>Methylation Extraction</strong>: Call methylation at each CpG</li><li><strong>M-bias Correction</strong>: Remove end-repair bias</li><li><strong>CpG Context Analysis</strong>: Classify CpGs (islands, shores, shelves)</li><li><strong>Differential Methylation</strong>: DMRs (differentially methylated regions)</li><li><strong>Annotation</strong>: Genes/promoters with altered methylation</li></ol><h3><strong>Aligners</strong></h3><p><strong>Bismark</strong> (default):</p><ul><li>Gold standard for bisulfite sequencing</li><li>Handles both directional and non-directional libraries</li><li>Comprehensive methylation calling</li></ul><p><strong>bwa-meth</strong>:</p><ul><li>Faster alignment</li><li>Uses BWA-MEM algorithm</li><li>Good for large WGBS datasets</li></ul><h3><strong>Scientific Questions</strong></h3><ul><li><strong>Developmental Methylation</strong>: How does methylation change during differentiation?</li><li><strong>Cancer Epigenetics</strong>: Which tumor suppressors are hypermethylated?</li><li><strong>Aging Clock</strong>: Can we predict biological age from methylation?</li><li><strong>Environmental Effects</strong>: Does diet/stress alter methylation?</li><li><strong>Imprinting Disorders</strong>: Abnormal parental allele methylation</li><li><strong>Cell Identity</strong>: Tissue-specific methylation patterns</li></ul><h3><strong>Applications</strong></h3><ul><li><strong>Cancer</strong>: Hypermethylation of BRCA1, VHL, MLH1 in tumors</li><li><strong>Aging</strong>: Horvath clock (353 CpGs predict age)</li><li><strong>Stem Cells</strong>: Reprogramming erases methylation</li><li><strong>Neuroscience</strong>: Activity-dependent methylation, learning & memory</li><li><strong>Imprinting Disorders</strong>: Beckwith-Wiedemann, Angelman syndromes</li><li><strong>Pharmacology</strong>: DNMT inhibitors (5-azacytidine) reactivate silenced genes</li></ul><h3><strong>Key Metrics</strong></h3><ul><li><strong>Bisulfite Conversion Rate</strong>: Should be >99% (check unmethylated spike-in control)</li><li><strong>CpG Coverage</strong>: Number of CpGs with \u226510X coverage</li><li><strong>Global Methylation</strong>: % methylated CpGs genome-wide</li><li><strong>Duplication Rate</strong>: PCR duplicates (higher in RRBS)</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with columns:</p><ul><li><strong>sample</strong>: Sample name</li><li><strong>fastq_1</strong>: Path to R1 FASTQ</li><li><strong>fastq_2</strong>: Path to R2 FASTQ (for paired-end)</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Methylation Calls</strong>: Per-CpG methylation levels (bedGraph, BigWig)</li><li><strong>CpG Coverage</strong>: Number of reads per CpG</li><li><strong>Differential Methylation</strong>: DMRs between conditions</li><li><strong>M-bias Plots</strong>: QC for end-repair artifacts</li><li><strong>Bisulfite Conversion Report</strong>: Conversion efficiency</li><li><strong>Methylation Context</strong>: CpG islands, shores, shelves</li><li><strong>Gene Annotation</strong>: Methylated promoters, gene bodies</li><li><strong>QC Report</strong>: MultiQC summary</li></ul><blockquote><p><strong>Perfect for:</strong> DNA methylation \u2022 Epigenetics \u2022 Cancer \u2022 Aging \u2022 Development \u2022 Gene silencing \u2022 Imprinting</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -17,7 +17,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -28,10 +30,22 @@
       "defaultValue": "GRCh38",
       "required": true,
       "options": [
-        {"label": "Human GRCh38", "value": "GRCh38"},
-        {"label": "Mouse GRCm39", "value": "GRCm39"},
-        {"label": "Human GRCh37", "value": "GRCh37"},
-        {"label": "Mouse GRCm38", "value": "GRCm38"}
+        {
+          "label": "Human GRCh38",
+          "value": "GRCh38"
+        },
+        {
+          "label": "Mouse GRCm39",
+          "value": "GRCm39"
+        },
+        {
+          "label": "Human GRCh37",
+          "value": "GRCh37"
+        },
+        {
+          "label": "Mouse GRCm38",
+          "value": "GRCm38"
+        }
       ]
     },
     {
@@ -42,8 +56,14 @@
       "defaultValue": "bismark",
       "required": true,
       "options": [
-        {"label": "Bismark (Recommended)", "value": "bismark"},
-        {"label": "bwa-meth (Faster)", "value": "bwameth"}
+        {
+          "label": "Bismark (Recommended)",
+          "value": "bismark"
+        },
+        {
+          "label": "bwa-meth (Faster)",
+          "value": "bwameth"
+        }
       ]
     },
     {
@@ -66,14 +86,31 @@
       "name": "system_size",
       "hidden": false,
       "options": [
-        {"label": "XLARGE (Recommended for WGBS)", "value": "xlarge", "mapValue": {"nodeSize": "XLARGE", "numNodes": 1, "withGpu": false}}
+        {
+          "label": "XLARGE (Recommended for WGBS)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
       ],
       "defaultValue": "xlarge"
     }
   ],
   "tags": [
-    {"name": "methylation", "type": "field"},
-    {"name": "bisulfite-seq", "type": "task"},
-    {"name": "epigenomics", "type": "task"}
+    {
+      "name": "methylation",
+      "type": "field"
+    },
+    {
+      "name": "bisulfite-seq",
+      "type": "task"
+    },
+    {
+      "name": "epigenomics",
+      "type": "task"
+    }
   ]
 }

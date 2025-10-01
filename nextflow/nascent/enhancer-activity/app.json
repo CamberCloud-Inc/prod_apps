@@ -1,12 +1,12 @@
 {
   "name": "nascent-enhancer-activity",
   "title": "Enhancer Activity Profiling (eRNA Detection)",
-  "description": "Identify active enhancers through enhancer RNA (eRNA) detection using nascent transcription assays. Maps functional regulatory elements genome-wide.",
+  "description": "Identify active enhancers through enhancer RNA (eRNA) detection using nascent transcription assays. Maps functional regulatory elements genome-wide. Samplesheet format: `sample,fastq_1,fastq_2,replicate`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/nascent --input ${input} --outdir ${outdir} --genome ${genome} --assay_type ${assay_type} -r 2.3.0 ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/nascent/master/docs/images/nf-core-nascent_logo_light.png",
-  "content": "<h2><strong>Enhancer Activity via eRNA Detection</strong></h2><p>Active enhancers produce <strong>enhancer RNAs (eRNAs)</strong> that are unstable and bidirectional. Nascent RNA capture is the gold standard for detecting eRNA production and mapping functional enhancers.</p><h3><strong>Why eRNAs as Enhancer Markers?</strong></h3><blockquote><ul><li><strong>Direct Activity Measure</strong>: eRNA production = active transcription at enhancer</li><li><strong>Functional Enhancers</strong>: Distinguishes active from poised/inactive enhancers</li><li><strong>Cell-Type Specific</strong>: Reveals context-dependent enhancer usage</li><li><strong>Dynamic</strong>: Reflects real-time regulatory state</li><li><strong>Unstable</strong>: Only detectable with nascent RNA methods</li></ul></blockquote><h3><strong>Enhancer Biology</strong></h3><p><strong>eRNA Characteristics</strong>:</p><ul><li>Bidirectional transcription</li><li>Short, unstable transcripts</li><li>Correlate with enhancer-promoter looping</li><li>Produced by RNA Pol II</li><li>Mark active, not poised enhancers</li></ul><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Regulatory Element Mapping</strong>: Genome-wide enhancer annotation</li><li><strong>Disease Mechanisms</strong>: GWAS variants in active enhancers</li><li><strong>Transcription Factor Binding</strong>: Enhancer activation by TFs</li><li><strong>Developmental Programs</strong>: Stage-specific enhancer usage</li><li><strong>Cancer Enhancers</strong>: Super-enhancers driving oncogenes</li><li><strong>Drug Target Discovery</strong>: Druggable enhancers</li></ul><h3><strong>Pipeline Features</strong></h3><ul><li><strong>Bidirectional Detection</strong>: Identify paired eRNA transcripts</li><li><strong>Enhancer Calling</strong>: Define enhancer boundaries</li><li><strong>Activity Quantification</strong>: eRNA levels as activity proxy</li><li><strong>Differential Activity</strong>: Compare enhancer usage across conditions</li><li><strong>Integration</strong>: Combine with ChIP-seq, ATAC-seq</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with PRO-seq or GRO-seq data (best for eRNA detection).</p><h3><strong>Key Outputs</strong></h3><ul><li><strong>Enhancer Annotations</strong>: Genome-wide active enhancers</li><li><strong>eRNA Expression</strong>: Activity levels per enhancer</li><li><strong>Bidirectional Sites</strong>: Characteristic eRNA patterns</li><li><strong>Differential Enhancers</strong>: Condition-specific activity</li></ul><blockquote><p><strong>Perfect for:</strong> Regulatory genomics • Enhancer discovery • GWAS follow-up • Super-enhancers • TF target identification</p></blockquote>",
+  "content": "<h2><strong>Enhancer Activity via eRNA Detection</strong></h2><p>Active enhancers produce <strong>enhancer RNAs (eRNAs)</strong> that are unstable and bidirectional. Nascent RNA capture is the gold standard for detecting eRNA production and mapping functional enhancers.</p><h3><strong>Why eRNAs as Enhancer Markers?</strong></h3><blockquote><ul><li><strong>Direct Activity Measure</strong>: eRNA production = active transcription at enhancer</li><li><strong>Functional Enhancers</strong>: Distinguishes active from poised/inactive enhancers</li><li><strong>Cell-Type Specific</strong>: Reveals context-dependent enhancer usage</li><li><strong>Dynamic</strong>: Reflects real-time regulatory state</li><li><strong>Unstable</strong>: Only detectable with nascent RNA methods</li></ul></blockquote><h3><strong>Enhancer Biology</strong></h3><p><strong>eRNA Characteristics</strong>:</p><ul><li>Bidirectional transcription</li><li>Short, unstable transcripts</li><li>Correlate with enhancer-promoter looping</li><li>Produced by RNA Pol II</li><li>Mark active, not poised enhancers</li></ul><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Regulatory Element Mapping</strong>: Genome-wide enhancer annotation</li><li><strong>Disease Mechanisms</strong>: GWAS variants in active enhancers</li><li><strong>Transcription Factor Binding</strong>: Enhancer activation by TFs</li><li><strong>Developmental Programs</strong>: Stage-specific enhancer usage</li><li><strong>Cancer Enhancers</strong>: Super-enhancers driving oncogenes</li><li><strong>Drug Target Discovery</strong>: Druggable enhancers</li></ul><h3><strong>Pipeline Features</strong></h3><ul><li><strong>Bidirectional Detection</strong>: Identify paired eRNA transcripts</li><li><strong>Enhancer Calling</strong>: Define enhancer boundaries</li><li><strong>Activity Quantification</strong>: eRNA levels as activity proxy</li><li><strong>Differential Activity</strong>: Compare enhancer usage across conditions</li><li><strong>Integration</strong>: Combine with ChIP-seq, ATAC-seq</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with PRO-seq or GRO-seq data (best for eRNA detection).</p><h3><strong>Key Outputs</strong></h3><ul><li><strong>Enhancer Annotations</strong>: Genome-wide active enhancers</li><li><strong>eRNA Expression</strong>: Activity levels per enhancer</li><li><strong>Bidirectional Sites</strong>: Characteristic eRNA patterns</li><li><strong>Differential Enhancers</strong>: Condition-specific activity</li></ul><blockquote><p><strong>Perfect for:</strong> Regulatory genomics \u2022 Enhancer discovery \u2022 GWAS follow-up \u2022 Super-enhancers \u2022 TF target identification</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -17,7 +17,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -28,9 +30,18 @@
       "defaultValue": "PROseq",
       "required": true,
       "options": [
-        {"label": "PRO-seq (Best for enhancers)", "value": "PROseq"},
-        {"label": "GRO-seq", "value": "GROseq"},
-        {"label": "GRO-cap (TSS focused)", "value": "GROcap"}
+        {
+          "label": "PRO-seq (Best for enhancers)",
+          "value": "PROseq"
+        },
+        {
+          "label": "GRO-seq",
+          "value": "GROseq"
+        },
+        {
+          "label": "GRO-cap (TSS focused)",
+          "value": "GROcap"
+        }
       ]
     },
     {
@@ -41,8 +52,14 @@
       "defaultValue": "GRCh38",
       "required": true,
       "options": [
-        {"label": "Human GRCh38", "value": "GRCh38"},
-        {"label": "Mouse GRCm39", "value": "GRCm39"}
+        {
+          "label": "Human GRCh38",
+          "value": "GRCh38"
+        },
+        {
+          "label": "Mouse GRCm39",
+          "value": "GRCm39"
+        }
       ]
     },
     {
@@ -65,14 +82,31 @@
       "name": "system_size",
       "hidden": false,
       "options": [
-        {"label": "LARGE (Recommended)", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}
+        {
+          "label": "LARGE (Recommended)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
       ],
       "defaultValue": "large"
     }
   ],
   "tags": [
-    {"name": "epigenomics", "type": "field"},
-    {"name": "enhancers", "type": "task"},
-    {"name": "ernaset", "type": "task"}
+    {
+      "name": "epigenomics",
+      "type": "field"
+    },
+    {
+      "name": "enhancers",
+      "type": "task"
+    },
+    {
+      "name": "ernaset",
+      "type": "task"
+    }
   ]
 }

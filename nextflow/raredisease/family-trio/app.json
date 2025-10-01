@@ -1,12 +1,12 @@
 {
   "name": "raredisease-family-trio",
   "title": "Rare Disease Family Trio Analysis",
-  "description": "Family-based WGS for rare disease diagnosis. Analyzes proband with parents (trio) to identify de novo, inherited, and compound heterozygous variants with superior accuracy.",
+  "description": "Family-based WGS for rare disease diagnosis. Analyzes proband with parents (trio) to identify de novo, inherited, and compound heterozygous variants with superior accuracy. Samplesheet format: `sample,lane,fastq_1,fastq_2,sex,phenotype`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/raredisease --input ${input} --outdir ${outdir} --genome ${genome} -r 2.2.1 ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/raredisease/master/docs/images/nf-core-raredisease_logo_light.png",
-  "content": "<h2><strong>Family Trio Rare Disease Analysis</strong></h2><p>Analyze affected child (proband) with both parents for maximum diagnostic power. Trio sequencing dramatically improves variant filtering and identification of de novo mutations.</p><h3><strong>Why Trio Sequencing?</strong></h3><blockquote><ul><li><strong>Higher Diagnostic Yield</strong>: 40-50% vs 25-35% for singletons</li><li><strong>De Novo Detection</strong>: High confidence new mutations</li><li><strong>Phase Inheritance</strong>: Determine maternal vs paternal alleles</li><li><strong>Filter False Positives</strong>: Remove shared benign variants</li><li><strong>Compound Heterozygotes</strong>: Validate alleles on different chromosomes</li><li><strong>Inheritance Validation</strong>: Confirm mode of inheritance</li></ul></blockquote><h3><strong>Trio Analysis Advantages</strong></h3><p><strong>Mendelian Inheritance Filtering</strong>:</p><ul><li><strong>De Novo Dominant</strong>: Present in child, absent in parents</li><li><strong>Autosomal Recessive</strong>: Both parents carriers (het), child homozygous</li><li><strong>Compound Heterozygous</strong>: Child has two different variants, one from each parent</li><li><strong>X-Linked Recessive</strong>: Mother carrier, affected son</li><li><strong>X-Linked Dominant</strong>: De novo in daughter or from affected mother</li></ul><p><strong>False Positive Reduction</strong>:</p><blockquote><p>Trio reduces candidate variants by <strong>90-95%</strong></p><ul><li>Remove common familial variants</li><li>Exclude sequencing artifacts</li><li>Validate rare variants through inheritance</li></ul></blockquote><h3><strong>Clinical Applications</strong></h3><ul><li><strong>Pediatric Disorders</strong>: Developmental delay, intellectual disability</li><li><strong>De Novo Diseases</strong>: Epileptic encephalopathies, autism spectrum</li><li><strong>Recessive Disorders</strong>: Identify compound heterozygotes</li><li><strong>Consanguineous Families</strong>: Homozygosity mapping</li><li><strong>Neonatal ICU</strong>: Rapid diagnosis for critically ill infants</li><li><strong>Prenatal Diagnosis</strong>: Risk assessment for future pregnancies</li></ul><h3><strong>De Novo Mutation Discovery</strong></h3><blockquote><p>De novo mutations cause ~20% of severe developmental disorders</p></blockquote><p>Trio sequencing identifies:</p><ul><li><strong>Coding de novo</strong>: New mutations in exons</li><li><strong>Splice site de novo</strong>: Disrupt splicing</li><li><strong>Regulatory de novo</strong>: Promoters, enhancers</li><li><strong>Structural de novo</strong>: De novo deletions, duplications</li></ul><p>Validation confidence: ~99% with trio vs ~80% singleton</p><h3><strong>Inheritance Pattern Analysis</strong></h3><ol><li><strong>De Novo Variants</strong>: New in child → Dominant disease</li><li><strong>Homozygous Recessive</strong>: Both parents carriers → Recessive disease</li><li><strong>Compound Heterozygous</strong>: Different variant from each parent → Recessive disease</li><li><strong>X-Linked</strong>: From mother, affecting son</li><li><strong>Uniparental Disomy</strong>: Both alleles from one parent</li></ol><h3><strong>Variant Prioritization</strong></h3><ul><li><strong>Inheritance Filter</strong>: Must match Mendelian pattern</li><li><strong>Frequency Filter</strong>: Rare in population (gnomAD < 0.1%)</li><li><strong>Pathogenicity</strong>: CADD, REVEL, SpliceAI scores</li><li><strong>Gene-Phenotype Match</strong>: HPO terms matching disease genes</li><li><strong>Known Pathogenic</strong>: ClinVar pathogenic/likely pathogenic</li><li><strong>Loss-of-Function</strong>: Truncating variants in disease genes</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with proband + both parents:</p><ul><li><strong>Proband</strong>: phenotype=2 (affected)</li><li><strong>Father</strong>: phenotype=1 (unaffected), paternal_id in proband row</li><li><strong>Mother</strong>: phenotype=1 (unaffected), maternal_id in proband row</li><li><strong>family_id</strong>: Same for all three</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>De Novo VCF</strong>: High-confidence new mutations</li><li><strong>Inherited VCF</strong>: Variants from parents</li><li><strong>Compound Het VCF</strong>: Recessive gene pairs</li><li><strong>Phased VCF</strong>: Maternal vs paternal alleles</li><li><strong>Prioritized Genes</strong>: Ranked candidate genes</li><li><strong>Inheritance Report</strong>: Pattern-specific findings</li></ul><blockquote><p><strong>Perfect for:</strong> Pediatric genetics • De novo diseases • Recessive disorders • Developmental delay • Undiagnosed trios</p></blockquote>",
+  "content": "<h2><strong>Family Trio Rare Disease Analysis</strong></h2><p>Analyze affected child (proband) with both parents for maximum diagnostic power. Trio sequencing dramatically improves variant filtering and identification of de novo mutations.</p><h3><strong>Why Trio Sequencing?</strong></h3><blockquote><ul><li><strong>Higher Diagnostic Yield</strong>: 40-50% vs 25-35% for singletons</li><li><strong>De Novo Detection</strong>: High confidence new mutations</li><li><strong>Phase Inheritance</strong>: Determine maternal vs paternal alleles</li><li><strong>Filter False Positives</strong>: Remove shared benign variants</li><li><strong>Compound Heterozygotes</strong>: Validate alleles on different chromosomes</li><li><strong>Inheritance Validation</strong>: Confirm mode of inheritance</li></ul></blockquote><h3><strong>Trio Analysis Advantages</strong></h3><p><strong>Mendelian Inheritance Filtering</strong>:</p><ul><li><strong>De Novo Dominant</strong>: Present in child, absent in parents</li><li><strong>Autosomal Recessive</strong>: Both parents carriers (het), child homozygous</li><li><strong>Compound Heterozygous</strong>: Child has two different variants, one from each parent</li><li><strong>X-Linked Recessive</strong>: Mother carrier, affected son</li><li><strong>X-Linked Dominant</strong>: De novo in daughter or from affected mother</li></ul><p><strong>False Positive Reduction</strong>:</p><blockquote><p>Trio reduces candidate variants by <strong>90-95%</strong></p><ul><li>Remove common familial variants</li><li>Exclude sequencing artifacts</li><li>Validate rare variants through inheritance</li></ul></blockquote><h3><strong>Clinical Applications</strong></h3><ul><li><strong>Pediatric Disorders</strong>: Developmental delay, intellectual disability</li><li><strong>De Novo Diseases</strong>: Epileptic encephalopathies, autism spectrum</li><li><strong>Recessive Disorders</strong>: Identify compound heterozygotes</li><li><strong>Consanguineous Families</strong>: Homozygosity mapping</li><li><strong>Neonatal ICU</strong>: Rapid diagnosis for critically ill infants</li><li><strong>Prenatal Diagnosis</strong>: Risk assessment for future pregnancies</li></ul><h3><strong>De Novo Mutation Discovery</strong></h3><blockquote><p>De novo mutations cause ~20% of severe developmental disorders</p></blockquote><p>Trio sequencing identifies:</p><ul><li><strong>Coding de novo</strong>: New mutations in exons</li><li><strong>Splice site de novo</strong>: Disrupt splicing</li><li><strong>Regulatory de novo</strong>: Promoters, enhancers</li><li><strong>Structural de novo</strong>: De novo deletions, duplications</li></ul><p>Validation confidence: ~99% with trio vs ~80% singleton</p><h3><strong>Inheritance Pattern Analysis</strong></h3><ol><li><strong>De Novo Variants</strong>: New in child \u2192 Dominant disease</li><li><strong>Homozygous Recessive</strong>: Both parents carriers \u2192 Recessive disease</li><li><strong>Compound Heterozygous</strong>: Different variant from each parent \u2192 Recessive disease</li><li><strong>X-Linked</strong>: From mother, affecting son</li><li><strong>Uniparental Disomy</strong>: Both alleles from one parent</li></ol><h3><strong>Variant Prioritization</strong></h3><ul><li><strong>Inheritance Filter</strong>: Must match Mendelian pattern</li><li><strong>Frequency Filter</strong>: Rare in population (gnomAD < 0.1%)</li><li><strong>Pathogenicity</strong>: CADD, REVEL, SpliceAI scores</li><li><strong>Gene-Phenotype Match</strong>: HPO terms matching disease genes</li><li><strong>Known Pathogenic</strong>: ClinVar pathogenic/likely pathogenic</li><li><strong>Loss-of-Function</strong>: Truncating variants in disease genes</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with proband + both parents:</p><ul><li><strong>Proband</strong>: phenotype=2 (affected)</li><li><strong>Father</strong>: phenotype=1 (unaffected), paternal_id in proband row</li><li><strong>Mother</strong>: phenotype=1 (unaffected), maternal_id in proband row</li><li><strong>family_id</strong>: Same for all three</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>De Novo VCF</strong>: High-confidence new mutations</li><li><strong>Inherited VCF</strong>: Variants from parents</li><li><strong>Compound Het VCF</strong>: Recessive gene pairs</li><li><strong>Phased VCF</strong>: Maternal vs paternal alleles</li><li><strong>Prioritized Genes</strong>: Ranked candidate genes</li><li><strong>Inheritance Report</strong>: Pattern-specific findings</li></ul><blockquote><p><strong>Perfect for:</strong> Pediatric genetics \u2022 De novo diseases \u2022 Recessive disorders \u2022 Developmental delay \u2022 Undiagnosed trios</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -17,7 +17,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -28,8 +30,14 @@
       "defaultValue": "GRCh38",
       "required": true,
       "options": [
-        {"label": "Human GRCh38", "value": "GRCh38"},
-        {"label": "Human GRCh37", "value": "GRCh37"}
+        {
+          "label": "Human GRCh38",
+          "value": "GRCh38"
+        },
+        {
+          "label": "Human GRCh37",
+          "value": "GRCh37"
+        }
       ]
     },
     {
@@ -52,14 +60,31 @@
       "name": "system_size",
       "hidden": false,
       "options": [
-        {"label": "XLARGE (Recommended for trio WGS)", "value": "xlarge", "mapValue": {"nodeSize": "XLARGE", "numNodes": 1, "withGpu": false}}
+        {
+          "label": "XLARGE (Recommended for trio WGS)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
       ],
       "defaultValue": "xlarge"
     }
   ],
   "tags": [
-    {"name": "genomics", "type": "subfield"},
-    {"name": "rare-disease", "type": "task"},
-    {"name": "family-analysis", "type": "task"}
+    {
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "name": "rare-disease",
+      "type": "task"
+    },
+    {
+      "name": "family-analysis",
+      "type": "task"
+    }
   ]
 }

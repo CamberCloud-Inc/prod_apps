@@ -1,17 +1,74 @@
 {
   "name": "rnavar-rna-variant-detection",
   "title": "RNAvar: RNA Variant Calling & Editing Detection",
-  "description": "RNA-seq variant calling to detect RNA editing, allele-specific expression, and tumor-specific mutations from transcriptome data. Complements DNA variant calling.",
+  "description": "RNA-seq variant calling to detect RNA editing, allele-specific expression, and tumor-specific mutations from transcriptome data. Complements DNA variant calling. Samplesheet format: `sample,fastq_1,fastq_2,strandedness`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/rnavar --input ${input} --outdir ${outdir} --genome ${genome} -r 1.0.0 ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/rnavar/master/docs/images/nf-core-rnavar_logo_light.png",
-  "content": "<h2><strong>RNAvar: RNA Variant Calling</strong></h2><p>Detect variants from RNA-seq: RNA editing (A-to-I), allele-specific expression, tumor mutations expressed at RNA level.</p><h3><strong>Key Outputs</strong></h3><ul><li><strong>RNA Variants</strong>: SNVs, indels from transcriptome</li><li><strong>RNA Editing Sites</strong>: A-to-I editing (ADAR)</li><li><strong>ASE</strong>: Allele-specific expression</li></ul><blockquote><p><strong>Perfect for:</strong> RNA editing • ASE • Tumor RNA variants</p></blockquote>",
+  "content": "<h2><strong>RNAvar: RNA Variant Calling</strong></h2><p>Detect variants from RNA-seq: RNA editing (A-to-I), allele-specific expression, tumor mutations expressed at RNA level.</p><h3><strong>Key Outputs</strong></h3><ul><li><strong>RNA Variants</strong>: SNVs, indels from transcriptome</li><li><strong>RNA Editing Sites</strong>: A-to-I editing (ADAR)</li><li><strong>ASE</strong>: Allele-specific expression</li></ul><blockquote><p><strong>Perfect for:</strong> RNA editing \u2022 ASE \u2022 Tumor RNA variants</p></blockquote>",
   "spec": [
-    {"type": "Stash File", "label": "Sample Sheet", "name": "input", "required": true, "restrictions": {"allow_files": true, "allow_folders": false, "allowed_file_types": [".csv"]}},
-    {"type": "Select", "label": "Genome", "name": "genome", "defaultValue": "GRCh38", "required": true, "options": [{"label": "GRCh38", "value": "GRCh38"}]},
-    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./rnavar-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".csv"
+        ]
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Genome",
+      "name": "genome",
+      "defaultValue": "GRCh38",
+      "required": true,
+      "options": [
+        {
+          "label": "GRCh38",
+          "value": "GRCh38"
+        }
+      ]
+    },
+    {
+      "type": "Stash File",
+      "label": "Output",
+      "name": "outdir",
+      "defaultValue": "./rnavar-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
   ],
-  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
-  "tags": [{"name": "rna-variants", "type": "task"}]
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Resources",
+      "name": "system_size",
+      "options": [
+        {
+          "label": "LARGE",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "name": "rna-variants",
+      "type": "task"
+    }
+  ]
 }

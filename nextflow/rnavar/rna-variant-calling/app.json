@@ -1,12 +1,12 @@
 {
   "name": "rnavar-variant-calling",
   "title": "RNA Variant Calling (nf-core/rnavar)",
-  "description": "Identify genetic variants from RNA-seq data following GATK4 best practices. Detects SNPs and indels in transcribed regions for disease gene discovery and allele-specific expression analysis.",
+  "description": "Identify genetic variants from RNA-seq data following GATK4 best practices. Detects SNPs and indels in transcribed regions for disease gene discovery and allele-specific expression analysis. Samplesheet format: `sample,fastq_1,fastq_2,strandedness`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/rnavar --input ${input} --outdir ${outdir} --genome ${genome} -r 1.2.1 ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/rnavar/master/docs/images/nf-core-rnavar_logo_light.png",
-  "content": "<h2><strong>RNA Variant Calling</strong></h2><p>The <strong>nf-core/rnavar</strong> pipeline identifies genetic variants (SNPs and indels) from RNA-seq data using GATK4 best practices optimized for RNA sequencing.</p><h3><strong>Scientific Applications</strong></h3><blockquote><ul><li><strong>Disease Gene Discovery</strong>: Identify pathogenic variants in expressed genes</li><li><strong>Allele-Specific Expression</strong>: Quantify imbalanced allele expression</li><li><strong>RNA Editing</strong>: Detect A-to-I and other RNA editing events</li><li><strong>Cancer Genomics</strong>: Identify tumor-specific mutations from RNA</li><li><strong>Rare Disease</strong>: Variant detection in hard-to-sequence genes</li><li><strong>Pharmacogenomics</strong>: Identify variants affecting drug response</li></ul></blockquote><h3><strong>Pipeline Features</strong></h3><ul><li><strong>STAR Alignment</strong>: Splice-aware read mapping</li><li><strong>GATK4 Best Practices</strong>: SplitNCigarReads, BaseRecalibration, HaplotypeCaller</li><li><strong>Variant Annotation</strong>: snpEff and Ensembl VEP functional annotation</li><li><strong>UMI Support</strong>: Optional unique molecular identifier processing</li><li><strong>Quality Control</strong>: FastQC, RSeQC, MultiQC comprehensive reports</li><li><strong>Duplicate Marking</strong>: Picard MarkDuplicates</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet:</p><ul><li><code>sample</code>: Sample identifier</li><li><code>fastq_1</code>: Forward reads</li><li><code>fastq_2</code>: Reverse reads (if paired-end)</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>VCF Files</strong>: Called variants per sample</li><li><strong>Annotated Variants</strong>: Functional predictions and effects</li><li><strong>BAM Files</strong>: Aligned reads for visualization</li><li><strong>QC Reports</strong>: MultiQC summary of all metrics</li></ul><blockquote><p><strong>Perfect for:</strong> Cancer researchers • Clinical genomics • Rare disease • RNA editing • Allele-specific expression</p></blockquote>",
+  "content": "<h2><strong>RNA Variant Calling</strong></h2><p>The <strong>nf-core/rnavar</strong> pipeline identifies genetic variants (SNPs and indels) from RNA-seq data using GATK4 best practices optimized for RNA sequencing.</p><h3><strong>Scientific Applications</strong></h3><blockquote><ul><li><strong>Disease Gene Discovery</strong>: Identify pathogenic variants in expressed genes</li><li><strong>Allele-Specific Expression</strong>: Quantify imbalanced allele expression</li><li><strong>RNA Editing</strong>: Detect A-to-I and other RNA editing events</li><li><strong>Cancer Genomics</strong>: Identify tumor-specific mutations from RNA</li><li><strong>Rare Disease</strong>: Variant detection in hard-to-sequence genes</li><li><strong>Pharmacogenomics</strong>: Identify variants affecting drug response</li></ul></blockquote><h3><strong>Pipeline Features</strong></h3><ul><li><strong>STAR Alignment</strong>: Splice-aware read mapping</li><li><strong>GATK4 Best Practices</strong>: SplitNCigarReads, BaseRecalibration, HaplotypeCaller</li><li><strong>Variant Annotation</strong>: snpEff and Ensembl VEP functional annotation</li><li><strong>UMI Support</strong>: Optional unique molecular identifier processing</li><li><strong>Quality Control</strong>: FastQC, RSeQC, MultiQC comprehensive reports</li><li><strong>Duplicate Marking</strong>: Picard MarkDuplicates</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet:</p><ul><li><code>sample</code>: Sample identifier</li><li><code>fastq_1</code>: Forward reads</li><li><code>fastq_2</code>: Reverse reads (if paired-end)</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>VCF Files</strong>: Called variants per sample</li><li><strong>Annotated Variants</strong>: Functional predictions and effects</li><li><strong>BAM Files</strong>: Aligned reads for visualization</li><li><strong>QC Reports</strong>: MultiQC summary of all metrics</li></ul><blockquote><p><strong>Perfect for:</strong> Cancer researchers \u2022 Clinical genomics \u2022 Rare disease \u2022 RNA editing \u2022 Allele-specific expression</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -17,7 +17,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -28,10 +30,22 @@
       "defaultValue": "GRCh38",
       "required": true,
       "options": [
-        {"label": "Human GRCh38", "value": "GRCh38"},
-        {"label": "Human GRCh37", "value": "GRCh37"},
-        {"label": "Mouse GRCm39", "value": "GRCm39"},
-        {"label": "Mouse GRCm38", "value": "GRCm38"}
+        {
+          "label": "Human GRCh38",
+          "value": "GRCh38"
+        },
+        {
+          "label": "Human GRCh37",
+          "value": "GRCh37"
+        },
+        {
+          "label": "Mouse GRCm39",
+          "value": "GRCm39"
+        },
+        {
+          "label": "Mouse GRCm38",
+          "value": "GRCm38"
+        }
       ]
     },
     {
@@ -54,15 +68,40 @@
       "name": "system_size",
       "hidden": false,
       "options": [
-        {"label": "LARGE (Recommended)", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}},
-        {"label": "XLARGE (Many samples)", "value": "xlarge", "mapValue": {"nodeSize": "XLARGE", "numNodes": 1, "withGpu": false}}
+        {
+          "label": "LARGE (Recommended)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE (Many samples)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
       ],
       "defaultValue": "large"
     }
   ],
   "tags": [
-    {"name": "genomics", "type": "subfield"},
-    {"name": "rnaseq", "type": "task"},
-    {"name": "variant-calling", "type": "task"}
+    {
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "name": "rnaseq",
+      "type": "task"
+    },
+    {
+      "name": "variant-calling",
+      "type": "task"
+    }
   ]
 }

@@ -1,12 +1,12 @@
 {
   "name": "funcscan-amr",
   "title": "Antimicrobial Resistance Gene Screening (nf-core/funcscan)",
-  "description": "Screen bacterial genomes and metagenomes for antimicrobial resistance genes (ARGs) using multiple tools. Identifies antibiotic resistance genes, enabling surveillance of AMR spread and informing treatment decisions in clinical and public health settings.",
+  "description": "Screen bacterial genomes and metagenomes for antimicrobial resistance genes (ARGs) using multiple tools. Identifies antibiotic resistance genes, enabling surveillance of AMR spread and informing treatment decisions in clinical and public health settings. Samplesheet format: `sample,fasta`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/funcscan --input ${input} --outdir ${outdir} --run_arg_screening --annotation_tool prokka -r 2.1.0 ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/funcscan/master/docs/images/nf-core-funcscan_logo_light.png",
-  "content": "<h2><strong>Antimicrobial Resistance Gene Screening</strong></h2><p>The <strong>nf-core/funcscan</strong> pipeline screens bacterial genomes for antimicrobial resistance genes (ARGs), providing comprehensive AMR surveillance for clinical, public health, and research applications.</p><h3><strong>Critical Public Health Application</strong></h3><p>Antimicrobial resistance (AMR) is a global health crisis. This pipeline helps:</p><ul><li><strong>Track AMR Spread</strong>: Monitor resistance gene distribution</li><li><strong>Inform Treatment</strong>: Guide antibiotic selection</li><li><strong>Outbreak Investigation</strong>: Identify resistant strains</li><li><strong>Surveillance</strong>: Population-level AMR monitoring</li><li><strong>Research</strong>: Study AMR evolution and mechanisms</li></ul><h3><strong>Tools Used</strong></h3><p>Multiple AMR detection tools for comprehensive screening:</p><ul><li><strong>ABRicate</strong>: Fast screening against multiple databases</li><li><strong>AMRFinderPlus</strong>: NCBI's comprehensive AMR database</li><li><strong>RGI (CARD)</strong>: Resistance Gene Identifier</li><li><strong>DeepARG</strong>: Deep learning-based AMR prediction</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with assembled genome contigs:</p><ul><li><code>sample</code>: Sample identifier</li><li><code>fasta</code>: Path to assembled FASTA file</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>ARG Lists</strong>: Detected resistance genes per sample</li><li><strong>Resistance Profile</strong>: Which antibiotics are affected</li><li><strong>Gene Annotations</strong>: Detailed resistance mechanisms</li><li><strong>Summary Reports</strong>: Aggregated AMR findings</li></ul><h3><strong>Clinical Applications</strong></h3><blockquote><p><strong>Clinical Microbiology Labs:</strong> Identify resistance genes in patient isolates to guide antibiotic therapy</p></blockquote><blockquote><p><strong>Public Health:</strong> Surveillance of AMR trends in communities and hospitals</p></blockquote><blockquote><p><strong>Outbreak Investigation:</strong> Track resistant strains during outbreaks</p></blockquote><blockquote><p><strong>Veterinary Medicine:</strong> Monitor AMR in food animals</p></blockquote><blockquote><p><strong>Perfect for:</strong> Clinical labs • Public health • Epidemiology • AMR researchers • Infection control</p></blockquote>",
+  "content": "<h2><strong>Antimicrobial Resistance Gene Screening</strong></h2><p>The <strong>nf-core/funcscan</strong> pipeline screens bacterial genomes for antimicrobial resistance genes (ARGs), providing comprehensive AMR surveillance for clinical, public health, and research applications.</p><h3><strong>Critical Public Health Application</strong></h3><p>Antimicrobial resistance (AMR) is a global health crisis. This pipeline helps:</p><ul><li><strong>Track AMR Spread</strong>: Monitor resistance gene distribution</li><li><strong>Inform Treatment</strong>: Guide antibiotic selection</li><li><strong>Outbreak Investigation</strong>: Identify resistant strains</li><li><strong>Surveillance</strong>: Population-level AMR monitoring</li><li><strong>Research</strong>: Study AMR evolution and mechanisms</li></ul><h3><strong>Tools Used</strong></h3><p>Multiple AMR detection tools for comprehensive screening:</p><ul><li><strong>ABRicate</strong>: Fast screening against multiple databases</li><li><strong>AMRFinderPlus</strong>: NCBI's comprehensive AMR database</li><li><strong>RGI (CARD)</strong>: Resistance Gene Identifier</li><li><strong>DeepARG</strong>: Deep learning-based AMR prediction</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with assembled genome contigs:</p><ul><li><code>sample</code>: Sample identifier</li><li><code>fasta</code>: Path to assembled FASTA file</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>ARG Lists</strong>: Detected resistance genes per sample</li><li><strong>Resistance Profile</strong>: Which antibiotics are affected</li><li><strong>Gene Annotations</strong>: Detailed resistance mechanisms</li><li><strong>Summary Reports</strong>: Aggregated AMR findings</li></ul><h3><strong>Clinical Applications</strong></h3><blockquote><p><strong>Clinical Microbiology Labs:</strong> Identify resistance genes in patient isolates to guide antibiotic therapy</p></blockquote><blockquote><p><strong>Public Health:</strong> Surveillance of AMR trends in communities and hospitals</p></blockquote><blockquote><p><strong>Outbreak Investigation:</strong> Track resistant strains during outbreaks</p></blockquote><blockquote><p><strong>Veterinary Medicine:</strong> Monitor AMR in food animals</p></blockquote><blockquote><p><strong>Perfect for:</strong> Clinical labs \u2022 Public health \u2022 Epidemiology \u2022 AMR researchers \u2022 Infection control</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -17,7 +17,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -41,16 +43,44 @@
       "name": "system_size",
       "hidden": false,
       "options": [
-        {"label": "SMALL (Recommended)", "value": "small", "mapValue": {"nodeSize": "SMALL", "numNodes": 1, "withGpu": false}},
-        {"label": "MEDIUM (Many samples)", "value": "medium", "mapValue": {"nodeSize": "MEDIUM", "numNodes": 1, "withGpu": false}}
+        {
+          "label": "SMALL (Recommended)",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM (Many samples)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
       ],
       "defaultValue": "small"
     }
   ],
   "tags": [
-    {"name": "genomics", "type": "subfield"},
-    {"name": "amr", "type": "task"},
-    {"name": "clinical", "type": "task"},
-    {"name": "microbiology", "type": "field"}
+    {
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "name": "amr",
+      "type": "task"
+    },
+    {
+      "name": "clinical",
+      "type": "task"
+    },
+    {
+      "name": "microbiology",
+      "type": "field"
+    }
   ]
 }

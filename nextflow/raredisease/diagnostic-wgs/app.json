@@ -1,12 +1,12 @@
 {
   "name": "raredisease-diagnostic-wgs",
   "title": "Rare Disease Diagnostic WGS (Singleton)",
-  "description": "Clinical WGS for rare disease diagnosis. Calls SNVs, indels, SVs, and CNVs with comprehensive annotation and pathogenicity scoring for single probands.",
+  "description": "Clinical WGS for rare disease diagnosis. Calls SNVs, indels, SVs, and CNVs with comprehensive annotation and pathogenicity scoring for single probands. Samplesheet format: `sample,lane,fastq_1,fastq_2,sex,phenotype`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/raredisease --input ${input} --outdir ${outdir} --genome ${genome} -r 2.2.1 ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/raredisease/master/docs/images/nf-core-raredisease_logo_light.png",
-  "content": "<h2><strong>Rare Disease Diagnostic Sequencing</strong></h2><p>Clinical-grade WGS analysis for rare disease diagnosis in single patients (singletons). Identifies causal variants for Mendelian disorders with comprehensive variant annotation and pathogenicity scoring.</p><h3><strong>Why WGS for Rare Disease?</strong></h3><blockquote><ul><li><strong>Diagnostic Yield</strong>: 25-50% solve rate for rare diseases</li><li><strong>Comprehensive Coverage</strong>: Exons + introns + regulatory regions</li><li><strong>All Variant Types</strong>: SNVs, indels, SVs, CNVs, repeat expansions</li><li><strong>No Bias</strong>: Detect variants in any gene</li><li><strong>Re-analysis</strong>: Data reusable as new genes discovered</li><li><strong>Structural Variants</strong>: ~10% of diagnoses missed by WES</li></ul></blockquote><h3><strong>Clinical Applications</strong></h3><ul><li><strong>Undiagnosed Diseases</strong>: Patients with unknown genetic etiology</li><li><strong>Mendelian Disorders</strong>: Autosomal dominant/recessive, X-linked</li><li><strong>Pediatric Genetics</strong>: Developmental disorders, intellectual disability</li><li><strong>Neurology</strong>: Epilepsy, ataxia, neuropathy</li><li><strong>Metabolic Disorders</strong>: Inborn errors of metabolism</li><li><strong>Multi-System Disorders</strong>: Complex phenotypes</li></ul><h3><strong>Variant Detection</strong></h3><ul><li><strong>SNVs & Indels</strong>: DeepVariant (Google) for high accuracy</li><li><strong>Structural Variants</strong>: Manta, TIDDIT for large SVs</li><li><strong>Copy Number Variants</strong>: GATK-gCNV for dosage changes</li><li><strong>Mitochondrial Variants</strong>: mtDNA heteroplasmy detection</li><li><strong>Repeat Expansions</strong>: ExpansionHunter for STR diseases</li></ul><h3><strong>Annotation & Prioritization</strong></h3><blockquote><p><strong>Databases</strong>: ClinVar, OMIM, HGMD, gnomAD</p><p><strong>Prediction Tools</strong>: CADD, REVEL, SpliceAI, PolyPhen-2</p><p><strong>Gene-Phenotype Matching</strong>: HPO phenotype matching</p><p><strong>Inheritance Models</strong>: AR, AD, XL, de novo</p><p><strong>Filtering</strong>: Population frequency, quality, inheritance</p></blockquote><h3><strong>Singleton Analysis</strong></h3><p>For single probands without family members:</p><ul><li><strong>De Novo Variants</strong>: Look for new dominant mutations</li><li><strong>Homozygous Variants</strong>: Recessive disease candidates</li><li><strong>Compound Heterozygotes</strong>: Two variants in same gene</li><li><strong>X-Linked</strong>: Hemizygous in males</li><li><strong>Dominant Pathogenic</strong>: Known disease variants</li></ul><h3><strong>Clinical Workflow</strong></h3><ol><li><strong>Sequencing</strong>: 30-40X coverage WGS</li><li><strong>Variant Calling</strong>: All variant types detected</li><li><strong>Annotation</strong>: Pathogenicity and clinical relevance</li><li><strong>Filtering</strong>: Rare, predicted pathogenic</li><li><strong>Phenotype Matching</strong>: Gene-disease associations</li><li><strong>Validation</strong>: Sanger sequencing of candidates</li><li><strong>Clinical Report</strong>: Diagnostic findings</li></ol><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with columns:</p><ul><li><strong>sample</strong>: Unique sample ID</li><li><strong>lane</strong>: Sequencing lane</li><li><strong>fastq_1, fastq_2</strong>: Paired-end reads</li><li><strong>sex</strong>: 1 (male), 2 (female), 0 (unknown)</li><li><strong>phenotype</strong>: 2 (affected)</li><li><strong>case_id</strong>: Case/family identifier</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Annotated VCF</strong>: All variants with pathogenicity scores</li><li><strong>Filtered VCF</strong>: Candidate diagnostic variants</li><li><strong>SV VCF</strong>: Structural variants</li><li><strong>CNV VCF</strong>: Copy number variants</li><li><strong>Gene Ranking</strong>: Prioritized candidate genes</li><li><strong>Clinical Report</strong>: Diagnostic interpretation</li></ul><blockquote><p><strong>Perfect for:</strong> Rare disease diagnosis • Undiagnosed patients • Clinical WGS • Mendelian disorders • Pediatric genetics</p></blockquote>",
+  "content": "<h2><strong>Rare Disease Diagnostic Sequencing</strong></h2><p>Clinical-grade WGS analysis for rare disease diagnosis in single patients (singletons). Identifies causal variants for Mendelian disorders with comprehensive variant annotation and pathogenicity scoring.</p><h3><strong>Why WGS for Rare Disease?</strong></h3><blockquote><ul><li><strong>Diagnostic Yield</strong>: 25-50% solve rate for rare diseases</li><li><strong>Comprehensive Coverage</strong>: Exons + introns + regulatory regions</li><li><strong>All Variant Types</strong>: SNVs, indels, SVs, CNVs, repeat expansions</li><li><strong>No Bias</strong>: Detect variants in any gene</li><li><strong>Re-analysis</strong>: Data reusable as new genes discovered</li><li><strong>Structural Variants</strong>: ~10% of diagnoses missed by WES</li></ul></blockquote><h3><strong>Clinical Applications</strong></h3><ul><li><strong>Undiagnosed Diseases</strong>: Patients with unknown genetic etiology</li><li><strong>Mendelian Disorders</strong>: Autosomal dominant/recessive, X-linked</li><li><strong>Pediatric Genetics</strong>: Developmental disorders, intellectual disability</li><li><strong>Neurology</strong>: Epilepsy, ataxia, neuropathy</li><li><strong>Metabolic Disorders</strong>: Inborn errors of metabolism</li><li><strong>Multi-System Disorders</strong>: Complex phenotypes</li></ul><h3><strong>Variant Detection</strong></h3><ul><li><strong>SNVs & Indels</strong>: DeepVariant (Google) for high accuracy</li><li><strong>Structural Variants</strong>: Manta, TIDDIT for large SVs</li><li><strong>Copy Number Variants</strong>: GATK-gCNV for dosage changes</li><li><strong>Mitochondrial Variants</strong>: mtDNA heteroplasmy detection</li><li><strong>Repeat Expansions</strong>: ExpansionHunter for STR diseases</li></ul><h3><strong>Annotation & Prioritization</strong></h3><blockquote><p><strong>Databases</strong>: ClinVar, OMIM, HGMD, gnomAD</p><p><strong>Prediction Tools</strong>: CADD, REVEL, SpliceAI, PolyPhen-2</p><p><strong>Gene-Phenotype Matching</strong>: HPO phenotype matching</p><p><strong>Inheritance Models</strong>: AR, AD, XL, de novo</p><p><strong>Filtering</strong>: Population frequency, quality, inheritance</p></blockquote><h3><strong>Singleton Analysis</strong></h3><p>For single probands without family members:</p><ul><li><strong>De Novo Variants</strong>: Look for new dominant mutations</li><li><strong>Homozygous Variants</strong>: Recessive disease candidates</li><li><strong>Compound Heterozygotes</strong>: Two variants in same gene</li><li><strong>X-Linked</strong>: Hemizygous in males</li><li><strong>Dominant Pathogenic</strong>: Known disease variants</li></ul><h3><strong>Clinical Workflow</strong></h3><ol><li><strong>Sequencing</strong>: 30-40X coverage WGS</li><li><strong>Variant Calling</strong>: All variant types detected</li><li><strong>Annotation</strong>: Pathogenicity and clinical relevance</li><li><strong>Filtering</strong>: Rare, predicted pathogenic</li><li><strong>Phenotype Matching</strong>: Gene-disease associations</li><li><strong>Validation</strong>: Sanger sequencing of candidates</li><li><strong>Clinical Report</strong>: Diagnostic findings</li></ol><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with columns:</p><ul><li><strong>sample</strong>: Unique sample ID</li><li><strong>lane</strong>: Sequencing lane</li><li><strong>fastq_1, fastq_2</strong>: Paired-end reads</li><li><strong>sex</strong>: 1 (male), 2 (female), 0 (unknown)</li><li><strong>phenotype</strong>: 2 (affected)</li><li><strong>case_id</strong>: Case/family identifier</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Annotated VCF</strong>: All variants with pathogenicity scores</li><li><strong>Filtered VCF</strong>: Candidate diagnostic variants</li><li><strong>SV VCF</strong>: Structural variants</li><li><strong>CNV VCF</strong>: Copy number variants</li><li><strong>Gene Ranking</strong>: Prioritized candidate genes</li><li><strong>Clinical Report</strong>: Diagnostic interpretation</li></ul><blockquote><p><strong>Perfect for:</strong> Rare disease diagnosis \u2022 Undiagnosed patients \u2022 Clinical WGS \u2022 Mendelian disorders \u2022 Pediatric genetics</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -17,7 +17,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -28,8 +30,14 @@
       "defaultValue": "GRCh38",
       "required": true,
       "options": [
-        {"label": "Human GRCh38", "value": "GRCh38"},
-        {"label": "Human GRCh37", "value": "GRCh37"}
+        {
+          "label": "Human GRCh38",
+          "value": "GRCh38"
+        },
+        {
+          "label": "Human GRCh37",
+          "value": "GRCh37"
+        }
       ]
     },
     {
@@ -52,14 +60,31 @@
       "name": "system_size",
       "hidden": false,
       "options": [
-        {"label": "XLARGE (Recommended for WGS)", "value": "xlarge", "mapValue": {"nodeSize": "XLARGE", "numNodes": 1, "withGpu": false}}
+        {
+          "label": "XLARGE (Recommended for WGS)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
       ],
       "defaultValue": "xlarge"
     }
   ],
   "tags": [
-    {"name": "genomics", "type": "subfield"},
-    {"name": "rare-disease", "type": "task"},
-    {"name": "clinical", "type": "task"}
+    {
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "name": "rare-disease",
+      "type": "task"
+    },
+    {
+      "name": "clinical",
+      "type": "task"
+    }
   ]
 }

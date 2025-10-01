@@ -1,12 +1,12 @@
 {
   "name": "denovohybrid-hybrid-assembly",
   "title": "De Novo Hybrid Assembly",
-  "description": "Hybrid genome assembly pipeline combining long-read (Oxford Nanopore) and short-read (Illumina) sequencing data for high-quality bacterial and eukaryotic genome assemblies.",
+  "description": "Hybrid genome assembly pipeline combining long-read (Oxford Nanopore) and short-read (Illumina) sequencing data for high-quality bacterial and eukaryotic genome assemblies. Supports Unicycler for bacteria, miniasm and wtdbg2 for eukaryotes, with comprehensive QC and polishing steps. Samplesheet format: `Nanopore,30`",
   "version": "dev",
   "engineType": "NEXTFLOW",
-  "command": "nextflow run nf-core/denovohybrid --input ${input} --outdir ${outdir} --mode ${mode} --minContigLength ${minContigLength} --genomeSize ${genomeSize} -r dev",
+  "command": "nextflow run nf-core/denovohybrid --input ${input} --outdir ${outdir} --mode ${mode} --minContigLength ${minContigLength} --genomeSize ${genomeSize} -r dev ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/denovohybrid/master/docs/images/nf-core-denovohybrid_logo_light.png",
-  "content": "<h2><strong>De Novo Hybrid Assembly</strong></h2><p>Hybrid genome assembly pipeline that combines long-read (Oxford Nanopore Technologies) and short-read (Illumina) sequencing data to generate high-quality genome assemblies.</p><h3>Key Features</h3><ul><li><strong>Multiple Assembly Methods:</strong> Unicycler (bacteria), miniasm, and wtdbg2 (eukaryotes)</li><li><strong>Comprehensive QC:</strong> FastQC for short reads, NanoPlot for long reads, and Quast for assembly quality</li><li><strong>Read Preprocessing:</strong> Automated adapter removal (Porechop) and quality filtering (Filtlong)</li><li><strong>Polishing:</strong> Long-read consensus with Racon and short-read polishing with Pilon</li><li><strong>Visualization:</strong> Assembly graph visualization with Bandage and MultiQC comprehensive reports</li></ul><h3>Assembly Methods</h3><ul><li><strong>Unicycler (default):</strong> State-of-the-art hybrid assembler for bacteria, often achieving complete closed genomes</li><li><strong>miniasm:</strong> Fast long-read assembler for large eukaryotic genomes with Racon consensus and Pilon polishing</li><li><strong>wtdbg2:</strong> Extremely fast long-read assembler suitable for large genomes</li></ul><h3>Input Requirements</h3><p>Tab-separated samplesheet with columns: Sample ID, Nanopore/long read file path, Illumina R1 file path, Illumina R2 file path. Pipeline can also perform long-read only assembly if short reads are not provided.</p><h3>Output</h3><ul><li>Assembled genome FASTA files</li><li>Assembly quality metrics (Quast reports)</li><li>Assembly graph visualizations (Bandage plots)</li><li>Comprehensive QC report (MultiQC)</li><li>Read quality metrics (FastQC, NanoPlot)</li></ul><p><strong>Note:</strong> This pipeline uses Nextflow DSL1 and requires Nextflow version 22.10.6 or earlier.</p>",
+  "content": "<h2><strong>De Novo Hybrid Assembly: Best of Both Sequencing Worlds</strong></h2><p>Combine the accuracy of Illumina short reads with the long-range information of Oxford Nanopore sequencing to generate high-quality, contiguous genome assemblies. This hybrid approach leverages strengths of both technologies to produce assemblies superior to either method alone.</p><blockquote><p><strong>Why Hybrid Assembly?</strong> Long reads provide scaffolding and resolve repeats, while short reads polish bases to high accuracy. Together, they produce chromosome-level assemblies with >99.99% accuracy.</p></blockquote><h3><strong>Key Features</strong></h3><ul><li><strong>Multiple Assembly Strategies</strong>: Unicycler (bacteria), miniasm, and wtdbg2 (eukaryotes)</li><li><strong>Comprehensive QC</strong>: FastQC (short reads), NanoPlot (long reads), Quast (assemblies)</li><li><strong>Automated Preprocessing</strong>: Porechop adapter removal, Filtlong quality filtering</li><li><strong>Multi-Stage Polishing</strong>: Racon long-read consensus + Pilon short-read correction</li><li><strong>Assembly Visualization</strong>: Bandage graphs reveal genome structure</li><li><strong>Flexible Input</strong>: Hybrid or long-read only assembly modes</li></ul><h3><strong>Assembly Methods</strong></h3><h4><strong>Unicycler (Default - Bacteria)</strong></h4><ul><li><strong>Approach</strong>: Hybrid assembly graph with iterative bridging and polishing</li><li><strong>Strengths</strong>: Often achieves complete closed bacterial genomes (chromosomes + plasmids)</li><li><strong>Best for</strong>: Bacterial and archaeal genomes (0.5-15 Mb)</li><li><strong>Output</strong>: Circular contigs for complete replicons, high contiguity</li><li><strong>Success rate</strong>: >90% complete genomes with good coverage</li></ul><h4><strong>miniasm (Eukaryotes)</strong></h4><ul><li><strong>Approach</strong>: Fast overlap-layout-consensus assembly from long reads</li><li><strong>Strengths</strong>: Very fast, low memory, good for large genomes</li><li><strong>Polishing</strong>: Racon (3 rounds) + Pilon (2 rounds) for accuracy</li><li><strong>Best for</strong>: Eukaryotic genomes (10 Mb - 3 Gb)</li><li><strong>Output</strong>: Long contigs with high contiguity</li></ul><h4><strong>wtdbg2 (Large Genomes)</strong></h4><ul><li><strong>Approach</strong>: Fuzzy de Bruijn graph assembly</li><li><strong>Strengths</strong>: Extremely fast, handles high error rates</li><li><strong>Best for</strong>: Very large or complex genomes (>1 Gb)</li><li><strong>Speed</strong>: 3-5x faster than miniasm for large genomes</li></ul><h3><strong>Pipeline Workflow</strong></h3><ol><li><strong>Read Quality Control</strong>: FastQC (short reads), NanoPlot (long reads)</li><li><strong>Adapter Trimming</strong>: Porechop removes Nanopore adapters</li><li><strong>Quality Filtering</strong>: Filtlong selects best long reads</li><li><strong>Initial Assembly</strong>: Unicycler/miniasm/wtdbg2 creates draft genome</li><li><strong>Long-Read Polishing</strong>: Racon improves consensus (3 rounds)</li><li><strong>Short-Read Polishing</strong>: Pilon corrects bases using Illumina reads</li><li><strong>Quality Assessment</strong>: Quast evaluates assembly metrics</li><li><strong>Visualization</strong>: Bandage generates assembly graphs</li><li><strong>Comprehensive Reporting</strong>: MultiQC summarizes all metrics</li></ol><h3><strong>Input Requirements</strong></h3><p><strong>Samplesheet Format (TSV):</strong></p><pre>sample\tlong_reads\tshort_reads_1\tshort_reads_2\nbacteria1\tnanopore.fastq.gz\tillumina_R1.fastq.gz\tillumina_R2.fastq.gz\neukaryote1\tnanopore.fastq.gz\tillumina_R1.fastq.gz\tillumina_R2.fastq.gz</pre><p><strong>Sequencing Requirements:</strong></p><ul><li><strong>Long reads</strong>: Oxford Nanopore, 30-100x coverage, N50 >10kb ideal</li><li><strong>Short reads</strong>: Illumina paired-end, 50-100x coverage, 2x100bp or longer</li><li><strong>Read quality</strong>: Nanopore Q7+, Illumina Q30+</li><li><strong>Optional</strong>: Can run long-read only (leave short read columns empty)</li></ul><h3><strong>Coverage Recommendations</strong></h3><table><tr><th>Genome Type</th><th>Long Read Coverage</th><th>Short Read Coverage</th><th>Assembly Method</th></tr><tr><td><strong>Bacteria</strong></td><td>40-60x</td><td>50-100x</td><td>Unicycler</td></tr><tr><td><strong>Small Eukaryote</strong></td><td>50-100x</td><td>50-100x</td><td>miniasm</td></tr><tr><td><strong>Large Genome</strong></td><td>30-50x</td><td>50x</td><td>wtdbg2</td></tr></table><h3><strong>Main Outputs</strong></h3><h4><strong>Assembly Files</strong></h4><ul><li><strong>Final assembly</strong>: Polished genome FASTA file</li><li><strong>Draft assembly</strong>: Pre-polishing contigs</li><li><strong>Assembly graph</strong>: GFA format for visualization</li><li><strong>Bandage images</strong>: PNG/SVG assembly graph plots</li></ul><h4><strong>Quality Metrics</strong></h4><ul><li><strong>Quast report</strong>: N50, L50, total length, GC content, gene predictions</li><li><strong>Contig statistics</strong>: Number, size distribution, completeness</li><li><strong>Mapping rates</strong>: Read alignment back to assembly</li><li><strong>MultiQC report</strong>: Combined quality metrics across all samples</li></ul><h4><strong>QC Data</strong></h4><ul><li><strong>Read QC</strong>: FastQC HTML reports for Illumina</li><li><strong>Long read stats</strong>: NanoPlot quality and length distributions</li><li><strong>Filtering stats</strong>: Reads retained/discarded at each step</li></ul><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Bacterial Genomics</strong>: Complete pathogen genomes for outbreak analysis</li><li><strong>Microbial Ecology</strong>: MAGs (metagenome-assembled genomes) from isolates</li><li><strong>Comparative Genomics</strong>: High-quality reference genomes for new species</li><li><strong>Structural Variation</strong>: Resolve complex rearrangements and repeats</li><li><strong>Plasmid Analysis</strong>: Complete plasmid sequences for AMR studies</li><li><strong>Eukaryotic Genomics</strong>: Non-model organism genome assembly</li><li><strong>Ancient DNA</strong>: Reconstruct degraded genomes</li></ul><h3><strong>Advantages of Hybrid Assembly</strong></h3><table><tr><th>Feature</th><th>Hybrid</th><th>Short-read Only</th><th>Long-read Only</th></tr><tr><td><strong>Contiguity</strong></td><td>✅ Excellent</td><td>⚠️ Fragmented</td><td>✅ Good</td></tr><tr><td><strong>Accuracy</strong></td><td>✅ >99.99%</td><td>✅ High</td><td>⚠️ 95-99%</td></tr><tr><td><strong>Repeat Resolution</strong></td><td>✅ Excellent</td><td>❌ Poor</td><td>✅ Good</td></tr><tr><td><strong>Closed Genomes</strong></td><td>✅ Often (bacteria)</td><td>❌ Rare</td><td>⚠️ Sometimes</td></tr><tr><td><strong>Cost</strong></td><td>⚠️ Moderate</td><td>✅ Low</td><td>✅ Low</td></tr></table><h3><strong>Expected Assembly Quality</strong></h3><p><strong>Bacterial Genomes (with Unicycler):</strong></p><ul><li>N50: 1-5 Mb (often complete chromosome)</li><li>Contigs: 1-5 (chromosome + plasmids)</li><li>Accuracy: >99.99%</li><li>Completion rate: 70-90% fully closed genomes</li></ul><p><strong>Eukaryotic Genomes (miniasm/wtdbg2):</strong></p><ul><li>N50: 500 kb - 10 Mb</li><li>Contigs: 100-1000s (depends on genome size)</li><li>Accuracy: >99.9% after polishing</li><li>Scaffold N50: Often chromosome-scale with good coverage</li></ul><h3><strong>Best Practices</strong></h3><ul><li><strong>DNA Quality</strong>: Use high molecular weight DNA (>50 kb) for best long reads</li><li><strong>Coverage Depth</strong>: Don't under-sequence - follow coverage recommendations</li><li><strong>Read Length</strong>: Longer Nanopore reads (N50 >20kb) dramatically improve results</li><li><strong>Subsampling</strong>: Pipeline can subsample high coverage (saves time/memory)</li><li><strong>Method Selection</strong>: Use Unicycler for bacteria, miniasm/wtdbg2 for eukaryotes</li><li><strong>Run All Methods</strong>: Try --mode all to compare assemblers (choose best result)</li></ul><h3><strong>Important Notes</strong></h3><blockquote><p><strong>⚠️ Nextflow Version</strong>: This pipeline uses DSL1 and requires Nextflow ≤22.10.6. Newer Nextflow versions are not compatible.</p></blockquote><blockquote><p><strong>📦 Archived Pipeline</strong>: While no longer actively maintained, this pipeline remains functional and useful. Consider newer alternatives like dragonflye for active development.</p></blockquote><h3><strong>Computational Requirements</strong></h3><ul><li><strong>CPU</strong>: 32-64 cores recommended</li><li><strong>Memory</strong>: 100-200GB for bacteria, 200-500GB for eukaryotes</li><li><strong>Storage</strong>: 50-500GB (depends on genome size and coverage)</li><li><strong>Runtime</strong>: 2-6 hours (bacteria), 6-24 hours (eukaryotes)</li></ul><blockquote><p><strong>Perfect for Research in:</strong> Bacterial genomics • Pathogen surveillance • Outbreak investigation • Plasmid analysis • Comparative genomics • Eukaryotic genome assembly • Structural variation • Non-model organisms</p></blockquote><p>Built with <a href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Originally powered by <a href=\"https://nf-co.re/denovohybrid/\" target=\"_blank\">nf-core/denovohybrid</a> • Containerized execution • Archived but functional</p>",
   "spec": [
     {
       "type": "Stash File",
@@ -16,7 +16,10 @@
       "required": true,
       "restrictions": {
         "allow_files": true,
-        "allowed_file_types": [".tsv", ".txt"]
+        "allowed_file_types": [
+          ".tsv",
+          ".txt"
+        ]
       }
     },
     {
@@ -39,10 +42,22 @@
       "defaultValue": "unicycler",
       "required": false,
       "options": [
-        {"label": "Unicycler (bacteria)", "value": "unicycler"},
-        {"label": "miniasm (eukaryotes)", "value": "miniasm"},
-        {"label": "wtdbg2 (fast eukaryotic)", "value": "wtdbg2"},
-        {"label": "All methods", "value": "all"}
+        {
+          "label": "Unicycler (bacteria)",
+          "value": "unicycler"
+        },
+        {
+          "label": "miniasm (eukaryotes)",
+          "value": "miniasm"
+        },
+        {
+          "label": "wtdbg2 (fast eukaryotic)",
+          "value": "wtdbg2"
+        },
+        {
+          "label": "All methods",
+          "value": "all"
+        }
       ]
     },
     {
@@ -107,11 +122,29 @@
     }
   ],
   "tags": [
-    {"name": "denovohybrid", "type": "task"},
-    {"name": "assembly", "type": "task"},
-    {"name": "genomics", "type": "task"},
-    {"name": "hybrid", "type": "task"},
-    {"name": "nanopore", "type": "task"},
-    {"name": "illumina", "type": "task"}
+    {
+      "name": "denovohybrid",
+      "type": "task"
+    },
+    {
+      "name": "assembly",
+      "type": "task"
+    },
+    {
+      "name": "genomics",
+      "type": "task"
+    },
+    {
+      "name": "hybrid",
+      "type": "task"
+    },
+    {
+      "name": "nanopore",
+      "type": "task"
+    },
+    {
+      "name": "illumina",
+      "type": "task"
+    }
   ]
 }

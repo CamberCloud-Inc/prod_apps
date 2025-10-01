@@ -1,12 +1,12 @@
 {
   "name": "nanoseq-dna-sequencing",
   "title": "Nanoseq: Long-Read DNA Sequencing Analysis",
-  "description": "Nanopore/PacBio long-read DNA sequencing pipeline with de novo assembly, structural variant detection, and QC. Ideal for complex genomes, phasing, and comprehensive variant analysis.",
+  "description": "Nanopore/PacBio long-read DNA sequencing pipeline with de novo assembly, structural variant detection, and QC. Ideal for complex genomes, phasing, and comprehensive variant analysis. Samplesheet format: `sample,fastq,barcode`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/nanoseq --input ${input} --outdir ${outdir} --protocol ${protocol} --skip_quantification -r 3.1.0 ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/nanoseq/master/docs/images/nf-core-nanoseq_logo_light.png",
-  "content": "<h2><strong>Nanoseq: Long-Read DNA Sequencing</strong></h2><p><strong>nf-core/nanoseq</strong> processes Oxford Nanopore and PacBio long-read DNA sequencing data with comprehensive QC, alignment, and analysis. Long reads excel at resolving structural variants, repetitive regions, and complex genomic architectures.</p><h3><strong>Why Long-Read DNA Sequencing?</strong></h3><ul><li><strong>Structural Variants</strong>: Detect large deletions, insertions, inversions, translocations (>50bp-Mb scale)</li><li><strong>Repeat Resolution</strong>: Span tandem repeats, centromeres, telomeres</li><li><strong>Phasing</strong>: Long reads enable haplotype phasing over megabases</li><li><strong>Complex Regions</strong>: Resolve segmental duplications, MHC locus, immunoglobulin genes</li><li><strong>De Novo Assembly</strong>: Create reference-free genome assemblies</li><li><strong>Methylation Detection</strong>: Native 5mC/6mA detection (Nanopore)</li></ul><h3><strong>Sequencing Technologies</strong></h3><p><strong>Oxford Nanopore</strong>:</p><ul><li>Real-time sequencing through nanopores</li><li>Read lengths: 10-100+ kb (ultra-long: >1Mb)</li><li>Native base modification detection</li><li>Rapid library prep (10 min - 1 hr)</li><li>Error rate: 5-10% (improving with R10.4 chemistry)</li></ul><p><strong>PacBio HiFi</strong>:</p><ul><li>Circular consensus sequencing (CCS)</li><li>Read lengths: 10-25 kb</li><li>Accuracy: 99.8-99.9% (Q20-Q30)</li><li>Gold standard for high-quality long reads</li><li>Excellent for diploid assembly</li></ul><h3><strong>Pipeline Workflow</strong></h3><ol><li><strong>Basecalling</strong>: Guppy (Nanopore) or extract HiFi reads (PacBio)</li><li><strong>Quality Control</strong>: NanoPlot, PycoQC assess read length/quality</li><li><strong>Trimming/Filtering</strong>: Remove adapters, low-quality reads</li><li><strong>Alignment</strong>: minimap2 maps to reference genome</li><li><strong>Variant Calling</strong>: Sniffles2, cuteSV for structural variants</li><li><strong>QC Report</strong>: MultiQC aggregates all metrics</li></ol><h3><strong>Scientific Applications</strong></h3><p><strong>Structural Variant Discovery</strong>:</p><ul><li>Large deletions/duplications in cancer genomes</li><li>Complex rearrangements (chromothripsis)</li><li>Gene fusions (BCR-ABL, EML4-ALK)</li><li>Mobile element insertions (LINE, SINE, Alu)</li></ul><p><strong>Repeat Expansion Disorders</strong>:</p><ul><li><strong>Huntington's disease</strong>: HTT CAG repeats (>36 copies)</li><li><strong>Fragile X syndrome</strong>: FMR1 CGG repeats (>200 copies)</li><li><strong>ALS/FTD</strong>: C9orf72 GGGGCC repeats</li><li><strong>Myotonic dystrophy</strong>: DMPK CTG repeats</li></ul><p><strong>Complex Genome Regions</strong>:</p><ul><li><strong>MHC locus</strong>: HLA typing from long reads</li><li><strong>Immunoglobulin/TCR loci</strong>: V(D)J recombination</li><li><strong>Centromeres/telomeres</strong>: Previously unresolvable</li><li><strong>Segmental duplications</strong>: >90% sequence identity</li></ul><p><strong>Phasing & Haplotypes</strong>:</p><ul><li>Phase variants over entire genes (10-100 kb)</li><li>Determine compound heterozygosity</li><li>Parental origin of mutations</li><li>Allele-specific expression studies</li></ul><h3><strong>Structural Variant Types</strong></h3><ul><li><strong>Deletions</strong>: Loss of genomic sequence (50bp - Mb)</li><li><strong>Insertions</strong>: Gain of sequence (novel or mobile elements)</li><li><strong>Duplications</strong>: Tandem or interspersed copies</li><li><strong>Inversions</strong>: Sequence flipped 180°</li><li><strong>Translocations</strong>: Inter-chromosomal rearrangements</li><li><strong>Copy Number Variants</strong>: Changes in gene dosage</li></ul><h3><strong>Sequencing Metrics</strong></h3><table><tr><th>Application</th><th>Coverage</th><th>Read Length</th></tr><tr><td><strong>SV Detection</strong></td><td>20-30X</td><td>>10 kb</td></tr><tr><td><strong>De Novo Assembly</strong></td><td>40-60X</td><td>>20 kb (ultra-long: >100kb)</td></tr><tr><td><strong>Methylation</strong></td><td>25-40X</td><td>>10 kb</td></tr><tr><td><strong>Targeted Regions</strong></td><td>100-500X</td><td>Amplicon-dependent</td></tr></table><h3><strong>Read Length Advantages</strong></h3><blockquote><p>Short reads (150bp) cannot:</p><ul><li>Span large structural variants</li><li>Resolve segmental duplications</li><li>Phase distant variants</li><li>Cross repetitive regions</li></ul><p>Long reads (10-100kb) can:</p><ul><li>Detect complex SVs in single reads</li><li>Uniquely map duplicated sequences</li><li>Phase entire genes</li><li>Resolve repeat expansions</li></ul></blockquote><h3><strong>Quality Metrics</strong></h3><ul><li><strong>N50 Read Length</strong>: Half of bases in reads ≥ this length (higher = better)</li><li><strong>Read Quality</strong>: Q10-Q15 (Nanopore), Q20+ (PacBio HiFi)</li><li><strong>Mapping Rate</strong>: >80% for good-quality data</li><li><strong>Coverage Uniformity</strong>: Check for GC bias, repeat dropout</li></ul><h3><strong>Nanopore vs PacBio Comparison</strong></h3><table><tr><th>Feature</th><th>Nanopore</th><th>PacBio HiFi</th></tr><tr><td><strong>Read Length</strong></td><td>10kb - >1Mb</td><td>10-25 kb</td></tr><tr><td><strong>Accuracy</strong></td><td>90-95% raw, 99%+ consensus</td><td>99.8-99.9%</td></tr><tr><td><strong>Throughput</strong></td><td>50-150 Gb (PromethION)</td><td>30-90 Gb (Revio)</td></tr><tr><td><strong>Speed</strong></td><td>Real-time, results in hours</td><td>Overnight runs</td></tr><tr><td><strong>Methylation</strong></td><td>Native detection</td><td>Requires separate assay</td></tr><tr><td><strong>Cost</strong></td><td>Lower per sample</td><td>Higher upfront cost</td></tr></table><h3><strong>Protocol Selection</strong></h3><p><strong>DNA</strong> (default):</p><ul><li>Standard genomic DNA sequencing</li><li>WGS, targeted amplicons</li><li>SV detection, phasing</li></ul><p><strong>cDNA</strong>:</p><ul><li>Reverse-transcribed RNA (full-length transcripts)</li><li>Isoform discovery</li><li>Fusion transcript detection</li></ul><p><strong>directRNA</strong>:</p><ul><li>Native RNA sequencing (Nanopore only)</li><li>RNA modifications (m6A, pseudouridine)</li><li>Poly(A) tail length</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with columns:</p><ul><li><strong>sample</strong>: Sample ID</li><li><strong>fastq</strong>: Path to FASTQ file(s)</li><li><strong>barcode</strong>: Barcode number (if multiplexed)</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Aligned BAM</strong>: Sorted, indexed alignments</li><li><strong>Structural Variants</strong>: VCF files from Sniffles2/cuteSV</li><li><strong>QC Reports</strong>: NanoPlot, PycoQC statistics</li><li><strong>Read Length Distributions</strong>: N50, histograms</li><li><strong>Coverage Tracks</strong>: BigWig for genome browsers</li><li><strong>MultiQC Report</strong>: Comprehensive summary</li></ul><blockquote><p><strong>Perfect for:</strong> Structural variants • Complex genomes • Repeat regions • Phasing • Cancer rearrangements • Rare disease diagnostics</p></blockquote>",
+  "content": "<h2><strong>Nanoseq: Long-Read DNA Sequencing</strong></h2><p><strong>nf-core/nanoseq</strong> processes Oxford Nanopore and PacBio long-read DNA sequencing data with comprehensive QC, alignment, and analysis. Long reads excel at resolving structural variants, repetitive regions, and complex genomic architectures.</p><h3><strong>Why Long-Read DNA Sequencing?</strong></h3><ul><li><strong>Structural Variants</strong>: Detect large deletions, insertions, inversions, translocations (>50bp-Mb scale)</li><li><strong>Repeat Resolution</strong>: Span tandem repeats, centromeres, telomeres</li><li><strong>Phasing</strong>: Long reads enable haplotype phasing over megabases</li><li><strong>Complex Regions</strong>: Resolve segmental duplications, MHC locus, immunoglobulin genes</li><li><strong>De Novo Assembly</strong>: Create reference-free genome assemblies</li><li><strong>Methylation Detection</strong>: Native 5mC/6mA detection (Nanopore)</li></ul><h3><strong>Sequencing Technologies</strong></h3><p><strong>Oxford Nanopore</strong>:</p><ul><li>Real-time sequencing through nanopores</li><li>Read lengths: 10-100+ kb (ultra-long: >1Mb)</li><li>Native base modification detection</li><li>Rapid library prep (10 min - 1 hr)</li><li>Error rate: 5-10% (improving with R10.4 chemistry)</li></ul><p><strong>PacBio HiFi</strong>:</p><ul><li>Circular consensus sequencing (CCS)</li><li>Read lengths: 10-25 kb</li><li>Accuracy: 99.8-99.9% (Q20-Q30)</li><li>Gold standard for high-quality long reads</li><li>Excellent for diploid assembly</li></ul><h3><strong>Pipeline Workflow</strong></h3><ol><li><strong>Basecalling</strong>: Guppy (Nanopore) or extract HiFi reads (PacBio)</li><li><strong>Quality Control</strong>: NanoPlot, PycoQC assess read length/quality</li><li><strong>Trimming/Filtering</strong>: Remove adapters, low-quality reads</li><li><strong>Alignment</strong>: minimap2 maps to reference genome</li><li><strong>Variant Calling</strong>: Sniffles2, cuteSV for structural variants</li><li><strong>QC Report</strong>: MultiQC aggregates all metrics</li></ol><h3><strong>Scientific Applications</strong></h3><p><strong>Structural Variant Discovery</strong>:</p><ul><li>Large deletions/duplications in cancer genomes</li><li>Complex rearrangements (chromothripsis)</li><li>Gene fusions (BCR-ABL, EML4-ALK)</li><li>Mobile element insertions (LINE, SINE, Alu)</li></ul><p><strong>Repeat Expansion Disorders</strong>:</p><ul><li><strong>Huntington's disease</strong>: HTT CAG repeats (>36 copies)</li><li><strong>Fragile X syndrome</strong>: FMR1 CGG repeats (>200 copies)</li><li><strong>ALS/FTD</strong>: C9orf72 GGGGCC repeats</li><li><strong>Myotonic dystrophy</strong>: DMPK CTG repeats</li></ul><p><strong>Complex Genome Regions</strong>:</p><ul><li><strong>MHC locus</strong>: HLA typing from long reads</li><li><strong>Immunoglobulin/TCR loci</strong>: V(D)J recombination</li><li><strong>Centromeres/telomeres</strong>: Previously unresolvable</li><li><strong>Segmental duplications</strong>: >90% sequence identity</li></ul><p><strong>Phasing & Haplotypes</strong>:</p><ul><li>Phase variants over entire genes (10-100 kb)</li><li>Determine compound heterozygosity</li><li>Parental origin of mutations</li><li>Allele-specific expression studies</li></ul><h3><strong>Structural Variant Types</strong></h3><ul><li><strong>Deletions</strong>: Loss of genomic sequence (50bp - Mb)</li><li><strong>Insertions</strong>: Gain of sequence (novel or mobile elements)</li><li><strong>Duplications</strong>: Tandem or interspersed copies</li><li><strong>Inversions</strong>: Sequence flipped 180\u00b0</li><li><strong>Translocations</strong>: Inter-chromosomal rearrangements</li><li><strong>Copy Number Variants</strong>: Changes in gene dosage</li></ul><h3><strong>Sequencing Metrics</strong></h3><table><tr><th>Application</th><th>Coverage</th><th>Read Length</th></tr><tr><td><strong>SV Detection</strong></td><td>20-30X</td><td>>10 kb</td></tr><tr><td><strong>De Novo Assembly</strong></td><td>40-60X</td><td>>20 kb (ultra-long: >100kb)</td></tr><tr><td><strong>Methylation</strong></td><td>25-40X</td><td>>10 kb</td></tr><tr><td><strong>Targeted Regions</strong></td><td>100-500X</td><td>Amplicon-dependent</td></tr></table><h3><strong>Read Length Advantages</strong></h3><blockquote><p>Short reads (150bp) cannot:</p><ul><li>Span large structural variants</li><li>Resolve segmental duplications</li><li>Phase distant variants</li><li>Cross repetitive regions</li></ul><p>Long reads (10-100kb) can:</p><ul><li>Detect complex SVs in single reads</li><li>Uniquely map duplicated sequences</li><li>Phase entire genes</li><li>Resolve repeat expansions</li></ul></blockquote><h3><strong>Quality Metrics</strong></h3><ul><li><strong>N50 Read Length</strong>: Half of bases in reads \u2265 this length (higher = better)</li><li><strong>Read Quality</strong>: Q10-Q15 (Nanopore), Q20+ (PacBio HiFi)</li><li><strong>Mapping Rate</strong>: >80% for good-quality data</li><li><strong>Coverage Uniformity</strong>: Check for GC bias, repeat dropout</li></ul><h3><strong>Nanopore vs PacBio Comparison</strong></h3><table><tr><th>Feature</th><th>Nanopore</th><th>PacBio HiFi</th></tr><tr><td><strong>Read Length</strong></td><td>10kb - >1Mb</td><td>10-25 kb</td></tr><tr><td><strong>Accuracy</strong></td><td>90-95% raw, 99%+ consensus</td><td>99.8-99.9%</td></tr><tr><td><strong>Throughput</strong></td><td>50-150 Gb (PromethION)</td><td>30-90 Gb (Revio)</td></tr><tr><td><strong>Speed</strong></td><td>Real-time, results in hours</td><td>Overnight runs</td></tr><tr><td><strong>Methylation</strong></td><td>Native detection</td><td>Requires separate assay</td></tr><tr><td><strong>Cost</strong></td><td>Lower per sample</td><td>Higher upfront cost</td></tr></table><h3><strong>Protocol Selection</strong></h3><p><strong>DNA</strong> (default):</p><ul><li>Standard genomic DNA sequencing</li><li>WGS, targeted amplicons</li><li>SV detection, phasing</li></ul><p><strong>cDNA</strong>:</p><ul><li>Reverse-transcribed RNA (full-length transcripts)</li><li>Isoform discovery</li><li>Fusion transcript detection</li></ul><p><strong>directRNA</strong>:</p><ul><li>Native RNA sequencing (Nanopore only)</li><li>RNA modifications (m6A, pseudouridine)</li><li>Poly(A) tail length</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with columns:</p><ul><li><strong>sample</strong>: Sample ID</li><li><strong>fastq</strong>: Path to FASTQ file(s)</li><li><strong>barcode</strong>: Barcode number (if multiplexed)</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Aligned BAM</strong>: Sorted, indexed alignments</li><li><strong>Structural Variants</strong>: VCF files from Sniffles2/cuteSV</li><li><strong>QC Reports</strong>: NanoPlot, PycoQC statistics</li><li><strong>Read Length Distributions</strong>: N50, histograms</li><li><strong>Coverage Tracks</strong>: BigWig for genome browsers</li><li><strong>MultiQC Report</strong>: Comprehensive summary</li></ul><blockquote><p><strong>Perfect for:</strong> Structural variants \u2022 Complex genomes \u2022 Repeat regions \u2022 Phasing \u2022 Cancer rearrangements \u2022 Rare disease diagnostics</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -17,7 +17,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -28,9 +30,18 @@
       "defaultValue": "DNA",
       "required": true,
       "options": [
-        {"label": "DNA (Genomic DNA)", "value": "DNA"},
-        {"label": "cDNA (Reverse-transcribed RNA)", "value": "cDNA"},
-        {"label": "directRNA (Native RNA)", "value": "directRNA"}
+        {
+          "label": "DNA (Genomic DNA)",
+          "value": "DNA"
+        },
+        {
+          "label": "cDNA (Reverse-transcribed RNA)",
+          "value": "cDNA"
+        },
+        {
+          "label": "directRNA (Native RNA)",
+          "value": "directRNA"
+        }
       ]
     },
     {
@@ -53,15 +64,40 @@
       "name": "system_size",
       "hidden": false,
       "options": [
-        {"label": "LARGE (Recommended)", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}},
-        {"label": "MEDIUM (For smaller datasets)", "value": "medium", "mapValue": {"nodeSize": "MEDIUM", "numNodes": 1, "withGpu": false}}
+        {
+          "label": "LARGE (Recommended)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM (For smaller datasets)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
       ],
       "defaultValue": "large"
     }
   ],
   "tags": [
-    {"name": "long-read", "type": "field"},
-    {"name": "structural-variants", "type": "task"},
-    {"name": "nanopore-pacbio", "type": "task"}
+    {
+      "name": "long-read",
+      "type": "field"
+    },
+    {
+      "name": "structural-variants",
+      "type": "task"
+    },
+    {
+      "name": "nanopore-pacbio",
+      "type": "task"
+    }
   ]
 }

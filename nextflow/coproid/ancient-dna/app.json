@@ -1,7 +1,7 @@
 {
   "name": "coproid-ancient-dna",
   "title": "Coprolite Host Identification (nf-core/coproid)",
-  "description": "Identify the host source of ancient coprolites and paleofeces using combined microbiome composition and host DNA content analysis. Uses machine learning to predict whether coprolites came from humans, dogs, or other animals - essential for archaeological and paleontological research.",
+  "description": "Identify the host source of ancient coprolites and paleofeces using combined microbiome composition and host DNA content analysis. Uses machine learning to predict whether coprolites came from humans, dogs, or other animals - essential for archaeological and paleontological research. Samplesheet format: `R1,R2`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/coproid --input ${input} --outdir ${outdir} --genome_sheet ${genome_sheet} --kraken2_db ${kraken2_db} -r 1.1.1 ",
@@ -16,7 +16,10 @@
       "required": true,
       "restrictions": {
         "allow_files": true,
-        "allowed_file_types": [".csv", ".tsv"]
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
       }
     },
     {
@@ -27,7 +30,10 @@
       "required": true,
       "restrictions": {
         "allow_files": true,
-        "allowed_file_types": [".csv", ".tsv"]
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
       }
     },
     {
@@ -89,9 +95,21 @@
     }
   ],
   "tags": [
-    {"name": "metagenomics", "type": "subfield"},
-    {"name": "ancient-dna", "type": "task"},
-    {"name": "archaeology", "type": "field"},
-    {"name": "paleogenomics", "type": "subfield"}
+    {
+      "name": "metagenomics",
+      "type": "subfield"
+    },
+    {
+      "name": "ancient-dna",
+      "type": "task"
+    },
+    {
+      "name": "archaeology",
+      "type": "field"
+    },
+    {
+      "name": "paleogenomics",
+      "type": "subfield"
+    }
   ]
 }

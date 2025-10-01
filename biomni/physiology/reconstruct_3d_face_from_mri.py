@@ -14,7 +14,7 @@ import subprocess
 
 def install_dependencies():
     """Install required dependencies"""
-    deps = ['biomni', 'opencv-python', 'scikit-image', 'scipy']
+    deps = ['biomni', 'opencv-python', 'scikit-image', 'scipy', 'nibabel']
     print("Installing dependencies...")
     for dep in deps:
         subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],

@@ -1,12 +1,12 @@
 {
   "name": "riboseq-stress-response",
   "title": "Stress Response Translation (Ribosome Profiling)",
-  "description": "Analyze translation dynamics during cellular stress. Identifies stress-induced translation reprogramming, preferential translation of stress response genes, and ribosome stalling patterns.",
+  "description": "Analyze translation dynamics during cellular stress. Identifies stress-induced translation reprogramming, preferential translation of stress response genes, and ribosome stalling patterns. Samplesheet format: `sample,fastq_1,fastq_2,replicate`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/riboseq --input ${input} --outdir ${outdir} --genome ${genome} -r 1.1.0 ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/riboseq/master/docs/images/nf-core-riboseq_logo_light.png",
-  "content": "<h2><strong>Stress Response Translation Analysis</strong></h2><p>During cellular stress (heat shock, oxidative stress, ER stress, hypoxia), translation is globally repressed but specific mRNAs are preferentially translated. Ribosome profiling reveals this reprogramming.</p><h3><strong>Stress-Induced Translation Reprogramming</strong></h3><blockquote><p><strong>Global Translation Shutoff</strong>: Most mRNAs stop being translated</p><p><strong>Preferential Translation</strong>: Stress response genes maintain or increase translation:</p><ul><li>Heat shock proteins (HSPs)</li><li>Chaperones (BiP, GRP94)</li><li>Antioxidant enzymes</li><li>Autophagy genes</li><li>Apoptosis regulators</li><li>Transcription factors (ATF4, NRF2)</li></ul></blockquote><h3><strong>Stress Types Studied</strong></h3><ul><li><strong>Heat Shock</strong>: HSP induction, protein folding</li><li><strong>ER Stress</strong>: Unfolded protein response (UPR)</li><li><strong>Oxidative Stress</strong>: Antioxidant response</li><li><strong>Hypoxia</strong>: HIF-1α and metabolic adaptation</li><li><strong>Nutrient Deprivation</strong>: Amino acid starvation, mTOR inhibition</li><li><strong>Viral Infection</strong>: Integrated stress response (ISR)</li></ul><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Stress Signaling</strong>: ISR, UPR, oxidative stress pathways</li><li><strong>Cancer</strong>: Tumor stress adaptation, therapy resistance</li><li><strong>Neurodegeneration</strong>: Protein aggregation, ER stress</li><li><strong>Aging</strong>: Proteostasis decline</li><li><strong>Drug Development</strong>: Stress pathway inhibitors</li><li><strong>Viral Infection</strong>: Host shutoff mechanisms</li></ul><h3><strong>Pipeline Features</strong></h3><ul><li><strong>Stress-Control Comparison</strong>: Differential translation analysis</li><li><strong>Ribosome Stalling</strong>: Detect stalled ribosomes during stress</li><li><strong>uORF Translation</strong>: Regulatory uORFs (e.g., ATF4, CHOP)</li><li><strong>IRES Activity</strong>: Cap-independent translation</li><li><strong>Polysome Profiling</strong>: Global translation state</li><li><strong>Time Course</strong>: Translation dynamics over stress response</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with Ribo-seq samples from:</p><ul><li><code>sample</code>: Sample identifier (control vs stress conditions)</li><li><code>fastq_1</code>: Ribo-seq reads</li><li><code>type</code>: riboseq</li><li><code>strandedness</code>: Usually forward for Ribo-seq</li></ul><p><strong>Experimental Design</strong>: Include time points (0h, 2h, 4h, 8h) to capture dynamics.</p><h3><strong>Key Outputs</strong></h3><ul><li><strong>Differentially Translated Genes</strong>: Stress vs control</li><li><strong>Translation Efficiency Changes</strong>: Per-gene TE shifts</li><li><strong>Ribosome Occupancy</strong>: Global translation state</li><li><strong>Stalling Events</strong>: Ribosome pausing sites</li><li><strong>uORF Activation</strong>: Regulatory ORF translation</li></ul><blockquote><p><strong>Perfect for:</strong> Stress biology • Integrated stress response • Proteostasis • Cancer stress adaptation • Viral infection</p></blockquote>",
+  "content": "<h2><strong>Stress Response Translation Analysis</strong></h2><p>During cellular stress (heat shock, oxidative stress, ER stress, hypoxia), translation is globally repressed but specific mRNAs are preferentially translated. Ribosome profiling reveals this reprogramming.</p><h3><strong>Stress-Induced Translation Reprogramming</strong></h3><blockquote><p><strong>Global Translation Shutoff</strong>: Most mRNAs stop being translated</p><p><strong>Preferential Translation</strong>: Stress response genes maintain or increase translation:</p><ul><li>Heat shock proteins (HSPs)</li><li>Chaperones (BiP, GRP94)</li><li>Antioxidant enzymes</li><li>Autophagy genes</li><li>Apoptosis regulators</li><li>Transcription factors (ATF4, NRF2)</li></ul></blockquote><h3><strong>Stress Types Studied</strong></h3><ul><li><strong>Heat Shock</strong>: HSP induction, protein folding</li><li><strong>ER Stress</strong>: Unfolded protein response (UPR)</li><li><strong>Oxidative Stress</strong>: Antioxidant response</li><li><strong>Hypoxia</strong>: HIF-1\u03b1 and metabolic adaptation</li><li><strong>Nutrient Deprivation</strong>: Amino acid starvation, mTOR inhibition</li><li><strong>Viral Infection</strong>: Integrated stress response (ISR)</li></ul><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Stress Signaling</strong>: ISR, UPR, oxidative stress pathways</li><li><strong>Cancer</strong>: Tumor stress adaptation, therapy resistance</li><li><strong>Neurodegeneration</strong>: Protein aggregation, ER stress</li><li><strong>Aging</strong>: Proteostasis decline</li><li><strong>Drug Development</strong>: Stress pathway inhibitors</li><li><strong>Viral Infection</strong>: Host shutoff mechanisms</li></ul><h3><strong>Pipeline Features</strong></h3><ul><li><strong>Stress-Control Comparison</strong>: Differential translation analysis</li><li><strong>Ribosome Stalling</strong>: Detect stalled ribosomes during stress</li><li><strong>uORF Translation</strong>: Regulatory uORFs (e.g., ATF4, CHOP)</li><li><strong>IRES Activity</strong>: Cap-independent translation</li><li><strong>Polysome Profiling</strong>: Global translation state</li><li><strong>Time Course</strong>: Translation dynamics over stress response</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with Ribo-seq samples from:</p><ul><li><code>sample</code>: Sample identifier (control vs stress conditions)</li><li><code>fastq_1</code>: Ribo-seq reads</li><li><code>type</code>: riboseq</li><li><code>strandedness</code>: Usually forward for Ribo-seq</li></ul><p><strong>Experimental Design</strong>: Include time points (0h, 2h, 4h, 8h) to capture dynamics.</p><h3><strong>Key Outputs</strong></h3><ul><li><strong>Differentially Translated Genes</strong>: Stress vs control</li><li><strong>Translation Efficiency Changes</strong>: Per-gene TE shifts</li><li><strong>Ribosome Occupancy</strong>: Global translation state</li><li><strong>Stalling Events</strong>: Ribosome pausing sites</li><li><strong>uORF Activation</strong>: Regulatory ORF translation</li></ul><blockquote><p><strong>Perfect for:</strong> Stress biology \u2022 Integrated stress response \u2022 Proteostasis \u2022 Cancer stress adaptation \u2022 Viral infection</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -17,7 +17,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -28,8 +30,14 @@
       "defaultValue": "GRCh38",
       "required": true,
       "options": [
-        {"label": "Human GRCh38", "value": "GRCh38"},
-        {"label": "Mouse GRCm39", "value": "GRCm39"}
+        {
+          "label": "Human GRCh38",
+          "value": "GRCh38"
+        },
+        {
+          "label": "Mouse GRCm39",
+          "value": "GRCm39"
+        }
       ]
     },
     {
@@ -52,14 +60,31 @@
       "name": "system_size",
       "hidden": false,
       "options": [
-        {"label": "LARGE (Recommended)", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}
+        {
+          "label": "LARGE (Recommended)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
       ],
       "defaultValue": "large"
     }
   ],
   "tags": [
-    {"name": "transcriptomics", "type": "field"},
-    {"name": "stress-response", "type": "task"},
-    {"name": "translation", "type": "task"}
+    {
+      "name": "transcriptomics",
+      "type": "field"
+    },
+    {
+      "name": "stress-response",
+      "type": "task"
+    },
+    {
+      "name": "translation",
+      "type": "task"
+    }
   ]
 }

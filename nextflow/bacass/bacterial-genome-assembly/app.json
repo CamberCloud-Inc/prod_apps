@@ -1,12 +1,12 @@
 {
   "name": "bacass-assembly",
   "title": "Bacterial Genome Assembly (nf-core/bacass)",
-  "description": "Assemble and annotate bacterial genomes from short-read (Illumina) or long-read (Nanopore) sequencing data using the nf-core/bacass pipeline. Performs quality control, contamination checking, genome assembly with Unicycler, and annotation with Prokka for microbiology research.",
+  "description": "Assemble and annotate bacterial genomes from short-read (Illumina) or long-read (Nanopore) sequencing data using the nf-core/bacass pipeline. Performs quality control, contamination checking, genome assembly with Unicycler, and annotation with Prokka for microbiology research. Samplesheet format: `ID,R1,R2,LongFastQ,Fast5,GenomeSize`",
   "version": "1.0.0",
   "engineType": "NEXTFLOW",
   "command": "nextflow run nf-core/bacass --input ${input} --outdir ${outdir} --skip_kraken2 --skip_kmerfinder -r 2.4.0 ",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/bacass/master/docs/images/nf-core-bacass_logo_light.png",
-  "content": "<h2><strong>Bacterial Genome Assembly</strong></h2><p>The <strong>nf-core/bacass</strong> pipeline assembles and annotates bacterial genomes from sequencing data. Supports short-read (Illumina), long-read (Nanopore), and hybrid assembly approaches for comprehensive bacterial genomics.</p><h3><strong>What This Pipeline Does</strong></h3><ul><li><strong>Quality Control</strong>: FastQC and FastP for read quality assessment</li><li><strong>Contamination Checking</strong>: Kraken2 to detect contamination</li><li><strong>Genome Assembly</strong>: Unicycler for high-quality bacterial assemblies</li><li><strong>Genome Annotation</strong>: Prokka to identify genes and features</li><li><strong>Assembly QC</strong>: QUAST for assembly quality metrics</li><li><strong>MultiQC Reports</strong>: Comprehensive quality summaries</li></ul><h3><strong>Use Cases</strong></h3><blockquote><ul><li><strong>Pathogen Genomics</strong>: Assemble genomes of bacterial pathogens</li><li><strong>AMR Research</strong>: Identify antibiotic resistance genes</li><li><strong>Outbreak Investigation</strong>: Genomic epidemiology</li><li><strong>Strain Characterization</strong>: Compare bacterial isolates</li><li><strong>Novel Species</strong>: De novo assembly and annotation</li></ul></blockquote><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with columns:</p><ul><li><code>ID</code>: Sample identifier</li><li><code>R1</code>: Forward reads (Illumina)</li><li><code>R2</code>: Reverse reads (Illumina, optional for single-end)</li><li><code>LongFastQ</code>: Long reads (Nanopore, optional)</li><li><code>GenomeSize</code>: Expected genome size (e.g., 5m for 5 megabases)</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Assembly FASTA</strong>: Assembled genome sequence</li><li><strong>Annotation GFF</strong>: Gene predictions and features</li><li><strong>QC Reports</strong>: Assembly statistics (N50, L50, contigs)</li><li><strong>Contamination Report</strong>: Kraken2 results</li></ul><blockquote><p><strong>Perfect for:</strong> Microbiologists • Clinical labs • Epidemiologists • AMR researchers • Bacterial geneticists</p></blockquote>",
+  "content": "<h2><strong>Bacterial Genome Assembly</strong></h2><p>The <strong>nf-core/bacass</strong> pipeline assembles and annotates bacterial genomes from sequencing data. Supports short-read (Illumina), long-read (Nanopore), and hybrid assembly approaches for comprehensive bacterial genomics.</p><h3><strong>What This Pipeline Does</strong></h3><ul><li><strong>Quality Control</strong>: FastQC and FastP for read quality assessment</li><li><strong>Contamination Checking</strong>: Kraken2 to detect contamination</li><li><strong>Genome Assembly</strong>: Unicycler for high-quality bacterial assemblies</li><li><strong>Genome Annotation</strong>: Prokka to identify genes and features</li><li><strong>Assembly QC</strong>: QUAST for assembly quality metrics</li><li><strong>MultiQC Reports</strong>: Comprehensive quality summaries</li></ul><h3><strong>Use Cases</strong></h3><blockquote><ul><li><strong>Pathogen Genomics</strong>: Assemble genomes of bacterial pathogens</li><li><strong>AMR Research</strong>: Identify antibiotic resistance genes</li><li><strong>Outbreak Investigation</strong>: Genomic epidemiology</li><li><strong>Strain Characterization</strong>: Compare bacterial isolates</li><li><strong>Novel Species</strong>: De novo assembly and annotation</li></ul></blockquote><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with columns:</p><ul><li><code>ID</code>: Sample identifier</li><li><code>R1</code>: Forward reads (Illumina)</li><li><code>R2</code>: Reverse reads (Illumina, optional for single-end)</li><li><code>LongFastQ</code>: Long reads (Nanopore, optional)</li><li><code>GenomeSize</code>: Expected genome size (e.g., 5m for 5 megabases)</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Assembly FASTA</strong>: Assembled genome sequence</li><li><strong>Annotation GFF</strong>: Gene predictions and features</li><li><strong>QC Reports</strong>: Assembly statistics (N50, L50, contigs)</li><li><strong>Contamination Report</strong>: Kraken2 results</li></ul><blockquote><p><strong>Perfect for:</strong> Microbiologists \u2022 Clinical labs \u2022 Epidemiologists \u2022 AMR researchers \u2022 Bacterial geneticists</p></blockquote>",
   "spec": [
     {
       "type": "Stash File",
@@ -17,7 +17,9 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": [
+          ".csv"
+        ]
       }
     },
     {
@@ -74,9 +76,21 @@
     }
   ],
   "tags": [
-    {"name": "genomics", "type": "subfield"},
-    {"name": "assembly", "type": "task"},
-    {"name": "bacteria", "type": "task"},
-    {"name": "microbiology", "type": "field"}
+    {
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "name": "assembly",
+      "type": "task"
+    },
+    {
+      "name": "bacteria",
+      "type": "task"
+    },
+    {
+      "name": "microbiology",
+      "type": "field"
+    }
   ]
 }
