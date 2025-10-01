@@ -1,0 +1,16 @@
+{
+  "name": "mhcquant-immunopeptidomics",
+  "title": "MHC Quant",
+  "description": " Immunopeptidomics",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/mhcquant --input ${input} --outdir ${outdir} -r  MHC peptide quantification:1.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/mhcquant/master/docs/images/nf-core-mhcquant_logo_light.png",
+  "content": "<h2><strong>MHC Quant</strong></h2><p> Immunopeptidomics</p>",
+  "spec": [
+    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
+    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./mhcquant-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+  ],
+  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
+  "tags": [{"name": "mhcquant", "type": "task"}]
+}

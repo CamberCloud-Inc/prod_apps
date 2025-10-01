@@ -1,0 +1,16 @@
+{
+  "name": "radseq-rad-seq",
+  "title": "RAD-Seq",
+  "description": " RAD Sequencing",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/radseq --input ${input} --outdir ${outdir} -r  Restriction site associated DNA sequencing:1.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/radseq/master/docs/images/nf-core-radseq_logo_light.png",
+  "content": "<h2><strong>RAD-Seq</strong></h2><p> RAD Sequencing</p>",
+  "spec": [
+    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
+    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./radseq-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+  ],
+  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
+  "tags": [{"name": "radseq", "type": "task"}]
+}

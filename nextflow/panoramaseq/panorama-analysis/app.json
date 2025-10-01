@@ -1,0 +1,16 @@
+{
+  "name": "panoramaseq-panorama-analysis",
+  "title": "PANORAMSeq",
+  "description": " Panorama Analysis",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/panoramaseq --input ${input} --outdir ${outdir} -r  PANORAMSeq data processing:1.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/panoramaseq/master/docs/images/nf-core-panoramaseq_logo_light.png",
+  "content": "<h2><strong>PANORAMSeq</strong></h2><p> Panorama Analysis</p>",
+  "spec": [
+    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
+    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./panoramaseq-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+  ],
+  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
+  "tags": [{"name": "panoramaseq", "type": "task"}]
+}
