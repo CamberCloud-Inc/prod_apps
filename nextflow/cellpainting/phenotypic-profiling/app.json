@@ -1,0 +1,16 @@
+{
+  "name": "cellpainting-phenotypic-profiling",
+  "title": "Cell Painting",
+  "description": " Phenotypic Profiling",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/cellpainting --input ${input} --outdir ${outdir} -r  Morphological phenotyping and drug screening:1.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/cellpainting/master/docs/images/nf-core-cellpainting_logo_light.png",
+  "content": "<h2><strong>Cell Painting</strong></h2><p> Phenotypic Profiling</p>",
+  "spec": [
+    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
+    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./cellpainting-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+  ],
+  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
+  "tags": [{"name": "cellpainting", "type": "task"}]
+}
