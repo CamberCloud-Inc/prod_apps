@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+"""
+Analyze Thrombus Histology
+
+Analyze histological images of thrombus samples.
+"""
+
+import sys
+import json
+from biomni.tool.pathology import analyze_thrombus_histology
+
+
+
+def install_dependencies():
+    """Install required dependencies"""
+    import subprocess
+    import sys
+    deps = ['biomni']
+    print("Installing dependencies...")
+    for dep in deps:
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
+                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+def main():
+    
+    install_dependencies()
+    if len(sys.argv) != 2:
+        print("Usage: analyze_thrombus_histology.py <input_json>")
+        sys.exit(1)
+
+    with open(sys.argv[1], 'r') as f:
+        inputs = json.load(f)
+
+    image_path = inputs['image_path']
+    output_dir = inputs.get('output_dir', './output')
+
+    result = analyze_thrombus_histology(
+        image_path=image_path,
+        output_dir=output_dir
+    )
+
+    print(json.dumps({"result": result}))
+
+
+if __name__ == "__main__":
+    main()

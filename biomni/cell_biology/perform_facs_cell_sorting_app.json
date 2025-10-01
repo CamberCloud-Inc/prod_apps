@@ -1,0 +1,45 @@
+{
+  "name": "biomni-perform-facs-cell-sorting",
+  "title": "Biomni: Perform Facs Cell Sorting",
+  "description": "Performs Fluorescence-Activated Cell Sorting (FACS) to enrich cell populations based on fluorescence characteristics. Loads flow cytometry data from FCS files, applies gating thresholds, and exports sorted cell populations with enrichment statistics.",
+  "content": "<h3>Overview</h3><p>Performs Fluorescence-Activated Cell Sorting (FACS) to enrich cell populations based on fluorescence characteristics. Loads flow cytometry data from FCS files, applies gating thresholds, and exports sorted cell populations with enrichment statistics.</p><h3>Category</h3><p>cell_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/cell_biology/perform_facs_cell_sorting.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
+    }
+  ]
+}

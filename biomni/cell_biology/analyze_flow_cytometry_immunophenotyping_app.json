@@ -1,0 +1,45 @@
+{
+  "name": "biomni-analyze-flow-cytometry-immunophenotyping",
+  "title": "Biomni: Analyze Flow Cytometry Immunophenotyping",
+  "description": "Analyze flow cytometry data to identify and quantify specific cell populations based on surface markers. Applies sequential gating strategies to identify cell populations, with optional compensation for fluorescence spillover.",
+  "content": "<h3>Overview</h3><p>Analyze flow cytometry data to identify and quantify specific cell populations based on surface markers. Applies sequential gating strategies to identify cell populations, with optional compensation for fluorescence spillover.</p><h3>Category</h3><p>cell_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/cell_biology/analyze_flow_cytometry_immunophenotyping.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
+    }
+  ]
+}

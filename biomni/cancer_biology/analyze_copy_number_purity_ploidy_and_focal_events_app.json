@@ -1,0 +1,45 @@
+{
+  "name": "biomni-analyze-copy-number-purity-ploidy-and-focal-events",
+  "title": "Biomni: Analyze Copy Number Purity Ploidy And Focal Events",
+  "description": "Perform comprehensive copy number variation (CNV) analysis, estimate tumor purity and ploidy, and detect focal amplification/deletion events in cancer samples. Provides insights into genomic instability and oncogenic drivers.",
+  "content": "<h3>Overview</h3><p>Perform comprehensive copy number variation (CNV) analysis, estimate tumor purity and ploidy, and detect focal amplification/deletion events in cancer samples. Provides insights into genomic instability and oncogenic drivers.</p><h3>Category</h3><p>cancer_biology</p>",
+  "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/cancer_biology/analyze_copy_number_purity_ploidy_and_focal_events.py \"${inputFile}\" -o \"${outputDir}\"",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select the configuration for the job",
+      "options": [
+        {
+          "label": "Extra Extra Small CPU",
+          "value": "xxsmall_cpu",
+          "mapValue": {
+            "nodeSize": "XXSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xxsmall_cpu"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "name": "inputFile",
+      "label": "Input File",
+      "description": "Input file from stash (JSON format)",
+      "defaultValue": ""
+    },
+    {
+      "type": "Stash File",
+      "name": "outputDir",
+      "label": "Output Directory",
+      "description": "Output directory in stash",
+      "defaultValue": "./"
+    }
+  ]
+}
