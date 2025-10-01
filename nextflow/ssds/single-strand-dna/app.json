@@ -1,0 +1,16 @@
+{
+  "name": "ssds-single-strand-dna",
+  "title": "SSDS",
+  "description": " Single-strand DNA Sequencing",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/ssds --input ${input} --outdir ${outdir} -r  ssDNA-seq analysis:1.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/ssds/master/docs/images/nf-core-ssds_logo_light.png",
+  "content": "<h2><strong>SSDS</strong></h2><p> Single-strand DNA Sequencing</p>",
+  "spec": [
+    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
+    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./ssds-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+  ],
+  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
+  "tags": [{"name": "ssds", "type": "task"}]
+}
