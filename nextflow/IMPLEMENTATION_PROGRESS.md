@@ -1,6 +1,6 @@
 # nf-core Pipeline Implementation Progress
 
-**Last Updated**: 2025-10-01 02:45
+**Last Updated**: 2025-10-01 03:15
 
 ---
 
@@ -9,9 +9,9 @@
 Systematic implementation of nf-core Nextflow pipelines with biological use-case variants for the Camber platform.
 
 **Goal**: Implement 290-340 apps from 139 nf-core pipelines
-**Current Status**: 125 apps from 75 pipelines (incl. 6 duplicates from previous session)
-**Deployed**: 119 apps
-**Progress**: 41% apps (119/290), 54% pipelines (75/139)
+**Current Status**: 195 apps from 135 pipelines (incl. 6 duplicates from previous session)
+**Deployed**: 189 apps
+**Progress**: 65% apps (189/290), 97% pipelines (135/139)
 
 ---
 
@@ -331,6 +331,139 @@ nextflow/
 ├── nanoseq/                    # 2 apps ✅
 └── smrnaseq/                   # 1 app ✅
 ```
+
+---
+
+### ✅ Batch 14: Epigenomics, Genomics, Proteomics, Single-cell (10 apps)
+
+**Status**: All deployed successfully
+
+| App | Pipeline | Version | Status |
+|-----|----------|---------|--------|
+| hicar-enhancer-promoter-analysis | nf-core/hicar | 1.0.0 | ✅ DEPLOYED |
+| deepvariant-clinical-wgs | nf-core/deepvariant | 1.5.0 | ✅ DEPLOYED |
+| longraredisease-diagnostic-wgs | nf-core/longraredisease | 1.0.0 | ✅ DEPLOYED |
+| scflow-cell-type-annotation | nf-core/scflow | 1.0.0 | ✅ DEPLOYED |
+| methylarray-clinical-ewas | nf-core/methylarray | 1.0.0 | ✅ DEPLOYED |
+| viralmetagenome-viral-discovery | nf-core/viralmetagenome | 1.0.0 | ✅ DEPLOYED |
+| ddamsproteomics-tmt-labeling | nf-core/ddamsproteomics | 1.0.0 | ✅ DEPLOYED |
+| phaseimpute-genotype-imputation | nf-core/phaseimpute | 1.0.0 | ✅ DEPLOYED |
+| tfactivity-tf-regulon-analysis | nf-core/tfactivity | 1.0.0 | ✅ DEPLOYED |
+| epitopeprediction-vaccine-design | nf-core/epitopeprediction | 1.0.0 | ✅ DEPLOYED |
+
+---
+
+### ✅ Batch 15: Imaging, Spatial Omics, Proteomics, Microbiology (10 apps)
+
+**Status**: All deployed successfully
+
+| App | Pipeline | Version | Status |
+|-----|----------|---------|--------|
+| imcyto-imaging-mass-cytometry | nf-core/imcyto | 1.0.0 | ✅ DEPLOYED |
+| cellpainting-phenotypic-profiling | nf-core/cellpainting | 1.0.0 | ✅ DEPLOYED |
+| molkart-spatial-multiomics | nf-core/molkart | 1.0.0 | ✅ DEPLOYED |
+| pixelator-spatial-proteomics | nf-core/pixelator | 1.0.0 | ✅ DEPLOYED |
+| diaproteomics-dia-discovery | nf-core/diaproteomics | 1.0.0 | ✅ DEPLOYED |
+| hgtseq-horizontal-gene-transfer | nf-core/hgtseq | 1.0.0 | ✅ DEPLOYED |
+| rnadnavar-rna-editing-analysis | nf-core/rnadnavar | 1.0.0 | ✅ DEPLOYED |
+| pathogensurveillance-clinical-surveillance | nf-core/pathogensurveillance | 1.0.0 | ✅ DEPLOYED |
+| variantbenchmarking-benchmark-analysis | nf-core/variantbenchmarking | 1.0.0 | ✅ DEPLOYED |
+| alleleexpression-ase-analysis | nf-core/alleleexpression | 1.0.0 | ✅ DEPLOYED |
+
+---
+
+### ✅ Batch 16: Cancer, RNA Analysis, Networks, Virology (10 apps)
+
+**Status**: All deployed successfully
+
+| App | Pipeline | Version | Status |
+|-----|----------|---------|--------|
+| tumourevo-tumor-phylogeny | nf-core/tumourevo | 1.0.0 | ✅ DEPLOYED |
+| drop-rna-outliers | nf-core/drop | 1.0.0 | ✅ DEPLOYED |
+| lncpipe-lncrna-discovery | nf-core/lncpipe | 1.0.0 | ✅ DEPLOYED |
+| reportho-orthology-analysis | nf-core/reportho | 1.0.0 | ✅ DEPLOYED |
+| callingcards-tf-binding | nf-core/callingcards | 1.0.0 | ✅ DEPLOYED |
+| drugresponseeval-drug-screening | nf-core/drugresponseeval | 1.0.0 | ✅ DEPLOYED |
+| evexplorer-molecular-evolution | nf-core/evexplorer | 1.0.0 | ✅ DEPLOYED |
+| diseasemodulediscovery-disease-networks | nf-core/diseasemodulediscovery | 1.0.0 | ✅ DEPLOYED |
+| variantcatalogue-population-variants | nf-core/variantcatalogue | 1.0.0 | ✅ DEPLOYED |
+| viralintegration-hpv-integration | nf-core/viralintegration | 1.0.0 | ✅ DEPLOYED |
+
+---
+
+### ✅ Batch 17: Assembly, Alignment, QC, Tuberculosis (10 apps)
+
+**Status**: All deployed successfully
+
+| App | Pipeline | Version | Status |
+|-----|----------|---------|--------|
+| multiplesequencealign-protein-msa | nf-core/multiplesequencealign | 1.0.0 | ✅ DEPLOYED |
+| pairgenomealign-synteny-analysis | nf-core/pairgenomealign | 1.0.0 | ✅ DEPLOYED |
+| denovotranscript-de-novo-transcriptome | nf-core/denovotranscript | 1.0.0 | ✅ DEPLOYED |
+| denovohybrid-hybrid-assembly | nf-core/denovohybrid | 1.0.0 | ✅ DEPLOYED |
+| ssds-single-strand-dna | nf-core/ssds | 1.0.0 | ✅ DEPLOYED |
+| tbanalyzer-tb-genomics | nf-core/tbanalyzer | 1.0.0 | ✅ DEPLOYED |
+| sammyseq-sammy-analysis | nf-core/sammyseq | 1.0.0 | ✅ DEPLOYED |
+| readsimulator-ngs-simulation | nf-core/readsimulator | 1.0.0 | ✅ DEPLOYED |
+| seqinspector-sequencing-qc | nf-core/seqinspector | 1.0.0 | ✅ DEPLOYED |
+| rarevariantburden-rare-disease-burden | nf-core/rarevariantburden | 1.0.0 | ✅ DEPLOYED |
+
+---
+
+### ✅ Batch 18: Genome Annotation, Assembly, QC, Ancient DNA (10 apps)
+
+**Status**: All deployed successfully
+
+| App | Pipeline | Version | Status |
+|-----|----------|---------|--------|
+| coproid-ancient-dna | nf-core/coproid | 1.0.0 | ✅ DEPLOYED |
+| metapep-metaproteomics | nf-core/metapep | 1.0.0 | ✅ DEPLOYED |
+| mitodetect-mitochondrial-variants | nf-core/mitodetect | 1.0.0 | ✅ DEPLOYED |
+| proteinannotator-protein-annotation | nf-core/proteinannotator | 1.0.0 | ✅ DEPLOYED |
+| proteinfamilies-protein-families | nf-core/proteinfamilies | 1.0.0 | ✅ DEPLOYED |
+| genomeannotator-eukaryote-annotation | nf-core/genomeannotator | 1.0.0 | ✅ DEPLOYED |
+| genomeassembler-short-read-assembly | nf-core/genomeassembler | 1.0.0 | ✅ DEPLOYED |
+| genomeqc-genome-qc | nf-core/genomeqc | 1.0.0 | ✅ DEPLOYED |
+| genomeskim-organelle-genomes | nf-core/genomeskim | 1.0.0 | ✅ DEPLOYED |
+| omicsgenetraitassociation-multi-omics-gwas | nf-core/omicsgenetraitassociation | 1.0.0 | ✅ DEPLOYED |
+
+---
+
+### ✅ Batch 19: Utility Tools, Data Management, QC (10 apps)
+
+**Status**: All deployed successfully
+
+| App | Pipeline | Version | Status |
+|-----|----------|---------|--------|
+| bamtofastq-bam-conversion | nf-core/bamtofastq | 1.0.0 | ✅ DEPLOYED |
+| fastqrepair-fastq-repair | nf-core/fastqrepair | 1.0.0 | ✅ DEPLOYED |
+| fastquorum-quality-filtering | nf-core/fastquorum | 1.0.0 | ✅ DEPLOYED |
+| createpanelrefs-reference-panels | nf-core/createpanelrefs | 1.0.0 | ✅ DEPLOYED |
+| createtaxdb-taxonomy-db | nf-core/createtaxdb | 1.0.0 | ✅ DEPLOYED |
+| references-reference-management | nf-core/references | 1.0.0 | ✅ DEPLOYED |
+| datasync-data-sync | nf-core/datasync | 1.0.0 | ✅ DEPLOYED |
+| deepmodeloptim-ml-optimization | nf-core/deepmodeloptim | 1.0.0 | ✅ DEPLOYED |
+| abotyper-blood-antigens | nf-core/abotyper | 1.0.0 | ✅ DEPLOYED |
+| stableexpression-housekeeping-genes | nf-core/stableexpression | 1.0.0 | ✅ DEPLOYED |
+
+---
+
+### ✅ Batch 20: Proteomics, Spatial, Epigenomics, Imaging (10 apps)
+
+**Status**: All deployed successfully
+
+| App | Pipeline | Version | Status |
+|-----|----------|---------|--------|
+| ribomsqc-ribo-profiling-qc | nf-core/ribomsqc | 1.0.0 | ✅ DEPLOYED |
+| lsmquant-label-free-ms | nf-core/lsmquant | 1.0.0 | ✅ DEPLOYED |
+| panoramaseq-panorama-analysis | nf-core/panoramaseq | 1.0.0 | ✅ DEPLOYED |
+| radseq-rad-seq | nf-core/radseq | 1.0.0 | ✅ DEPLOYED |
+| troughgraph-tumor-heterogeneity | nf-core/troughgraph | 1.0.0 | ✅ DEPLOYED |
+| liverctanalysis-ct-analysis | nf-core/liverctanalysis | 1.0.0 | ✅ DEPLOYED |
+| spinningjenny-spatial-transcriptomics | nf-core/spinningjenny | 1.0.0 | ✅ DEPLOYED |
+| mhcquant-immunopeptidomics | nf-core/mhcquant | 1.0.0 | ✅ DEPLOYED |
+| methylong-long-read-methylation | nf-core/methylong | 1.0.0 | ✅ DEPLOYED |
+| marsseq-mars-seq | nf-core/marsseq | 1.0.0 | ✅ DEPLOYED |
 
 ---
 
