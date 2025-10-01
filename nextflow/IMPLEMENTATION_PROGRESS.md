@@ -1,6 +1,6 @@
 # nf-core Pipeline Implementation Progress
 
-**Last Updated**: 2025-10-01 00:36
+**Last Updated**: 2025-10-01 00:50
 
 ---
 
@@ -9,8 +9,8 @@
 Systematic implementation of nf-core Nextflow pipelines with biological use-case variants for the Camber platform.
 
 **Goal**: Implement 290-340 apps from 139 nf-core pipelines
-**Current Status**: 61 apps from 30 pipelines
-**Progress**: 18-21% complete
+**Current Status**: 71 apps from 35 pipelines
+**Progress**: 20-25% complete
 
 ---
 
@@ -92,7 +92,33 @@ Systematic implementation of nf-core Nextflow pipelines with biological use-case
 
 ---
 
-### 📝 Batch 4: Epigenomics & Regulation (Planned)
+### ✅ Batch 4: Epigenomics & Regulation (COMPLETED)
+
+**Status**: 10 apps created successfully
+
+| App | Pipeline | Version | Status |
+|-----|----------|---------|--------|
+| chipseq-tf-binding | nf-core/chipseq | 2.1.0 | ✅ DEPLOYED |
+| chipseq-histone-modifications | nf-core/chipseq | 2.1.0 | ✅ DEPLOYED |
+| atacseq-accessibility-profiling | nf-core/atacseq | 2.1.2 | ✅ DEPLOYED |
+| atacseq-regulatory-landscape | nf-core/atacseq | 2.1.2 | ✅ DEPLOYED |
+| cutandrun-histone-profiling | nf-core/cutandrun | 3.2.2 | ✅ DEPLOYED |
+| cutandrun-tf-profiling | nf-core/cutandrun | 3.2.2 | ✅ DEPLOYED |
+| methylseq-dna-methylation | nf-core/methylseq | 4.1.0 | ✅ DEPLOYED |
+| methylseq-targeted-analysis | nf-core/methylseq | 4.1.0 | ✅ DEPLOYED |
+| hic-chromatin-architecture | nf-core/hic | 2.1.0 | ✅ DEPLOYED |
+| hic-tad-analysis | nf-core/hic | 2.1.0 | ✅ DEPLOYED |
+
+**Pipelines Verified**:
+- ✅ nf-core/chipseq: DSL2, TF binding & histone modifications
+- ✅ nf-core/atacseq: DSL2, chromatin accessibility & regulatory elements
+- ✅ nf-core/cutandrun: DSL2, low-input chromatin profiling
+- ✅ nf-core/methylseq: DSL2, bisulfite sequencing & targeted methylation
+- ✅ nf-core/hic: DSL2, 3D genome architecture & TAD analysis
+
+---
+
+### 📝 Batch 5: Metagenomics & Viromics (Planned)
 
 **Target**: 10-12 apps
 
@@ -108,13 +134,14 @@ Systematic implementation of nf-core Nextflow pipelines with biological use-case
 | **Batch 1** | 7 | 5 | 2 ✅ 3 ❌ |
 | **Batch 2** | 7 | 0 | TBD (90% confidence) |
 | **Batch 3** | 9 | 0 | TBD |
-| **Total** | **61** | **6** | **3+** |
+| **Batch 4** | 10 | 0 | TBD (95% confidence) |
+| **Total** | **71** | **6** | **3+** |
 
 ### Pipeline Coverage
 
 **Total nf-core pipelines**: 139
-**Implemented**: 30 (~22%)
-**With variants**: 61 apps
+**Implemented**: 35 (~25%)
+**With variants**: 71 apps
 
 ### Account Issues
 
@@ -137,7 +164,7 @@ Systematic implementation of nf-core Nextflow pipelines with biological use-case
 
 ## Next Steps
 
-1. **Batch 3**: Implement single-cell & spatial pipelines (12-15 apps)
+1. **Batch 5**: Implement metagenomics & viromics pipelines (10-12 apps)
 2. **Testing**: Develop testing strategy with valid nf-core test data
 3. **Documentation**: Create user guides for successfully deployed apps
 4. **Cleanup**: Fix nascent apps, document riboseq test data workaround
@@ -157,7 +184,17 @@ nextflow/
 ├── slamseq/                    # 1 app ❌
 ├── pacvar/                     # 2 apps ✅
 ├── oncoanalyser/               # 3 apps ✅
-└── raredisease/                # 2 apps ✅
+├── raredisease/                # 2 apps ✅
+├── scdownstream/               # 3 apps ✅
+├── scnanoseq/                  # 2 apps ✅
+├── smartseq2/                  # 2 apps ✅
+├── sopa/                       # 1 app ✅
+├── spatialvi/                  # 1 app ✅
+├── chipseq/                    # 2 apps ✅
+├── atacseq/                    # 2 apps ✅
+├── cutandrun/                  # 2 apps ✅
+├── methylseq/                  # 2 apps ✅
+└── hic/                        # 2 apps ✅
 ```
 
 ---
