@@ -352,14 +352,31 @@ def attempt_fix(app_name, app_json_path, suggestions):
 
 def test_app_with_retries(app_name, progress):
     """Test an app with up to MAX_RETRIES attempts"""
+
+    # Skip apps that require API keys
+    skip_apps = [
+        'biomni-advanced-web-search-claude',  # Requires Anthropic API key
+        'biomni-query-chatnt',  # Requires API key
+    ]
+
+    if app_name in skip_apps:
+        log(f"⏭️  Skipping {app_name} (requires API key)")
+        return {
+            "app_name": app_name,
+            "final_status": "skipped",
+            "reason": "Requires API key",
+            "attempts": []
+        }
+
     app_json_path = find_app_json(app_name)
 
     if not app_json_path:
         log(f"⚠️  Could not find app JSON for {app_name}")
         return {
-            "status": "skipped",
+            "app_name": app_name,
+            "final_status": "skipped",
             "reason": "App JSON not found",
-            "attempts": 0
+            "attempts": []
         }
 
     result = {
