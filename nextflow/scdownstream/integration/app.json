@@ -1,0 +1,53 @@
+{
+  "name": "scdownstream-integration",
+  "title": "Multi-Sample scRNA-seq Integration",
+  "description": "Integrate multiple scRNA-seq datasets to remove batch effects while preserving biological variation. Essential for meta-analysis and multi-cohort studies.",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/scdownstream --input ${input} --outdir ${outdir} -r dev ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/scdownstream/master/docs/images/nf-core-scdownstream_logo_light.png",
+  "content": "<h2><strong>Multi-Dataset Integration</strong></h2><p>Harmonize scRNA-seq data from multiple experiments, platforms, or batches. Remove technical variation while preserving biological differences for robust cross-study comparisons.</p><h3><strong>Why Integration?</strong></h3><blockquote><ul><li><strong>Batch Effects</strong>: Remove technical variation between experiments</li><li><strong>Meta-Analysis</strong>: Combine published datasets</li><li><strong>Cross-Platform</strong>: Integrate 10X + Smart-seq2 + other platforms</li><li><strong>Multi-Cohort</strong>: Combine patient cohorts</li><li><strong>Increase Power</strong>: Larger sample sizes for rare cell types</li><li><strong>Reference Building</strong>: Create comprehensive atlases</li></ul></blockquote><h3><strong>Batch Effect Sources</strong></h3><p><strong>Technical Variation</strong>:</p><ul><li>Sequencing platform (10X v2 vs v3, Illumina vs BGI)</li><li>Library prep batch</li><li>Sequencing depth differences</li><li>Processing pipeline versions</li><li>Lab-to-lab variation</li></ul><p><strong>Biological Variation to Preserve</strong>:</p><ul><li>Cell type differences</li><li>Disease vs healthy</li><li>Treatment effects</li><li>Developmental stages</li><li>Genetic variation</li></ul><h3><strong>Integration Methods</strong></h3><ul><li><strong>Harmony</strong>: Fast, scales to millions of cells</li><li><strong>Seurat Integration</strong>: Anchor-based, robust</li><li><strong>Scanorama</strong>: Panoramic stitching</li><li><strong>scVI</strong>: Deep learning-based</li><li><strong>LIGER</strong>: Integrative non-negative matrix factorization</li></ul><h3><strong>Use Cases</strong></h3><ul><li><strong>Meta-Analysis</strong>: Combine multiple published datasets</li><li><strong>Cross-Study Validation</strong>: Replicate findings across cohorts</li><li><strong>Reference Atlases</strong>: Human Cell Atlas, Mouse Cell Atlas</li><li><strong>Multi-Center Studies</strong>: Clinical trials across sites</li><li><strong>Technology Comparison</strong>: Benchmark platforms</li><li><strong>Longitudinal Studies</strong>: Time series with batch effects</li></ul><h3><strong>Integration Workflow</strong></h3><ol><li><strong>QC Per Sample</strong>: Filter low-quality cells individually</li><li><strong>Normalization</strong>: Within-sample normalization</li><li><strong>Feature Selection</strong>: Identify highly variable genes</li><li><strong>Integration</strong>: Align datasets in latent space</li><li><strong>Joint Analysis</strong>: Clustering, UMAP on integrated data</li><li><strong>Validation</strong>: Check batch mixing, biological preservation</li></ol><h3><strong>Quality Metrics</strong></h3><blockquote><p><strong>Integration Quality</strong>:</p><ul><li>Mixing entropy (batches well-mixed?)</li><li>LISI scores (local integration)</li><li>Silhouette scores (cluster separation)</li></ul><p><strong>Biological Preservation</strong>:</p><ul><li>Cell type markers retained?</li><li>Biological variance explained?</li><li>Known cell type structure preserved?</li></ul></blockquote><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with multiple samples:</p><ul><li><strong>sample</strong>: Unique sample IDs</li><li><strong>batch_col</strong>: Batch/experiment identifier</li><li><strong>unfiltered/filtered</strong>: Matrix paths</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Integrated h5ad</strong>: Batch-corrected object</li><li><strong>UMAP (Before/After)</strong>: Integration quality visualization</li><li><strong>Batch Mixing Metrics</strong>: Quantitative integration assessment</li><li><strong>Integrated Clusters</strong>: Joint cell type identification</li><li><strong>Conserved Markers</strong>: Genes consistent across batches</li></ul><blockquote><p><strong>Perfect for:</strong> Meta-analysis • Multi-cohort studies • Reference atlases • Cross-platform integration • Batch correction</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV with multiple scRNA-seq samples for integration",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory",
+      "defaultValue": "./scdownstream-integration-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "options": [
+        {"label": "XLARGE (Recommended for large integrations)", "value": "xlarge", "mapValue": {"nodeSize": "XLARGE", "numNodes": 1, "withGpu": false}}
+      ],
+      "defaultValue": "xlarge"
+    }
+  ],
+  "tags": [
+    {"name": "single-cell", "type": "field"},
+    {"name": "integration", "type": "task"},
+    {"name": "batch-correction", "type": "task"}
+  ]
+}
