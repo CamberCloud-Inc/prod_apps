@@ -9,8 +9,8 @@
 Systematic implementation of nf-core Nextflow pipelines with biological use-case variants for the Camber platform.
 
 **Goal**: Implement 290-340 apps from 139 nf-core pipelines
-**Current Status**: 75 apps from 38 pipelines
-**Progress**: 21-26% complete
+**Current Status**: 79 apps from 42 pipelines
+**Progress**: 23-27% complete
 
 ---
 
@@ -150,9 +150,21 @@ Systematic implementation of nf-core Nextflow pipelines with biological use-case
 
 ---
 
-### 📝 Batch 7: Next Pipelines (Planned)
+### ✅ Batch 7: Data Utilities & Long-Read Sequencing (COMPLETED)
 
-**Target**: 10-12 apps
+**Status**: 4 apps created successfully
+
+| App | Pipeline | Version | Status |
+|-----|----------|---------|--------|
+| fetchngs-data-download | nf-core/fetchngs | 1.12.0 | ✅ DEPLOYED |
+| nanoseq-dna-sequencing | nf-core/nanoseq | 3.1.0 | ✅ DEPLOYED |
+| nanoseq-rna-sequencing | nf-core/nanoseq | 3.1.0 | ✅ DEPLOYED |
+| smrnaseq-small-rna-profiling | nf-core/smrnaseq | 2.4.0 | ✅ DEPLOYED |
+
+**Pipelines Verified**:
+- ✅ nf-core/fetchngs: DSL2, public data download (SRA/ENA/GEO)
+- ✅ nf-core/nanoseq: DSL2, long-read DNA/RNA sequencing
+- ✅ nf-core/smrnaseq: DSL2, small RNA and miRNA profiling
 
 ---
 
@@ -169,13 +181,14 @@ Systematic implementation of nf-core Nextflow pipelines with biological use-case
 | **Batch 4** | 10 | 0 | TBD (95% confidence) |
 | **Batch 5** | 0 | 2 | 0 ❌ (memory limits) |
 | **Batch 6** | 4 | 0 | TBD (high confidence) |
-| **Total** | **75** | **8** | **3+** |
+| **Batch 7** | 4 | 0 | TBD |
+| **Total** | **79** | **8** | **3+** |
 
 ### Pipeline Coverage
 
 **Total nf-core pipelines**: 139
-**Implemented**: 38 (~27%)
-**With variants**: 75 apps
+**Implemented**: 42 (~30%)
+**With variants**: 79 apps
 
 ### Account Issues
 
@@ -228,7 +241,12 @@ nextflow/
 ├── atacseq/                    # 2 apps ✅
 ├── cutandrun/                  # 2 apps ✅
 ├── methylseq/                  # 2 apps ✅
-└── hic/                        # 2 apps ✅
+├── hic/                        # 2 apps ✅
+├── rnaseq/                     # 1 app ✅
+├── sarek/                      # 2 apps ✅
+├── fetchngs/                   # 1 app ✅
+├── nanoseq/                    # 2 apps ✅
+└── smrnaseq/                   # 1 app ✅
 ```
 
 ---
