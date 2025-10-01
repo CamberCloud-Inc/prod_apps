@@ -13,7 +13,7 @@ import numpy as np
 
 def install_dependencies():
     """Install required dependencies"""
-    deps = ['biomni']
+    deps = ['biomni', 'numpy']
     print("Installing dependencies...")
     for dep in deps:
         subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
