@@ -1,0 +1,16 @@
+{
+  "name": "detaxizer-contamination-removal",
+  "title": "Detaxizer",
+  "description": " Taxonomic Decontamination",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/detaxizer --input ${input} --outdir ${outdir} -r Remove contaminating sequences from genome assemblies.:1.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/detaxizer/master/docs/images/nf-core-detaxizer_logo_light.png",
+  "content": "<h2><strong>Detaxizer</strong></h2><p> Taxonomic Decontamination</p>",
+  "spec": [
+    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
+    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./detaxizer-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+  ],
+  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
+  "tags": [{"name": "detaxizer", "type": "task"}]
+}

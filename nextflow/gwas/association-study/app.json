@@ -1,0 +1,16 @@
+{
+  "name": "gwas-genome-association",
+  "title": "GWAS",
+  "description": " Genome-Wide Association Studies",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/gwas --input ${input} --outdir ${outdir} -r Perform GWAS to identify genetic variants associated with complex traits and diseases.:1.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/gwas/master/docs/images/nf-core-gwas_logo_light.png",
+  "content": "<h2><strong>GWAS</strong></h2><p> Genome-Wide Association Studies</p>",
+  "spec": [
+    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
+    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./gwas-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+  ],
+  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
+  "tags": [{"name": "gwas", "type": "task"}]
+}
