@@ -1,8 +1,8 @@
 {
   "name": "biomni-query-remap",
   "title": "Biomni: Query Remap",
-  "description": "Query the ReMap database for regulatory elements and transcription factor binding sites.\n\n    Parameters\n    ----------\n    prompt (str, required): Natural language query about transcription factors a",
-  "content": "<h3>Overview</h3><p>Query the ReMap database for regulatory elements and transcription factor binding sites.\n\n    Parameters\n    ----------\n    prompt (str, required): Natural language query about transcription factors a</p><h3>Category</h3><p>database</p>",
+  "description": "Query ReMap for transcription factor binding data from ChIP-seq experiments across cell types.",
+  "content": "<h3>Overview</h3><p>Searches ReMap, an integrative ChIP-seq database containing TF binding sites, histone modifications, and chromatin accessibility across hundreds of human and model organism datasets.</p><h3>Input Parameters</h3><ul><li><strong>prompt</strong> (string, optional): Natural language query</li><li><strong>endpoint</strong> (string, optional): ReMap endpoint</li><li><strong>verbose</strong> (boolean, optional): Enable logging</li></ul><h3>Input Format</h3><p>Create JSON:</p><pre>{\n  \"prompt\": \"Find CTCF binding in liver cells\"\n}</pre><h3>Biological Use Case</h3><p>Critical for gene regulation studies and regulatory network analysis. Researchers use ReMap to map TF binding landscapes, identify co-binding patterns, analyze regulatory elements, compare binding across conditions, and understand transcriptional regulation.</p><h3>Output</h3><p>Returns JSON (remap_results.json) with ChIP-seq peak data including coordinates, TFs, cell types, experiment metadata, peak scores, nearby genes, and dataset links.</p><h3>Category</h3><p>database</p>",
   "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_remap.py \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [

@@ -1,8 +1,8 @@
 {
   "name": "biomni-query-ucsc",
   "title": "Biomni: Query Ucsc",
-  "description": "Query the UCSC Genome Browser API using natural language or a direct endpoint.\n\n    Parameters\n    ----------\n    prompt (str, required): Natural language query about genomic data\n    endpoint (str, o",
-  "content": "<h3>Overview</h3><p>Query the UCSC Genome Browser API using natural language or a direct endpoint.\n\n    Parameters\n    ----------\n    prompt (str, required): Natural language query about genomic data\n    endpoint (str, o</p><h3>Category</h3><p>database</p>",
+  "description": "Query UCSC Genome Browser for genome annotations, conservation scores, and multi-species alignments.",
+  "content": "<h3>Overview</h3><p>Searches UCSC Genome Browser providing reference sequences and annotations including genes, comparative genomics, variation, regulation, and expression with powerful visualization tools.</p><h3>Input Parameters</h3><ul><li><strong>prompt</strong> (string, optional): Natural language query</li><li><strong>endpoint</strong> (string, optional): UCSC endpoint</li><li><strong>verbose</strong> (boolean, optional): Enable logging</li></ul><h3>Input Format</h3><p>Create JSON:</p><pre>{\n  \"prompt\": \"Get conservation for chr1:1000000-1001000\"\n}</pre><h3>Biological Use Case</h3><p>Fundamental for genome analysis and comparative genomics. Researchers use UCSC to visualize regions, access conservation scores, retrieve sequences, analyze regulatory features, compare genomes, and integrate diverse genomic annotations.</p><h3>Output</h3><p>Returns JSON (ucsc_results.json) with genomic data including sequences, gene annotations, conservation scores, repeats, variation data, regulatory features, and cross-species alignments.</p><h3>Category</h3><p>database</p>",
   "command": "rm -rf prod_apps 2>/dev/null || true && git clone --depth 1 https://github.com/CamberCloud-Inc/prod_apps.git prod_apps && python3 prod_apps/biomni/database/query_ucsc.py \"${inputFile}\" -o \"${outputDir}\"",
   "engineType": "MPI",
   "jobConfig": [
