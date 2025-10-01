@@ -1,0 +1,16 @@
+{
+  "name": "createpanelrefs-reference-panels",
+  "title": "Create Panel Refs",
+  "description": " Reference Panels",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/createpanelrefs --input ${input} --outdir ${outdir} -r  Generate reference panels for imputation:1.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/createpanelrefs/master/docs/images/nf-core-createpanelrefs_logo_light.png",
+  "content": "<h2><strong>Create Panel Refs</strong></h2><p> Reference Panels</p>",
+  "spec": [
+    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
+    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./createpanelrefs-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+  ],
+  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
+  "tags": [{"name": "createpanelrefs", "type": "task"}]
+}
