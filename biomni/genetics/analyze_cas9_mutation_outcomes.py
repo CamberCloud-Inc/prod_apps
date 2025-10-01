@@ -1,7 +1,12 @@
+#!/usr/bin/env python3
+"""Biomni Tool: Analyze Cas9 Mutation Outcomes
+Wraps: biomni.tool.genetics.analyze_cas9_mutation_outcomes
+"""
 import subprocess
 import sys
 import argparse
 import json
+import os
 
 # Install required dependencies
 subprocess.check_call([sys.executable, "-m", "pip", "install", "biopython", "pandas"])
@@ -31,8 +36,7 @@ def main():
     parser.add_argument('-c', '--cell-line-info', help='Path to JSON file with cell line information (optional)')
     parser.add_argument('-p', '--output-prefix', default='cas9_mutation_analysis',
                         help='Prefix for output files (default: cas9_mutation_analysis)')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
@@ -61,12 +65,11 @@ def main():
                 cell_line_info = json.load(f)
             print(f"Loaded cell line info for {len(cell_line_info)} sequences")
 
-        # Change to output directory to save results there
-        import os
-        os.makedirs(args.output_dir, exist_ok=True)
+        # Create output directory
+        os.makedirs(args.output, exist_ok=True)
 
         # Update output prefix to include directory
-        output_prefix = os.path.join(args.output_dir, args.output_prefix)
+        output_prefix = os.path.join(args.output, args.output_prefix)
 
         result = analyze_cas9_mutation_outcomes(
             reference_sequences=reference_sequences,
@@ -75,25 +78,17 @@ def main():
             output_prefix=output_prefix
         )
 
-        print("\n" + "="*80)
-        print("ANALYSIS RESULTS")
-        print("="*80)
-        print(result)
-
         # Save full results to log file
-        output_file = os.path.join(args.output_dir, f"{args.output_prefix}_log.txt")
+        output_file = os.path.join(args.output, f"{args.output_prefix}_log.txt")
         with open(output_file, 'w') as f:
             f.write(result)
-
-        print(f"\nFull analysis log saved to: {output_file}")
+        print(f"Complete! Results: {output_file}")
 
     except Exception as e:
         print(f"Error during Cas9 mutation analysis: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
-
-    print("\nCas9 mutation outcome analysis completed!")
 
 
 if __name__ == "__main__":

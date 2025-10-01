@@ -1,55 +1,46 @@
+#!/usr/bin/env python3
 """
-Camber wrapper for biomni.tool.database.query_uniprot
+Biomni Tool: Query UniProt
+Wraps: biomni.tool.database.query_uniprot
 """
-
+import argparse
+import sys
+import subprocess
+import os
 import json
-
-
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
-def main(prompt=None, endpoint=None, max_results=5):
-    
+def main():
+    parser = argparse.ArgumentParser(
+        description='Query the UniProt REST API'
+    )
+    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
-    # Import after dependencies are installed
+    # Load input parameters
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
     from biomni.tool.database import query_uniprot
-    """
-    Wrapper for query_uniprot from biomni.tool.database
-    
-    Query the UniProt REST API using either natural language or a direct endpoint.
 
-    Parameters
-    ----------
-    prompt (str, required): Natural language query about proteins (e.g., "Find information about human insulin")
-    endpoint (str, optional): Full or partial UniProt API endpoint URL to query directly
-                            (e.g., "https://rest.uniprot.org/uniprotkb/P01308")
-    max_results (int): Maximum number of results to return
+    result = query_uniprot(prompt=input_data.get('prompt'),
+        endpoint=input_data.get('endpoint'),
+        max_results=input_data.get('max_results'))
 
-    Returns
-    -------
-    dict: Dictionary con
-    """
-    result = query_uniprot(prompt=prompt, endpoint=endpoint, max_results=max_results)
-    print(json.dumps(result, indent=2, default=str))
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'uniprot_results.json')
+    with open(output_file, 'w') as f:
+        json.dump(result, f, indent=2, default=str)
+    print(f"Complete! Results: {output_file}")
 
-
-if __name__ == "__main__":
-    import sys
-    import argparse
-    
-    parser = argparse.ArgumentParser(description='query_uniprot')
-    parser.add_argument('--prompt', type=str, default=None, help='prompt')
-    parser.add_argument('--endpoint', type=str, default=None, help='endpoint')
-    parser.add_argument('--max_results', type=int, default=5, help='max_results')
-    
-    args = parser.parse_args()
-    main(**vars(args))
+if __name__ == '__main__':
+    main()

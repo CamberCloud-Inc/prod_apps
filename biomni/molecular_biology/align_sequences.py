@@ -24,13 +24,12 @@ def main():
     parser = argparse.ArgumentParser(description='Align short sequences (primers) to a longer sequence')
     parser.add_argument('long_seq', help='Target DNA sequence')
     parser.add_argument('short_seqs', nargs='+', help='One or more short sequences to align')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
     # Create output directory if it doesn't exist
-    os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs(args.output, exist_ok=True)
 
     print(f"\nAligning sequences...")
     print(f"Target sequence length: {len(args.long_seq)} bp")
@@ -41,21 +40,17 @@ def main():
 
         # Generate output filename
         output_filename = "alignment_results.json"
-        output_path = os.path.join(args.output_dir, output_filename)
+        output_path = os.path.join(args.output, output_filename)
 
         # Write results to JSON
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(result, f, indent=2, ensure_ascii=False)
 
-        print(f"\nResults saved to: {output_path}")
-        for seq_result in result.get('sequences', []):
-            print(f"Sequence: {seq_result['sequence']} - {len(seq_result['alignments'])} alignments found")
+        print(f"Complete! Results: {output_path}")
 
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
-
-    print("\nSequence alignment completed successfully!")
 
 
 if __name__ == "__main__":

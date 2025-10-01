@@ -1,6 +1,11 @@
+#!/usr/bin/env python3
+"""Biomni Tool: Analyze Protein Phylogeny
+Wraps: biomni.tool.genetics.analyze_protein_phylogeny
+"""
 import subprocess
 import sys
 import argparse
+import os
 
 # Install required dependencies
 subprocess.check_call([sys.executable, "-m", "pip", "install", "biopython", "matplotlib"])
@@ -32,8 +37,7 @@ def main():
     parser.add_argument('-t', '--tree-method', default='iqtree',
                         choices=['iqtree', 'fasttree'],
                         help='Method for tree construction (default: iqtree)')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
@@ -43,37 +47,27 @@ def main():
     print(f"Tree method: {args.tree_method}")
 
     try:
-        import os
-
         # Set up output directory
-        os.makedirs(args.output_dir, exist_ok=True)
+        os.makedirs(args.output, exist_ok=True)
 
         result = analyze_protein_phylogeny(
             fasta_sequences=args.fasta_sequences,
-            output_dir=args.output_dir,
+            output_dir=args.output,
             alignment_method=args.alignment_method,
             tree_method=args.tree_method
         )
 
-        print("\n" + "="*80)
-        print("ANALYSIS RESULTS")
-        print("="*80)
-        print(result)
-
         # Save log to file
-        log_file = os.path.join(args.output_dir, "phylogeny_analysis_log.txt")
+        log_file = os.path.join(args.output, "phylogeny_analysis_log.txt")
         with open(log_file, 'w') as f:
             f.write(result)
-
-        print(f"\nAnalysis log saved to: {log_file}")
+        print(f"Complete! Results: {log_file}")
 
     except Exception as e:
         print(f"Error during protein phylogeny analysis: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
-
-    print("\nProtein phylogeny analysis completed!")
 
 
 if __name__ == "__main__":

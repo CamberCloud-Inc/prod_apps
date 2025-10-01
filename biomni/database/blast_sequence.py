@@ -1,56 +1,48 @@
+#!/usr/bin/env python3
 """
-Camber wrapper for biomni.tool.database.blast_sequence
+Biomni Tool: BLAST Sequence
+Wraps: biomni.tool.database.blast_sequence
 """
-
+import argparse
+import sys
+import subprocess
+import os
 import json
-
-
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
-def main(sequence, database, program):
-    
+def main():
+    parser = argparse.ArgumentParser(
+        description='BLAST a sequence against a database'
+    )
+    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
-    # Import after dependencies are installed
+    # Load input parameters
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
     from biomni.tool.database import blast_sequence
-    """
-    Wrapper for blast_sequence from biomni.tool.database
-    
-    Query the Reactome database using natural language or a direct endpoint.
 
-    Parameters
-    ----------
-    prompt (str, required): Natural language query about biological pathways
-    endpoint (str, optional): Direct API endpoint or full URL
-    download (bool): Whether to download pathway diagrams
-    output_dir (str, optional): Directory to save downloaded files
-    verbose (bool): Whether to return detailed results
+    result = blast_sequence(
+        sequence=input_data.get('sequence'),
+        database=input_data.get('database'),
+        program=input_data.get('program')
+    )
 
-    Returns
-    -------
-    dict: Dictionary containing the query results or
-    """
-    result = blast_sequence(sequence=sequence, database=database, program=program)
-    print(json.dumps(result, indent=2, default=str))
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'blast_results.json')
+    with open(output_file, 'w') as f:
+        json.dump(result, f, indent=2, default=str)
+    print(f"Complete! Results: {output_file}")
 
-
-if __name__ == "__main__":
-    import sys
-    import argparse
-    
-    parser = argparse.ArgumentParser(description='blast_sequence')
-    parser.add_argument('--sequence', type=str, required=True, help='sequence')
-    parser.add_argument('--database', type=str, required=True, help='database')
-    parser.add_argument('--program', type=float, required=True, help='program')
-    
-    args = parser.parse_args()
-    main(**vars(args))
+if __name__ == '__main__':
+    main()

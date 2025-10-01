@@ -5,8 +5,10 @@ Analyze ITC Binding Thermodynamics
 Analyzes isothermal titration calorimetry (ITC) data to determine binding affinity and thermodynamic parameters.
 """
 
+import argparse
 import sys
 import json
+import os
 
 
 
@@ -21,16 +23,19 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Analyze isothermal titration calorimetry (ITC) data'
+    )
+    parser.add_argument('input_file', help='JSON file with ITC data')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.biochemistry import analyze_itc_binding_thermodynamics
-    if len(sys.argv) != 2:
-        print("Usage: analyze_itc_binding_thermodynamics.py <input_json>")
-        sys.exit(1)
 
-    with open(sys.argv[1], 'r') as f:
+    with open(args.input_file, 'r') as f:
         inputs = json.load(f)
 
     itc_data_path = inputs.get('itc_data_path')
@@ -47,7 +52,11 @@ def main():
         ligand_concentration=ligand_concentration
     )
 
-    print(json.dumps({"result": result}))
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'itc_analysis_results.json')
+    with open(output_file, 'w') as f:
+        json.dump({"result": result}, f, indent=2)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == "__main__":

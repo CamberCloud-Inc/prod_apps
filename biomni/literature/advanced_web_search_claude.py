@@ -3,15 +3,15 @@
 Camber wrapper for advanced_web_search_claude from biomni.tool.literature
 """
 
+import argparse
 import sys
 import json
-
+import subprocess
+import os
 
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
     print("Installing dependencies...")
     for dep in deps:
@@ -19,33 +19,34 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Advanced web search using Claude'
+    )
+    parser.add_argument('input_file', help='JSON file with query parameters from stash')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
+
+    # Load input data
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
+    query = input_data['query']
+    max_searches = input_data.get('max_searches', 5)
+    max_retries = input_data.get('max_retries', 3)
 
     # Import after dependencies are installed
     from biomni.tool.literature import advanced_web_search_claude
-    """Main function for Camber app execution"""
-    if len(sys.argv) != 4:
-        print(json.dumps({
-            "error": "Usage: advanced_web_search_claude.py <query> <max_searches> <max_retries>"
-        }))
-        sys.exit(1)
 
-    query = sys.argv[1]
-    max_searches = int(sys.argv[2])
-    max_retries = int(sys.argv[3])
+    result = advanced_web_search_claude(query=query, max_searches=max_searches, max_retries=max_retries)
 
-    try:
-        result = advanced_web_search_claude(query=query, max_searches=max_searches, max_retries=max_retries)
-        print(json.dumps({
-            "success": True,
-            "result": result
-        }, indent=2))
-    except Exception as e:
-        print(json.dumps({
-            "error": str(e)
-        }))
-        sys.exit(1)
+    # Write output
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'search_results.txt')
+    with open(output_file, 'w') as f:
+        f.write(result)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == "__main__":

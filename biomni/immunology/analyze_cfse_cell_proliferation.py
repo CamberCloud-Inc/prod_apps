@@ -3,8 +3,10 @@
 Camber wrapper for analyze_cfse_cell_proliferation from biomni.tool.immunology
 """
 
+import argparse
 import sys
 import json
+import os
 
 
 
@@ -19,21 +21,25 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Analyze CFSE cell proliferation from flow cytometry data'
+    )
+    parser.add_argument('input_file', help='JSON file with analysis parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
+
+    # Load input data
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
+    fcs_file_path = input_data['fcs_file_path']
+    cfse_channel = input_data.get('cfse_channel', 'FL1-A')
+    lymphocyte_gate = input_data.get('lymphocyte_gate', None)
 
     # Import after dependencies are installed
     from biomni.tool.immunology import analyze_cfse_cell_proliferation
-    if len(sys.argv) < 2:
-        print("Usage: analyze_cfse_cell_proliferation.py <fcs_file_path> [cfse_channel] [lymphocyte_gate_json]")
-        print("\nlymphocyte_gate format: JSON string of dict with 'fsc' and 'ssc' keys, e.g., '{\"fsc\": [50000, 250000], \"ssc\": [0, 200000]}'")
-        sys.exit(1)
-
-    fcs_file_path = sys.argv[1]
-    cfse_channel = sys.argv[2] if len(sys.argv) > 2 else "FL1-A"
-    lymphocyte_gate = None
-    if len(sys.argv) > 3 and sys.argv[3] != "None":
-        lymphocyte_gate = json.loads(sys.argv[3])
 
     result = analyze_cfse_cell_proliferation(
         fcs_file_path=fcs_file_path,
@@ -41,7 +47,11 @@ def main():
         lymphocyte_gate=lymphocyte_gate
     )
 
-    print(result)
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'cfse_proliferation_results.txt')
+    with open(output_file, 'w') as f:
+        f.write(result)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == "__main__":

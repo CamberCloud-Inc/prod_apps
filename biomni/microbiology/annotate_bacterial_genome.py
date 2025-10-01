@@ -5,6 +5,8 @@ Annotate a bacterial genome using Prokka to identify genes, proteins, and functi
 
 import sys
 import json
+import argparse
+import os
 
 
 
@@ -19,13 +21,21 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Annotate a bacterial genome using Prokka to identify genes, proteins, and functional features.'
+    )
+    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+    args = parser.parse_args()
+
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.microbiology import annotate_bacterial_genome
-    # Read input from stdin
-    input_data = json.loads(sys.stdin.read())
+
+    # Read input from file
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
 
     # Extract parameters
     genome_file_path = input_data.get('genome_file_path')
@@ -45,11 +55,12 @@ def main():
         prefix=prefix
     )
 
-    # Output result as JSON
-    output = {
-        "research_log": result
-    }
-    print(json.dumps(output, indent=2))
+    # Write result to output file
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'genome_annotation_results.txt')
+    with open(output_file, 'w') as f:
+        f.write(result)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == "__main__":

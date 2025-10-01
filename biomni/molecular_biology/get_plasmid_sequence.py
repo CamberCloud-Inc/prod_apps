@@ -27,13 +27,12 @@ def main():
                         help='Force Addgene lookup')
     parser.add_argument('--ncbi', action='store_true',
                         help='Force NCBI lookup')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
     # Create output directory if it doesn't exist
-    os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs(args.output, exist_ok=True)
 
     print(f"\nRetrieving plasmid sequence for: {args.identifier}")
 
@@ -53,21 +52,17 @@ def main():
 
         # Generate output filename
         output_filename = f"plasmid_{args.identifier.replace(' ', '_')}.json"
-        output_path = os.path.join(args.output_dir, output_filename)
+        output_path = os.path.join(args.output, output_filename)
 
         # Write results to JSON
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(result, f, indent=2, ensure_ascii=False)
 
-        print(f"\nResults saved to: {output_path}")
-        print(f"Source: {result.get('source', 'Unknown')}")
-        print(f"Sequence length: {len(result.get('sequence', ''))} bp")
+        print(f"Complete! Results: {output_path}")
 
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
-
-    print("\nPlasmid sequence retrieval completed successfully!")
 
 
 if __name__ == "__main__":

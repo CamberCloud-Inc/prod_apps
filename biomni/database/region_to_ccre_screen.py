@@ -1,49 +1,49 @@
+#!/usr/bin/env python3
 """
-Camber wrapper for biomni.tool.database.region_to_ccre_screen
+Biomni Tool: Region to cCRE Screen
+Wraps: biomni.tool.database.region_to_ccre_screen
 """
-
-from biomni.tool.database import region_to_ccre_screen
+import argparse
+import sys
+import subprocess
+import os
 import json
-
-
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
-def main(coord_chrom, coord_start, coord_end, assembly="GRCh38") -> str:
-    """Given starting and ending coordinates, this function retrieves information of intersecting cCREs.
+def main():
+    parser = argparse.ArgumentParser(
+        description='Get cCREs intersecting with a genomic region'
+    )
+    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
-    Args:
-        assembly (str):
-    """
-    Wrapper for region_to_ccre_screen from biomni.tool.database
-    
-    No docstring available
-    """
-    result = region_to_ccre_screen(coord_chrom=coord_chrom, coord_start=coord_start, coord_end=coord_end, assembly=assembly)
-    print(json.dumps(result, indent=2, default=str))
-
-
-if __name__ == "__main__":
-    import sys
-    import argparse
-    
-    parser = argparse.ArgumentParser(description='region_to_ccre_screen')
-    parser.add_argument('--coord_chrom', type=str, required=True, help='coord_chrom')
-    parser.add_argument('--coord_start', type=int, required=True, help='coord_start')
-    parser.add_argument('--coord_end', type=int, required=True, help='coord_end')
-    parser.add_argument('--assembly', type=str, default="GRCh38") -> str:
-    """Given starting and ending coordinates, this function retrieves information of intersecting cCREs.
-
-    Args:
-        assembly (str, help='assembly')
-    
     args = parser.parse_args()
-    main(**vars(args))
+    install_dependencies()
+
+    # Load input parameters
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
+    from biomni.tool.database import region_to_ccre_screen
+
+    result = region_to_ccre_screen(
+        coord_chrom=input_data.get('coord_chrom'),
+        coord_start=input_data.get('coord_start'),
+        coord_end=input_data.get('coord_end'),
+        assembly=input_data.get('assembly', 'GRCh38')
+    )
+
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'region_to_ccre.json')
+    with open(output_file, 'w') as f:
+        json.dump(result, f, indent=2, default=str)
+    print(f"Complete! Results: {output_file}")
+
+if __name__ == '__main__':
+    main()

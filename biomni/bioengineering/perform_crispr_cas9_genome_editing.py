@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import os
 import argparse
 import json
 
@@ -18,44 +19,48 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.bioengineering import perform_crispr_cas9_genome_editing
     parser = argparse.ArgumentParser(description='Simulate CRISPR-Cas9 genome editing process')
-    parser.add_argument('guide_rna_sequences', help='JSON string or comma-separated list of guide RNA sequences (20 nucleotides each)')
-    parser.add_argument('target_genomic_loci', help='Target genomic sequence to be edited')
-    parser.add_argument('cell_tissue_type', help='Type of cell or tissue being edited (e.g., HEK293, HeLa, iPSC)')
+    parser.add_argument('input_file', help='JSON file containing input parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
-    # Parse guide RNA sequences (either JSON or comma-separated)
-    try:
-        guide_rnas = json.loads(args.guide_rna_sequences)
-    except json.JSONDecodeError:
-        # Assume comma-separated list
-        guide_rnas = [g.strip() for g in args.guide_rna_sequences.split(',')]
+    # Read input from file
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
+    guide_rnas = input_data['guide_rna_sequences']
+    target_genomic_loci = input_data['target_genomic_loci']
+    cell_tissue_type = input_data['cell_tissue_type']
 
     print(f"Guide RNAs: {guide_rnas}")
-    print(f"Target sequence length: {len(args.target_genomic_loci)} bp")
-    print(f"Cell/Tissue type: {args.cell_tissue_type}")
-    print("\n" + "="*80)
+    print(f"Target sequence length: {len(target_genomic_loci)} bp")
+    print(f"Cell/Tissue type: {cell_tissue_type}")
+
+    # Create output directory if it doesn't exist
+    os.makedirs(args.output, exist_ok=True)
 
     # Run the simulation
     try:
         result = perform_crispr_cas9_genome_editing(
             guide_rna_sequences=guide_rnas,
-            target_genomic_loci=args.target_genomic_loci,
-            cell_tissue_type=args.cell_tissue_type
+            target_genomic_loci=target_genomic_loci,
+            cell_tissue_type=cell_tissue_type
         )
-        print(result)
+
+        # Write result to file
+        output_file = os.path.join(args.output, 'crispr_cas9_results.txt')
+        with open(output_file, 'w') as f:
+            f.write(result)
+        print(f"Complete! Results: {output_file}")
     except Exception as e:
         print(f"Error during CRISPR-Cas9 simulation: {e}")
         sys.exit(1)
-
-    print("\n" + "="*80)
-    print("CRISPR-Cas9 genome editing simulation completed successfully!")
 
 
 if __name__ == "__main__":

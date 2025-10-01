@@ -1,6 +1,11 @@
+#!/usr/bin/env python3
+"""Biomni Tool: Analyze CRISPR Genome Editing
+Wraps: biomni.tool.genetics.analyze_crispr_genome_editing
+"""
 import subprocess
 import sys
 import argparse
+import os
 
 # Install required dependencies
 subprocess.check_call([sys.executable, "-m", "pip", "install", "biopython"])
@@ -29,8 +34,7 @@ def main():
     parser.add_argument('edited_sequence', help='Path to file with edited DNA sequence or sequence string')
     parser.add_argument('guide_rna', help='CRISPR guide RNA (crRNA) sequence')
     parser.add_argument('-r', '--repair-template', help='Homology-directed repair template sequence (optional)')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
@@ -38,8 +42,6 @@ def main():
     print(f"Guide RNA: {args.guide_rna}")
 
     try:
-        import os
-
         # Check if inputs are files or sequences
         if os.path.isfile(args.original_sequence):
             print(f"Loading original sequence from file: {args.original_sequence}")
@@ -75,26 +77,18 @@ def main():
             repair_template=repair_template
         )
 
-        print("\n" + "="*80)
-        print("ANALYSIS RESULTS")
-        print("="*80)
-        print(result)
-
         # Save results to file
-        os.makedirs(args.output_dir, exist_ok=True)
-        output_file = os.path.join(args.output_dir, "crispr_editing_analysis.txt")
+        os.makedirs(args.output, exist_ok=True)
+        output_file = os.path.join(args.output, "crispr_editing_analysis.txt")
         with open(output_file, 'w') as f:
             f.write(result)
-
-        print(f"\nResults saved to: {output_file}")
+        print(f"Complete! Results: {output_file}")
 
     except Exception as e:
         print(f"Error during CRISPR genome editing analysis: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
-
-    print("\nCRISPR-Cas9 genome editing analysis completed!")
 
 
 if __name__ == "__main__":

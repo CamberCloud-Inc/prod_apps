@@ -26,13 +26,12 @@ def main():
                         help='Selection antibiotic (default: ampicillin)')
     parser.add_argument('--repetitive', action='store_true',
                         help='Sequence contains repetitive elements')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
     # Create output directory if it doesn't exist
-    os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs(args.output, exist_ok=True)
 
     print(f"\nGenerating bacterial transformation protocol...")
     print(f"Antibiotic: {args.antibiotic}")
@@ -46,21 +45,17 @@ def main():
 
         # Generate output filename
         output_filename = "bacterial_transformation_protocol.json"
-        output_path = os.path.join(args.output_dir, output_filename)
+        output_path = os.path.join(args.output, output_filename)
 
         # Write protocol to JSON
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(protocol, f, indent=2, ensure_ascii=False)
 
-        print(f"\nProtocol saved to: {output_path}")
-        print(f"Protocol: {protocol['title']}")
-        print(f"Steps: {len(protocol.get('steps', []))}")
+        print(f"Complete! Results: {output_path}")
 
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
-
-    print("\nProtocol generation completed successfully!")
 
 
 if __name__ == "__main__":

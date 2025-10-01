@@ -5,15 +5,15 @@ Analyze Fatty Acid Composition by GC
 Analyzes fatty acid composition in tissue samples using gas chromatography data.
 """
 
+import argparse
 import sys
 import json
-
+import os
+import subprocess
 
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
     print("Installing dependencies...")
     for dep in deps:
@@ -21,16 +21,19 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Analyze Fatty Acid Composition by GC'
+    )
+    parser.add_argument('input_file', help='Input JSON file with gc_data_file, tissue_type, sample_id')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.physiology import analyze_fatty_acid_composition_by_gc
-    if len(sys.argv) != 2:
-        print("Usage: analyze_fatty_acid_composition_by_gc.py <input_json>")
-        sys.exit(1)
 
-    with open(sys.argv[1], 'r') as f:
+    with open(args.input_file, 'r') as f:
         inputs = json.load(f)
 
     gc_data_file = inputs['gc_data_file']
@@ -45,7 +48,11 @@ def main():
         output_directory=output_directory
     )
 
-    print(json.dumps({"result": result}))
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'fatty_acid_composition_results.json')
+    with open(output_file, 'w') as f:
+        json.dump({"result": result}, f, indent=2)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == "__main__":

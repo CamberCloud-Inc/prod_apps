@@ -4,14 +4,15 @@ Wrapper for biomni.tool.pharmacology.calculate_physicochemical_properties
 Calculates physicochemical properties of molecules.
 """
 
+import argparse
 import sys
+import subprocess
+import os
 import json
 
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
     print("Installing dependencies...")
     for dep in deps:
@@ -19,36 +20,37 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Calculates physicochemical properties of molecules'
+    )
+    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
+
+    # Load input data
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
+    smiles_string = input_data.get('smiles_string')
+
+    if not smiles_string:
+        raise ValueError("Missing required parameter: smiles_string")
 
     # Import after dependencies are installed
     from biomni.tool.pharmacology import calculate_physicochemical_properties
-    if len(sys.argv) != 2:
-        print(json.dumps({"error": "Usage: calculate_physicochemical_properties.py '<json_args>'"}))
-        sys.exit(1)
 
-    try:
-        args = json.loads(sys.argv[1])
+    result = calculate_physicochemical_properties(
+        smiles_string=smiles_string
+    )
 
-        smiles_string = args.get('smiles_string')
-
-        if not smiles_string:
-            print(json.dumps({"error": "Missing required parameter: smiles_string"}))
-            sys.exit(1)
-
-        result = calculate_physicochemical_properties(
-            smiles_string=smiles_string
-        )
-
-        print(json.dumps({"result": result}))
-
-    except json.JSONDecodeError as e:
-        print(json.dumps({"error": f"Invalid JSON input: {str(e)}"}))
-        sys.exit(1)
-    except Exception as e:
-        print(json.dumps({"error": str(e)}))
-        sys.exit(1)
+    # Create output directory and write result
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'physicochemical_properties_results.txt')
+    with open(output_file, 'w') as f:
+        f.write(result)
+    print(f"Complete! Results: {output_file}")
 
 if __name__ == "__main__":
     main()

@@ -4,6 +4,8 @@ Wrapper for Biomni perform_flux_balance_analysis tool
 """
 import sys
 import json
+import argparse
+import os
 
 
 def install_dependencies():
@@ -17,22 +19,35 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Perform flux balance analysis using Biomni'
+    )
+    parser.add_argument('input_file', help='JSON file with FBA parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
+
+    # Load input parameters
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
+    model_file = input_data.get('model_file')
+    constraints = input_data.get('constraints')
+    objective_reaction = input_data.get('objective_reaction')
+    output_filename = input_data.get('output_file', 'fba_results.csv')
 
     # Import after dependencies are installed
     from biomni.tool.systems_biology import perform_flux_balance_analysis
-    if len(sys.argv) < 2:
-        print("Usage: perform_flux_balance_analysis.py <model_file> [constraints_json] [objective_reaction] [output_file]")
-        sys.exit(1)
 
-    model_file = sys.argv[1]
-    constraints = json.loads(sys.argv[2]) if len(sys.argv) > 2 and sys.argv[2] else None
-    objective_reaction = sys.argv[3] if len(sys.argv) > 3 and sys.argv[3] else None
-    output_file = sys.argv[4] if len(sys.argv) > 4 else "fba_results.csv"
+    result = perform_flux_balance_analysis(model_file, constraints, objective_reaction, output_filename)
 
-    result = perform_flux_balance_analysis(model_file, constraints, objective_reaction, output_file)
-    print(result)
+    # Create output directory and write result
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'fba_results.txt')
+    with open(output_file, 'w') as f:
+        f.write(result)
+    print(f"Complete! Results: {output_file}")
 
 if __name__ == "__main__":
     main()

@@ -5,15 +5,15 @@ Calculate Brain ADC Map
 Calculate Apparent Diffusion Coefficient (ADC) map from diffusion-weighted MRI data.
 """
 
+import argparse
 import sys
 import json
-
+import os
+import subprocess
 
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
     print("Installing dependencies...")
     for dep in deps:
@@ -21,16 +21,19 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Calculate Brain ADC Map'
+    )
+    parser.add_argument('input_file', help='Input JSON file with dwi_file_path, b_values and optional parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.physiology import calculate_brain_adc_map
-    if len(sys.argv) != 2:
-        print("Usage: calculate_brain_adc_map.py <input_json>")
-        sys.exit(1)
 
-    with open(sys.argv[1], 'r') as f:
+    with open(args.input_file, 'r') as f:
         inputs = json.load(f)
 
     dwi_file_path = inputs['dwi_file_path']
@@ -45,7 +48,11 @@ def main():
         mask_file_path=mask_file_path
     )
 
-    print(json.dumps({"result": result}))
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'brain_adc_map_results.json')
+    with open(output_file, 'w') as f:
+        json.dump({"result": result}, f, indent=2)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == "__main__":

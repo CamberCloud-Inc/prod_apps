@@ -1,6 +1,11 @@
+#!/usr/bin/env python3
+"""Biomni Tool: Fit Genomic Prediction Model
+Wraps: biomni.tool.genetics.fit_genomic_prediction_model
+"""
 import subprocess
 import sys
 import argparse
+import os
 
 # Install required dependencies
 subprocess.check_call([sys.executable, "-m", "pip", "install", "numpy", "pandas", "scipy"])
@@ -34,8 +39,7 @@ def main():
                         help='Type of genetic model (default: additive)')
     parser.add_argument('-p', '--output-file', default='genomic_prediction_results.csv',
                         help='Output filename for results (default: genomic_prediction_results.csv)')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
@@ -45,8 +49,6 @@ def main():
     print(f"Model type: {args.model_type}")
 
     try:
-        import os
-
         # Load genotype data
         print("\nLoading genotype data...")
         genotypes = np.load(args.genotypes)
@@ -67,8 +69,8 @@ def main():
             print(f"Fixed effects shape: {fixed_effects.shape}")
 
         # Set up output directory
-        os.makedirs(args.output_dir, exist_ok=True)
-        output_file = os.path.join(args.output_dir, args.output_file)
+        os.makedirs(args.output, exist_ok=True)
+        output_file = os.path.join(args.output, args.output_file)
 
         result = fit_genomic_prediction_model(
             genotypes=genotypes,
@@ -78,26 +80,17 @@ def main():
             output_file=output_file
         )
 
-        print("\n" + "="*80)
-        print("ANALYSIS RESULTS")
-        print("="*80)
-        print(result)
-
         # Save log to file
-        log_file = os.path.join(args.output_dir, "genomic_prediction_log.txt")
+        log_file = os.path.join(args.output, "genomic_prediction_log.txt")
         with open(log_file, 'w') as f:
             f.write(result)
-
-        print(f"\nAnalysis log saved to: {log_file}")
-        print(f"Results CSV saved to: {output_file}")
+        print(f"Complete! Results: {log_file}")
 
     except Exception as e:
         print(f"Error during genomic prediction model fitting: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
-
-    print("\nGenomic prediction model fitting completed!")
 
 
 if __name__ == "__main__":

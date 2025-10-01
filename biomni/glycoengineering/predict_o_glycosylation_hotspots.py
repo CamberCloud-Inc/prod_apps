@@ -6,7 +6,8 @@ Heuristic O-glycosylation hotspot scoring.
 
 import sys
 import json
-
+import argparse
+import os
 
 
 def install_dependencies():
@@ -20,13 +21,20 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.glycoengineering import predict_o_glycosylation_hotspots
-    # Read input from stdin
-    input_data = json.load(sys.stdin)
+
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(description='Predict O-glycosylation hotspots')
+    parser.add_argument('input_file', help='Path to input JSON file')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+    args = parser.parse_args()
+
+    # Read input from file
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
 
     sequence = input_data.get("sequence")
     window = input_data.get("window", 7)
@@ -49,11 +57,13 @@ def main():
             disallow_proline_next=disallow_proline_next
         )
 
-        # Output result as JSON
-        output = {
-            "result": result
-        }
-        print(json.dumps(output, indent=2))
+        # Write output to file
+        os.makedirs(args.output, exist_ok=True)
+        output_file = os.path.join(args.output, 'o_glycosylation_hotspots.json')
+        with open(output_file, 'w') as f:
+            json.dump({"result": result}, f, indent=2)
+
+        print(f"Results written to {output_file}")
 
     except Exception as e:
         print(json.dumps({

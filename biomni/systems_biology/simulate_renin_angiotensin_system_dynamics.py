@@ -4,6 +4,8 @@ Wrapper for Biomni simulate_renin_angiotensin_system_dynamics tool
 """
 import sys
 import json
+import argparse
+import os
 
 
 def install_dependencies():
@@ -17,25 +19,38 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Simulate renin-angiotensin system dynamics using Biomni'
+    )
+    parser.add_argument('input_file', help='JSON file with simulation parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
+
+    # Load input parameters
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
+    initial_concentrations = input_data.get('initial_concentrations')
+    rate_constants = input_data.get('rate_constants')
+    feedback_params = input_data.get('feedback_params')
+    simulation_time = input_data.get('simulation_time', 48)
+    time_points = input_data.get('time_points', 100)
 
     # Import after dependencies are installed
     from biomni.tool.systems_biology import simulate_renin_angiotensin_system_dynamics
-    if len(sys.argv) < 4:
-        print("Usage: simulate_renin_angiotensin_system_dynamics.py <initial_concentrations_json> <rate_constants_json> <feedback_params_json> [simulation_time] [time_points]")
-        sys.exit(1)
-
-    initial_concentrations = json.loads(sys.argv[1])
-    rate_constants = json.loads(sys.argv[2])
-    feedback_params = json.loads(sys.argv[3])
-    simulation_time = float(sys.argv[4]) if len(sys.argv) > 4 else 48
-    time_points = int(sys.argv[5]) if len(sys.argv) > 5 else 100
 
     result = simulate_renin_angiotensin_system_dynamics(
         initial_concentrations, rate_constants, feedback_params, simulation_time, time_points
     )
-    print(result)
+
+    # Create output directory and write result
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'renin_angiotensin_results.txt')
+    with open(output_file, 'w') as f:
+        f.write(result)
+    print(f"Complete! Results: {output_file}")
 
 if __name__ == "__main__":
     main()

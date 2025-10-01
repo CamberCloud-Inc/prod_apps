@@ -3,6 +3,9 @@
 Wrapper for Biomni compare_protein_structures tool
 """
 import sys
+import argparse
+import os
+import json
 
 
 def install_dependencies():
@@ -16,23 +19,36 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Compare protein structures using Biomni'
+    )
+    parser.add_argument('input_file', help='JSON file with comparison parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
+
+    # Load input parameters
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
+    pdb_file1 = input_data.get('pdb_file1')
+    pdb_file2 = input_data.get('pdb_file2')
+    chain_id1 = input_data.get('chain_id1', 'A')
+    chain_id2 = input_data.get('chain_id2', 'A')
+    output_prefix = input_data.get('output_prefix', 'protein_comparison')
 
     # Import after dependencies are installed
     from biomni.tool.systems_biology import compare_protein_structures
-    if len(sys.argv) < 3:
-        print("Usage: compare_protein_structures.py <pdb_file1> <pdb_file2> [chain_id1] [chain_id2] [output_prefix]")
-        sys.exit(1)
-
-    pdb_file1 = sys.argv[1]
-    pdb_file2 = sys.argv[2]
-    chain_id1 = sys.argv[3] if len(sys.argv) > 3 else "A"
-    chain_id2 = sys.argv[4] if len(sys.argv) > 4 else "A"
-    output_prefix = sys.argv[5] if len(sys.argv) > 5 else "protein_comparison"
 
     result = compare_protein_structures(pdb_file1, pdb_file2, chain_id1, chain_id2, output_prefix)
-    print(result)
+
+    # Create output directory and write result
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'comparison_results.txt')
+    with open(output_file, 'w') as f:
+        f.write(result)
+    print(f"Complete! Results: {output_file}")
 
 if __name__ == "__main__":
     main()

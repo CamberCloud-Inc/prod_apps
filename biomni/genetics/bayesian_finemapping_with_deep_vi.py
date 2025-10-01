@@ -1,6 +1,11 @@
+#!/usr/bin/env python3
+"""Biomni Tool: Bayesian Fine-mapping with Deep VI
+Wraps: biomni.tool.genetics.bayesian_finemapping_with_deep_vi
+"""
 import subprocess
 import sys
 import argparse
+import os
 
 # Install required dependencies
 subprocess.check_call([sys.executable, "-m", "pip", "install", "torch", "numpy", "pandas", "scipy", "matplotlib"])
@@ -36,8 +41,7 @@ def main():
                         help='Hidden dimension size for neural network (default: 64)')
     parser.add_argument('-ct', '--credible-threshold', type=float, default=0.95,
                         help='Threshold for credible set (default: 0.95)')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
@@ -53,10 +57,9 @@ def main():
         ld_matrix = np.load(args.ld_matrix)
         print(f"LD matrix shape: {ld_matrix.shape}")
 
-        # Change to output directory to save results there
-        import os
-        os.makedirs(args.output_dir, exist_ok=True)
-        os.chdir(args.output_dir)
+        # Create output directory
+        os.makedirs(args.output, exist_ok=True)
+        os.chdir(args.output)
 
         result = bayesian_finemapping_with_deep_vi(
             gwas_summary_path=args.gwas_summary,
@@ -67,25 +70,17 @@ def main():
             credible_threshold=args.credible_threshold
         )
 
-        print("\n" + "="*80)
-        print("ANALYSIS RESULTS")
-        print("="*80)
-        print(result)
-
         # Save full results to log file
-        output_file = os.path.join(args.output_dir, "bayesian_finemapping_log.txt")
+        output_file = os.path.join(args.output, "bayesian_finemapping_log.txt")
         with open(output_file, 'w') as f:
             f.write(result)
-
-        print(f"\nFull analysis log saved to: {output_file}")
+        print(f"Complete! Results: {output_file}")
 
     except Exception as e:
         print(f"Error during Bayesian fine-mapping analysis: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
-
-    print("\nBayesian fine-mapping analysis completed!")
 
 
 if __name__ == "__main__":

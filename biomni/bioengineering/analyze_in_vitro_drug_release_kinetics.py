@@ -21,36 +21,27 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.bioengineering import analyze_in_vitro_drug_release_kinetics
     parser = argparse.ArgumentParser(description='Analyze in vitro drug release kinetics from biomaterial formulations')
-    parser.add_argument('time_points', help='JSON string or comma-separated list of time points (hours)')
-    parser.add_argument('concentration_data', help='JSON string or comma-separated list of drug concentrations')
-    parser.add_argument('--drug-name', default='Drug',
-                        help='Name of the drug being analyzed (default: Drug)')
-    parser.add_argument('--total-drug-loaded', type=float, default=None,
-                        help='Total amount of drug initially loaded. If not provided, max concentration is used as 100%%')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('input_file', help='JSON file containing input parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
-    # Parse time points (either JSON or comma-separated)
-    try:
-        time_points = json.loads(args.time_points)
-    except json.JSONDecodeError:
-        time_points = [float(t.strip()) for t in args.time_points.split(',')]
+    # Read input from file
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
 
-    # Parse concentration data (either JSON or comma-separated)
-    try:
-        concentration_data = json.loads(args.concentration_data)
-    except json.JSONDecodeError:
-        concentration_data = [float(c.strip()) for c in args.concentration_data.split(',')]
+    time_points = input_data['time_points']
+    concentration_data = input_data['concentration_data']
+    drug_name = input_data.get('drug_name', 'Drug')
+    total_drug_loaded = input_data.get('total_drug_loaded', None)
 
-    print(f"Drug: {args.drug_name}")
+    print(f"Drug: {drug_name}")
     print(f"Number of time points: {len(time_points)}")
     print(f"Time range: {min(time_points)} to {max(time_points)} hours")
     print(f"Concentration range: {min(concentration_data)} to {max(concentration_data)}")
@@ -60,28 +51,28 @@ def main():
         sys.exit(1)
 
     # Create output directory if it doesn't exist
-    os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs(args.output, exist_ok=True)
 
     # Run the analysis
     try:
         result = analyze_in_vitro_drug_release_kinetics(
             time_points=time_points,
             concentration_data=concentration_data,
-            drug_name=args.drug_name,
-            total_drug_loaded=args.total_drug_loaded,
-            output_dir=args.output_dir
+            drug_name=drug_name,
+            total_drug_loaded=total_drug_loaded,
+            output_dir=args.output
         )
-        print("\n" + "="*80)
-        print("ANALYSIS RESULTS")
-        print("="*80)
-        print(result)
+
+        # Write result to file
+        output_file = os.path.join(args.output, 'drug_release_kinetics_results.txt')
+        with open(output_file, 'w') as f:
+            f.write(result)
+        print(f"Complete! Results: {output_file}")
     except Exception as e:
         print(f"Error during analysis: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
-
-    print("\nDrug release kinetics analysis completed successfully!")
 
 
 if __name__ == "__main__":

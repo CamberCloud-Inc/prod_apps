@@ -28,13 +28,12 @@ def main():
                         help='Target species (default: human)')
     parser.add_argument('--num-guides', type=int, default=1,
                         help='Number of guides to return (default: 1)')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
     # Create output directory if it doesn't exist
-    os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs(args.output, exist_ok=True)
 
     print(f"\nDesigning sgRNAs for gene knockout...")
     print(f"Gene: {args.gene_name}")
@@ -51,22 +50,17 @@ def main():
 
         # Generate output filename
         output_filename = f"{args.gene_name}_sgrnas.json"
-        output_path = os.path.join(args.output_dir, output_filename)
+        output_path = os.path.join(args.output, output_filename)
 
         # Write results to JSON
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(result, f, indent=2, ensure_ascii=False)
 
-        print(f"\nResults saved to: {output_path}")
-        print(f"Guide sequences: {len(result.get('guides', []))}")
-        for i, guide in enumerate(result.get('guides', []), 1):
-            print(f"  Guide {i}: {guide}")
+        print(f"Complete! Results: {output_path}")
 
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
-
-    print("\nsgRNA design completed successfully!")
 
 
 if __name__ == "__main__":

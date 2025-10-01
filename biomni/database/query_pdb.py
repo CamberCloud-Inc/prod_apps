@@ -1,58 +1,46 @@
+#!/usr/bin/env python3
 """
-Camber wrapper for biomni.tool.database.query_pdb
+Biomni Tool: Query PDB
+Wraps: biomni.tool.database.query_pdb
 """
-
+import argparse
+import sys
+import subprocess
+import os
 import json
-
-
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
-def main(prompt=None, query=None, max_results=3):
-    
+def main():
+    parser = argparse.ArgumentParser(
+        description='Query the RCSB PDB database'
+    )
+    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
-    # Import after dependencies are installed
+    # Load input parameters
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
     from biomni.tool.database import query_pdb
-    """
-    Wrapper for query_pdb from biomni.tool.database
-    
-    Query the RCSB PDB database using natural language or a direct structured query.
 
-    Parameters
-    ----------
-    prompt (str, required): Natural language query about protein structures
-    query (dict, optional): Direct structured query in RCSB Search API format (overrides prompt)
-    max_results (int): Maximum number of results to return
+    result = query_pdb(prompt=input_data.get('prompt'),
+        query=input_data.get('query'),
+        max_results=input_data.get('max_results'))
 
-    Returns
-    -------
-    dict: Dictionary containing the structured query, search results, and identifiers
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'pdb_results.json')
+    with open(output_file, 'w') as f:
+        json.dump(result, f, indent=2, default=str)
+    print(f"Complete! Results: {output_file}")
 
-    Examples
-    --------
-    - Natural lang
-    """
-    result = query_pdb(prompt=prompt, query=query, max_results=max_results)
-    print(json.dumps(result, indent=2, default=str))
-
-
-if __name__ == "__main__":
-    import sys
-    import argparse
-    
-    parser = argparse.ArgumentParser(description='query_pdb')
-    parser.add_argument('--prompt', type=str, default=None, help='prompt')
-    parser.add_argument('--query', type=str, default=None, help='query')
-    parser.add_argument('--max_results', type=int, default=3, help='max_results')
-    
-    args = parser.parse_args()
-    main(**vars(args))
+if __name__ == '__main__':
+    main()

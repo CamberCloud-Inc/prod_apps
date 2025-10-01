@@ -1,60 +1,57 @@
+#!/usr/bin/env python3
 """
-Camber wrapper for biomni.tool.database.query_clinicaltrials
+Biomni Tool: Query ClinicalTrials
+Wraps: biomni.tool.database.query_clinicaltrials
 """
-
+import argparse
+import sys
+import subprocess
+import os
 import json
-
-
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
-def main(prompt=None, endpoint=None, term=None, status=None, condition=None, intervention=None, location=None, phase=None, page_size=10, max_pages=1, page_token=None, verbose=True):
-    
+def main():
+    parser = argparse.ArgumentParser(
+        description='Query ClinicalTrials.gov API for clinical studies'
+    )
+    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
-    # Import after dependencies are installed
+    # Load input parameters
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
     from biomni.tool.database import query_clinicaltrials
-    """
-    Wrapper for query_clinicaltrials from biomni.tool.database
-    
-    Query ClinicalTrials.gov API for clinical studies.
 
-    Modes:
-    - Direct URL: set `endpoint` to a full URL or a path (e.g., "/studies?query.term=breast%20cancer").
-    - Structured params: provide `term`, `status`, `condition`, etc.
-    - Natural language: provide `prompt` and the function will infer structured params.
+    result = query_clinicaltrials(
+        prompt=input_data.get('prompt'),
+        endpoint=input_data.get('endpoint'),
+        term=input_data.get('term'),
+        status=input_data.get('status'),
+        condition=input_data.get('condition'),
+        intervention=input_data.get('intervention'),
+        location=input_data.get('location'),
+        phase=input_data.get('phase'),
+        page_size=input_data.get('page_size', 10),
+        max_pages=input_data.get('max_pages', 1),
+        page_token=input_data.get('page_token'),
+        verbose=input_data.get('verbose', True)
+    )
 
-    Returns a dict with aggregated results across pages (up to `max_pages`).
-    """
-    result = query_clinicaltrials(prompt=prompt, endpoint=endpoint, term=term, status=status, condition=condition, intervention=intervention, location=location, phase=phase, page_size=page_size, max_pages=max_pages, page_token=page_token, verbose=verbose)
-    print(json.dumps(result, indent=2, default=str))
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'clinicaltrials_results.json')
+    with open(output_file, 'w') as f:
+        json.dump(result, f, indent=2, default=str)
+    print(f"Complete! Results: {output_file}")
 
-
-if __name__ == "__main__":
-    import sys
-    import argparse
-    
-    parser = argparse.ArgumentParser(description='query_clinicaltrials')
-    parser.add_argument('--prompt', type=str, default=None, help='prompt')
-    parser.add_argument('--endpoint', type=str, default=None, help='endpoint')
-    parser.add_argument('--term', type=str, default=None, help='term')
-    parser.add_argument('--status', type=str, default=None, help='status')
-    parser.add_argument('--condition', type=str, default=None, help='condition')
-    parser.add_argument('--intervention', type=str, default=None, help='intervention')
-    parser.add_argument('--location', type=str, default=None, help='location')
-    parser.add_argument('--phase', type=str, default=None, help='phase')
-    parser.add_argument('--page_size', type=int, default=10, help='page_size')
-    parser.add_argument('--max_pages', type=int, default=1, help='max_pages')
-    parser.add_argument('--page_token', type=str, default=None, help='page_token')
-    parser.add_argument('--verbose', type=bool, default=True, help='verbose')
-    
-    args = parser.parse_args()
-    main(**vars(args))
+if __name__ == '__main__':
+    main()

@@ -1,59 +1,47 @@
+#!/usr/bin/env python3
 """
-Camber wrapper for biomni.tool.database.query_opentarget
+Biomni Tool: Query OpenTargets
+Wraps: biomni.tool.database.query_opentarget
 """
-
+import argparse
+import sys
+import subprocess
+import os
 import json
-
-
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
-def main(prompt=None, query=None, variables=None, verbose=False):
-    
+def main():
+    parser = argparse.ArgumentParser(
+        description='Query the OpenTargets Platform API'
+    )
+    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
-    # Import after dependencies are installed
+    # Load input parameters
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
     from biomni.tool.database import query_opentarget
-    """
-    Wrapper for query_opentarget from biomni.tool.database
-    
-    Query the OpenTargets Platform API using natural language or a direct GraphQL query.
 
-    Parameters
-    ----------
-    prompt (str, required): Natural language query about drug targets, diseases, and mechanisms
-    query (str, optional): Direct GraphQL query string
-    variables (dict, optional): Variables for the GraphQL query
-    verbose (bool): Whether to return detailed results
+    result = query_opentarget(prompt=input_data.get('prompt'),
+        query=input_data.get('query'),
+        variables=input_data.get('variables'),
+        verbose=input_data.get('verbose'))
 
-    Returns
-    -------
-    dict: Dictionary containing the query results or error information
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'opentarget_results.json')
+    with open(output_file, 'w') as f:
+        json.dump(result, f, indent=2, default=str)
+    print(f"Complete! Results: {output_file}")
 
-    Examples
-    
-    """
-    result = query_opentarget(prompt=prompt, query=query, variables=variables, verbose=verbose)
-    print(json.dumps(result, indent=2, default=str))
-
-
-if __name__ == "__main__":
-    import sys
-    import argparse
-    
-    parser = argparse.ArgumentParser(description='query_opentarget')
-    parser.add_argument('--prompt', type=str, default=None, help='prompt')
-    parser.add_argument('--query', type=str, default=None, help='query')
-    parser.add_argument('--variables', type=str, default=None, help='variables')
-    parser.add_argument('--verbose', type=bool, default=False, help='verbose')
-    
-    args = parser.parse_args()
-    main(**vars(args))
+if __name__ == '__main__':
+    main()

@@ -1,65 +1,49 @@
+#!/usr/bin/env python3
 """
-Camber wrapper for biomni.tool.database.get_genes_near_ccre
+Biomni Tool: Get Genes Near cCRE
+Wraps: biomni.tool.database.get_genes_near_ccre
 """
-
-from biomni.tool.database import get_genes_near_ccre
+import argparse
+import sys
+import subprocess
+import os
 import json
-
-
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
-def main(accession, assembly, chromosome, k=10) -> str:
-    """Given a cCRE (Candidate cis-Regulatory Element), this function returns a string containing the
-    steps it performs and the k nearest genes sorted by distance.
+def main():
+    parser = argparse.ArgumentParser(
+        description='Get k nearest genes to a cCRE (Candidate cis-Regulatory Element)'
+    )
+    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
-    Parameters
-    ----------
-    - accession (str):
-    """
-    Wrapper for get_genes_near_ccre from biomni.tool.database
-    
-    Query the ReMap database for regulatory elements and transcription factor binding sites.
-
-    Parameters
-    ----------
-    prompt (str, required): Natural language query about transcription factors and binding sites
-    endpoint (str, optional): Full API endpoint to query (e.g., "https://remap.univ-amu.fr/api/v1/catalogue/tf?tf=CTCF")
-    verbose (bool): Whether to return detailed results
-
-    Returns
-    -------
-    dict: Dictionary containing the query results or error information
-
-    Exampl
-    """
-    result = get_genes_near_ccre(accession=accession, assembly=assembly, chromosome=chromosome, k=k)
-    print(json.dumps(result, indent=2, default=str))
-
-
-if __name__ == "__main__":
-    import sys
-    import argparse
-    
-    parser = argparse.ArgumentParser(description='get_genes_near_ccre')
-    parser.add_argument('--accession', type=str, required=True, help='accession')
-    parser.add_argument('--assembly', type=str, required=True, help='assembly')
-    parser.add_argument('--chromosome', type=str, required=True, help='chromosome')
-    parser.add_argument('--k', type=int, default=10) -> str:
-    """Given a cCRE (Candidate cis-Regulatory Element), this function returns a string containing the
-    steps it performs and the k nearest genes sorted by distance.
-
-    Parameters
-    ----------
-    - accession (str, help='k')
-    
     args = parser.parse_args()
-    main(**vars(args))
+    install_dependencies()
+
+    # Load input parameters
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
+    from biomni.tool.database import get_genes_near_ccre
+
+    result = get_genes_near_ccre(
+        accession=input_data.get('accession'),
+        assembly=input_data.get('assembly'),
+        chromosome=input_data.get('chromosome'),
+        k=input_data.get('k', 10)
+    )
+
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'genes_near_ccre.json')
+    with open(output_file, 'w') as f:
+        json.dump(result, f, indent=2, default=str)
+    print(f"Complete! Results: {output_file}")
+
+if __name__ == '__main__':
+    main()

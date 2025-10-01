@@ -1,6 +1,11 @@
+#!/usr/bin/env python3
+"""Biomni Tool: Identify Transcription Factor Binding Sites
+Wraps: biomni.tool.genetics.identify_transcription_factor_binding_sites
+"""
 import subprocess
 import sys
 import argparse
+import os
 
 # Install required dependencies
 subprocess.check_call([sys.executable, "-m", "pip", "install", "biopython", "requests"])
@@ -30,8 +35,7 @@ def main():
     parser.add_argument('-t', '--threshold', type=float, default=0.8,
                         help='Minimum score threshold for binding sites (0.0-1.0, default: 0.8)')
     parser.add_argument('-f', '--output-file', help='Path to save results (optional)')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
@@ -40,8 +44,6 @@ def main():
     print(f"Threshold: {args.threshold}")
 
     try:
-        import os
-
         # Check if input is file or sequence
         if os.path.isfile(args.sequence):
             print(f"Loading sequence from file: {args.sequence}")
@@ -53,12 +55,12 @@ def main():
         print(f"Sequence length: {len(sequence)} bp")
 
         # Set up output file path
-        os.makedirs(args.output_dir, exist_ok=True)
+        os.makedirs(args.output, exist_ok=True)
         output_file = None
         if args.output_file:
-            output_file = os.path.join(args.output_dir, args.output_file)
+            output_file = os.path.join(args.output, args.output_file)
         else:
-            output_file = os.path.join(args.output_dir, f"{args.tf_name}_binding_sites.tsv")
+            output_file = os.path.join(args.output, f"{args.tf_name}_binding_sites.tsv")
 
         result = identify_transcription_factor_binding_sites(
             sequence=sequence,
@@ -67,25 +69,17 @@ def main():
             output_file=output_file
         )
 
-        print("\n" + "="*80)
-        print("ANALYSIS RESULTS")
-        print("="*80)
-        print(result)
-
         # Save log to file
-        log_file = os.path.join(args.output_dir, f"{args.tf_name}_tfbs_analysis_log.txt")
+        log_file = os.path.join(args.output, f"{args.tf_name}_tfbs_analysis_log.txt")
         with open(log_file, 'w') as f:
             f.write(result)
-
-        print(f"\nAnalysis log saved to: {log_file}")
+        print(f"Complete! Results: {log_file}")
 
     except Exception as e:
         print(f"Error during transcription factor binding site analysis: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
-
-    print("\nTranscription factor binding site analysis completed!")
 
 
 if __name__ == "__main__":

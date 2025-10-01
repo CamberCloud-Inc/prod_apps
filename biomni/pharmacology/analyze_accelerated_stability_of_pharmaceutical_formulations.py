@@ -4,14 +4,15 @@ Wrapper for biomni.tool.pharmacology.analyze_accelerated_stability_of_pharmaceut
 Analyzes accelerated stability of pharmaceutical formulations.
 """
 
+import argparse
 import sys
+import subprocess
+import os
 import json
 
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
     print("Installing dependencies...")
     for dep in deps:
@@ -19,40 +20,41 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Analyzes accelerated stability of pharmaceutical formulations'
+    )
+    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
+
+    # Load input data
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
+    formulations = input_data.get('formulations')
+    storage_conditions = input_data.get('storage_conditions')
+    time_points = input_data.get('time_points')
+
+    if not formulations or not storage_conditions or not time_points:
+        raise ValueError("Missing required parameters: formulations, storage_conditions, time_points")
 
     # Import after dependencies are installed
     from biomni.tool.pharmacology import analyze_accelerated_stability_of_pharmaceutical_formulations
-    if len(sys.argv) != 2:
-        print(json.dumps({"error": "Usage: analyze_accelerated_stability_of_pharmaceutical_formulations.py '<json_args>'"}))
-        sys.exit(1)
 
-    try:
-        args = json.loads(sys.argv[1])
+    result = analyze_accelerated_stability_of_pharmaceutical_formulations(
+        formulations=formulations,
+        storage_conditions=storage_conditions,
+        time_points=time_points
+    )
 
-        formulations = args.get('formulations')
-        storage_conditions = args.get('storage_conditions')
-        time_points = args.get('time_points')
-
-        if not formulations or not storage_conditions or not time_points:
-            print(json.dumps({"error": "Missing required parameters: formulations, storage_conditions, time_points"}))
-            sys.exit(1)
-
-        result = analyze_accelerated_stability_of_pharmaceutical_formulations(
-            formulations=formulations,
-            storage_conditions=storage_conditions,
-            time_points=time_points
-        )
-
-        print(json.dumps({"result": result}))
-
-    except json.JSONDecodeError as e:
-        print(json.dumps({"error": f"Invalid JSON input: {str(e)}"}))
-        sys.exit(1)
-    except Exception as e:
-        print(json.dumps({"error": str(e)}))
-        sys.exit(1)
+    # Create output directory and write result
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'stability_results.txt')
+    with open(output_file, 'w') as f:
+        f.write(result)
+    print(f"Complete! Results: {output_file}")
 
 if __name__ == "__main__":
     main()

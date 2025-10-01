@@ -22,24 +22,24 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.bioengineering import decode_behavior_from_neural_trajectories
     parser = argparse.ArgumentParser(description='Model neural activity trajectories and decode behavioral variables')
-    parser.add_argument('neural_data_file', help='Path to CSV file containing neural data (rows=timepoints, cols=neurons)')
-    parser.add_argument('behavioral_data_file', help='Path to CSV file containing behavioral data (rows=timepoints, cols=variables)')
-    parser.add_argument('--n-components', type=int, default=10,
-                        help='Number of principal components for dimensionality reduction (default: 10)')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('input_file', help='JSON file containing input parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
-    # Expand user paths if provided
-    neural_data_file = os.path.expanduser(args.neural_data_file)
-    behavioral_data_file = os.path.expanduser(args.behavioral_data_file)
+    # Read input from file
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
+    neural_data_file = os.path.expanduser(input_data['neural_data_file'])
+    behavioral_data_file = os.path.expanduser(input_data['behavioral_data_file'])
+    n_components = input_data.get('n_components', 10)
 
     print(f"Loading neural data from: {neural_data_file}")
     print(f"Loading behavioral data from: {behavioral_data_file}")
@@ -74,27 +74,27 @@ def main():
         sys.exit(1)
 
     # Create output directory if it doesn't exist
-    os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs(args.output, exist_ok=True)
 
     # Run the analysis
     try:
         result = decode_behavior_from_neural_trajectories(
             neural_data=neural_data,
             behavioral_data=behavioral_data,
-            n_components=args.n_components,
-            output_dir=args.output_dir
+            n_components=n_components,
+            output_dir=args.output
         )
-        print("\n" + "="*80)
-        print("ANALYSIS RESULTS")
-        print("="*80)
-        print(result)
+
+        # Write result to file
+        output_file = os.path.join(args.output, 'neural_trajectory_decoding_results.txt')
+        with open(output_file, 'w') as f:
+            f.write(result)
+        print(f"Complete! Results: {output_file}")
     except Exception as e:
         print(f"Error during analysis: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
-
-    print("\nNeural trajectory decoding analysis completed successfully!")
 
 
 if __name__ == "__main__":

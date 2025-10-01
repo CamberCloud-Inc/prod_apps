@@ -1,49 +1,53 @@
 #!/usr/bin/env python3
+"""Biomni Tool: Predict Protein Disorder Regions
+Wraps: biomni.tool.biophysics.predict_protein_disorder_regions
 """
-Predict Protein Disorder Regions
-
-Predicts intrinsically disordered regions (IDRs) in a protein sequence using IUPred2A.
-"""
-
+import argparse
 import sys
+import subprocess
+import os
 import json
-
-
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Predicts intrinsically disordered regions (IDRs) in a protein sequence using IUPred2A'
+    )
+    parser.add_argument('input_file', help='JSON file with input parameters from stash')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
-    # Import after dependencies are installed
+    # Load input parameters
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
+    protein_sequence = input_data['protein_sequence']
+    threshold = input_data.get('threshold', 0.5)
+
     from biomni.tool.biophysics import predict_protein_disorder_regions
-    if len(sys.argv) != 2:
-        print("Usage: predict_protein_disorder_regions.py <input_json>")
-        sys.exit(1)
 
-    with open(sys.argv[1], 'r') as f:
-        inputs = json.load(f)
-
-    protein_sequence = inputs['protein_sequence']
-    threshold = inputs.get('threshold', 0.5)
-    output_file = inputs.get('output_file', 'disorder_prediction_results.csv')
+    # Create output directory and set output_file path
+    os.makedirs(args.output, exist_ok=True)
+    output_csv_file = os.path.join(args.output, 'disorder_prediction_results.csv')
 
     result = predict_protein_disorder_regions(
         protein_sequence=protein_sequence,
         threshold=threshold,
-        output_file=output_file
+        output_file=output_csv_file
     )
 
-    print(json.dumps({"result": result}))
+    output_file = os.path.join(args.output, 'disorder_results.json')
+    with open(output_file, 'w') as f:
+        json.dump({"result": result}, f, indent=2)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == "__main__":

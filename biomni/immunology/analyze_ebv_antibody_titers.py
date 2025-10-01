@@ -3,8 +3,10 @@
 Camber wrapper for analyze_ebv_antibody_titers from biomni.tool.immunology
 """
 
+import argparse
 import sys
 import json
+import os
 
 
 
@@ -19,26 +21,34 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Analyze EBV antibody titers from ELISA data'
+    )
+    parser.add_argument('input_file', help='JSON file with sample data')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
+
+    # Load input data
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
+    sample_data = input_data['sample_data']
 
     # Import after dependencies are installed
     from biomni.tool.immunology import analyze_ebv_antibody_titers
-    if len(sys.argv) < 2:
-        print("Usage: analyze_ebv_antibody_titers.py <sample_data_json> [output_dir]")
-        print("\nsample_data format: JSON string of list containing dicts with keys: sample_id, vca_igg_od, ea_igg_od, ebna_igg_od")
-        print("Example: '[{\"sample_id\": \"S001\", \"vca_igg_od\": 0.8, \"ea_igg_od\": 0.3, \"ebna_igg_od\": 1.2}]'")
-        sys.exit(1)
-
-    sample_data = json.loads(sys.argv[1])
-    output_dir = sys.argv[2] if len(sys.argv) > 2 else "."
 
     result = analyze_ebv_antibody_titers(
         sample_data=sample_data,
-        output_dir=output_dir
+        output_dir=args.output
     )
 
-    print(result)
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'ebv_antibody_results.txt')
+    with open(output_file, 'w') as f:
+        f.write(result)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == "__main__":

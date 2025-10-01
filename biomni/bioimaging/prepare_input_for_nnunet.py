@@ -3,8 +3,10 @@
 Prepare input data for nnUNet processing.
 """
 
+import argparse
 import sys
 import json
+import os
 
 
 
@@ -19,16 +21,19 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Prepare input data for nnUNet processing'
+    )
+    parser.add_argument('input_file', help='JSON config file from stash')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.bioimaging import prepare_input_for_nnunet
-    if len(sys.argv) != 2:
-        print("Error: Expected config file as argument", file=sys.stderr)
-        sys.exit(1)
 
-    with open(sys.argv[1], 'r') as f:
+    with open(args.input_file, 'r') as f:
         config = json.load(f)
 
     input_path = config['input_path']
@@ -41,10 +46,14 @@ def main():
         case_name=case_name
     )
 
-    print(json.dumps({
-        "prepared_dir": result,
-        "status": "success"
-    }))
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'nnunet_preparation_results.json')
+    with open(output_file, 'w') as f:
+        json.dump({
+            "prepared_dir": result,
+            "status": "success"
+        }, f, indent=2)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == '__main__':

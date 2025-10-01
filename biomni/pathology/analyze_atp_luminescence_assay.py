@@ -5,8 +5,10 @@ Analyze ATP Luminescence Assay
 Analyze luminescence-based ATP concentration.
 """
 
+import argparse
 import sys
 import json
+import os
 
 
 
@@ -21,16 +23,20 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Analyze luminescence-based ATP concentration'
+    )
+    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
+
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.pathology import analyze_atp_luminescence_assay
-    if len(sys.argv) != 2:
-        print("Usage: analyze_atp_luminescence_assay.py <input_json>")
-        sys.exit(1)
 
-    with open(sys.argv[1], 'r') as f:
+    with open(args.input_file, 'r') as f:
         inputs = json.load(f)
 
     data_file = inputs['data_file']
@@ -45,7 +51,11 @@ def main():
         normalization_data=normalization_data
     )
 
-    print(json.dumps({"result": result}))
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'result.json')
+    with open(output_file, 'w') as f:
+        json.dump({"result": result}, f, indent=2)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == "__main__":

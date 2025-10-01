@@ -4,6 +4,8 @@ Wrapper for Biomni simulate_protein_signaling_network tool
 """
 import sys
 import json
+import argparse
+import os
 
 
 def install_dependencies():
@@ -17,25 +19,38 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Simulate protein signaling network using Biomni'
+    )
+    parser.add_argument('input_file', help='JSON file with network parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
+
+    # Load input parameters
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
+    network_structure = input_data.get('network_structure')
+    reaction_params = input_data.get('reaction_params')
+    species_params = input_data.get('species_params')
+    simulation_time = input_data.get('simulation_time', 100)
+    time_points = input_data.get('time_points', 1000)
 
     # Import after dependencies are installed
     from biomni.tool.systems_biology import simulate_protein_signaling_network
-    if len(sys.argv) < 4:
-        print("Usage: simulate_protein_signaling_network.py <network_structure_json> <reaction_params_json> <species_params_json> [simulation_time] [time_points]")
-        sys.exit(1)
-
-    network_structure = json.loads(sys.argv[1])
-    reaction_params = json.loads(sys.argv[2])
-    species_params = json.loads(sys.argv[3])
-    simulation_time = float(sys.argv[4]) if len(sys.argv) > 4 else 100
-    time_points = int(sys.argv[5]) if len(sys.argv) > 5 else 1000
 
     result = simulate_protein_signaling_network(
         network_structure, reaction_params, species_params, simulation_time, time_points
     )
-    print(result)
+
+    # Create output directory and write result
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'signaling_network_results.txt')
+    with open(output_file, 'w') as f:
+        f.write(result)
+    print(f"Complete! Results: {output_file}")
 
 if __name__ == "__main__":
     main()

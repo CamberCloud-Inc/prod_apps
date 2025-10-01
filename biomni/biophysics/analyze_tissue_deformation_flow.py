@@ -1,42 +1,36 @@
 #!/usr/bin/env python3
+"""Biomni Tool: Analyze Tissue Deformation Flow
+Wraps: biomni.tool.biophysics.analyze_tissue_deformation_flow
 """
-Analyze Tissue Deformation Flow
-
-Quantify tissue deformation and flow dynamics from microscopy image sequence.
-"""
-
+import argparse
 import sys
+import subprocess
+import os
 import json
-import numpy as np
-
-
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Quantify tissue deformation and flow dynamics from microscopy image sequence'
+    )
+    parser.add_argument('input_file', help='JSON file with input parameters from stash')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
-    # Import after dependencies are installed
-    from biomni.tool.biophysics import analyze_tissue_deformation_flow
-    if len(sys.argv) != 2:
-        print("Usage: analyze_tissue_deformation_flow.py <input_json>")
-        sys.exit(1)
+    # Load input parameters
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
 
-    with open(sys.argv[1], 'r') as f:
-        inputs = json.load(f)
-
-    image_sequence = inputs['image_sequence']
-    output_dir = inputs.get('output_dir', 'results')
-    pixel_scale = inputs.get('pixel_scale', 1.0)
+    image_sequence = input_data['image_sequence']
+    pixel_scale = input_data.get('pixel_scale', 1.0)
 
     # Convert image_sequence to list if it's a path or list of paths
     if isinstance(image_sequence, str):
@@ -44,13 +38,19 @@ def main():
         import glob
         image_sequence = sorted(glob.glob(image_sequence))
 
+    from biomni.tool.biophysics import analyze_tissue_deformation_flow
+
     result = analyze_tissue_deformation_flow(
         image_sequence=image_sequence,
-        output_dir=output_dir,
+        output_dir=args.output,
         pixel_scale=pixel_scale
     )
 
-    print(json.dumps({"result": result}))
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'tissue_deformation_results.json')
+    with open(output_file, 'w') as f:
+        json.dump({"result": result}, f, indent=2)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == "__main__":

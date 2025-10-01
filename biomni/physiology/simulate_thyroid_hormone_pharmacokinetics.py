@@ -6,15 +6,15 @@ Simulates the transport and binding of thyroid hormones across different tissue 
 using an ODE-based pharmacokinetic model.
 """
 
+import argparse
 import sys
 import json
-
+import os
+import subprocess
 
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
     print("Installing dependencies...")
     for dep in deps:
@@ -22,16 +22,19 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Simulate Thyroid Hormone Pharmacokinetics'
+    )
+    parser.add_argument('input_file', help='Input JSON file with parameters, initial_conditions and optional time settings')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.physiology import simulate_thyroid_hormone_pharmacokinetics
-    if len(sys.argv) != 2:
-        print("Usage: simulate_thyroid_hormone_pharmacokinetics.py <input_json>")
-        sys.exit(1)
 
-    with open(sys.argv[1], 'r') as f:
+    with open(args.input_file, 'r') as f:
         inputs = json.load(f)
 
     parameters = inputs['parameters']
@@ -46,7 +49,11 @@ def main():
         time_points=time_points
     )
 
-    print(json.dumps({"result": result}))
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'thyroid_hormone_pharmacokinetics_results.json')
+    with open(output_file, 'w') as f:
+        json.dump({"result": result}, f, indent=2)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == "__main__":

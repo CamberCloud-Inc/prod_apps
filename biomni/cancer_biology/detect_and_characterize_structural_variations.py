@@ -3,8 +3,10 @@
 Wrapper for Biomni detect_and_characterize_structural_variations tool
 """
 
+import argparse
 import sys
 import json
+import os
 
 
 
@@ -19,16 +21,19 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Detect and characterize structural variations'
+    )
+    parser.add_argument('input_file', help='JSON file with parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.cancer_biology import detect_and_characterize_structural_variations
-    if len(sys.argv) != 2:
-        print("Usage: detect_and_characterize_structural_variations.py <input_json>")
-        sys.exit(1)
 
-    with open(sys.argv[1], 'r') as f:
+    with open(args.input_file, 'r') as f:
         params = json.load(f)
 
     bam_file_path = params['bam_file_path']
@@ -45,7 +50,11 @@ def main():
         clinvar_db_path=clinvar_db_path
     )
 
-    print(result)
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'structural_variations_results.txt')
+    with open(output_file, 'w') as f:
+        f.write(result)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == '__main__':

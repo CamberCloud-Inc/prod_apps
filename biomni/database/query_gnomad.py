@@ -1,59 +1,48 @@
+#!/usr/bin/env python3
 """
-Camber wrapper for biomni.tool.database.query_gnomad
+Biomni Tool: Query gnomAD
+Wraps: biomni.tool.database.query_gnomad
 """
-
+import argparse
+import sys
+import subprocess
+import os
 import json
-
-
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
-def main(prompt=None, gene_symbol=None, verbose=True):
-    
+def main():
+    parser = argparse.ArgumentParser(
+        description='Query gnomAD for variants in a gene'
+    )
+    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
-    # Import after dependencies are installed
+    # Load input parameters
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
     from biomni.tool.database import query_gnomad
-    """
-    Wrapper for query_gnomad from biomni.tool.database
-    
-    Query gnomAD for variants in a gene using natural language or direct gene symbol.
 
-    Parameters
-    ----------
-    prompt (str, required): Natural language query about genetic variants
-    gene_symbol (str, optional): Gene symbol (e.g., "BRCA1")
-    verbose (bool): Whether to print verbose output
+    result = query_gnomad(
+        prompt=input_data.get('prompt'),
+        gene_symbol=input_data.get('gene_symbol'),
+        verbose=input_data.get('verbose', True)
+    )
 
-    Returns
-    -------
-    dict: Dictionary containing the query results or error information
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'gnomad_results.json')
+    with open(output_file, 'w') as f:
+        json.dump(result, f, indent=2, default=str)
+    print(f"Complete! Results: {output_file}")
 
-    Examples
-    --------
-    - Direct gene: query_gnomad(gene_symbol="BRCA1")
-    - Natural language: 
-    """
-    result = query_gnomad(prompt=prompt, gene_symbol=gene_symbol, verbose=verbose)
-    print(json.dumps(result, indent=2, default=str))
-
-
-if __name__ == "__main__":
-    import sys
-    import argparse
-    
-    parser = argparse.ArgumentParser(description='query_gnomad')
-    parser.add_argument('--prompt', type=str, default=None, help='prompt')
-    parser.add_argument('--gene_symbol', type=str, default=None, help='gene_symbol')
-    parser.add_argument('--verbose', type=bool, default=True, help='verbose')
-    
-    args = parser.parse_args()
-    main(**vars(args))
+if __name__ == '__main__':
+    main()

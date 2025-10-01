@@ -34,13 +34,12 @@ def main():
                         help='Insert lengths in bp (space-separated)')
     parser.add_argument('--library-prep', action='store_true',
                         help='Protocol is for library preparation')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
     # Create output directory if it doesn't exist
-    os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs(args.output, exist_ok=True)
 
     print(f"\nGenerating Golden Gate assembly protocol...")
     print(f"Enzyme: {args.enzyme}")
@@ -60,20 +59,17 @@ def main():
 
         # Generate output filename
         output_filename = "golden_gate_protocol.json"
-        output_path = os.path.join(args.output_dir, output_filename)
+        output_path = os.path.join(args.output, output_filename)
 
         # Write protocol to JSON
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(protocol, f, indent=2, ensure_ascii=False, default=str)
 
-        print(f"\nProtocol saved to: {output_path}")
-        print(f"Protocol: {protocol['title']}")
+        print(f"Complete! Results: {output_path}")
 
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
-
-    print("\nProtocol generation completed successfully!")
 
 
 if __name__ == "__main__":

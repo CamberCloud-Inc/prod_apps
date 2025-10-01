@@ -1,6 +1,11 @@
+#!/usr/bin/env python3
+"""Biomni Tool: Perform PCR and Gel Electrophoresis
+Wraps: biomni.tool.genetics.perform_pcr_and_gel_electrophoresis
+"""
 import subprocess
 import sys
 import argparse
+import os
 
 # Install required dependencies
 subprocess.check_call([sys.executable, "-m", "pip", "install", "biopython", "matplotlib", "numpy"])
@@ -39,8 +44,7 @@ def main():
                         help='Agarose gel percentage (default: 2.0)')
     parser.add_argument('-p', '--output-prefix', default='pcr_result',
                         help='Prefix for output files (default: pcr_result)')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
@@ -53,8 +57,6 @@ def main():
     print(f"  Gel percentage: {args.gel_percentage}%")
 
     try:
-        import os
-
         # Parse target region if provided
         target_region = None
         if args.target_region:
@@ -64,8 +66,8 @@ def main():
                 print(f"  Target region: {target_region}")
 
         # Set up output directory
-        os.makedirs(args.output_dir, exist_ok=True)
-        output_prefix = os.path.join(args.output_dir, args.output_prefix)
+        os.makedirs(args.output, exist_ok=True)
+        output_prefix = os.path.join(args.output, args.output_prefix)
 
         result = perform_pcr_and_gel_electrophoresis(
             genomic_dna=args.genomic_dna,
@@ -79,25 +81,17 @@ def main():
             output_prefix=output_prefix
         )
 
-        print("\n" + "="*80)
-        print("ANALYSIS RESULTS")
-        print("="*80)
-        print(result)
-
         # Save log to file
-        log_file = os.path.join(args.output_dir, f"{args.output_prefix}_log.txt")
+        log_file = os.path.join(args.output, f"{args.output_prefix}_log.txt")
         with open(log_file, 'w') as f:
             f.write(result)
-
-        print(f"\nAnalysis log saved to: {log_file}")
+        print(f"Complete! Results: {log_file}")
 
     except Exception as e:
         print(f"Error during PCR and gel electrophoresis simulation: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
-
-    print("\nPCR and gel electrophoresis simulation completed!")
 
 
 if __name__ == "__main__":

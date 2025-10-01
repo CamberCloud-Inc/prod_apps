@@ -1,6 +1,11 @@
+#!/usr/bin/env python3
+"""Biomni Tool: Liftover Coordinates
+Wraps: biomni.tool.genetics.liftover_coordinates
+"""
 import subprocess
 import sys
 import argparse
+import os
 
 # Install required dependencies
 subprocess.check_call([sys.executable, "-m", "pip", "install", "pyliftover"])
@@ -30,8 +35,7 @@ def main():
     parser.add_argument('input_format', help='Input genome build (hg19 or hg38)')
     parser.add_argument('output_format', help='Output genome build (hg19 or hg38)')
     parser.add_argument('data_path', help='Path to liftover chain files')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
@@ -49,25 +53,16 @@ def main():
             data_path=args.data_path
         )
 
-        print("\n" + "="*80)
-        print("ANALYSIS RESULTS")
-        print("="*80)
-        print(result)
-
         # Save results to file
-        import os
-        os.makedirs(args.output_dir, exist_ok=True)
-        output_file = os.path.join(args.output_dir, f"liftover_{args.chromosome}_{args.position}_results.txt")
+        os.makedirs(args.output, exist_ok=True)
+        output_file = os.path.join(args.output, f"liftover_{args.chromosome}_{args.position}_results.txt")
         with open(output_file, 'w') as f:
             f.write(result)
-
-        print(f"\nResults saved to: {output_file}")
+        print(f"Complete! Results: {output_file}")
 
     except Exception as e:
         print(f"Error during liftover analysis: {e}")
         sys.exit(1)
-
-    print("\nLiftover coordinates analysis completed!")
 
 
 if __name__ == "__main__":

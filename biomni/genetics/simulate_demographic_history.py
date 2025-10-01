@@ -1,7 +1,12 @@
+#!/usr/bin/env python3
+"""Biomni Tool: Simulate Demographic History
+Wraps: biomni.tool.genetics.simulate_demographic_history
+"""
 import subprocess
 import sys
 import argparse
 import json
+import os
 
 # Install required dependencies
 subprocess.check_call([sys.executable, "-m", "pip", "install", "msprime"])
@@ -45,8 +50,7 @@ def main():
     parser.add_argument('-s', '--random-seed', type=int, help='Random seed for reproducibility (optional)')
     parser.add_argument('-f', '--output-file', default='simulated_sequences.vcf',
                         help='Output filename for VCF (default: simulated_sequences.vcf)')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
@@ -60,8 +64,6 @@ def main():
     print(f"  Coalescent model: {args.coalescent_model}")
 
     try:
-        import os
-
         # Load demographic parameters if provided
         demographic_params = None
         if args.demographic_params:
@@ -69,9 +71,9 @@ def main():
             with open(args.demographic_params, 'r') as f:
                 demographic_params = json.load(f)
 
-        # Change to output directory
-        os.makedirs(args.output_dir, exist_ok=True)
-        output_file = os.path.join(args.output_dir, args.output_file)
+        # Create output directory
+        os.makedirs(args.output, exist_ok=True)
+        output_file = os.path.join(args.output, args.output_file)
 
         result = simulate_demographic_history(
             num_samples=args.num_samples,
@@ -86,25 +88,17 @@ def main():
             output_file=output_file
         )
 
-        print("\n" + "="*80)
-        print("SIMULATION RESULTS")
-        print("="*80)
-        print(result)
-
         # Save log to file
-        log_file = os.path.join(args.output_dir, "demographic_simulation_log.txt")
+        log_file = os.path.join(args.output, "demographic_simulation_log.txt")
         with open(log_file, 'w') as f:
             f.write(result)
-
-        print(f"\nSimulation log saved to: {log_file}")
+        print(f"Complete! Results: {log_file}")
 
     except Exception as e:
         print(f"Error during demographic history simulation: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
-
-    print("\nDemographic history simulation completed!")
 
 
 if __name__ == "__main__":

@@ -5,6 +5,8 @@ Quantify biofilm biomass using the crystal violet staining method.
 
 import sys
 import json
+import argparse
+import os
 
 
 
@@ -19,13 +21,21 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Quantify biofilm biomass using the crystal violet staining method.'
+    )
+    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+    args = parser.parse_args()
+
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.microbiology import quantify_biofilm_biomass_crystal_violet
-    # Read input from stdin
-    input_data = json.loads(sys.stdin.read())
+
+    # Read input from file
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
 
     # Extract parameters
     absorbance_readings = input_data.get('absorbance_readings')
@@ -39,11 +49,12 @@ def main():
         sample_names=sample_names
     )
 
-    # Output result as JSON
-    output = {
-        "research_log": result
-    }
-    print(json.dumps(output, indent=2))
+    # Write result to output file
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'biofilm_quantification_results.txt')
+    with open(output_file, 'w') as f:
+        f.write(result)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == "__main__":

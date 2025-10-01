@@ -1,59 +1,47 @@
+#!/usr/bin/env python3
 """
-Camber wrapper for biomni.tool.database.query_iucn
+Biomni Tool: Query IUCN
+Wraps: biomni.tool.database.query_iucn
 """
-
+import argparse
+import sys
+import subprocess
+import os
 import json
-
-
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
-def main(prompt=None, endpoint=None, token="", verbose=True):
-    
+def main():
+    parser = argparse.ArgumentParser(
+        description='Query the IUCN Red List API'
+    )
+    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
-    # Import after dependencies are installed
+    # Load input parameters
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
     from biomni.tool.database import query_iucn
-    """
-    Wrapper for query_iucn from biomni.tool.database
-    
-    Query the IUCN Red List API using natural language or a direct endpoint.
 
-    Parameters
-    ----------
-    prompt (str, required): Natural language query about species conservation status
-    endpoint (str, optional): API endpoint name (e.g., "species/id/12392") or full URL
-    token (str): IUCN API token - required for all queries
-    verbose (bool): Whether to print verbose output
+    result = query_iucn(prompt=input_data.get('prompt'),
+        endpoint=input_data.get('endpoint'),
+        token=input_data.get('token'),
+        verbose=input_data.get('verbose'))
 
-    Returns
-    -------
-    dict: Dictionary containing the query results or error information
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'iucn_results.json')
+    with open(output_file, 'w') as f:
+        json.dump(result, f, indent=2, default=str)
+    print(f"Complete! Results: {output_file}")
 
-    Examples
-   
-    """
-    result = query_iucn(prompt=prompt, endpoint=endpoint, token=token, verbose=verbose)
-    print(json.dumps(result, indent=2, default=str))
-
-
-if __name__ == "__main__":
-    import sys
-    import argparse
-    
-    parser = argparse.ArgumentParser(description='query_iucn')
-    parser.add_argument('--prompt', type=str, default=None, help='prompt')
-    parser.add_argument('--endpoint', type=str, default=None, help='endpoint')
-    parser.add_argument('--token', type=str, default="", help='token')
-    parser.add_argument('--verbose', type=bool, default=True, help='verbose')
-    
-    args = parser.parse_args()
-    main(**vars(args))
+if __name__ == '__main__':
+    main()

@@ -26,13 +26,12 @@ def main():
     parser.add_argument('reference_sequence', help='Reference sequence to compare against')
     parser.add_argument('--query-start', type=int, default=1,
                         help='Start position of query sequence (default: 1)')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
     # Create output directory if it doesn't exist
-    os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs(args.output, exist_ok=True)
 
     print(f"\nComparing sequences for mutations...")
     print(f"Query length: {len(args.query_sequence)}")
@@ -47,25 +46,17 @@ def main():
 
         # Generate output filename
         output_filename = "mutations.json"
-        output_path = os.path.join(args.output_dir, output_filename)
+        output_path = os.path.join(args.output, output_filename)
 
         # Write results to JSON
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(result, f, indent=2, ensure_ascii=False)
 
-        print(f"\nResults saved to: {output_path}")
-        if result.get('success'):
-            print(f"Mutations found: {len(result.get('mutations', []))}")
-            for mut in result.get('mutations', []):
-                print(f"  {mut}")
-        else:
-            print("Comparison failed")
+        print(f"Complete! Results: {output_path}")
 
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
-
-    print("\nMutation analysis completed successfully!")
 
 
 if __name__ == "__main__":

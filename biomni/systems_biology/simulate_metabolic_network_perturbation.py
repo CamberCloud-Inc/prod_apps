@@ -4,6 +4,8 @@ Wrapper for Biomni simulate_metabolic_network_perturbation tool
 """
 import sys
 import json
+import argparse
+import os
 
 
 def install_dependencies():
@@ -17,25 +19,38 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Simulate metabolic network perturbation using Biomni'
+    )
+    parser.add_argument('input_file', help='JSON file with simulation parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
+
+    # Load input parameters
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
+    model_file = input_data.get('model_file')
+    initial_concentrations = input_data.get('initial_concentrations')
+    perturbation_params = input_data.get('perturbation_params')
+    simulation_time = input_data.get('simulation_time', 100)
+    time_points = input_data.get('time_points', 1000)
 
     # Import after dependencies are installed
     from biomni.tool.systems_biology import simulate_metabolic_network_perturbation
-    if len(sys.argv) < 4:
-        print("Usage: simulate_metabolic_network_perturbation.py <model_file> <initial_concentrations_json> <perturbation_params_json> [simulation_time] [time_points]")
-        sys.exit(1)
-
-    model_file = sys.argv[1]
-    initial_concentrations = json.loads(sys.argv[2])
-    perturbation_params = json.loads(sys.argv[3])
-    simulation_time = float(sys.argv[4]) if len(sys.argv) > 4 else 100
-    time_points = int(sys.argv[5]) if len(sys.argv) > 5 else 1000
 
     result = simulate_metabolic_network_perturbation(
         model_file, initial_concentrations, perturbation_params, simulation_time, time_points
     )
-    print(result)
+
+    # Create output directory and write result
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'metabolic_network_results.txt')
+    with open(output_file, 'w') as f:
+        f.write(result)
+    print(f"Complete! Results: {output_file}")
 
 if __name__ == "__main__":
     main()

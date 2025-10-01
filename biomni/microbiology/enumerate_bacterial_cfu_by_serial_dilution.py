@@ -5,6 +5,8 @@ Quantify bacterial concentration (CFU/mL) using serial dilutions and spot platin
 
 import sys
 import json
+import argparse
+import os
 
 
 
@@ -19,13 +21,21 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Quantify bacterial concentration (CFU/mL) using serial dilutions and spot plating.'
+    )
+    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+    args = parser.parse_args()
+
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.microbiology import enumerate_bacterial_cfu_by_serial_dilution
-    # Read input from stdin
-    input_data = json.loads(sys.stdin.read())
+
+    # Read input from file
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
 
     # Extract parameters
     initial_sample_volume_ml = input_data.get('initial_sample_volume_ml', 1.0)
@@ -45,11 +55,12 @@ def main():
         output_file=output_file
     )
 
-    # Output result as JSON
-    output = {
-        "research_log": result
-    }
-    print(json.dumps(output, indent=2))
+    # Write result to output file
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'cfu_enumeration_results.txt')
+    with open(output_file, 'w') as f:
+        f.write(result)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == "__main__":

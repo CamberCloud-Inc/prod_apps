@@ -3,15 +3,15 @@
 Camber app wrapper for create_biochemical_network_sbml_model from biomni.tool.synthetic_biology
 """
 
+import argparse
 import sys
 import json
-
+import os
+import subprocess
 
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
     print("Installing dependencies...")
     for dep in deps:
@@ -19,14 +19,21 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Create biochemical network SBML model'
+    )
+    parser.add_argument('input_file', help='JSON file with input parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.synthetic_biology import create_biochemical_network_sbml_model
-    """Main function for Camber app wrapper"""
-    # Read input from stdin
-    input_data = json.loads(sys.stdin.read())
+
+    # Read input from file
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
 
     # Extract parameters
     reaction_network = input_data.get("reaction_network")
@@ -40,8 +47,12 @@ def main():
         output_file=output_file
     )
 
-    # Output result
-    print(result)
+    # Write result to file
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'sbml_model_result.txt')
+    with open(output_file, 'w') as f:
+        f.write(result)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == "__main__":

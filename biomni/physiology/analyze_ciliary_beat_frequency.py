@@ -5,15 +5,15 @@ Analyze Ciliary Beat Frequency
 Analyze ciliary beat frequency from high-speed video microscopy data using FFT analysis.
 """
 
+import argparse
 import sys
 import json
-
+import os
+import subprocess
 
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
     print("Installing dependencies...")
     for dep in deps:
@@ -21,16 +21,19 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Analyze Ciliary Beat Frequency'
+    )
+    parser.add_argument('input_file', help='Input JSON file with video_path and optional parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.physiology import analyze_ciliary_beat_frequency
-    if len(sys.argv) != 2:
-        print("Usage: analyze_ciliary_beat_frequency.py <input_json>")
-        sys.exit(1)
 
-    with open(sys.argv[1], 'r') as f:
+    with open(args.input_file, 'r') as f:
         inputs = json.load(f)
 
     video_path = inputs['video_path']
@@ -47,7 +50,11 @@ def main():
         output_dir=output_dir
     )
 
-    print(json.dumps({"result": result}))
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'ciliary_beat_frequency_results.json')
+    with open(output_file, 'w') as f:
+        json.dump({"result": result}, f, indent=2)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == "__main__":

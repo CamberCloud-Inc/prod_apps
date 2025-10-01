@@ -5,8 +5,10 @@ Analyze Protease Kinetics
 Analyze protease kinetics data from fluorogenic peptide cleavage assays.
 """
 
+import argparse
 import sys
 import json
+import os
 
 
 
@@ -21,16 +23,19 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Analyze protease kinetics data from fluorogenic peptide cleavage assays'
+    )
+    parser.add_argument('input_file', help='JSON file with protease kinetics data')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.biochemistry import analyze_protease_kinetics
-    if len(sys.argv) != 2:
-        print("Usage: analyze_protease_kinetics.py <input_json>")
-        sys.exit(1)
 
-    with open(sys.argv[1], 'r') as f:
+    with open(args.input_file, 'r') as f:
         inputs = json.load(f)
 
     time_points = inputs['time_points']
@@ -49,7 +54,11 @@ def main():
         output_dir=output_dir
     )
 
-    print(json.dumps({"result": result}))
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'protease_kinetics_results.json')
+    with open(output_file, 'w') as f:
+        json.dump({"result": result}, f, indent=2)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == "__main__":

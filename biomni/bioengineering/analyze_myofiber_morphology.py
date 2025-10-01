@@ -2,6 +2,7 @@ import subprocess
 import sys
 import os
 import argparse
+import json
 
 # Install required packages
 subprocess.check_call([sys.executable, "-m", "pip", "install", "numpy", "pandas", "scikit-image"])
@@ -20,26 +21,26 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+
     install_dependencies()
 
     # Import after dependencies are installed
     from biomni.tool.bioengineering import analyze_myofiber_morphology
     parser = argparse.ArgumentParser(description='Quantify morphological properties of myofibers in microscopy images')
-    parser.add_argument('image_path', help='Path to the microscopy image file (multichannel with nuclei and myofiber staining)')
-    parser.add_argument('--nuclei-channel', type=int, default=2,
-                        help='Channel index containing nuclei staining (default: 2)')
-    parser.add_argument('--myofiber-channel', type=int, default=1,
-                        help='Channel index containing myofiber staining (default: 1)')
-    parser.add_argument('--threshold-method', choices=['otsu', 'adaptive', 'manual'], default='otsu',
-                        help='Thresholding method to use (default: otsu)')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('input_file', help='JSON file containing input parameters')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
-    # Expand user path if provided
-    image_path = os.path.expanduser(args.image_path)
+    # Read input from file
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
+    image_path = os.path.expanduser(input_data['image_path'])
+    nuclei_channel = input_data.get('nuclei_channel', 2)
+    myofiber_channel = input_data.get('myofiber_channel', 1)
+    threshold_method = input_data.get('threshold_method', 'otsu')
+
     print(f"Analyzing myofiber morphology from: {image_path}")
 
     if not os.path.exists(image_path):
@@ -47,28 +48,28 @@ def main():
         sys.exit(1)
 
     # Create output directory if it doesn't exist
-    os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs(args.output, exist_ok=True)
 
     # Run the analysis
     try:
         result = analyze_myofiber_morphology(
             image_path=image_path,
-            nuclei_channel=args.nuclei_channel,
-            myofiber_channel=args.myofiber_channel,
-            threshold_method=args.threshold_method,
-            output_dir=args.output_dir
+            nuclei_channel=nuclei_channel,
+            myofiber_channel=myofiber_channel,
+            threshold_method=threshold_method,
+            output_dir=args.output
         )
-        print("\n" + "="*80)
-        print("ANALYSIS RESULTS")
-        print("="*80)
-        print(result)
+
+        # Write result to file
+        output_file = os.path.join(args.output, 'myofiber_morphology_results.txt')
+        with open(output_file, 'w') as f:
+            f.write(result)
+        print(f"Complete! Results: {output_file}")
     except Exception as e:
         print(f"Error during analysis: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
-
-    print("\nMyofiber morphology analysis completed successfully!")
 
 
 if __name__ == "__main__":

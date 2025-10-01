@@ -1,57 +1,48 @@
+#!/usr/bin/env python3
 """
-Camber wrapper for biomni.tool.database.query_stringdb
+Biomni Tool: Query STRING
+Wraps: biomni.tool.database.query_stringdb
 """
-
+import argparse
+import sys
+import subprocess
+import os
 import json
-
-
 
 def install_dependencies():
     """Install required dependencies"""
-    import subprocess
-    import sys
     deps = ['biomni']
-    print("Installing dependencies...")
     for dep in deps:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"Installing {dep}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
 
-def main(prompt=None, endpoint=None, download_image=False, output_dir=None, verbose=True):
-    
+def main():
+    parser = argparse.ArgumentParser(
+        description='Query the STRING protein interaction database'
+    )
+    parser.add_argument('input_file', help='JSON file with parameters from stash')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
 
-    # Import after dependencies are installed
+    # Load input parameters
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
     from biomni.tool.database import query_stringdb
-    """
-    Wrapper for query_stringdb from biomni.tool.database
-    
-    Query the STRING protein interaction database using natural language or direct endpoint.
 
-    Parameters
-    ----------
-    prompt (str, required): Natural language query about protein interactions
-    endpoint (str, optional): Full URL to query directly (overrides prompt)
-    download_image (bool): Whether to download image results (for image endpoints)
-    output_dir (str, optional): Directory to save downloaded files (default: current directory)
+    result = query_stringdb(prompt=input_data.get('prompt'),
+        endpoint=input_data.get('endpoint'),
+        download_image=input_data.get('download_image'),
+        output_dir=input_data.get('output_dir'),
+        verbose=input_data.get('verbose'))
 
-    Returns
-    -------
-    dict: Dictionary c
-    """
-    result = query_stringdb(prompt=prompt, endpoint=endpoint, download_image=download_image, output_dir=output_dir, verbose=verbose)
-    print(json.dumps(result, indent=2, default=str))
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'stringdb_results.json')
+    with open(output_file, 'w') as f:
+        json.dump(result, f, indent=2, default=str)
+    print(f"Complete! Results: {output_file}")
 
-
-if __name__ == "__main__":
-    import sys
-    import argparse
-    
-    parser = argparse.ArgumentParser(description='query_stringdb')
-    parser.add_argument('--prompt', type=str, default=None, help='prompt')
-    parser.add_argument('--endpoint', type=str, default=None, help='endpoint')
-    parser.add_argument('--download_image', type=bool, default=False, help='download_image')
-    parser.add_argument('--output_dir', type=str, default=None, help='output_dir')
-    parser.add_argument('--verbose', type=bool, default=True, help='verbose')
-    
-    args = parser.parse_args()
-    main(**vars(args))
+if __name__ == '__main__':
+    main()

@@ -3,8 +3,10 @@
 Camber wrapper for estimate_cell_cycle_phase_durations from biomni.tool.immunology
 """
 
+import argparse
 import sys
 import json
+import os
 
 
 
@@ -19,26 +21,35 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
+    parser = argparse.ArgumentParser(
+        description='Estimate cell cycle phase durations from flow cytometry data'
+    )
+    parser.add_argument('input_file', help='JSON file with flow cytometry data and initial estimates')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
+
+    args = parser.parse_args()
     install_dependencies()
+
+    # Load input data
+    with open(args.input_file, 'r') as f:
+        input_data = json.load(f)
+
+    flow_cytometry_data = input_data['flow_cytometry_data']
+    initial_estimates = input_data['initial_estimates']
 
     # Import after dependencies are installed
     from biomni.tool.immunology import estimate_cell_cycle_phase_durations
-    if len(sys.argv) < 3:
-        print("Usage: estimate_cell_cycle_phase_durations.py <flow_cytometry_data_json> <initial_estimates_json>")
-        print("\nflow_cytometry_data format: {\"time_points\": [...], \"edu_positive\": [...], \"brdu_positive\": [...], \"double_positive\": [...]}")
-        print("initial_estimates format: {\"g1_duration\": ..., \"s_duration\": ..., \"g2m_duration\": ..., \"death_rate\": ...}")
-        sys.exit(1)
-
-    flow_cytometry_data = json.loads(sys.argv[1])
-    initial_estimates = json.loads(sys.argv[2])
 
     result = estimate_cell_cycle_phase_durations(
         flow_cytometry_data=flow_cytometry_data,
         initial_estimates=initial_estimates
     )
 
-    print(result)
+    os.makedirs(args.output, exist_ok=True)
+    output_file = os.path.join(args.output, 'cell_cycle_results.txt')
+    with open(output_file, 'w') as f:
+        f.write(result)
+    print(f"Complete! Results: {output_file}")
 
 
 if __name__ == "__main__":

@@ -36,13 +36,12 @@ def main():
                         help='Maximum melting temperature (default: 65.0)')
     parser.add_argument('--search-window', type=int, default=100,
                         help='Search window size (default: 100)')
-    parser.add_argument('-o', '--output-dir', default='./',
-                        help='Output directory for results (default: ./)')
+    parser.add_argument('-o', '--output', required=True, help='Output directory')
 
     args = parser.parse_args()
 
     # Create output directory if it doesn't exist
-    os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs(args.output, exist_ok=True)
 
     print(f"\nDesigning primer...")
     print(f"Sequence length: {len(args.sequence)} bp")
@@ -63,26 +62,17 @@ def main():
 
         # Generate output filename
         output_filename = "designed_primer.json"
-        output_path = os.path.join(args.output_dir, output_filename)
+        output_path = os.path.join(args.output, output_filename)
 
         # Write result to JSON
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(primer, f, indent=2, ensure_ascii=False)
 
-        print(f"\nResults saved to: {output_path}")
-        if primer:
-            print(f"Primer sequence: {primer['sequence']}")
-            print(f"Position: {primer['position']}")
-            print(f"GC content: {primer['gc']:.2%}")
-            print(f"Tm: {primer['tm']:.1f}°C")
-        else:
-            print("No suitable primer found")
+        print(f"Complete! Results: {output_path}")
 
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
-
-    print("\nPrimer design completed!")
 
 
 if __name__ == "__main__":
