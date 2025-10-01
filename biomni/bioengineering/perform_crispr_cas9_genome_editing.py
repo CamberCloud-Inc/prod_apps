@@ -4,7 +4,6 @@ import argparse
 import json
 
 # No external packages needed for this tool
-from biomni.tool.bioengineering import perform_crispr_cas9_genome_editing
 
 
 
@@ -21,6 +20,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.bioengineering import perform_crispr_cas9_genome_editing
     parser = argparse.ArgumentParser(description='Simulate CRISPR-Cas9 genome editing process')
     parser.add_argument('guide_rna_sequences', help='JSON string or comma-separated list of guide RNA sequences (20 nucleotides each)')
     parser.add_argument('target_genomic_loci', help='Target genomic sequence to be edited')

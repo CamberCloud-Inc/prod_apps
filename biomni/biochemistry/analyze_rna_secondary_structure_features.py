@@ -7,7 +7,6 @@ Calculate numeric values for various structural features of an RNA secondary str
 
 import sys
 import json
-from biomni.tool.biochemistry import analyze_rna_secondary_structure_features
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.biochemistry import analyze_rna_secondary_structure_features
     if len(sys.argv) != 2:
         print("Usage: analyze_rna_secondary_structure_features.py <input_json>")
         sys.exit(1)

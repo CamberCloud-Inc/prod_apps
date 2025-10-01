@@ -2,7 +2,6 @@
 Camber wrapper for biomni.tool.database.query_gnomad
 """
 
-from biomni.tool.database import query_gnomad
 import json
 
 
@@ -20,6 +19,9 @@ def install_dependencies():
 def main(prompt=None, gene_symbol=None, verbose=True):
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.database import query_gnomad
     """
     Wrapper for query_gnomad from biomni.tool.database
     

@@ -5,7 +5,6 @@ Wrapper for Biomni perform_gene_expression_nmf_analysis tool
 
 import sys
 import json
-from biomni.tool.cancer_biology import perform_gene_expression_nmf_analysis
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.cancer_biology import perform_gene_expression_nmf_analysis
     if len(sys.argv) != 2:
         print("Usage: perform_gene_expression_nmf_analysis.py <input_json>")
         sys.exit(1)

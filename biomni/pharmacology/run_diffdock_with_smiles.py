@@ -6,7 +6,6 @@ Runs DiffDock inference for molecular docking using a Docker container.
 
 import sys
 import json
-from biomni.tool.pharmacology import run_diffdock_with_smiles
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import run_diffdock_with_smiles
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: run_diffdock_with_smiles.py '<json_args>'"}))
         sys.exit(1)

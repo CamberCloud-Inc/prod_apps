@@ -2,7 +2,6 @@ import json
 import sys
 import os
 import argparse
-from biomni.tool.molecular_biology import annotate_open_reading_frames
 
 
 
@@ -19,6 +18,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.molecular_biology import annotate_open_reading_frames
     parser = argparse.ArgumentParser(description='Find all Open Reading Frames (ORFs) in a DNA sequence')
     parser.add_argument('sequence', help='DNA sequence')
     parser.add_argument('min_length', type=int, help='Minimum length of ORF in nucleotides')

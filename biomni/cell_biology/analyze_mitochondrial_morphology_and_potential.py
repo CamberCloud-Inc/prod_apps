@@ -6,7 +6,6 @@ Camber wrapper for analyze_mitochondrial_morphology_and_potential from Biomni
 import json
 import sys
 
-from biomni.tool.cell_biology import analyze_mitochondrial_morphology_and_potential
 
 
 
@@ -23,6 +22,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.cell_biology import analyze_mitochondrial_morphology_and_potential
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())
 

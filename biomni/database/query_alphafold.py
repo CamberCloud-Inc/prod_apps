@@ -2,7 +2,6 @@
 Camber wrapper for biomni.tool.database.query_alphafold
 """
 
-from biomni.tool.database import query_alphafold
 import json
 
 
@@ -20,6 +19,9 @@ def install_dependencies():
 def main(uniprot_id, endpoint="prediction", residue_range=None, download=False, output_dir=None, file_format="pdb", model_version="v4", model_number=1):
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.database import query_alphafold
     """
     Wrapper for query_alphafold from biomni.tool.database
     

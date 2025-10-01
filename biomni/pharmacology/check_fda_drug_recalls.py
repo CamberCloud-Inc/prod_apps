@@ -6,7 +6,6 @@ Checks FDA drug recalls database.
 
 import sys
 import json
-from biomni.tool.pharmacology import check_fda_drug_recalls
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import check_fda_drug_recalls
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: check_fda_drug_recalls.py '<json_args>'"}))
         sys.exit(1)

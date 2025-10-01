@@ -2,7 +2,6 @@ import json
 import sys
 import os
 import argparse
-from biomni.tool.molecular_biology import design_golden_gate_oligos
 
 
 
@@ -19,6 +18,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.molecular_biology import design_golden_gate_oligos
     parser = argparse.ArgumentParser(description='Design oligos for Golden Gate assembly')
     parser.add_argument('backbone_sequence', help='Plasmid/backbone sequence')
     parser.add_argument('insert_sequence', help='Sequence to be inserted')

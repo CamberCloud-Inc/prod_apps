@@ -4,7 +4,6 @@ Camber wrapper for track_immune_cells_under_flow from biomni.tool.immunology
 """
 
 import sys
-from biomni.tool.immunology import track_immune_cells_under_flow
 
 
 
@@ -21,6 +20,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.immunology import track_immune_cells_under_flow
     if len(sys.argv) < 2:
         print("Usage: track_immune_cells_under_flow.py <image_sequence_path> [output_dir] [pixel_size_um] [time_interval_sec] [flow_direction]")
         sys.exit(1)

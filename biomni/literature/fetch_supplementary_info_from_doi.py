@@ -5,7 +5,6 @@ Camber wrapper for fetch_supplementary_info_from_doi from biomni.tool.literature
 
 import sys
 import json
-from biomni.tool.literature import fetch_supplementary_info_from_doi
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.literature import fetch_supplementary_info_from_doi
     """Main function for Camber app execution"""
     if len(sys.argv) != 3:
         print(json.dumps({

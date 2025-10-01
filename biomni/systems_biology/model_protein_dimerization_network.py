@@ -4,7 +4,6 @@ Wrapper for Biomni model_protein_dimerization_network tool
 """
 import sys
 import json
-from biomni.tool.systems_biology import model_protein_dimerization_network
 
 
 def install_dependencies():
@@ -20,6 +19,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.systems_biology import model_protein_dimerization_network
     if len(sys.argv) != 4:
         print("Usage: model_protein_dimerization_network.py <monomer_concentrations_json> <dimerization_affinities_json> <network_topology_json>")
         sys.exit(1)

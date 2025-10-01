@@ -2,7 +2,6 @@ import json
 import sys
 import os
 import argparse
-from biomni.tool.molecular_biology import find_sequence_mutations
 
 
 
@@ -19,6 +18,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.molecular_biology import find_sequence_mutations
     parser = argparse.ArgumentParser(description='Find mutations by comparing query and reference sequences')
     parser.add_argument('query_sequence', help='Query sequence to analyze')
     parser.add_argument('reference_sequence', help='Reference sequence to compare against')

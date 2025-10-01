@@ -4,7 +4,6 @@ Wrapper for Biomni perform_flux_balance_analysis tool
 """
 import sys
 import json
-from biomni.tool.systems_biology import perform_flux_balance_analysis
 
 
 def install_dependencies():
@@ -20,6 +19,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.systems_biology import perform_flux_balance_analysis
     if len(sys.argv) < 2:
         print("Usage: perform_flux_balance_analysis.py <model_file> [constraints_json] [objective_reaction] [output_file]")
         sys.exit(1)

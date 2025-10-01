@@ -5,7 +5,6 @@ Wrapper for Biomni analyze_cell_senescence_and_apoptosis tool
 
 import sys
 import json
-from biomni.tool.cancer_biology import analyze_cell_senescence_and_apoptosis
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.cancer_biology import analyze_cell_senescence_and_apoptosis
     if len(sys.argv) != 2:
         print("Usage: analyze_cell_senescence_and_apoptosis.py <input_json>")
         sys.exit(1)

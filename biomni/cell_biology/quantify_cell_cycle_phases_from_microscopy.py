@@ -6,7 +6,6 @@ Camber wrapper for quantify_cell_cycle_phases_from_microscopy from Biomni
 import json
 import sys
 
-from biomni.tool.cell_biology import quantify_cell_cycle_phases_from_microscopy
 
 
 
@@ -23,6 +22,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.cell_biology import quantify_cell_cycle_phases_from_microscopy
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())
 

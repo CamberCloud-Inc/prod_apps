@@ -7,7 +7,6 @@ Performs cosinor analysis on physiological time series data to characterize circ
 
 import sys
 import json
-from biomni.tool.physiology import perform_cosinor_analysis
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.physiology import perform_cosinor_analysis
     if len(sys.argv) != 2:
         print("Usage: perform_cosinor_analysis.py <input_json>")
         sys.exit(1)

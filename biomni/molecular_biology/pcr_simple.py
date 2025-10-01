@@ -2,7 +2,6 @@ import json
 import sys
 import os
 import argparse
-from biomni.tool.molecular_biology import pcr_simple
 
 
 
@@ -19,6 +18,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.molecular_biology import pcr_simple
     parser = argparse.ArgumentParser(description='Simulate PCR amplification with given primers')
     parser.add_argument('sequence', help='DNA sequence or plasmid')
     parser.add_argument('forward_primer', help='Forward primer sequence (5\' to 3\')')

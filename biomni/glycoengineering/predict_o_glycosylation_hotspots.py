@@ -6,7 +6,6 @@ Heuristic O-glycosylation hotspot scoring.
 
 import sys
 import json
-from biomni.tool.glycoengineering import predict_o_glycosylation_hotspots
 
 
 
@@ -23,6 +22,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.glycoengineering import predict_o_glycosylation_hotspots
     # Read input from stdin
     input_data = json.load(sys.stdin)
 

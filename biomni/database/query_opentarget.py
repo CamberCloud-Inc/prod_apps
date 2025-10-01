@@ -2,7 +2,6 @@
 Camber wrapper for biomni.tool.database.query_opentarget
 """
 
-from biomni.tool.database import query_opentarget
 import json
 
 
@@ -20,6 +19,9 @@ def install_dependencies():
 def main(prompt=None, query=None, variables=None, verbose=False):
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.database import query_opentarget
     """
     Wrapper for query_opentarget from biomni.tool.database
     

@@ -5,7 +5,6 @@ import argparse
 # Install required dependencies
 subprocess.check_call([sys.executable, "-m", "pip", "install", "biopython", "matplotlib", "numpy"])
 
-from biomni.tool.genetics import perform_pcr_and_gel_electrophoresis
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.genetics import perform_pcr_and_gel_electrophoresis
     parser = argparse.ArgumentParser(description='Simulate PCR amplification and gel electrophoresis')
     parser.add_argument('genomic_dna', help='Path to genomic DNA FASTA file or DNA sequence string')
     parser.add_argument('-f', '--forward-primer', help='Forward primer sequence (optional)')

@@ -6,7 +6,6 @@ import argparse
 # Install required packages
 subprocess.check_call([sys.executable, "-m", "pip", "install", "numpy", "pandas", "matplotlib", "trackpy", "scikit-image"])
 
-from biomni.tool.bioengineering import analyze_cell_migration_metrics
 
 
 
@@ -23,6 +22,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.bioengineering import analyze_cell_migration_metrics
     parser = argparse.ArgumentParser(description='Analyze cell migration metrics from time-lapse microscopy images')
     parser.add_argument('image_sequence_path', help='Path to the directory containing time-lapse images or path to a multi-frame TIFF file')
     parser.add_argument('--pixel-size-um', type=float, default=1.0,

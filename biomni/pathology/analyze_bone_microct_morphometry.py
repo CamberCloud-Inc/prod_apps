@@ -7,7 +7,6 @@ Analyze bone microarchitecture parameters from 3D micro-CT images.
 
 import sys
 import json
-from biomni.tool.pathology import analyze_bone_microct_morphometry
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pathology import analyze_bone_microct_morphometry
     if len(sys.argv) != 2:
         print("Usage: analyze_bone_microct_morphometry.py <input_json>")
         sys.exit(1)

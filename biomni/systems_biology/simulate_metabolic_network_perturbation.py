@@ -4,7 +4,6 @@ Wrapper for Biomni simulate_metabolic_network_perturbation tool
 """
 import sys
 import json
-from biomni.tool.systems_biology import simulate_metabolic_network_perturbation
 
 
 def install_dependencies():
@@ -20,6 +19,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.systems_biology import simulate_metabolic_network_perturbation
     if len(sys.argv) < 4:
         print("Usage: simulate_metabolic_network_perturbation.py <model_file> <initial_concentrations_json> <perturbation_params_json> [simulation_time] [time_points]")
         sys.exit(1)

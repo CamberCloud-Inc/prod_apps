@@ -6,7 +6,6 @@ Performs docking using AutoDock Vina with specified parameters.
 
 import sys
 import json
-from biomni.tool.pharmacology import docking_autodock_vina
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import docking_autodock_vina
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: docking_autodock_vina.py '<json_args>'"}))
         sys.exit(1)

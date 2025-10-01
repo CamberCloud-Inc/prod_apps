@@ -7,7 +7,6 @@ Segment cells and quantify protein expression levels from multichannel tissue im
 
 import sys
 import json
-from biomni.tool.pathology import segment_and_quantify_cells_in_multiplexed_images
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pathology import segment_and_quantify_cells_in_multiplexed_images
     if len(sys.argv) != 2:
         print("Usage: segment_and_quantify_cells_in_multiplexed_images.py <input_json>")
         sys.exit(1)

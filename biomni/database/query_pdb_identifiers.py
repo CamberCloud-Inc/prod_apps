@@ -2,7 +2,6 @@
 Camber wrapper for biomni.tool.database.query_pdb_identifiers
 """
 
-from biomni.tool.database import query_pdb_identifiers
 import json
 
 
@@ -20,6 +19,9 @@ def install_dependencies():
 def main(identifiers, return_type="entry", download=False, attributes=None):
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.database import query_pdb_identifiers
     """
     Wrapper for query_pdb_identifiers from biomni.tool.database
     

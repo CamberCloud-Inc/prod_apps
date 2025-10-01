@@ -7,7 +7,6 @@ Analyze colocalization between two fluorescently labeled proteins in microscopy 
 
 import sys
 import json
-from biomni.tool.physiology import analyze_protein_colocalization
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.physiology import analyze_protein_colocalization
     if len(sys.argv) != 2:
         print("Usage: analyze_protein_colocalization.py <input_json>")
         sys.exit(1)

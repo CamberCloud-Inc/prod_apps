@@ -2,7 +2,6 @@
 Camber wrapper for biomni.tool.database.get_hpo_names
 """
 
-from biomni.tool.database import get_hpo_names
 import json
 
 
@@ -20,6 +19,9 @@ def install_dependencies():
 def main(hpo_terms, data_lake_path):
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.database import get_hpo_names
     """
     Wrapper for get_hpo_names from biomni.tool.database
     

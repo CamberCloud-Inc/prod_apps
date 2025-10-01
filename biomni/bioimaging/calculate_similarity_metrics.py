@@ -5,7 +5,6 @@ Calculate similarity metrics between two medical images.
 
 import sys
 import json
-from biomni.tool.bioimaging import calculate_similarity_metrics
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.bioimaging import calculate_similarity_metrics
     if len(sys.argv) != 2:
         print("Error: Expected config file as argument", file=sys.stderr)
         sys.exit(1)

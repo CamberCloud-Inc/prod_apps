@@ -2,7 +2,6 @@
 Camber wrapper for biomni.tool.database.query_openfda
 """
 
-from biomni.tool.database import query_openfda
 import json
 
 
@@ -20,6 +19,9 @@ def install_dependencies():
 def main(prompt=None, endpoint=None, max_results=100, verbose=True):
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.database import query_openfda
     """
     Wrapper for query_openfda from biomni.tool.database
     

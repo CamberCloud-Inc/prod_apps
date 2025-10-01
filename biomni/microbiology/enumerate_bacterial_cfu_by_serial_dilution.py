@@ -5,7 +5,6 @@ Quantify bacterial concentration (CFU/mL) using serial dilutions and spot platin
 
 import sys
 import json
-from biomni.tool.microbiology import enumerate_bacterial_cfu_by_serial_dilution
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.microbiology import enumerate_bacterial_cfu_by_serial_dilution
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())
 

@@ -6,7 +6,6 @@ Camber wrapper for analyze_flow_cytometry_immunophenotyping from Biomni
 import json
 import sys
 
-from biomni.tool.cell_biology import analyze_flow_cytometry_immunophenotyping
 
 
 
@@ -23,6 +22,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.cell_biology import analyze_flow_cytometry_immunophenotyping
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())
 

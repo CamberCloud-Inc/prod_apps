@@ -5,7 +5,6 @@ Simulate microbial population dynamics with multiple interacting species.
 
 import sys
 import json
-from biomni.tool.microbiology import simulate_microbial_population_dynamics
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.microbiology import simulate_microbial_population_dynamics
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())
 

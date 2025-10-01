@@ -5,7 +5,6 @@ Wrapper for Biomni analyze_ddr_network_in_cancer tool
 
 import sys
 import json
-from biomni.tool.cancer_biology import analyze_ddr_network_in_cancer
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.cancer_biology import analyze_ddr_network_in_cancer
     if len(sys.argv) != 2:
         print("Usage: analyze_ddr_network_in_cancer.py <input_json>")
         sys.exit(1)

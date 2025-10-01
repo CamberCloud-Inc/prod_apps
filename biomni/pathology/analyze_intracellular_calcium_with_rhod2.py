@@ -7,7 +7,6 @@ Analyze intracellular calcium concentration using Rhod-2 fluorescent indicator.
 
 import sys
 import json
-from biomni.tool.pathology import analyze_intracellular_calcium_with_rhod2
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pathology import analyze_intracellular_calcium_with_rhod2
     if len(sys.argv) != 2:
         print("Usage: analyze_intracellular_calcium_with_rhod2.py <input_json>")
         sys.exit(1)

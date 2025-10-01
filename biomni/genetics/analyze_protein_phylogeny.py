@@ -5,7 +5,6 @@ import argparse
 # Install required dependencies
 subprocess.check_call([sys.executable, "-m", "pip", "install", "biopython", "matplotlib"])
 
-from biomni.tool.genetics import analyze_protein_phylogeny
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.genetics import analyze_protein_phylogeny
     parser = argparse.ArgumentParser(description='Perform phylogenetic analysis on protein sequences')
     parser.add_argument('fasta_sequences', help='Path to FASTA file with protein sequences')
     parser.add_argument('-a', '--alignment-method', default='clustalw',

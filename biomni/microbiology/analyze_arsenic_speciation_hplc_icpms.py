@@ -5,7 +5,6 @@ Analyzes arsenic speciation in liquid samples using HPLC-ICP-MS technique.
 
 import sys
 import json
-from biomni.tool.microbiology import analyze_arsenic_speciation_hplc_icpms
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.microbiology import analyze_arsenic_speciation_hplc_icpms
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())
 

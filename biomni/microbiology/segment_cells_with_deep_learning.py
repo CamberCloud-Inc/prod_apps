@@ -5,7 +5,6 @@ Segment cells in microscopy images using deep learning models.
 
 import sys
 import json
-from biomni.tool.microbiology import segment_cells_with_deep_learning
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.microbiology import segment_cells_with_deep_learning
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())
 

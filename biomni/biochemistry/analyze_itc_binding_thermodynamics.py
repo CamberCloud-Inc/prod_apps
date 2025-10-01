@@ -7,7 +7,6 @@ Analyzes isothermal titration calorimetry (ITC) data to determine binding affini
 
 import sys
 import json
-from biomni.tool.biochemistry import analyze_itc_binding_thermodynamics
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.biochemistry import analyze_itc_binding_thermodynamics
     if len(sys.argv) != 2:
         print("Usage: analyze_itc_binding_thermodynamics.py <input_json>")
         sys.exit(1)

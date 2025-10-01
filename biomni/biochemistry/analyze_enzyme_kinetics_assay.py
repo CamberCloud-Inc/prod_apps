@@ -7,7 +7,6 @@ Performs in vitro enzyme kinetics assay and analyzes the dose-dependent effects 
 
 import sys
 import json
-from biomni.tool.biochemistry import analyze_enzyme_kinetics_assay
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.biochemistry import analyze_enzyme_kinetics_assay
     if len(sys.argv) != 2:
         print("Usage: analyze_enzyme_kinetics_assay.py <input_json>")
         sys.exit(1)

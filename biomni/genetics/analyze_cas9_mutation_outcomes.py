@@ -6,7 +6,6 @@ import json
 # Install required dependencies
 subprocess.check_call([sys.executable, "-m", "pip", "install", "biopython", "pandas"])
 
-from biomni.tool.genetics import analyze_cas9_mutation_outcomes
 
 
 
@@ -23,6 +22,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.genetics import analyze_cas9_mutation_outcomes
     parser = argparse.ArgumentParser(description='Analyze and categorize mutations induced by Cas9 at target sites')
     parser.add_argument('reference_sequences', help='Path to JSON file with reference sequences (dict mapping seq_id to sequence)')
     parser.add_argument('edited_sequences', help='Path to JSON file with edited sequences (nested dict: {seq_id: {read_id: sequence}})')

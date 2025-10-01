@@ -7,7 +7,6 @@ Quantify immunofluorescence-labeled corneal nerve fibers.
 
 import sys
 import json
-from biomni.tool.pathology import quantify_corneal_nerve_fibers
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pathology import quantify_corneal_nerve_fibers
     if len(sys.argv) != 2:
         print("Usage: quantify_corneal_nerve_fibers.py <input_json>")
         sys.exit(1)

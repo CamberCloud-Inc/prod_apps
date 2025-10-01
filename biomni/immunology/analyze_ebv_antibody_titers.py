@@ -5,7 +5,6 @@ Camber wrapper for analyze_ebv_antibody_titers from biomni.tool.immunology
 
 import sys
 import json
-from biomni.tool.immunology import analyze_ebv_antibody_titers
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.immunology import analyze_ebv_antibody_titers
     if len(sys.argv) < 2:
         print("Usage: analyze_ebv_antibody_titers.py <sample_data_json> [output_dir]")
         print("\nsample_data format: JSON string of list containing dicts with keys: sample_id, vca_igg_od, ea_igg_od, ebna_igg_od")

@@ -2,7 +2,6 @@ import json
 import sys
 import os
 import argparse
-from biomni.tool.molecular_biology import align_sequences
 
 
 
@@ -19,6 +18,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.molecular_biology import align_sequences
     parser = argparse.ArgumentParser(description='Align short sequences (primers) to a longer sequence')
     parser.add_argument('long_seq', help='Target DNA sequence')
     parser.add_argument('short_seqs', nargs='+', help='One or more short sequences to align')

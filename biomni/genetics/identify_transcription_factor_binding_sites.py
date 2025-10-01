@@ -5,7 +5,6 @@ import argparse
 # Install required dependencies
 subprocess.check_call([sys.executable, "-m", "pip", "install", "biopython", "requests"])
 
-from biomni.tool.genetics import identify_transcription_factor_binding_sites
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.genetics import identify_transcription_factor_binding_sites
     parser = argparse.ArgumentParser(description='Identify transcription factor binding sites in genomic sequences')
     parser.add_argument('sequence', help='Path to file with genomic DNA sequence or sequence string')
     parser.add_argument('tf_name', help='Name of transcription factor (e.g., "Hsf1", "GATA1")')

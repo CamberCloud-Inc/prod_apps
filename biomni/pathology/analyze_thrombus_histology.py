@@ -7,7 +7,6 @@ Analyze histological images of thrombus samples.
 
 import sys
 import json
-from biomni.tool.pathology import analyze_thrombus_histology
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pathology import analyze_thrombus_histology
     if len(sys.argv) != 2:
         print("Usage: analyze_thrombus_histology.py <input_json>")
         sys.exit(1)

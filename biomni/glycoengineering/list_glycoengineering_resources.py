@@ -6,7 +6,6 @@ Curate and summarize external glycoengineering tools and resources.
 
 import sys
 import json
-from biomni.tool.glycoengineering import list_glycoengineering_resources
 
 
 
@@ -23,6 +22,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.glycoengineering import list_glycoengineering_resources
     # Read input from stdin (even though no parameters are needed)
     try:
         input_data = json.load(sys.stdin)

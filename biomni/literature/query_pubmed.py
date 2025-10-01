@@ -5,7 +5,6 @@ Camber wrapper for query_pubmed from biomni.tool.literature
 
 import sys
 import json
-from biomni.tool.literature import query_pubmed
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.literature import query_pubmed
     """Main function for Camber app execution"""
     if len(sys.argv) != 4:
         print(json.dumps({

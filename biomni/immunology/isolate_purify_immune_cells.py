@@ -4,7 +4,6 @@ Camber wrapper for isolate_purify_immune_cells from biomni.tool.immunology
 """
 
 import sys
-from biomni.tool.immunology import isolate_purify_immune_cells
 
 
 
@@ -21,6 +20,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.immunology import isolate_purify_immune_cells
     if len(sys.argv) < 3:
         print("Usage: isolate_purify_immune_cells.py <tissue_type> <target_cell_type> [enzyme_type] [macs_antibody] [digestion_time_min]")
         sys.exit(1)

@@ -5,7 +5,6 @@ import argparse
 # Install required dependencies
 subprocess.check_call([sys.executable, "-m", "pip", "install", "torch", "numpy", "pandas", "scipy", "matplotlib"])
 
-from biomni.tool.genetics import bayesian_finemapping_with_deep_vi
 import numpy as np
 
 
@@ -23,6 +22,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.genetics import bayesian_finemapping_with_deep_vi
     parser = argparse.ArgumentParser(description='Bayesian fine-mapping from GWAS summary statistics using deep variational inference')
     parser.add_argument('gwas_summary', help='Path to GWAS summary statistics file (CSV or TSV)')
     parser.add_argument('ld_matrix', help='Path to LD matrix file (numpy .npy format)')

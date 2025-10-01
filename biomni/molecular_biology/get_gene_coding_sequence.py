@@ -2,7 +2,6 @@ import json
 import sys
 import os
 import argparse
-from biomni.tool.molecular_biology import get_gene_coding_sequence
 
 
 
@@ -19,6 +18,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.molecular_biology import get_gene_coding_sequence
     parser = argparse.ArgumentParser(description='Retrieve gene coding sequences from NCBI')
     parser.add_argument('gene_name', help='Name of the gene')
     parser.add_argument('organism', help='Name of the organism (e.g., "Homo sapiens", "Mus musculus")')

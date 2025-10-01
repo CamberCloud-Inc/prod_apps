@@ -4,7 +4,6 @@ Camber wrapper for analyze_atac_seq_differential_accessibility from biomni.tool.
 """
 
 import sys
-from biomni.tool.immunology import analyze_atac_seq_differential_accessibility
 
 
 
@@ -21,6 +20,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.immunology import analyze_atac_seq_differential_accessibility
     if len(sys.argv) < 3:
         print("Usage: analyze_atac_seq_differential_accessibility.py <treatment_bam> <control_bam> [output_dir] [genome_size] [q_value] [name_prefix]")
         sys.exit(1)

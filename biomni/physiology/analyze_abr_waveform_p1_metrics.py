@@ -7,7 +7,6 @@ Extracts P1 amplitude and latency from Auditory Brainstem Response (ABR) wavefor
 
 import sys
 import json
-from biomni.tool.physiology import analyze_abr_waveform_p1_metrics
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.physiology import analyze_abr_waveform_p1_metrics
     if len(sys.argv) != 2:
         print("Usage: analyze_abr_waveform_p1_metrics.py <input_json>")
         sys.exit(1)

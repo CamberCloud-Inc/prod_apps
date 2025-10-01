@@ -7,7 +7,6 @@ Analyze aortic diameter and geometry from cardiovascular imaging.
 
 import sys
 import json
-from biomni.tool.pathology import analyze_aortic_diameter_and_geometry
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pathology import analyze_aortic_diameter_and_geometry
     if len(sys.argv) != 2:
         print("Usage: analyze_aortic_diameter_and_geometry.py <input_json>")
         sys.exit(1)

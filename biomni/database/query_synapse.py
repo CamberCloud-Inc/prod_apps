@@ -2,7 +2,6 @@
 Camber wrapper for biomni.tool.database.query_synapse
 """
 
-from biomni.tool.database import query_synapse
 import json
 
 
@@ -20,6 +19,9 @@ def install_dependencies():
 def main(prompt=None, query_term=None, return_fields=None, max_results=20, query_type="dataset", verbose=True):
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.database import query_synapse
     """
     Wrapper for query_synapse from biomni.tool.database
     

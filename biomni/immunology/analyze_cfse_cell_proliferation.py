@@ -5,7 +5,6 @@ Camber wrapper for analyze_cfse_cell_proliferation from biomni.tool.immunology
 
 import sys
 import json
-from biomni.tool.immunology import analyze_cfse_cell_proliferation
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.immunology import analyze_cfse_cell_proliferation
     if len(sys.argv) < 2:
         print("Usage: analyze_cfse_cell_proliferation.py <fcs_file_path> [cfse_channel] [lymphocyte_gate_json]")
         print("\nlymphocyte_gate format: JSON string of dict with 'fsc' and 'ssc' keys, e.g., '{\"fsc\": [50000, 250000], \"ssc\": [0, 200000]}'")

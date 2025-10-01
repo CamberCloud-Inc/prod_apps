@@ -5,7 +5,6 @@ Model bacterial population dynamics over time using ordinary differential equati
 
 import sys
 import json
-from biomni.tool.microbiology import model_bacterial_growth_dynamics
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.microbiology import model_bacterial_growth_dynamics
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())
 

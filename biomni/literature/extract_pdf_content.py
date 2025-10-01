@@ -5,7 +5,6 @@ Camber wrapper for extract_pdf_content from biomni.tool.literature
 
 import sys
 import json
-from biomni.tool.literature import extract_pdf_content
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.literature import extract_pdf_content
     """Main function for Camber app execution"""
     if len(sys.argv) != 2:
         print(json.dumps({

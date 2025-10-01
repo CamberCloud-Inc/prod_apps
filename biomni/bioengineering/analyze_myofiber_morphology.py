@@ -6,7 +6,6 @@ import argparse
 # Install required packages
 subprocess.check_call([sys.executable, "-m", "pip", "install", "numpy", "pandas", "scikit-image"])
 
-from biomni.tool.bioengineering import analyze_myofiber_morphology
 
 
 
@@ -23,6 +22,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.bioengineering import analyze_myofiber_morphology
     parser = argparse.ArgumentParser(description='Quantify morphological properties of myofibers in microscopy images')
     parser.add_argument('image_path', help='Path to the microscopy image file (multichannel with nuclei and myofiber staining)')
     parser.add_argument('--nuclei-channel', type=int, default=2,

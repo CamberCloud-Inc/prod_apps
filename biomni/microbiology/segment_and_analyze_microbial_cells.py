@@ -5,7 +5,6 @@ Segment and analyze microbial cells in microscopy images using image processing 
 
 import sys
 import json
-from biomni.tool.microbiology import segment_and_analyze_microbial_cells
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.microbiology import segment_and_analyze_microbial_cells
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())
 

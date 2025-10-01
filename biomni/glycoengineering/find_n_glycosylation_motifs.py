@@ -6,8 +6,6 @@ Scan a protein sequence for N-linked glycosylation sequons (N-X-[S/T]).
 
 import sys
 import json
-from biomni.tool.glycoengineering import find_n_glycosylation_motifs
-
 
 
 def install_dependencies():
@@ -21,8 +19,11 @@ def install_dependencies():
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def main():
-    
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.glycoengineering import find_n_glycosylation_motifs
+
     # Read input from stdin
     input_data = json.load(sys.stdin)
 

@@ -6,7 +6,6 @@ Analyzes xenograft tumor growth inhibition data.
 
 import sys
 import json
-from biomni.tool.pharmacology import analyze_xenograft_tumor_growth_inhibition
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import analyze_xenograft_tumor_growth_inhibition
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: analyze_xenograft_tumor_growth_inhibition.py '<json_args>'"}))
         sys.exit(1)

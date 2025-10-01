@@ -6,7 +6,6 @@ Queries drug-drug interactions.
 
 import sys
 import json
-from biomni.tool.pharmacology import query_drug_interactions
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import query_drug_interactions
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: query_drug_interactions.py '<json_args>'"}))
         sys.exit(1)

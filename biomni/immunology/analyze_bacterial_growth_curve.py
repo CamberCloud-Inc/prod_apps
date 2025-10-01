@@ -5,7 +5,6 @@ Camber wrapper for analyze_bacterial_growth_curve from biomni.tool.immunology
 
 import sys
 import json
-from biomni.tool.immunology import analyze_bacterial_growth_curve
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.immunology import analyze_bacterial_growth_curve
     if len(sys.argv) < 4:
         print("Usage: analyze_bacterial_growth_curve.py <time_points_json> <od_values_json> <strain_name> [output_dir]")
         sys.exit(1)

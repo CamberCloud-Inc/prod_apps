@@ -7,7 +7,6 @@ Analyzes fatty acid composition in tissue samples using gas chromatography data.
 
 import sys
 import json
-from biomni.tool.physiology import analyze_fatty_acid_composition_by_gc
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.physiology import analyze_fatty_acid_composition_by_gc
     if len(sys.argv) != 2:
         print("Usage: analyze_fatty_acid_composition_by_gc.py <input_json>")
         sys.exit(1)

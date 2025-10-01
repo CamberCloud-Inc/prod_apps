@@ -5,7 +5,6 @@ import argparse
 # Install required dependencies
 subprocess.check_call([sys.executable, "-m", "pip", "install", "biopython"])
 
-from biomni.tool.genetics import analyze_crispr_genome_editing
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.genetics import analyze_crispr_genome_editing
     parser = argparse.ArgumentParser(description='Analyze CRISPR-Cas9 genome editing results')
     parser.add_argument('original_sequence', help='Path to file with original DNA sequence or sequence string')
     parser.add_argument('edited_sequence', help='Path to file with edited DNA sequence or sequence string')

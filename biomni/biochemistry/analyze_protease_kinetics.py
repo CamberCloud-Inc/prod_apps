@@ -7,7 +7,6 @@ Analyze protease kinetics data from fluorogenic peptide cleavage assays.
 
 import sys
 import json
-from biomni.tool.biochemistry import analyze_protease_kinetics
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.biochemistry import analyze_protease_kinetics
     if len(sys.argv) != 2:
         print("Usage: analyze_protease_kinetics.py <input_json>")
         sys.exit(1)

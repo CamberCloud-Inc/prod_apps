@@ -6,7 +6,6 @@ Queries FDA adverse events database.
 
 import sys
 import json
-from biomni.tool.pharmacology import query_fda_adverse_events
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import query_fda_adverse_events
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: query_fda_adverse_events.py '<json_args>'"}))
         sys.exit(1)

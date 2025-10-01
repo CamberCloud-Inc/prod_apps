@@ -5,7 +5,6 @@ Camber app wrapper for optimize_codons_for_heterologous_expression from biomni.t
 
 import sys
 import json
-from biomni.tool.synthetic_biology import optimize_codons_for_heterologous_expression
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.synthetic_biology import optimize_codons_for_heterologous_expression
     """Main function for Camber app wrapper"""
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())

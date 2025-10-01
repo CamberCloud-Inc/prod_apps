@@ -5,7 +5,6 @@ Optimize anaerobic digestion process conditions to maximize VFA production or me
 
 import sys
 import json
-from biomni.tool.microbiology import optimize_anaerobic_digestion_process
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.microbiology import optimize_anaerobic_digestion_process
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())
 

@@ -3,7 +3,6 @@
 Wrapper for Biomni compare_protein_structures tool
 """
 import sys
-from biomni.tool.systems_biology import compare_protein_structures
 
 
 def install_dependencies():
@@ -19,6 +18,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.systems_biology import compare_protein_structures
     if len(sys.argv) < 3:
         print("Usage: compare_protein_structures.py <pdb_file1> <pdb_file2> [chain_id1] [chain_id2] [output_prefix]")
         sys.exit(1)

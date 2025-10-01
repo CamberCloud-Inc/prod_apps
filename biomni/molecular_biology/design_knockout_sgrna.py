@@ -2,7 +2,6 @@ import json
 import sys
 import os
 import argparse
-from biomni.tool.molecular_biology import design_knockout_sgrna
 
 
 
@@ -19,6 +18,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.molecular_biology import design_knockout_sgrna
     parser = argparse.ArgumentParser(description='Design sgRNAs for CRISPR knockout')
     parser.add_argument('gene_name', help='Target gene symbol (e.g., EGFR, TP53)')
     parser.add_argument('data_lake_path', help='Path to sgRNA library data')

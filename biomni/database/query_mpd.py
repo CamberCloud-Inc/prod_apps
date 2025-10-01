@@ -2,7 +2,6 @@
 Camber wrapper for biomni.tool.database.query_mpd
 """
 
-from biomni.tool.database import query_mpd
 import json
 
 
@@ -20,6 +19,9 @@ def install_dependencies():
 def main(prompt=None, endpoint=None, verbose=True):
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.database import query_mpd
     """
     Wrapper for query_mpd from biomni.tool.database
     

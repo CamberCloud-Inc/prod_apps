@@ -6,7 +6,6 @@ Grades adverse events using VCOG-CTCAE criteria.
 
 import sys
 import json
-from biomni.tool.pharmacology import grade_adverse_events_using_vcog_ctcae
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import grade_adverse_events_using_vcog_ctcae
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: grade_adverse_events_using_vcog_ctcae.py '<json_args>'"}))
         sys.exit(1)

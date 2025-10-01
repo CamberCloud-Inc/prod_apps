@@ -7,7 +7,6 @@ import json
 # Install required packages
 subprocess.check_call([sys.executable, "-m", "pip", "install", "numpy", "pandas", "matplotlib", "scipy"])
 
-from biomni.tool.bioengineering import analyze_in_vitro_drug_release_kinetics
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.bioengineering import analyze_in_vitro_drug_release_kinetics
     parser = argparse.ArgumentParser(description='Analyze in vitro drug release kinetics from biomaterial formulations')
     parser.add_argument('time_points', help='JSON string or comma-separated list of time points (hours)')
     parser.add_argument('concentration_data', help='JSON string or comma-separated list of drug concentrations')

@@ -2,7 +2,6 @@
 Camber wrapper for biomni.tool.database.query_kegg
 """
 
-from biomni.tool.database import query_kegg
 import json
 
 
@@ -20,6 +19,9 @@ def install_dependencies():
 def main(prompt, endpoint=None, verbose=True):
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.database import query_kegg
     """
     Wrapper for query_kegg from biomni.tool.database
     

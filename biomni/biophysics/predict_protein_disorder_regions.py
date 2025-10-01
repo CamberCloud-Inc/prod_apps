@@ -7,7 +7,6 @@ Predicts intrinsically disordered regions (IDRs) in a protein sequence using IUP
 
 import sys
 import json
-from biomni.tool.biophysics import predict_protein_disorder_regions
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.biophysics import predict_protein_disorder_regions
     if len(sys.argv) != 2:
         print("Usage: predict_protein_disorder_regions.py <input_json>")
         sys.exit(1)

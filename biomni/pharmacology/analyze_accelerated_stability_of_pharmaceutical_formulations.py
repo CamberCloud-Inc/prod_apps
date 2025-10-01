@@ -6,7 +6,6 @@ Analyzes accelerated stability of pharmaceutical formulations.
 
 import sys
 import json
-from biomni.tool.pharmacology import analyze_accelerated_stability_of_pharmaceutical_formulations
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import analyze_accelerated_stability_of_pharmaceutical_formulations
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: analyze_accelerated_stability_of_pharmaceutical_formulations.py '<json_args>'"}))
         sys.exit(1)

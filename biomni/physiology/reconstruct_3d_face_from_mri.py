@@ -7,7 +7,6 @@ Generate a 3D model of facial anatomy from MRI scans of the head and neck.
 
 import sys
 import json
-from biomni.tool.physiology import reconstruct_3d_face_from_mri
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.physiology import reconstruct_3d_face_from_mri
     if len(sys.argv) != 2:
         print("Usage: reconstruct_3d_face_from_mri.py <input_json>")
         sys.exit(1)

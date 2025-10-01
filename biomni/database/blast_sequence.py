@@ -2,7 +2,6 @@
 Camber wrapper for biomni.tool.database.blast_sequence
 """
 
-from biomni.tool.database import blast_sequence
 import json
 
 
@@ -20,6 +19,9 @@ def install_dependencies():
 def main(sequence, database, program):
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.database import blast_sequence
     """
     Wrapper for blast_sequence from biomni.tool.database
     

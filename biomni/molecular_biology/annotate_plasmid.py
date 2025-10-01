@@ -2,7 +2,6 @@ import json
 import sys
 import os
 import argparse
-from biomni.tool.molecular_biology import annotate_plasmid
 
 
 
@@ -19,6 +18,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.molecular_biology import annotate_plasmid
     parser = argparse.ArgumentParser(description='Annotate a DNA sequence using pLannotate')
     parser.add_argument('sequence', help='DNA sequence to annotate')
     parser.add_argument('--linear', action='store_true',

@@ -2,7 +2,6 @@ import json
 import sys
 import os
 import argparse
-from biomni.tool.molecular_biology import design_primer
 
 
 
@@ -19,6 +18,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.molecular_biology import design_primer
     parser = argparse.ArgumentParser(description='Design a single primer')
     parser.add_argument('sequence', help='Target DNA sequence')
     parser.add_argument('start_pos', type=int, help='Starting position for primer search')

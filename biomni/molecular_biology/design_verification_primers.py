@@ -2,7 +2,6 @@ import json
 import sys
 import os
 import argparse
-from biomni.tool.molecular_biology import design_verification_primers
 
 
 
@@ -19,6 +18,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.molecular_biology import design_verification_primers
     parser = argparse.ArgumentParser(description='Design Sanger sequencing verification primers')
     parser.add_argument('plasmid_sequence', help='Complete plasmid sequence')
     parser.add_argument('start', type=int, help='Target region start position (0-based)')

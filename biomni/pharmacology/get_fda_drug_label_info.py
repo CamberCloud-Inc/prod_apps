@@ -6,7 +6,6 @@ Retrieves FDA drug label information.
 
 import sys
 import json
-from biomni.tool.pharmacology import get_fda_drug_label_info
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import get_fda_drug_label_info
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: get_fda_drug_label_info.py '<json_args>'"}))
         sys.exit(1)

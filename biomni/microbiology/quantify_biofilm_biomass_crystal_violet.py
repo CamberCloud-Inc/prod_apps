@@ -5,7 +5,6 @@ Quantify biofilm biomass using the crystal violet staining method.
 
 import sys
 import json
-from biomni.tool.microbiology import quantify_biofilm_biomass_crystal_violet
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.microbiology import quantify_biofilm_biomass_crystal_violet
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())
 

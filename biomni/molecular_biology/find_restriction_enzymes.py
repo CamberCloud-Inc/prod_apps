@@ -2,7 +2,6 @@ import json
 import sys
 import os
 import argparse
-from biomni.tool.molecular_biology import find_restriction_enzymes
 
 
 
@@ -19,6 +18,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.molecular_biology import find_restriction_enzymes
     parser = argparse.ArgumentParser(description='Find common restriction enzyme sites in DNA')
     parser.add_argument('sequence', help='DNA sequence to analyze')
     parser.add_argument('--circular', action='store_true',

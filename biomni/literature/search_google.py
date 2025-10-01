@@ -5,7 +5,6 @@ Camber wrapper for search_google from biomni.tool.literature
 
 import sys
 import json
-from biomni.tool.literature import search_google
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.literature import search_google
     """Main function for Camber app execution"""
     if len(sys.argv) != 4:
         print(json.dumps({

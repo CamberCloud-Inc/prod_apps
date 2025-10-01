@@ -2,7 +2,6 @@
 Camber wrapper for biomni.tool.database.query_clinicaltrials
 """
 
-from biomni.tool.database import query_clinicaltrials
 import json
 
 
@@ -20,6 +19,9 @@ def install_dependencies():
 def main(prompt=None, endpoint=None, term=None, status=None, condition=None, intervention=None, location=None, phase=None, page_size=10, max_pages=1, page_token=None, verbose=True):
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.database import query_clinicaltrials
     """
     Wrapper for query_clinicaltrials from biomni.tool.database
     

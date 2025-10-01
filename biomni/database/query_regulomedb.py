@@ -2,7 +2,6 @@
 Camber wrapper for biomni.tool.database.query_regulomedb
 """
 
-from biomni.tool.database import query_regulomedb
 import json
 
 
@@ -20,6 +19,9 @@ def install_dependencies():
 def main(prompt=None, endpoint=None, verbose=False):
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.database import query_regulomedb
     """
     Wrapper for query_regulomedb from biomni.tool.database
     

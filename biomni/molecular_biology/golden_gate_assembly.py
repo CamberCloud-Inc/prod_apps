@@ -2,7 +2,6 @@ import json
 import sys
 import os
 import argparse
-from biomni.tool.molecular_biology import golden_gate_assembly
 
 
 
@@ -19,6 +18,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.molecular_biology import golden_gate_assembly
     parser = argparse.ArgumentParser(description='Simulate Golden Gate assembly')
     parser.add_argument('backbone_sequence', help='Complete backbone sequence')
     parser.add_argument('enzyme', help='Type IIS enzyme (BsaI, BsmBI, BbsI, Esp3I, BtgZI, SapI)')

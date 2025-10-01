@@ -6,7 +6,6 @@ Finds alternative drugs to avoid contraindicated interactions.
 
 import sys
 import json
-from biomni.tool.pharmacology import find_alternative_drugs_ddinter
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import find_alternative_drugs_ddinter
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: find_alternative_drugs_ddinter.py '<json_args>'"}))
         sys.exit(1)

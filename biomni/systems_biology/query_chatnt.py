@@ -3,7 +3,6 @@
 Wrapper for Biomni query_chatnt tool
 """
 import sys
-from biomni.tool.systems_biology import query_chatnt
 
 
 def install_dependencies():
@@ -19,6 +18,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.systems_biology import query_chatnt
     if len(sys.argv) != 4:
         print("Usage: query_chatnt.py <question> <sequence> <device>")
         sys.exit(1)

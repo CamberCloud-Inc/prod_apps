@@ -8,7 +8,6 @@ using an ODE-based pharmacokinetic model.
 
 import sys
 import json
-from biomni.tool.physiology import simulate_thyroid_hormone_pharmacokinetics
 
 
 
@@ -25,6 +24,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.physiology import simulate_thyroid_hormone_pharmacokinetics
     if len(sys.argv) != 2:
         print("Usage: simulate_thyroid_hormone_pharmacokinetics.py <input_json>")
         sys.exit(1)

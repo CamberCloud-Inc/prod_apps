@@ -7,7 +7,6 @@ Analyzes circular dichroism (CD) spectroscopy data to determine secondary struct
 
 import sys
 import json
-from biomni.tool.biochemistry import analyze_circular_dichroism_spectra
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.biochemistry import analyze_circular_dichroism_spectra
     if len(sys.argv) != 2:
         print("Usage: analyze_circular_dichroism_spectra.py <input_json>")
         sys.exit(1)

@@ -2,7 +2,6 @@ import json
 import sys
 import os
 import argparse
-from biomni.tool.molecular_biology import get_golden_gate_assembly_protocol
 
 
 
@@ -19,6 +18,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.molecular_biology import get_golden_gate_assembly_protocol
     parser = argparse.ArgumentParser(description='Get Golden Gate assembly protocol')
     parser.add_argument('--num-inserts', type=int, default=1,
                         help='Number of inserts (default: 1)')

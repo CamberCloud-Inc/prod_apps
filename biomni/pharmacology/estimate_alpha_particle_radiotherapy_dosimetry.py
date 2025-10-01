@@ -6,7 +6,6 @@ Estimates alpha particle radiotherapy dosimetry.
 
 import sys
 import json
-from biomni.tool.pharmacology import estimate_alpha_particle_radiotherapy_dosimetry
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import estimate_alpha_particle_radiotherapy_dosimetry
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: estimate_alpha_particle_radiotherapy_dosimetry.py '<json_args>'"}))
         sys.exit(1)

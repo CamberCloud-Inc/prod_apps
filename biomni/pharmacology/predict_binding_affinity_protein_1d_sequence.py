@@ -6,7 +6,6 @@ Predicts protein-ligand binding affinity.
 
 import sys
 import json
-from biomni.tool.pharmacology import predict_binding_affinity_protein_1d_sequence
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import predict_binding_affinity_protein_1d_sequence
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: predict_binding_affinity_protein_1d_sequence.py '<json_args>'"}))
         sys.exit(1)

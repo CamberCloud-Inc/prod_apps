@@ -4,7 +4,6 @@ Wrapper for Biomni simulate_renin_angiotensin_system_dynamics tool
 """
 import sys
 import json
-from biomni.tool.systems_biology import simulate_renin_angiotensin_system_dynamics
 
 
 def install_dependencies():
@@ -20,6 +19,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.systems_biology import simulate_renin_angiotensin_system_dynamics
     if len(sys.argv) < 4:
         print("Usage: simulate_renin_angiotensin_system_dynamics.py <initial_concentrations_json> <rate_constants_json> <feedback_params_json> [simulation_time] [time_points]")
         sys.exit(1)

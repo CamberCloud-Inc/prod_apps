@@ -2,7 +2,6 @@
 Camber wrapper for biomni.tool.database.query_pride
 """
 
-from biomni.tool.database import query_pride
 import json
 
 
@@ -20,6 +19,9 @@ def install_dependencies():
 def main(prompt=None, endpoint=None, max_results=3):
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.database import query_pride
     """
     Wrapper for query_pride from biomni.tool.database
     

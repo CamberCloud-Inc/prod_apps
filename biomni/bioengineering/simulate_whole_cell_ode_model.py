@@ -7,7 +7,6 @@ import json
 # Install required packages
 subprocess.check_call([sys.executable, "-m", "pip", "install", "numpy", "pandas", "scipy"])
 
-from biomni.tool.bioengineering import simulate_whole_cell_ode_model
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.bioengineering import simulate_whole_cell_ode_model
     parser = argparse.ArgumentParser(description='Simulate a whole-cell model using ordinary differential equations')
     parser.add_argument('initial_conditions', help='JSON string of initial conditions (e.g., {"mRNA":1.0,"protein":0.5,"metabolite":2.0,"atp":5.0})')
     parser.add_argument('parameters', help='JSON string of model parameters (e.g., {"k_transcription":0.5,"k_translation":0.1,...})')

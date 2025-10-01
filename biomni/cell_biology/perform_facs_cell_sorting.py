@@ -6,7 +6,6 @@ Camber wrapper for perform_facs_cell_sorting from Biomni
 import json
 import sys
 
-from biomni.tool.cell_biology import perform_facs_cell_sorting
 
 
 
@@ -23,6 +22,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.cell_biology import perform_facs_cell_sorting
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())
 

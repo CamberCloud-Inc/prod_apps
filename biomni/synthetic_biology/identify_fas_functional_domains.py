@@ -5,7 +5,6 @@ Camber app wrapper for identify_fas_functional_domains from biomni.tool.syntheti
 
 import sys
 import json
-from biomni.tool.synthetic_biology import identify_fas_functional_domains
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.synthetic_biology import identify_fas_functional_domains
     """Main function for Camber app wrapper"""
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())

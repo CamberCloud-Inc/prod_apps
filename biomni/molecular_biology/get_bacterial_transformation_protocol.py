@@ -2,7 +2,6 @@ import json
 import sys
 import os
 import argparse
-from biomni.tool.molecular_biology import get_bacterial_transformation_protocol
 
 
 
@@ -19,6 +18,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.molecular_biology import get_bacterial_transformation_protocol
     parser = argparse.ArgumentParser(description='Get bacterial transformation protocol')
     parser.add_argument('--antibiotic', default='ampicillin',
                         help='Selection antibiotic (default: ampicillin)')

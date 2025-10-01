@@ -6,7 +6,6 @@ Camber app wrapper for analyze_bifurcation_diagram from biomni.tool.synthetic_bi
 import sys
 import json
 import numpy as np
-from biomni.tool.synthetic_biology import analyze_bifurcation_diagram
 
 
 
@@ -23,6 +22,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.synthetic_biology import analyze_bifurcation_diagram
     """Main function for Camber app wrapper"""
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())

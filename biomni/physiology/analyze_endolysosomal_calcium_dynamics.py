@@ -7,7 +7,6 @@ Analyze calcium dynamics in endo-lysosomal compartments using ELGA/ELGA1 probe d
 
 import sys
 import json
-from biomni.tool.physiology import analyze_endolysosomal_calcium_dynamics
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.physiology import analyze_endolysosomal_calcium_dynamics
     if len(sys.argv) != 2:
         print("Usage: analyze_endolysosomal_calcium_dynamics.py <input_json>")
         sys.exit(1)

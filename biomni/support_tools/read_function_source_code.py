@@ -5,7 +5,6 @@ Camber wrapper for read_function_source_code from biomni.tool.support_tools
 
 import sys
 import json
-from biomni.tool.support_tools import read_function_source_code
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.support_tools import read_function_source_code
     """Main function for Camber app execution"""
     if len(sys.argv) != 2:
         print(json.dumps({

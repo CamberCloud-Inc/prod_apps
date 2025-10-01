@@ -6,7 +6,6 @@ Checks safety of drug combinations.
 
 import sys
 import json
-from biomni.tool.pharmacology import check_drug_combination_safety
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import check_drug_combination_safety
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: check_drug_combination_safety.py '<json_args>'"}))
         sys.exit(1)

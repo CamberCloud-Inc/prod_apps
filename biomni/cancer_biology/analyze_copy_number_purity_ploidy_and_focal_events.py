@@ -5,7 +5,6 @@ Wrapper for Biomni analyze_copy_number_purity_ploidy_and_focal_events tool
 
 import sys
 import json
-from biomni.tool.cancer_biology import analyze_copy_number_purity_ploidy_and_focal_events
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.cancer_biology import analyze_copy_number_purity_ploidy_and_focal_events
     if len(sys.argv) != 2:
         print("Usage: analyze_copy_number_purity_ploidy_and_focal_events.py <input_json>")
         sys.exit(1)

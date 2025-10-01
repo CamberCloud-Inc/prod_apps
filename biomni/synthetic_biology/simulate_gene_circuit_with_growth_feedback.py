@@ -6,7 +6,6 @@ Camber app wrapper for simulate_gene_circuit_with_growth_feedback from biomni.to
 import sys
 import json
 import numpy as np
-from biomni.tool.synthetic_biology import simulate_gene_circuit_with_growth_feedback
 
 
 
@@ -23,6 +22,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.synthetic_biology import simulate_gene_circuit_with_growth_feedback
     """Main function for Camber app wrapper"""
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())

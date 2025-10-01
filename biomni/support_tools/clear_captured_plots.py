@@ -5,7 +5,6 @@ Camber wrapper for clear_captured_plots from biomni.tool.support_tools
 
 import sys
 import json
-from biomni.tool.support_tools import clear_captured_plots
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.support_tools import clear_captured_plots
     """Main function for Camber app execution"""
     if len(sys.argv) != 1:
         print(json.dumps({

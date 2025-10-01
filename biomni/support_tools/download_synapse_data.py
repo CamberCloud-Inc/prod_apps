@@ -5,7 +5,6 @@ Camber wrapper for download_synapse_data from biomni.tool.support_tools
 
 import sys
 import json
-from biomni.tool.support_tools import download_synapse_data
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.support_tools import download_synapse_data
     """Main function for Camber app execution"""
     if len(sys.argv) != 7:
         print(json.dumps({

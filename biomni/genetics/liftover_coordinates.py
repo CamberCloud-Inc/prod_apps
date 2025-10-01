@@ -5,7 +5,6 @@ import argparse
 # Install required dependencies
 subprocess.check_call([sys.executable, "-m", "pip", "install", "pyliftover"])
 
-from biomni.tool.genetics import liftover_coordinates
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.genetics import liftover_coordinates
     parser = argparse.ArgumentParser(description='Perform liftover of genomic coordinates between hg19 and hg38 formats')
     parser.add_argument('chromosome', help='Chromosome number (e.g., "1", "X")')
     parser.add_argument('position', type=int, help='Genomic position')

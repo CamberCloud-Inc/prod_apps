@@ -7,7 +7,6 @@ Quantifies amyloid-beta plaques in microscopy images using image segmentation an
 
 import sys
 import json
-from biomni.tool.physiology import quantify_amyloid_beta_plaques
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.physiology import quantify_amyloid_beta_plaques
     if len(sys.argv) != 2:
         print("Usage: quantify_amyloid_beta_plaques.py <input_json>")
         sys.exit(1)

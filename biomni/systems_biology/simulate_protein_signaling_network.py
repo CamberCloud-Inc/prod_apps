@@ -4,7 +4,6 @@ Wrapper for Biomni simulate_protein_signaling_network tool
 """
 import sys
 import json
-from biomni.tool.systems_biology import simulate_protein_signaling_network
 
 
 def install_dependencies():
@@ -20,6 +19,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.systems_biology import simulate_protein_signaling_network
     if len(sys.argv) < 4:
         print("Usage: simulate_protein_signaling_network.py <network_structure_json> <reaction_params_json> <species_params_json> [simulation_time] [time_points]")
         sys.exit(1)

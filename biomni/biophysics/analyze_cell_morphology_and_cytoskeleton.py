@@ -7,7 +7,6 @@ Quantifies cell morphology and cytoskeletal organization from fluorescence micro
 
 import sys
 import json
-from biomni.tool.biophysics import analyze_cell_morphology_and_cytoskeleton
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.biophysics import analyze_cell_morphology_and_cytoskeleton
     if len(sys.argv) != 2:
         print("Usage: analyze_cell_morphology_and_cytoskeleton.py <input_json>")
         sys.exit(1)

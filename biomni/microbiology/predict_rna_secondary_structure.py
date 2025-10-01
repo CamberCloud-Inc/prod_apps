@@ -5,7 +5,6 @@ Predict RNA secondary structure from sequence using thermodynamic models.
 
 import sys
 import json
-from biomni.tool.microbiology import predict_rna_secondary_structure
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.microbiology import predict_rna_secondary_structure
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())
 

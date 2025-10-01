@@ -6,7 +6,6 @@ Performs methylation-wide association study (MWAS) for CYP2C19 metabolizer statu
 
 import sys
 import json
-from biomni.tool.pharmacology import perform_mwas_cyp2c19_metabolizer_status
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import perform_mwas_cyp2c19_metabolizer_status
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: perform_mwas_cyp2c19_metabolizer_status.py '<json_args>'"}))
         sys.exit(1)

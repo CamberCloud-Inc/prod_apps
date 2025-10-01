@@ -2,7 +2,6 @@ import json
 import sys
 import os
 import argparse
-from biomni.tool.molecular_biology import get_oligo_annealing_protocol
 
 
 
@@ -19,6 +18,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.molecular_biology import get_oligo_annealing_protocol
     parser = argparse.ArgumentParser(description='Get standard oligo annealing protocol')
     parser.add_argument('-o', '--output-dir', default='./',
                         help='Output directory for results (default: ./)')

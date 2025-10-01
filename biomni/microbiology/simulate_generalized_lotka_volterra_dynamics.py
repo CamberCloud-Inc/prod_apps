@@ -5,7 +5,6 @@ Simulate microbial community dynamics using the generalized Lotka-Volterra model
 
 import sys
 import json
-from biomni.tool.microbiology import simulate_generalized_lotka_volterra_dynamics
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.microbiology import simulate_generalized_lotka_volterra_dynamics
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())
 

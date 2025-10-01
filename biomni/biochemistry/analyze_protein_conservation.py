@@ -7,7 +7,6 @@ Perform multiple sequence alignment and phylogenetic analysis to identify conser
 
 import sys
 import json
-from biomni.tool.biochemistry import analyze_protein_conservation
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.biochemistry import analyze_protein_conservation
     if len(sys.argv) != 2:
         print("Usage: analyze_protein_conservation.py <input_json>")
         sys.exit(1)

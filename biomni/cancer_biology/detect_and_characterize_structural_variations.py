@@ -5,7 +5,6 @@ Wrapper for Biomni detect_and_characterize_structural_variations tool
 
 import sys
 import json
-from biomni.tool.cancer_biology import detect_and_characterize_structural_variations
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.cancer_biology import detect_and_characterize_structural_variations
     if len(sys.argv) != 2:
         print("Usage: detect_and_characterize_structural_variations.py <input_json>")
         sys.exit(1)

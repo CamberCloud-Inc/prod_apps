@@ -6,7 +6,6 @@ Predicts top K drug repurposing candidates for a given disease using TxGNN.
 
 import sys
 import json
-from biomni.tool.pharmacology import retrieve_topk_repurposing_drugs_from_disease_txgnn
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import retrieve_topk_repurposing_drugs_from_disease_txgnn
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: retrieve_topk_repurposing_drugs_from_disease_txgnn.py '<json_args>'"}))
         sys.exit(1)

@@ -5,7 +5,6 @@ import argparse
 # Install required dependencies
 subprocess.check_call([sys.executable, "-m", "pip", "install", "numpy", "pandas", "scipy"])
 
-from biomni.tool.genetics import fit_genomic_prediction_model
 import numpy as np
 
 
@@ -23,6 +22,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.genetics import fit_genomic_prediction_model
     parser = argparse.ArgumentParser(description='Fit linear mixed model for genomic prediction')
     parser.add_argument('genotypes', help='Path to genotype data file (numpy .npy format)')
     parser.add_argument('phenotypes', help='Path to phenotype data file (numpy .npy format)')

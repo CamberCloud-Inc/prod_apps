@@ -7,7 +7,6 @@ Analyze ciliary beat frequency from high-speed video microscopy data using FFT a
 
 import sys
 import json
-from biomni.tool.physiology import analyze_ciliary_beat_frequency
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.physiology import analyze_ciliary_beat_frequency
     if len(sys.argv) != 2:
         print("Usage: analyze_ciliary_beat_frequency.py <input_json>")
         sys.exit(1)

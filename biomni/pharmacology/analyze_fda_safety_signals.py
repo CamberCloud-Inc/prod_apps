@@ -6,7 +6,6 @@ Analyzes FDA safety signals for drugs.
 
 import sys
 import json
-from biomni.tool.pharmacology import analyze_fda_safety_signals
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import analyze_fda_safety_signals
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: analyze_fda_safety_signals.py '<json_args>'"}))
         sys.exit(1)

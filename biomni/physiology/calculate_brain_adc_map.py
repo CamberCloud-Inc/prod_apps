@@ -7,7 +7,6 @@ Calculate Apparent Diffusion Coefficient (ADC) map from diffusion-weighted MRI d
 
 import sys
 import json
-from biomni.tool.physiology import calculate_brain_adc_map
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.physiology import calculate_brain_adc_map
     if len(sys.argv) != 2:
         print("Usage: calculate_brain_adc_map.py <input_json>")
         sys.exit(1)

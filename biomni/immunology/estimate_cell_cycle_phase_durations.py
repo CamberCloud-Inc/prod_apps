@@ -5,7 +5,6 @@ Camber wrapper for estimate_cell_cycle_phase_durations from biomni.tool.immunolo
 
 import sys
 import json
-from biomni.tool.immunology import estimate_cell_cycle_phase_durations
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.immunology import estimate_cell_cycle_phase_durations
     if len(sys.argv) < 3:
         print("Usage: estimate_cell_cycle_phase_durations.py <flow_cytometry_data_json> <initial_estimates_json>")
         print("\nflow_cytometry_data format: {\"time_points\": [...], \"edu_positive\": [...], \"brdu_positive\": [...], \"double_positive\": [...]}")

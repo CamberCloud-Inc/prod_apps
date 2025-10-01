@@ -6,7 +6,6 @@ Runs 3D chondrogenic aggregate assay.
 
 import sys
 import json
-from biomni.tool.pharmacology import run_3d_chondrogenic_aggregate_assay
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import run_3d_chondrogenic_aggregate_assay
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: run_3d_chondrogenic_aggregate_assay.py '<json_args>'"}))
         sys.exit(1)

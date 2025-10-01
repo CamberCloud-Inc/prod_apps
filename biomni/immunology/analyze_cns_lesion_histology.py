@@ -5,7 +5,6 @@ Camber wrapper for analyze_cns_lesion_histology from biomni.tool.immunology
 
 import sys
 import json
-from biomni.tool.immunology import analyze_cns_lesion_histology
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.immunology import analyze_cns_lesion_histology
     if len(sys.argv) < 2:
         print("Usage: analyze_cns_lesion_histology.py <image_path> [output_dir] [cell_markers_json] [pixel_size_um]")
         print("\ncell_markers format: JSON list of cell marker names, e.g., '[\"CD3\", \"CD8\", \"GFAP\"]'")

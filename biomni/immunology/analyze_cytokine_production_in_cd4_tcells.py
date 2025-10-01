@@ -5,7 +5,6 @@ Camber wrapper for analyze_cytokine_production_in_cd4_tcells from biomni.tool.im
 
 import sys
 import json
-from biomni.tool.immunology import analyze_cytokine_production_in_cd4_tcells
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.immunology import analyze_cytokine_production_in_cd4_tcells
     if len(sys.argv) < 2:
         print("Usage: analyze_cytokine_production_in_cd4_tcells.py <fcs_files_dict_json> [output_dir]")
         print("\nfcs_files_dict format: JSON string mapping condition names to FCS file paths")

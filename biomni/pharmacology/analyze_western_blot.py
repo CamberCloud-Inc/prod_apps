@@ -6,7 +6,6 @@ Analyzes western blot images.
 
 import sys
 import json
-from biomni.tool.pharmacology import analyze_western_blot
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import analyze_western_blot
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: analyze_western_blot.py '<json_args>'"}))
         sys.exit(1)

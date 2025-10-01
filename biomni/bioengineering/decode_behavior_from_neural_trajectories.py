@@ -7,7 +7,6 @@ import json
 # Install required packages
 subprocess.check_call([sys.executable, "-m", "pip", "install", "numpy", "pandas", "matplotlib", "scikit-learn", "pykalman"])
 
-from biomni.tool.bioengineering import decode_behavior_from_neural_trajectories
 import numpy as np
 
 
@@ -25,6 +24,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.bioengineering import decode_behavior_from_neural_trajectories
     parser = argparse.ArgumentParser(description='Model neural activity trajectories and decode behavioral variables')
     parser.add_argument('neural_data_file', help='Path to CSV file containing neural data (rows=timepoints, cols=neurons)')
     parser.add_argument('behavioral_data_file', help='Path to CSV file containing behavioral data (rows=timepoints, cols=variables)')

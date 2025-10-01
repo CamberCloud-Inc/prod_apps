@@ -2,7 +2,6 @@ import json
 import sys
 import os
 import argparse
-from biomni.tool.molecular_biology import get_plasmid_sequence
 
 
 
@@ -19,6 +18,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.molecular_biology import get_plasmid_sequence
     parser = argparse.ArgumentParser(description='Retrieve plasmid sequences from Addgene or NCBI')
     parser.add_argument('identifier', help='Plasmid ID (Addgene) or name (NCBI)')
     parser.add_argument('--addgene', action='store_true',

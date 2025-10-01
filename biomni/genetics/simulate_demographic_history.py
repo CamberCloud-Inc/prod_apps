@@ -6,7 +6,6 @@ import json
 # Install required dependencies
 subprocess.check_call([sys.executable, "-m", "pip", "install", "msprime"])
 
-from biomni.tool.genetics import simulate_demographic_history
 
 
 
@@ -23,6 +22,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.genetics import simulate_demographic_history
     parser = argparse.ArgumentParser(description='Simulate DNA sequences with demographic and coalescent histories')
     parser.add_argument('-n', '--num-samples', type=int, default=10,
                         help='Number of sample sequences to simulate (default: 10)')

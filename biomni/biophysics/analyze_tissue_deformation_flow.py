@@ -8,7 +8,6 @@ Quantify tissue deformation and flow dynamics from microscopy image sequence.
 import sys
 import json
 import numpy as np
-from biomni.tool.biophysics import analyze_tissue_deformation_flow
 
 
 
@@ -25,6 +24,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.biophysics import analyze_tissue_deformation_flow
     if len(sys.argv) != 2:
         print("Usage: analyze_tissue_deformation_flow.py <input_json>")
         sys.exit(1)

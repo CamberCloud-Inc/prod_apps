@@ -5,7 +5,6 @@ Annotate a bacterial genome using Prokka to identify genes, proteins, and functi
 
 import sys
 import json
-from biomni.tool.microbiology import annotate_bacterial_genome
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.microbiology import annotate_bacterial_genome
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())
 

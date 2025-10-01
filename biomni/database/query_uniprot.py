@@ -2,7 +2,6 @@
 Camber wrapper for biomni.tool.database.query_uniprot
 """
 
-from biomni.tool.database import query_uniprot
 import json
 
 
@@ -20,6 +19,9 @@ def install_dependencies():
 def main(prompt=None, endpoint=None, max_results=5):
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.database import query_uniprot
     """
     Wrapper for query_uniprot from biomni.tool.database
     

@@ -2,7 +2,6 @@
 Camber wrapper for biomni.tool.database.query_paleobiology
 """
 
-from biomni.tool.database import query_paleobiology
 import json
 
 
@@ -20,6 +19,9 @@ def install_dependencies():
 def main(prompt=None, endpoint=None, verbose=True):
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.database import query_paleobiology
     """
     Wrapper for query_paleobiology from biomni.tool.database
     

@@ -5,7 +5,6 @@ Count bacterial colonies from an image of agar plate using computer vision techn
 
 import sys
 import json
-from biomni.tool.microbiology import count_bacterial_colonies
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.microbiology import count_bacterial_colonies
     # Read input from stdin
     input_data = json.loads(sys.stdin.read())
 

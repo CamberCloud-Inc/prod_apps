@@ -6,7 +6,6 @@ Runs AutoSite to identify potential binding sites in a protein.
 
 import sys
 import json
-from biomni.tool.pharmacology import run_autosite
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import run_autosite
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: run_autosite.py '<json_args>'"}))
         sys.exit(1)

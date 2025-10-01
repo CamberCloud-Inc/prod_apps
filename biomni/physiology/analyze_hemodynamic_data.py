@@ -7,7 +7,6 @@ Analyzes raw blood pressure data to calculate key hemodynamic parameters.
 
 import sys
 import json
-from biomni.tool.physiology import analyze_hemodynamic_data
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.physiology import analyze_hemodynamic_data
     if len(sys.argv) != 2:
         print("Usage: analyze_hemodynamic_data.py <input_json>")
         sys.exit(1)

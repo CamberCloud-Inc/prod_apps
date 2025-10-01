@@ -5,7 +5,6 @@ Camber wrapper for query_scholar from biomni.tool.literature
 
 import sys
 import json
-from biomni.tool.literature import query_scholar
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.literature import query_scholar
     """Main function for Camber app execution"""
     if len(sys.argv) != 2:
         print(json.dumps({

@@ -6,7 +6,6 @@ import argparse
 # Install required packages
 subprocess.check_call([sys.executable, "-m", "pip", "install", "numpy", "pandas", "scipy", "scikit-image"])
 
-from biomni.tool.bioengineering import analyze_calcium_imaging_data
 
 
 
@@ -23,6 +22,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.bioengineering import analyze_calcium_imaging_data
     parser = argparse.ArgumentParser(description='Analyze calcium imaging data to quantify neuronal activity')
     parser.add_argument('image_stack_path', help='Path to the time-series stack of fluorescence microscopy images (TIFF format)')
     parser.add_argument('-o', '--output-dir', default='./',

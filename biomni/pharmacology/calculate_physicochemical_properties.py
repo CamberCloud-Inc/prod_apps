@@ -6,7 +6,6 @@ Calculates physicochemical properties of molecules.
 
 import sys
 import json
-from biomni.tool.pharmacology import calculate_physicochemical_properties
 
 
 def install_dependencies():
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pharmacology import calculate_physicochemical_properties
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Usage: calculate_physicochemical_properties.py '<json_args>'"}))
         sys.exit(1)

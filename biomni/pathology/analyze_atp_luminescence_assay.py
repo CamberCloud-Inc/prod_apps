@@ -7,7 +7,6 @@ Analyze luminescence-based ATP concentration.
 
 import sys
 import json
-from biomni.tool.pathology import analyze_atp_luminescence_assay
 
 
 
@@ -24,6 +23,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.pathology import analyze_atp_luminescence_assay
     if len(sys.argv) != 2:
         print("Usage: analyze_atp_luminescence_assay.py <input_json>")
         sys.exit(1)

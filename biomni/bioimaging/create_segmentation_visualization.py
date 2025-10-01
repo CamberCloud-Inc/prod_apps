@@ -5,7 +5,6 @@ Create visualization of segmentation results.
 
 import sys
 import json
-from biomni.tool.bioimaging import create_segmentation_visualization
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.bioimaging import create_segmentation_visualization
     if len(sys.argv) != 2:
         print("Error: Expected config file as argument", file=sys.stderr)
         sys.exit(1)

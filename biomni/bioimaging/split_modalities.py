@@ -5,7 +5,6 @@ Split 4D NIfTI medical imaging file into separate modality files.
 
 import sys
 import json
-from biomni.tool.bioimaging import split_modalities
 
 
 
@@ -22,6 +21,9 @@ def install_dependencies():
 def main():
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.bioimaging import split_modalities
     if len(sys.argv) != 2:
         print("Error: Expected config file as argument", file=sys.stderr)
         sys.exit(1)

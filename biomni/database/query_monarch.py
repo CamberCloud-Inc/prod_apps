@@ -2,7 +2,6 @@
 Camber wrapper for biomni.tool.database.query_monarch
 """
 
-from biomni.tool.database import query_monarch
 import json
 
 
@@ -20,6 +19,9 @@ def install_dependencies():
 def main(prompt=None, endpoint=None, max_results=2, verbose=False):
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.database import query_monarch
     """
     Wrapper for query_monarch from biomni.tool.database
     

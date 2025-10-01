@@ -2,7 +2,6 @@
 Camber wrapper for biomni.tool.database.query_reactome
 """
 
-from biomni.tool.database import query_reactome
 import json
 
 
@@ -20,6 +19,9 @@ def install_dependencies():
 def main(prompt=None, endpoint=None, download=False, output_dir=None, verbose=True):
     
     install_dependencies()
+
+    # Import after dependencies are installed
+    from biomni.tool.database import query_reactome
     """
     Wrapper for query_reactome from biomni.tool.database
     
