@@ -1,0 +1,16 @@
+{
+  "name": "neutronstar-astrophysics",
+  "title": "Neutron Star",
+  "description": " Astrophysics Analysis",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/neutronstar --input ${input} --outdir ${outdir} -r  Neutron star data analysis pipeline:1.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/neutronstar/master/docs/images/nf-core-neutronstar_logo_light.png",
+  "content": "<h2><strong>Neutron Star</strong></h2><p> Astrophysics Analysis</p>",
+  "spec": [
+    {"type": "Stash File", "label": "Input", "name": "input", "required": true, "restrictions": {"allow_files": true, "allowed_file_types": [".csv", ".tsv"]}},
+    {"type": "Stash File", "label": "Output", "name": "outdir", "defaultValue": "./neutronstar-results", "required": true, "restrictions": {"allow_files": false, "allow_folders": true}}
+  ],
+  "jobConfig": [{"type": "Select", "label": "Resources", "name": "system_size", "options": [{"label": "LARGE", "value": "large", "mapValue": {"nodeSize": "LARGE", "numNodes": 1, "withGpu": false}}], "defaultValue": "large"}],
+  "tags": [{"name": "neutronstar", "type": "task"}]
+}
