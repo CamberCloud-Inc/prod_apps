@@ -1,6 +1,6 @@
 # nf-core Pipeline Implementation Progress
 
-**Last Updated**: 2025-10-01 00:10
+**Last Updated**: 2025-10-01 00:36
 
 ---
 
@@ -9,8 +9,8 @@
 Systematic implementation of nf-core Nextflow pipelines with biological use-case variants for the Camber platform.
 
 **Goal**: Implement 290-340 apps from 139 nf-core pipelines
-**Current Status**: 52 apps from 24 pipelines
-**Progress**: 15-18% complete
+**Current Status**: 61 apps from 30 pipelines
+**Progress**: 18-21% complete
 
 ---
 
@@ -67,17 +67,34 @@ Systematic implementation of nf-core Nextflow pipelines with biological use-case
 
 ---
 
-### 📝 Batch 3: Single-Cell & Spatial (Planned)
+### ✅ Batch 3: Single-Cell & Spatial (COMPLETED)
 
-**Target**: 12-15 apps
+**Status**: 9 apps created successfully
 
-**Pipelines**:
-- scflow (3 variants): cell-type-annotation, trajectory, multi-sample
-- scdownstream (3 variants): DE-analysis, pseudotime, RNA-velocity
-- smartseq2 (2 variants): full-length-transcripts, isoform-analysis
-- scnanoseq (2 variants): sc-isoseq, isoform-diversity
-- spatialxe (2 variants): Xenium-analysis, spatial-niches
-- sopa (1 variant): spatial-omics
+| App | Pipeline | Version | Status |
+|-----|----------|---------|--------|
+| scdownstream-cell-annotation | nf-core/scdownstream | dev | ✅ DEPLOYED |
+| scdownstream-integration | nf-core/scdownstream | dev | ✅ DEPLOYED |
+| scdownstream-clustering | nf-core/scdownstream | dev | ✅ DEPLOYED |
+| scnanoseq-long-read | nf-core/scnanoseq | dev | ✅ DEPLOYED |
+| scnanoseq-isoform-diversity | nf-core/scnanoseq | dev | ✅ DEPLOYED |
+| smartseq2-full-length | nf-core/smartseq2 | dev | ✅ DEPLOYED |
+| smartseq2-isoform-analysis | nf-core/smartseq2 | dev | ✅ DEPLOYED |
+| sopa-spatial-omics | nf-core/sopa | dev | ✅ DEPLOYED |
+| spatialvi-visium-analysis | nf-core/spatialvi | dev | ✅ DEPLOYED |
+
+**Pipelines Verified**:
+- ✅ nf-core/scdownstream: DSL2, replacement for deprecated scflow
+- ✅ nf-core/scnanoseq: DSL2, Nanopore long-read scRNA-seq
+- ✅ nf-core/smartseq2: DSL2, plate-based full-length scRNA-seq
+- ✅ nf-core/sopa: DSL2, multi-platform spatial omics
+- ✅ nf-core/spatialvi: DSL2, Visium spatial transcriptomics
+
+---
+
+### 📝 Batch 4: Epigenomics & Regulation (Planned)
+
+**Target**: 10-12 apps
 
 ---
 
@@ -89,14 +106,15 @@ Systematic implementation of nf-core Nextflow pipelines with biological use-case
 |----------|--------------|-------------|--------------|
 | **Previous** | 38 | 1 (scrnaseq) | 1 |
 | **Batch 1** | 7 | 5 | 2 ✅ 3 ❌ |
-| **Batch 2** | 7 | 0 | TBD |
-| **Total** | **52** | **6** | **3+** |
+| **Batch 2** | 7 | 0 | TBD (90% confidence) |
+| **Batch 3** | 9 | 0 | TBD |
+| **Total** | **61** | **6** | **3+** |
 
 ### Pipeline Coverage
 
 **Total nf-core pipelines**: 139
-**Implemented**: 24 (~17%)
-**With variants**: 52 apps
+**Implemented**: 30 (~22%)
+**With variants**: 61 apps
 
 ### Account Issues
 
