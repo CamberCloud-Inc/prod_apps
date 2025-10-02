@@ -1,0 +1,1532 @@
+{
+  "biomni-analyze-circular-dichroism-spectra": {
+    "json_path": "biomni/biochemistry/analyze_circular_dichroism_spectra_app.json",
+    "inputs": {
+      "sample_name": "P04637",
+      "sample_type": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "wavelength_data": "test_value",
+      "cd_signal_data": "test_value",
+      "temperature_data": "37",
+      "thermal_cd_data": "37"
+    }
+  },
+  "biomni-analyze-enzyme-kinetics-assay": {
+    "json_path": "biomni/biochemistry/analyze_enzyme_kinetics_assay_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-analyze-itc-binding-thermodynamics": {
+    "json_path": "biomni/biochemistry/analyze_itc_binding_thermodynamics_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-analyze-protease-kinetics": {
+    "json_path": "biomni/biochemistry/analyze_protease_kinetics_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-analyze-protein-conservation": {
+    "json_path": "biomni/biochemistry/analyze_protein_conservation_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-analyze-rna-secondary-structure-features": {
+    "json_path": "biomni/biochemistry/analyze_rna_secondary_structure_features_app.json",
+    "inputs": {
+      "dot_bracket_structure": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG"
+    }
+  },
+  "biomni-analyze-calcium-imaging-data": {
+    "json_path": "biomni/bioengineering/analyze_calcium_imaging_data_app.json",
+    "inputs": {
+      "image_stack_path": "test_image.png"
+    }
+  },
+  "biomni-analyze-cell-migration-metrics": {
+    "json_path": "biomni/bioengineering/analyze_cell_migration_metrics_app.json",
+    "inputs": {
+      "image_sequence_path": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "pixel_size_um": "1.0",
+      "time_interval_min": "1.0",
+      "min_track_length": "10"
+    }
+  },
+  "biomni-analyze-in-vitro-drug-release-kinetics": {
+    "json_path": "biomni/bioengineering/analyze_in_vitro_drug_release_kinetics_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-analyze-myofiber-morphology": {
+    "json_path": "biomni/bioengineering/analyze_myofiber_morphology_app.json",
+    "inputs": {
+      "image_path": "test_image.png",
+      "nuclei_channel": "2",
+      "myofiber_channel": "1",
+      "threshold_method": "otsu"
+    }
+  },
+  "biomni-decode-behavior-from-neural-trajectories": {
+    "json_path": "biomni/bioengineering/decode_behavior_from_neural_trajectories_app.json",
+    "inputs": {
+      "neural_data_file": "test_data.csv",
+      "behavioral_data_file": "test_data.csv",
+      "n_components": "10"
+    }
+  },
+  "biomni-perform-crispr-cas9-genome-editing": {
+    "json_path": "biomni/bioengineering/perform_crispr_cas9_genome_editing_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-simulate-whole-cell-ode-model": {
+    "json_path": "biomni/bioengineering/simulate_whole_cell_ode_model_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-batch-register-images": {
+    "json_path": "biomni/bioimaging/batch_register_images_app.json",
+    "inputs": {
+      "fixed_image_path": "test_image.png",
+      "moving_images_dir": "test_file.txt",
+      "output_dir": "test_file.txt",
+      "transform_type": "rigid",
+      "metric": "mutual_information",
+      "optimizer": "gradient_descent",
+      "preprocess": "true",
+      "create_visualizations": "true",
+      "learning_rate": "0.01",
+      "number_of_iterations": "100",
+      "gradient_convergence_tolerance": "1e-6"
+    }
+  },
+  "biomni-calculate-similarity-metrics": {
+    "json_path": "biomni/bioimaging/calculate_similarity_metrics_app.json",
+    "inputs": {
+      "image1_path": "test_image.png",
+      "image2_path": "test_image.png"
+    }
+  },
+  "biomni-create-segmentation-visualization": {
+    "json_path": "biomni/bioimaging/create_segmentation_visualization_app.json",
+    "inputs": {
+      "original_mri": "test_image.png",
+      "segmentation": "test_file.txt",
+      "output_dir": "./visualization_output"
+    }
+  },
+  "biomni-prepare-input-for-nnunet": {
+    "json_path": "biomni/bioimaging/prepare_input_for_nnunet_app.json",
+    "inputs": {
+      "input_path": "test_image.png",
+      "output_dir": "test_file.txt",
+      "case_name": "BRAT"
+    }
+  },
+  "biomni-preprocess-image": {
+    "json_path": "biomni/bioimaging/preprocess_image_app.json",
+    "inputs": {
+      "image_path": "test_image.png",
+      "output_path": "test_image.png",
+      "denoise": "true",
+      "normalize": "true"
+    }
+  },
+  "biomni-quick-affine-registration": {
+    "json_path": "biomni/bioimaging/quick_affine_registration_app.json",
+    "inputs": {
+      "fixed_image_path": "test_image.png",
+      "moving_image_path": "test_image.png",
+      "output_dir": "test_file.txt",
+      "metric": "mutual_information",
+      "optimizer": "gradient_descent",
+      "preprocess": "true",
+      "create_visualizations": "true",
+      "learning_rate": "0.01",
+      "number_of_iterations": "100",
+      "gradient_convergence_tolerance": "1e-6"
+    }
+  },
+  "biomni-quick-deformable-registration": {
+    "json_path": "biomni/bioimaging/quick_deformable_registration_app.json",
+    "inputs": {
+      "fixed_image_path": "test_image.png",
+      "moving_image_path": "test_image.png",
+      "output_dir": "test_file.txt",
+      "metric": "mutual_information",
+      "optimizer": "gradient_descent",
+      "preprocess": "true",
+      "create_visualizations": "true",
+      "learning_rate": "0.01",
+      "number_of_iterations": "100",
+      "gradient_convergence_tolerance": "1e-6",
+      "number_of_control_points": "4"
+    }
+  },
+  "biomni-quick-rigid-registration": {
+    "json_path": "biomni/bioimaging/quick_rigid_registration_app.json",
+    "inputs": {
+      "fixed_image_path": "test_image.png",
+      "moving_image_path": "test_image.png",
+      "output_dir": "test_file.txt",
+      "metric": "mutual_information",
+      "optimizer": "gradient_descent",
+      "preprocess": "true",
+      "create_visualizations": "true",
+      "learning_rate": "0.01",
+      "number_of_iterations": "100",
+      "gradient_convergence_tolerance": "1e-6"
+    }
+  },
+  "biomni-segment-with-nn-unet": {
+    "json_path": "biomni/bioimaging/segment_with_nn_unet_app.json",
+    "inputs": {
+      "image_path": "test_image.png",
+      "output_dir": "test_file.txt",
+      "task_id": "Task001_BrainTumour",
+      "model_type": "3d_fullres",
+      "folds": "0,1,2,3,4",
+      "use_tta": "false",
+      "num_threads": "1",
+      "mixed_precision": "true",
+      "verbose": "true",
+      "auto_prepare_input": "true",
+      "results_folder": "test_file.txt"
+    }
+  },
+  "biomni-split-modalities": {
+    "json_path": "biomni/bioimaging/split_modalities_app.json",
+    "inputs": {
+      "input_file": "test_file.txt",
+      "output_dir": "test_file.txt",
+      "case_name": "BRAT"
+    }
+  },
+  "biomni-analyze-cell-morphology-and-cytoskeleton": {
+    "json_path": "biomni/biophysics/analyze_cell_morphology_and_cytoskeleton_app.json",
+    "inputs": {
+      "imagePath": "test_image.png",
+      "thresholdMethod": "otsu"
+    }
+  },
+  "biomni-analyze-tissue-deformation-flow": {
+    "json_path": "biomni/biophysics/analyze_tissue_deformation_flow_app.json",
+    "inputs": {
+      "imageSequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "pixelScale": "1.0"
+    }
+  },
+  "biomni-predict-protein-disorder-regions": {
+    "json_path": "biomni/biophysics/predict_protein_disorder_regions_app.json",
+    "inputs": {
+      "proteinSequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "threshold": "0.5"
+    }
+  },
+  "biomni-analyze-cell-senescence-and-apoptosis": {
+    "json_path": "biomni/cancer_biology/analyze_cell_senescence_and_apoptosis_app.json",
+    "inputs": {
+      "fcsFilePath": "test_file.txt"
+    }
+  },
+  "biomni-analyze-copy-number-purity-ploidy-and-focal-events": {
+    "json_path": "biomni/cancer_biology/analyze_copy_number_purity_ploidy_and_focal_events_app.json",
+    "inputs": {
+      "tumorBam": "test_file.txt",
+      "referenceGenome": "test_file.txt",
+      "normalBam": "test_file.txt",
+      "outputDirInternal": "./results"
+    }
+  },
+  "biomni-analyze-ddr-network-in-cancer": {
+    "json_path": "biomni/cancer_biology/analyze_ddr_network_in_cancer_app.json",
+    "inputs": {
+      "expressionDataPath": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "mutationDataPath": "test_file.txt",
+      "outputDirInternal": "./results"
+    }
+  },
+  "biomni-detect-and-annotate-somatic-mutations": {
+    "json_path": "biomni/cancer_biology/detect_and_annotate_somatic_mutations_app.json",
+    "inputs": {
+      "tumorBam": "test_file.txt",
+      "normalBam": "test_file.txt",
+      "referenceGenome": "test_file.txt",
+      "outputPrefix": "sample",
+      "snpeffDatabase": "GRCh38.105"
+    }
+  },
+  "biomni-detect-and-characterize-structural-variations": {
+    "json_path": "biomni/cancer_biology/detect_and_characterize_structural_variations_app.json",
+    "inputs": {
+      "bamFilePath": "test_file.txt",
+      "referenceGenomePath": "test_file.txt",
+      "outputDirInternal": "./sv_results",
+      "cosmicDbPath": "test_file.txt",
+      "clinvarDbPath": "test_file.txt"
+    }
+  },
+  "biomni-perform-gene-expression-nmf-analysis": {
+    "json_path": "biomni/cancer_biology/perform_gene_expression_nmf_analysis_app.json",
+    "inputs": {
+      "expressionDataPath": "test_file.txt",
+      "nComponents": 5,
+      "outputDirInternal": "./results"
+    }
+  },
+  "biomni-analyze-flow-cytometry-immunophenotyping": {
+    "json_path": "biomni/cell_biology/analyze_flow_cytometry_immunophenotyping_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-analyze-mitochondrial-morphology-and-potential": {
+    "json_path": "biomni/cell_biology/analyze_mitochondrial_morphology_and_potential_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-perform-facs-cell-sorting": {
+    "json_path": "biomni/cell_biology/perform_facs_cell_sorting_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-quantify-and-cluster-cell-motility": {
+    "json_path": "biomni/cell_biology/quantify_and_cluster_cell_motility_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-quantify-cell-cycle-phases-from-microscopy": {
+    "json_path": "biomni/cell_biology/quantify_cell_cycle_phases_from_microscopy_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-blast-sequence": {
+    "json_path": "biomni/database/blast_sequence_app.json",
+    "inputs": {
+      "sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "database": "test_value",
+      "program": "test_value"
+    }
+  },
+  "biomni-get-genes-near-ccre": {
+    "json_path": "biomni/database/get_genes_near_ccre_app.json",
+    "inputs": {
+      "accession": "TEST_ID_12345",
+      "assembly": "test_value",
+      "chromosome": "test_value",
+      "k": "10"
+    }
+  },
+  "biomni-get-hpo-names": {
+    "json_path": "biomni/database/get_hpo_names_app.json",
+    "inputs": {
+      "hpo_terms": "cancer immunotherapy",
+      "data_lake_path": "test_file.txt"
+    }
+  },
+  "biomni-query-alphafold": {
+    "json_path": "biomni/database/query_alphafold_app.json",
+    "inputs": {
+      "uniprot_id": "P04637",
+      "endpoint": "prediction",
+      "residue_range": "TEST_ID_12345",
+      "download": "false",
+      "output_dir": "test_value",
+      "file_format": "pdb",
+      "model_version": "v4",
+      "model_number": "1"
+    }
+  },
+  "biomni-query-cbioportal": {
+    "json_path": "biomni/database/query_cbioportal_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-clinicaltrials": {
+    "json_path": "biomni/database/query_clinicaltrials_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "term": "cancer immunotherapy",
+      "status": "test_value",
+      "condition": "test_value",
+      "intervention": "test_value",
+      "location": "test_value",
+      "phase": "7.4",
+      "page_size": "10",
+      "max_pages": "1",
+      "page_token": "test_value",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-clinvar": {
+    "json_path": "biomni/database/query_clinvar_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "search_term": "cancer immunotherapy",
+      "max_results": "3"
+    }
+  },
+  "biomni-query-dbsnp": {
+    "json_path": "biomni/database/query_dbsnp_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "search_term": "cancer immunotherapy",
+      "max_results": "3"
+    }
+  },
+  "biomni-query-emdb": {
+    "json_path": "biomni/database/query_emdb_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-ensembl": {
+    "json_path": "biomni/database/query_ensembl_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-geo": {
+    "json_path": "biomni/database/query_geo_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "search_term": "cancer immunotherapy",
+      "max_results": "3"
+    }
+  },
+  "biomni-query-gnomad": {
+    "json_path": "biomni/database/query_gnomad_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "gene_symbol": "BRCA1",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-gtopdb": {
+    "json_path": "biomni/database/query_gtopdb_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-gwas-catalog": {
+    "json_path": "biomni/database/query_gwas_catalog_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "max_results": "3"
+    }
+  },
+  "biomni-query-interpro": {
+    "json_path": "biomni/database/query_interpro_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "max_results": "3"
+    }
+  },
+  "biomni-query-iucn": {
+    "json_path": "biomni/database/query_iucn_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "token": "test_value",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-jaspar": {
+    "json_path": "biomni/database/query_jaspar_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-kegg": {
+    "json_path": "biomni/database/query_kegg_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-monarch": {
+    "json_path": "biomni/database/query_monarch_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "max_results": "10",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-mpd": {
+    "json_path": "biomni/database/query_mpd_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-openfda": {
+    "json_path": "biomni/database/query_openfda_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "max_results": "10",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-opentarget": {
+    "json_path": "biomni/database/query_opentarget_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "query": "cancer immunotherapy",
+      "variables": "cancer immunotherapy",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-paleobiology": {
+    "json_path": "biomni/database/query_paleobiology_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-pdb": {
+    "json_path": "biomni/database/query_pdb_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "query": "cancer immunotherapy",
+      "max_results": "10"
+    }
+  },
+  "biomni-query-pdb-identifiers": {
+    "json_path": "biomni/database/query_pdb_identifiers_app.json",
+    "inputs": {
+      "identifiers": "1TUP",
+      "return_type": "test_value",
+      "download": "test_file.txt",
+      "attributes": "test_value"
+    }
+  },
+  "biomni-query-pride": {
+    "json_path": "biomni/database/query_pride_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "max_results": "10"
+    }
+  },
+  "biomni-query-reactome": {
+    "json_path": "biomni/database/query_reactome_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "download": "test_file.txt",
+      "output_dir": "test_value",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-regulomedb": {
+    "json_path": "biomni/database/query_regulomedb_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-remap": {
+    "json_path": "biomni/database/query_remap_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-stringdb": {
+    "json_path": "biomni/database/query_stringdb_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "download_image": "test_value",
+      "output_dir": "test_value",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-synapse": {
+    "json_path": "biomni/database/query_synapse_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "query_term": "cancer immunotherapy",
+      "return_fields": "test_value",
+      "max_results": "10",
+      "query_type": "cancer immunotherapy",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-ucsc": {
+    "json_path": "biomni/database/query_ucsc_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "verbose": "true"
+    }
+  },
+  "biomni-query-uniprot": {
+    "json_path": "biomni/database/query_uniprot_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "max_results": "10"
+    }
+  },
+  "biomni-query-worms": {
+    "json_path": "biomni/database/query_worms_app.json",
+    "inputs": {
+      "prompt": "cancer immunotherapy",
+      "endpoint": "test_file.txt",
+      "verbose": "true"
+    }
+  },
+  "biomni-region-to-ccre-screen": {
+    "json_path": "biomni/database/region_to_ccre_screen_app.json",
+    "inputs": {
+      "coord_chrom": "test_value",
+      "coord_start": "100",
+      "coord_end": "100",
+      "assembly": "GRCh38"
+    }
+  },
+  "biomni-analyze-cas9-mutation-outcomes": {
+    "json_path": "biomni/genetics/analyze_cas9_mutation_outcomes_app.json",
+    "inputs": {
+      "reference_sequences": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "edited_sequences": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "cell_line_info": "test_data.json",
+      "output_prefix": "test_file.txt"
+    }
+  },
+  "biomni-analyze-crispr-genome-editing": {
+    "json_path": "biomni/genetics/analyze_crispr_genome_editing_app.json",
+    "inputs": {
+      "original_sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "edited_sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "guide_rna": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "repair_template": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG"
+    }
+  },
+  "biomni-analyze-protein-phylogeny": {
+    "json_path": "biomni/genetics/analyze_protein_phylogeny_app.json",
+    "inputs": {
+      "fasta_sequences": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "alignment_method": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "tree_method": "test_value"
+    }
+  },
+  "biomni-bayesian-finemapping-with-deep-vi": {
+    "json_path": "biomni/genetics/bayesian_finemapping_with_deep_vi_app.json",
+    "inputs": {
+      "gwas_summary": "test_data.csv",
+      "ld_matrix": "test_data.npy",
+      "n_iterations": "5",
+      "learning_rate": "test_value",
+      "hidden_dim": "TEST_ID_12345",
+      "credible_threshold": "0.05"
+    }
+  },
+  "biomni-fit-genomic-prediction-model": {
+    "json_path": "biomni/genetics/fit_genomic_prediction_model_app.json",
+    "inputs": {
+      "genotypes": "test_data.npy",
+      "phenotypes": "test_data.npy",
+      "fixed_effects": "test_data.npy",
+      "model_type": "5",
+      "output_file": "test_data.csv"
+    }
+  },
+  "biomni-identify-transcription-factor-binding-sites": {
+    "json_path": "biomni/genetics/identify_transcription_factor_binding_sites_app.json",
+    "inputs": {
+      "sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "tf_name": "test_value",
+      "threshold": "0.05",
+      "output_file": "test_file.txt"
+    }
+  },
+  "biomni-liftover-coordinates": {
+    "json_path": "biomni/genetics/liftover_coordinates_app.json",
+    "inputs": {
+      "chromosome": "5",
+      "position": "100",
+      "input_format": "hg19",
+      "output_format": "hg38",
+      "data_path": "test_file.txt"
+    }
+  },
+  "biomni-perform-pcr-and-gel-electrophoresis": {
+    "json_path": "biomni/genetics/perform_pcr_and_gel_electrophoresis_app.json",
+    "inputs": {
+      "genomic_dna": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "forward_primer": "ATGCGATCGATCGATCGATC",
+      "reverse_primer": "ATGCGATCGATCGATCGATC",
+      "target_region": "test_value",
+      "annealing_temp": "37",
+      "extension_time": "10",
+      "cycles": "5",
+      "gel_percentage": "0.05",
+      "output_prefix": "test_file.txt"
+    }
+  },
+  "biomni-simulate-demographic-history": {
+    "json_path": "biomni/genetics/simulate_demographic_history_app.json",
+    "inputs": {
+      "num_samples": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "sequence_length": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "recombination_rate": "test_value",
+      "mutation_rate": "test_value",
+      "demographic_model": "7.4",
+      "demographic_params": "test_data.json",
+      "coalescent_model": "test_value",
+      "beta_param": "test_value",
+      "random_seed": "test_value",
+      "output_file": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG"
+    }
+  },
+  "biomni-find-n-glycosylation-motifs": {
+    "json_path": "biomni/glycoengineering/find_n_glycosylation_motifs_app.json",
+    "inputs": {
+      "sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "allowOverlap": "false"
+    }
+  },
+  "biomni-list-glycoengineering-resources": {
+    "json_path": "biomni/glycoengineering/list_glycoengineering_resources_app.json",
+    "inputs": {}
+  },
+  "biomni-predict-o-glycosylation-hotspots": {
+    "json_path": "biomni/glycoengineering/predict_o_glycosylation_hotspots_app.json",
+    "inputs": {
+      "sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "window": 7,
+      "minStFraction": 0.4,
+      "disallowProlineNext": true
+    }
+  },
+  "biomni-analyze-atac-seq-differential-accessibility": {
+    "json_path": "biomni/immunology/analyze_atac_seq_differential_accessibility_app.json",
+    "inputs": {
+      "treatment_bam": "test_file.txt",
+      "control_bam": "test_file.txt",
+      "genome_size": "hs",
+      "q_value": "0.05",
+      "name_prefix": "atac"
+    }
+  },
+  "biomni-analyze-bacterial-growth-curve": {
+    "json_path": "biomni/immunology/analyze_bacterial_growth_curve_app.json",
+    "inputs": {
+      "time_points": "5",
+      "od_values": "test_value",
+      "strain_name": "TEST_ID_12345"
+    }
+  },
+  "biomni-analyze-cfse-cell-proliferation": {
+    "json_path": "biomni/immunology/analyze_cfse_cell_proliferation_app.json",
+    "inputs": {
+      "fcs_file_path": "test_file.txt",
+      "cfse_channel": "FL1-A",
+      "lymphocyte_gate": "7.4"
+    }
+  },
+  "biomni-analyze-cns-lesion-histology": {
+    "json_path": "biomni/immunology/analyze_cns_lesion_histology_app.json",
+    "inputs": {
+      "image_path": "test_image.png",
+      "cell_markers": "0.05",
+      "pixel_size_um": "0.5"
+    }
+  },
+  "biomni-analyze-cytokine-production-in-cd4-tcells": {
+    "json_path": "biomni/immunology/analyze_cytokine_production_in_cd4_tcells_app.json",
+    "inputs": {
+      "fcs_files_dict": "test_data.json"
+    }
+  },
+  "biomni-analyze-ebv-antibody-titers": {
+    "json_path": "biomni/immunology/analyze_ebv_antibody_titers_app.json",
+    "inputs": {
+      "sample_data": "TEST_ID_12345"
+    }
+  },
+  "biomni-estimate-cell-cycle-phase-durations": {
+    "json_path": "biomni/immunology/estimate_cell_cycle_phase_durations_app.json",
+    "inputs": {
+      "flow_cytometry_data": "test_value",
+      "initial_estimates": "7.4"
+    }
+  },
+  "biomni-isolate-purify-immune-cells": {
+    "json_path": "biomni/immunology/isolate_purify_immune_cells_app.json",
+    "inputs": {
+      "tissue_type": "7.4",
+      "target_cell_type": "test_value",
+      "enzyme_type": "collagenase",
+      "macs_antibody": "test_value",
+      "digestion_time_min": "45"
+    }
+  },
+  "biomni-track-immune-cells-under-flow": {
+    "json_path": "biomni/immunology/track_immune_cells_under_flow_app.json",
+    "inputs": {
+      "image_sequence_path": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "pixel_size_um": "1.0",
+      "time_interval_sec": "1.0",
+      "flow_direction": "right"
+    }
+  },
+  "biomni-advanced-web-search-claude": {
+    "json_path": "biomni/literature/advanced_web_search_claude_app.json",
+    "inputs": {
+      "query": "cancer immunotherapy",
+      "max_searches": "5",
+      "max_retries": "3"
+    }
+  },
+  "biomni-extract-pdf-content": {
+    "json_path": "biomni/literature/extract_pdf_content_app.json",
+    "inputs": {
+      "url": "test_file.txt"
+    }
+  },
+  "biomni-extract-url-content": {
+    "json_path": "biomni/literature/extract_url_content_app.json",
+    "inputs": {
+      "url": "https://www.ncbi.nlm.nih.gov/pubmed/12345678"
+    }
+  },
+  "biomni-fetch-supplementary-info-from-doi": {
+    "json_path": "biomni/literature/fetch_supplementary_info_from_doi_app.json",
+    "inputs": {
+      "doi": "cancer immunotherapy"
+    }
+  },
+  "biomni-query-arxiv": {
+    "json_path": "biomni/literature/query_arxiv_app.json",
+    "inputs": {
+      "query": "p53",
+      "max_papers": "10"
+    }
+  },
+  "biomni-query-pubmed": {
+    "json_path": "biomni/literature/query_pubmed_app.json",
+    "inputs": {
+      "query": "cancer immunotherapy",
+      "max_papers": "10",
+      "max_retries": "3"
+    }
+  },
+  "biomni-query-scholar": {
+    "json_path": "biomni/literature/query_scholar_app.json",
+    "inputs": {
+      "query": "cancer immunotherapy"
+    }
+  },
+  "biomni-search-google": {
+    "json_path": "biomni/literature/search_google_app.json",
+    "inputs": {
+      "query": "cancer immunotherapy",
+      "num_results": "10",
+      "language": "en"
+    }
+  },
+  "biomni-analyze-arsenic-speciation-hplc-icpms": {
+    "json_path": "biomni/microbiology/analyze_arsenic_speciation_hplc_icpms_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-annotate-bacterial-genome": {
+    "json_path": "biomni/microbiology/annotate_bacterial_genome_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-count-bacterial-colonies": {
+    "json_path": "biomni/microbiology/count_bacterial_colonies_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-enumerate-bacterial-cfu-by-serial-dilution": {
+    "json_path": "biomni/microbiology/enumerate_bacterial_cfu_by_serial_dilution_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-model-bacterial-growth-dynamics": {
+    "json_path": "biomni/microbiology/model_bacterial_growth_dynamics_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-optimize-anaerobic-digestion-process": {
+    "json_path": "biomni/microbiology/optimize_anaerobic_digestion_process_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-predict-rna-secondary-structure": {
+    "json_path": "biomni/microbiology/predict_rna_secondary_structure_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-quantify-biofilm-biomass-crystal-violet": {
+    "json_path": "biomni/microbiology/quantify_biofilm_biomass_crystal_violet_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-segment-and-analyze-microbial-cells": {
+    "json_path": "biomni/microbiology/segment_and_analyze_microbial_cells_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-segment-cells-with-deep-learning": {
+    "json_path": "biomni/microbiology/segment_cells_with_deep_learning_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-simulate-generalized-lotka-volterra-dynamics": {
+    "json_path": "biomni/microbiology/simulate_generalized_lotka_volterra_dynamics_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-simulate-microbial-population-dynamics": {
+    "json_path": "biomni/microbiology/simulate_microbial_population_dynamics_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-align-sequences": {
+    "json_path": "biomni/molecular_biology/align_sequences_app.json",
+    "inputs": {
+      "long_seq": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "short_seqs": "ATGCGATCGATCGATCGATC"
+    }
+  },
+  "biomni-annotate-open-reading-frames": {
+    "json_path": "biomni/molecular_biology/annotate_open_reading_frames_app.json",
+    "inputs": {
+      "sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "min_length": "100",
+      "search_reverse": "cancer immunotherapy",
+      "filter_subsets": "test_value"
+    }
+  },
+  "biomni-annotate-plasmid": {
+    "json_path": "biomni/molecular_biology/annotate_plasmid_app.json",
+    "inputs": {
+      "sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "linear": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG"
+    }
+  },
+  "biomni-design-golden-gate-oligos": {
+    "json_path": "biomni/molecular_biology/design_golden_gate_oligos_app.json",
+    "inputs": {
+      "backbone_sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "insert_sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "enzyme": "BsaI",
+      "linear": "test_value"
+    }
+  },
+  "biomni-design-knockout-sgrna": {
+    "json_path": "biomni/molecular_biology/design_knockout_sgrna_app.json",
+    "inputs": {
+      "gene_name": "test_value",
+      "data_lake_path": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "species": "human",
+      "num_guides": "1"
+    }
+  },
+  "biomni-design-primer": {
+    "json_path": "biomni/molecular_biology/design_primer_app.json",
+    "inputs": {
+      "sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "start_pos": "0",
+      "primer_length": "20",
+      "min_gc": "0.4",
+      "max_gc": "0.6",
+      "min_tm": "55.0",
+      "max_tm": "65.0",
+      "search_window": "100"
+    }
+  },
+  "biomni-design-verification-primers": {
+    "json_path": "biomni/molecular_biology/design_verification_primers_app.json",
+    "inputs": {
+      "plasmid_sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "start": "0",
+      "end": "1000",
+      "linear": "TEST_ID_12345",
+      "coverage_length": "800",
+      "primer_length": "20"
+    }
+  },
+  "biomni-digest-sequence": {
+    "json_path": "biomni/molecular_biology/digest_sequence_app.json",
+    "inputs": {
+      "dna_sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "enzymes": "test_value",
+      "linear": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG"
+    }
+  },
+  "biomni-find-restriction-enzymes": {
+    "json_path": "biomni/molecular_biology/find_restriction_enzymes_app.json",
+    "inputs": {
+      "sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "circular": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG"
+    }
+  },
+  "biomni-find-restriction-sites": {
+    "json_path": "biomni/molecular_biology/find_restriction_sites_app.json",
+    "inputs": {
+      "dna_sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "enzymes": "test_value",
+      "linear": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG"
+    }
+  },
+  "biomni-find-sequence-mutations": {
+    "json_path": "biomni/molecular_biology/find_sequence_mutations_app.json",
+    "inputs": {
+      "query_sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "reference_sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "query_start": "1"
+    }
+  },
+  "biomni-get-bacterial-transformation-protocol": {
+    "json_path": "biomni/molecular_biology/get_bacterial_transformation_protocol_app.json",
+    "inputs": {
+      "antibiotic": "ampicillin",
+      "repetitive": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG"
+    }
+  },
+  "biomni-get-gene-coding-sequence": {
+    "json_path": "biomni/molecular_biology/get_gene_coding_sequence_app.json",
+    "inputs": {
+      "gene_name": "test_value",
+      "organism": "Homo sapiens",
+      "email": "test@example.com"
+    }
+  },
+  "biomni-get-golden-gate-assembly-protocol": {
+    "json_path": "biomni/molecular_biology/get_golden_gate_assembly_protocol_app.json",
+    "inputs": {
+      "num_inserts": "1",
+      "enzyme": "BsaI",
+      "vector_length": "test_value",
+      "vector_amount": "75.0",
+      "insert_lengths": "test_value",
+      "library_prep": "test_value"
+    }
+  },
+  "biomni-get-oligo-annealing-protocol": {
+    "json_path": "biomni/molecular_biology/get_oligo_annealing_protocol_app.json",
+    "inputs": {}
+  },
+  "biomni-get-plasmid-sequence": {
+    "json_path": "biomni/molecular_biology/get_plasmid_sequence_app.json",
+    "inputs": {
+      "identifier": "ENSG00000141510",
+      "addgene": "test_value",
+      "ncbi": "test_value"
+    }
+  },
+  "biomni-golden-gate-assembly": {
+    "json_path": "biomni/molecular_biology/golden_gate_assembly_app.json",
+    "inputs": {
+      "backbone_sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "enzyme": "BsaI",
+      "fragments_file": "test_data.json",
+      "linear": "test_value"
+    }
+  },
+  "biomni-pcr-simple": {
+    "json_path": "biomni/molecular_biology/pcr_simple_app.json",
+    "inputs": {
+      "sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "forward_primer": "ATGCGATCGATCGATCGATC",
+      "reverse_primer": "ATGCGATCGATCGATCGATC",
+      "circular": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG"
+    }
+  },
+  "biomni-analyze-aortic-diameter-and-geometry": {
+    "json_path": "biomni/pathology/analyze_aortic_diameter_and_geometry_app.json",
+    "inputs": {
+      "image_path": "test_image.png",
+      "output_dir": "./output"
+    }
+  },
+  "biomni-analyze-atp-luminescence-assay": {
+    "json_path": "biomni/pathology/analyze_atp_luminescence_assay_app.json",
+    "inputs": {
+      "data_file": "test_file.txt",
+      "standard_curve_file": "test_file.txt",
+      "normalization_method": "cell_count",
+      "normalization_data": "test_data.json"
+    }
+  },
+  "biomni-analyze-bone-microct-morphometry": {
+    "json_path": "biomni/pathology/analyze_bone_microct_morphometry_app.json",
+    "inputs": {
+      "input_file_path": "test_image.png",
+      "output_dir": "./results",
+      "threshold_value": "TEST_ID_12345"
+    }
+  },
+  "biomni-analyze-intracellular-calcium-with-rhod2": {
+    "json_path": "biomni/pathology/analyze_intracellular_calcium_with_rhod2_app.json",
+    "inputs": {
+      "background_image_path": "test_image.png",
+      "control_image_path": "test_image.png",
+      "sample_image_path": "test_image.png",
+      "output_dir": "./output"
+    }
+  },
+  "biomni-analyze-thrombus-histology": {
+    "json_path": "biomni/pathology/analyze_thrombus_histology_app.json",
+    "inputs": {
+      "image_path": "test_image.png",
+      "output_dir": "./output"
+    }
+  },
+  "biomni-quantify-corneal-nerve-fibers": {
+    "json_path": "biomni/pathology/quantify_corneal_nerve_fibers_app.json",
+    "inputs": {
+      "image_path": "test_image.png",
+      "marker_type": "test_value",
+      "output_dir": "./output",
+      "threshold_method": "otsu"
+    }
+  },
+  "biomni-segment-and-quantify-cells-in-multiplexed-images": {
+    "json_path": "biomni/pathology/segment_and_quantify_cells_in_multiplexed_images_app.json",
+    "inputs": {
+      "image_path": "test_image.png",
+      "markers_list": "test_data.json",
+      "nuclear_channel_index": "0",
+      "output_dir": "./output"
+    }
+  },
+  "biomni-analyze-accelerated-stability-of-pharmaceutical-formulations": {
+    "json_path": "biomni/pharmacology/analyze_accelerated_stability_of_pharmaceutical_formulations_app.json",
+    "inputs": {
+      "formulations": "7.4",
+      "storageConditions": "TEST_ID_12345",
+      "timePoints": "10"
+    }
+  },
+  "biomni-analyze-fda-safety-signals": {
+    "json_path": "biomni/pharmacology/analyze_fda_safety_signals_app.json",
+    "inputs": {
+      "drugList": "test_value",
+      "comparisonPeriod": "test_value",
+      "signalThreshold": "2.0"
+    }
+  },
+  "biomni-analyze-interaction-mechanisms": {
+    "json_path": "biomni/pharmacology/analyze_interaction_mechanisms_app.json",
+    "inputs": {
+      "drugPair": "test_value",
+      "detailedAnalysis": "true",
+      "dataLakePath": "test_file.txt"
+    }
+  },
+  "biomni-analyze-radiolabeled-antibody-biodistribution": {
+    "json_path": "biomni/pharmacology/analyze_radiolabeled_antibody_biodistribution_app.json",
+    "inputs": {
+      "timePoints": "10",
+      "tissueData": "test_value"
+    }
+  },
+  "biomni-analyze-western-blot": {
+    "json_path": "biomni/pharmacology/analyze_western_blot_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-analyze-xenograft-tumor-growth-inhibition": {
+    "json_path": "biomni/pharmacology/analyze_xenograft_tumor_growth_inhibition_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-calculate-physicochemical-properties": {
+    "json_path": "biomni/pharmacology/calculate_physicochemical_properties_app.json",
+    "inputs": {
+      "smilesString": "CC(=O)OC1=CC=CC=C1C(=O)O"
+    }
+  },
+  "biomni-check-drug-combination-safety": {
+    "json_path": "biomni/pharmacology/check_drug_combination_safety_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-check-fda-drug-recalls": {
+    "json_path": "biomni/pharmacology/check_fda_drug_recalls_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-docking-autodock-vina": {
+    "json_path": "biomni/pharmacology/docking_autodock_vina_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-estimate-alpha-particle-radiotherapy-dosimetry": {
+    "json_path": "biomni/pharmacology/estimate_alpha_particle_radiotherapy_dosimetry_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-find-alternative-drugs-ddinter": {
+    "json_path": "biomni/pharmacology/find_alternative_drugs_ddinter_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-get-fda-drug-label-info": {
+    "json_path": "biomni/pharmacology/get_fda_drug_label_info_app.json",
+    "inputs": {
+      "drugName": "5",
+      "sections": "test_value"
+    }
+  },
+  "biomni-grade-adverse-events-using-vcog-ctcae": {
+    "json_path": "biomni/pharmacology/grade_adverse_events_using_vcog_ctcae_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-perform-mwas-cyp2c19-metabolizer-status": {
+    "json_path": "biomni/pharmacology/perform_mwas_cyp2c19_metabolizer_status_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-predict-admet-properties": {
+    "json_path": "biomni/pharmacology/predict_admet_properties_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-predict-binding-affinity-protein-1d-sequence": {
+    "json_path": "biomni/pharmacology/predict_binding_affinity_protein_1d_sequence_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-query-drug-interactions": {
+    "json_path": "biomni/pharmacology/query_drug_interactions_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-query-fda-adverse-events": {
+    "json_path": "biomni/pharmacology/query_fda_adverse_events_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-retrieve-topk-repurposing-drugs-from-disease-txgnn": {
+    "json_path": "biomni/pharmacology/retrieve_topk_repurposing_drugs_from_disease_txgnn_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-run-3d-chondrogenic-aggregate-assay": {
+    "json_path": "biomni/pharmacology/run_3d_chondrogenic_aggregate_assay_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-run-autosite": {
+    "json_path": "biomni/pharmacology/run_autosite_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-run-diffdock-with-smiles": {
+    "json_path": "biomni/pharmacology/run_diffdock_with_smiles_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-analyze-abr-waveform-p1-metrics": {
+    "json_path": "biomni/physiology/analyze_abr_waveform_p1_metrics_app.json",
+    "inputs": {
+      "timeMsFile": "test_data.json",
+      "amplitudeUvFile": "test_data.json"
+    }
+  },
+  "biomni-analyze-ciliary-beat-frequency": {
+    "json_path": "biomni/physiology/analyze_ciliary_beat_frequency_app.json",
+    "inputs": {
+      "videoPath": "test_file.txt",
+      "roiCount": "5",
+      "minFreq": "0",
+      "maxFreq": "30",
+      "outputDirParam": "./"
+    }
+  },
+  "biomni-analyze-endolysosomal-calcium-dynamics": {
+    "json_path": "biomni/physiology/analyze_endolysosomal_calcium_dynamics_app.json",
+    "inputs": {
+      "timePointsFile": "test_data.json",
+      "luminescenceValuesFile": "test_data.json",
+      "treatmentTime": "10",
+      "cellType": "test_value",
+      "treatmentName": "test_value",
+      "outputFileName": "calcium_analysis_results.txt"
+    }
+  },
+  "biomni-analyze-fatty-acid-composition-by-gc": {
+    "json_path": "biomni/physiology/analyze_fatty_acid_composition_by_gc_app.json",
+    "inputs": {
+      "gcDataFile": "test_data.csv",
+      "tissueType": "brain",
+      "sampleId": "TEST_ID_12345",
+      "outputDirectory": "./results"
+    }
+  },
+  "biomni-analyze-hemodynamic-data": {
+    "json_path": "biomni/physiology/analyze_hemodynamic_data_app.json",
+    "inputs": {
+      "pressureDataFile": "test_data.json",
+      "samplingRate": "1000",
+      "outputFileName": "hemodynamic_results.csv"
+    }
+  },
+  "biomni-analyze-protein-colocalization": {
+    "json_path": "biomni/physiology/analyze_protein_colocalization_app.json",
+    "inputs": {
+      "channel1Path": "test_image.png",
+      "channel2Path": "test_image.png",
+      "outputDirParam": "./output",
+      "thresholdMethod": "otsu"
+    }
+  },
+  "biomni-calculate-brain-adc-map": {
+    "json_path": "biomni/physiology/calculate_brain_adc_map_app.json",
+    "inputs": {
+      "dwiFilePath": "test_file.txt",
+      "bValuesFile": "test_data.json",
+      "outputPath": "adc_map.nii.gz",
+      "maskFilePath": "test_file.txt"
+    }
+  },
+  "biomni-perform-cosinor-analysis": {
+    "json_path": "biomni/physiology/perform_cosinor_analysis_app.json",
+    "inputs": {
+      "timeDataFile": "test_data.json",
+      "physiologicalDataFile": "test_data.json",
+      "period": "24.0"
+    }
+  },
+  "biomni-quantify-amyloid-beta-plaques": {
+    "json_path": "biomni/physiology/quantify_amyloid_beta_plaques_app.json",
+    "inputs": {
+      "imagePath": "test_image.png",
+      "outputDirParam": "./results",
+      "thresholdMethod": "otsu",
+      "minPlaqueSize": "50",
+      "manualThreshold": "127"
+    }
+  },
+  "biomni-reconstruct-3d-face-from-mri": {
+    "json_path": "biomni/physiology/reconstruct_3d_face_from_mri_app.json",
+    "inputs": {
+      "mriFilePath": "test_file.txt",
+      "outputDirParam": "./output",
+      "subjectId": "subject",
+      "thresholdValue": "300"
+    }
+  },
+  "biomni-simulate-thyroid-hormone-pharmacokinetics": {
+    "json_path": "biomni/physiology/simulate_thyroid_hormone_pharmacokinetics_app.json",
+    "inputs": {
+      "parametersFile": "test_data.json",
+      "initialConditionsFile": "test_data.json",
+      "timeSpanStart": "0",
+      "timeSpanEnd": "24",
+      "timePoints": "100"
+    }
+  },
+  "biomni-clear-captured-plots": {
+    "json_path": "biomni/support_tools/clear_captured_plots_app.json",
+    "inputs": {}
+  },
+  "biomni-download-synapse-data": {
+    "json_path": "biomni/support_tools/download_synapse_data_app.json",
+    "inputs": {
+      "entityIds": "TEST_ID_12345",
+      "entityType": "file",
+      "timeout": "300"
+    }
+  },
+  "biomni-get-captured-plots": {
+    "json_path": "biomni/support_tools/get_captured_plots_app.json",
+    "inputs": {}
+  },
+  "biomni-read-function-source-code": {
+    "json_path": "biomni/support_tools/read_function_source_code_app.json",
+    "inputs": {
+      "functionName": "test_value"
+    }
+  },
+  "biomni-run-python-repl": {
+    "json_path": "biomni/support_tools/run_python_repl_app.json",
+    "inputs": {
+      "pythonCommand": "test_value"
+    }
+  },
+  "biomni-analyze-bacterial-growth-rate": {
+    "json_path": "biomni/synthetic_biology/analyze_bacterial_growth_rate_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-analyze-barcode-sequencing-data": {
+    "json_path": "biomni/synthetic_biology/analyze_barcode_sequencing_data_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-analyze-bifurcation-diagram": {
+    "json_path": "biomni/synthetic_biology/analyze_bifurcation_diagram_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-create-biochemical-network-sbml-model": {
+    "json_path": "biomni/synthetic_biology/create_biochemical_network_sbml_model_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-engineer-bacterial-genome-for-therapeutic-delivery": {
+    "json_path": "biomni/synthetic_biology/engineer_bacterial_genome_for_therapeutic_delivery_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-identify-fas-functional-domains": {
+    "json_path": "biomni/synthetic_biology/identify_fas_functional_domains_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-optimize-codons-for-heterologous-expression": {
+    "json_path": "biomni/synthetic_biology/optimize_codons_for_heterologous_expression_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-simulate-gene-circuit-with-growth-feedback": {
+    "json_path": "biomni/synthetic_biology/simulate_gene_circuit_with_growth_feedback_app.json",
+    "inputs": {
+      "inputFile": "test_data.json"
+    }
+  },
+  "biomni-compare-protein-structures": {
+    "json_path": "biomni/systems_biology/compare_protein_structures_app.json",
+    "inputs": {
+      "pdbFile1": "test_structure.pdb",
+      "pdbFile2": "test_structure.pdb",
+      "chainId1": "A",
+      "chainId2": "A",
+      "outputPrefix": "protein_comparison"
+    }
+  },
+  "biomni-model-protein-dimerization-network": {
+    "json_path": "biomni/systems_biology/model_protein_dimerization_network_app.json",
+    "inputs": {
+      "monomerConcentrations": "{}",
+      "dimerizationAffinities": "{}",
+      "networkTopology": "{}"
+    }
+  },
+  "biomni-perform-flux-balance-analysis": {
+    "json_path": "biomni/systems_biology/perform_flux_balance_analysis_app.json",
+    "inputs": {
+      "modelFile": "test_data.json",
+      "constraints": "{}",
+      "objectiveReaction": "TEST_ID_12345",
+      "outputFilename": "fba_results.csv"
+    }
+  },
+  "biomni-query-chatnt": {
+    "json_path": "biomni/systems_biology/query_chatnt_app.json",
+    "inputs": {
+      "question": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "sequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+      "device": "TEST_ID_12345"
+    }
+  },
+  "biomni-simulate-metabolic-network-perturbation": {
+    "json_path": "biomni/systems_biology/simulate_metabolic_network_perturbation_app.json",
+    "inputs": {
+      "modelFile": "test_file.txt",
+      "initialConcentrations": "{}",
+      "perturbationParams": "{}",
+      "simulationTime": 100,
+      "timePoints": 1000
+    }
+  },
+  "biomni-simulate-protein-signaling-network": {
+    "json_path": "biomni/systems_biology/simulate_protein_signaling_network_app.json",
+    "inputs": {
+      "networkStructure": "{}",
+      "reactionParams": "{}",
+      "speciesParams": "{}",
+      "simulationTime": 100,
+      "timePoints": 1000
+    }
+  },
+  "biomni-simulate-renin-angiotensin-system-dynamics": {
+    "json_path": "biomni/systems_biology/simulate_renin_angiotensin_system_dynamics_app.json",
+    "inputs": {
+      "initialConcentrations": "{}",
+      "rateConstants": "{}",
+      "feedbackParams": "{}",
+      "simulationTime": 48,
+      "timePoints": 100
+    }
+  }
+}

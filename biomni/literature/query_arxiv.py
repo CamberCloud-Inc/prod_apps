@@ -10,7 +10,7 @@ import os
 
 def install_dependencies():
     """Install required dependencies"""
-    deps = ['PyPDF2', 'biomni', 'beautifulsoup4']
+    deps = ['PyPDF2', 'biomni', 'beautifulsoup4', 'googlesearch-python']
     for dep in deps:
         print(f"Installing {dep}...")
         subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', dep])
