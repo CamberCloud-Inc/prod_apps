@@ -1,0 +1,72 @@
+{
+  "name": "metaboigniter-metabolome-analysis",
+  "title": "LC-MS Metabolomics Analysis",
+  "description": "Comprehensive LC-MS metabolomics data processing from raw mass spectrometry to metabolite identification. Performs feature detection, alignment, adduct detection, and MS2-based compound identification. Samplesheet format: `sample,mzml_file`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/metaboigniter --input ${input} --outdir ${outdir} -r 1.0.1 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/metaboigniter/master/docs/images/nf-core-metaboigniter_logo_light.png",
+  "content": "<h2><strong>MetaboIgniter - LC-MS Metabolomics Analysis</strong></h2><p>Comprehensive bioinformatics pipeline for processing and analyzing liquid chromatography-mass spectrometry (LC-MS) metabolomics data. Processes raw mass spectrometry data in mzML format through advanced feature detection, alignment, and metabolite identification workflows.</p><h3><strong>What is MetaboIgniter?</strong></h3><blockquote><p><strong>MetaboIgniter</strong> automates the complex process of converting raw LC-MS data into identified metabolites, enabling researchers to perform comprehensive metabolite profiling across multiple samples with standardized workflows.</p></blockquote><h3><strong>Key Features</strong></h3><ul><li><strong>End-to-End Processing</strong>: From raw mzML to metabolite identifications</li><li><strong>MS1/MS2 Support</strong>: Process both MS1 and MS2 spectra</li><li><strong>Advanced Detection</strong>: Sophisticated feature and adduct detection</li><li><strong>Multi-Sample Alignment</strong>: Align features across samples</li><li><strong>Compound Identification</strong>: MS2Query and SIRIUS integration</li><li><strong>Missing Value Handling</strong>: Requantification to fill gaps</li></ul><h3><strong>Pipeline Workflow</strong></h3><ol><li><strong>Centroiding</strong>: Convert continuous mass spectra to discrete points</li><li><strong>Feature Detection</strong>: Identify unique signals in MS1 spectra</li><li><strong>Adduct Detection</strong>: Recognize ion interactions and adduct formations</li><li><strong>Sample Alignment</strong>: Match features across different samples</li><li><strong>Linking</strong>: Connect features across ionization modes (positive/negative)</li><li><strong>Requantification</strong>: Fill missing data values across samples</li><li><strong>Identification</strong>: Use MS2Query and SIRIUS for compound identification</li><li><strong>Quality Control</strong>: Generate comprehensive QC reports</li></ol><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Metabolomics Research</strong>: Comprehensive metabolite profiling</li><li><strong>Biomarker Discovery</strong>: Identify disease or treatment markers</li><li><strong>Systems Biology</strong>: Integrate with other omics data</li><li><strong>Drug Metabolism</strong>: Study drug metabolites and pathways</li><li><strong>Environmental Science</strong>: Analyze environmental metabolites</li></ul><h3><strong>Advantages</strong></h3><ul><li><strong>Automated Workflow</strong>: Reduces manual processing time</li><li><strong>Reproducible Results</strong>: Standardized analysis pipeline</li><li><strong>Advanced Algorithms</strong>: State-of-the-art metabolite detection</li><li><strong>Comprehensive Coverage</strong>: MS1 and MS2 analysis integrated</li><li><strong>Community Developed</strong>: Best practices from metabolomics experts</li></ul><h3><strong>Input Requirements</strong></h3><ul><li><strong>mzML Files</strong>: Converted raw mass spectrometry data</li><li><strong>Sample Sheet</strong>: CSV with sample information and file paths</li><li><strong>Optional</strong>: Metadata for experimental design</li><li><strong>Reference Databases</strong>: For compound identification</li></ul><h3><strong>Main Outputs</strong></h3><ul><li><strong>Feature Tables</strong>: Quantified metabolite features across samples</li><li><strong>Identification Results</strong>: Putative compound identifications</li><li><strong>MS2 Matches</strong>: Spectral library matching results</li><li><strong>SIRIUS Annotations</strong>: Structural predictions and formula assignments</li><li><strong>QC Reports</strong>: MultiQC summary of quality metrics</li><li><strong>Aligned Peaks</strong>: Cross-sample aligned feature lists</li></ul><blockquote><p><strong>Perfect for:</strong> Metabolomics • Mass Spectrometry • Biomarker Discovery • Drug Metabolism • Systems Biology</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Input",
+      "name": "input",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output",
+      "name": "outdir",
+      "defaultValue": "./metaboigniter-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Resources",
+      "name": "system_size",
+      "options": [
+        {
+          "label": "LARGE",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

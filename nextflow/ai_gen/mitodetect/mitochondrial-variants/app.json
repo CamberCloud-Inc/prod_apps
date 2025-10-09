@@ -1,0 +1,110 @@
+{
+  "name": "mitodetect-mitochondrial-variants",
+  "title": "Mitochondrial Variant Detection",
+  "description": "Comprehensive A-Z analysis pipeline for mitochondrial NGS data. Performs quality control, read mapping, variant calling, and heteroplasmy detection from next-generation sequencing of mitochondrial DNA. Essential for mitochondrial disease research and diagnostics. Samplesheet format: `detection,500X`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/mitodetect --input ${input} --outdir ${outdir} -r ${revision} ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/mitodetect/master/docs/images/nf-core-mitodetect_logo_light.png",
+  "content": "<h2><strong>MitoDetect - Mitochondrial Variant Detection</strong></h2><p>Comprehensive A-Z analysis pipeline for mitochondrial DNA (mtDNA) sequencing data. Identifies variants, quantifies heteroplasmy levels, and performs quality control for next-generation sequencing of the mitochondrial genome.</p><h3><strong>What is Mitochondrial DNA Analysis?</strong></h3><blockquote><p><strong>Mitochondrial DNA</strong> is a small circular genome (~16.6 kb in humans) inherited maternally that encodes essential components of cellular energy production. Unlike nuclear DNA, cells can contain hundreds to thousands of mitochondrial genomes, each potentially carrying different variants - a phenomenon called heteroplasmy.</p></blockquote><h3><strong>Key Features</strong></h3><ul><li><strong>Comprehensive QC</strong>: FastQC and MultiQC for read quality assessment</li><li><strong>Variant Detection</strong>: Identify SNPs, indels, and structural variants in mtDNA</li><li><strong>Heteroplasmy Quantification</strong>: Measure mixed populations of mitochondrial genomes</li><li><strong>Ancient DNA Compatible</strong>: Handles degraded and low-input samples</li><li><strong>High Sensitivity</strong>: Detect low-frequency variants down to 1-5% heteroplasmy</li><li><strong>Automated Workflow</strong>: End-to-end analysis from raw reads to annotated variants</li></ul><h3><strong>Pipeline Workflow</strong></h3><ol><li><strong>Quality Control</strong>: Assess raw read quality with FastQC</li><li><strong>Read Trimming</strong>: Remove adapters and low-quality bases with fastp</li><li><strong>Reference Mapping</strong>: Align reads to mitochondrial reference genome</li><li><strong>Variant Calling</strong>: Identify variants with specialized mtDNA callers</li><li><strong>Heteroplasmy Detection</strong>: Quantify variant allele frequencies</li><li><strong>Annotation</strong>: Annotate variants with gene and pathogenicity information</li><li><strong>Reporting</strong>: Generate comprehensive MultiQC summary report</li></ol><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Mitochondrial Disease Diagnostics</strong>: Identify pathogenic mutations causing mitochondrial disorders</li><li><strong>Cancer Research</strong>: Detect somatic mtDNA mutations in tumor samples</li><li><strong>Population Genetics</strong>: Study mitochondrial haplogroups and human migration</li><li><strong>Ancient DNA Studies</strong>: Analyze degraded mtDNA from archaeological samples</li><li><strong>Aging Research</strong>: Track accumulation of mitochondrial mutations over time</li><li><strong>Pharmacogenomics</strong>: Identify mtDNA variants affecting drug metabolism</li></ul><h3><strong>Understanding Heteroplasmy</strong></h3><p>Heteroplasmy occurs when multiple mitochondrial DNA variants coexist within a cell, tissue, or individual. This is critical because:</p><ul><li><strong>Disease Threshold</strong>: Many mitochondrial diseases only manifest when pathogenic variants exceed 60-90% heteroplasmy</li><li><strong>Tissue Specificity</strong>: Heteroplasmy levels vary between tissues, affecting clinical presentation</li><li><strong>Inheritance Patterns</strong>: Heteroplasmy can shift dramatically between generations due to the mitochondrial bottleneck</li><li><strong>Low-Level Variants</strong>: Even rare variants (<5%) may be clinically significant in some contexts</li></ul><h3><strong>Input Requirements</strong></h3><ul><li><strong>Samplesheet (CSV)</strong>: sample, fastq_1, fastq_2 columns</li><li><strong>Sequencing Data</strong>: Paired-end or single-end FASTQ files</li><li><strong>Target Enrichment</strong>: Works with whole-genome or mtDNA-enriched libraries</li><li><strong>Coverage Requirements</strong>: Minimum 100X for basic variant detection, 500X+ recommended for low-level heteroplasmy</li></ul><h3><strong>Main Outputs</strong></h3><ul><li><strong>Variant Calls</strong>: VCF files with all detected mitochondrial variants</li><li><strong>Heteroplasmy Tables</strong>: Quantitative allele frequency measurements</li><li><strong>Annotated Variants</strong>: Clinical significance and gene impact annotations</li><li><strong>Coverage Plots</strong>: Per-base depth visualization across the mitochondrial genome</li><li><strong>Quality Metrics</strong>: Comprehensive MultiQC report with alignment and variant statistics</li><li><strong>Haplogroup Assignment</strong>: Mitochondrial lineage classification</li></ul><h3><strong>Mitochondrial Disease Context</strong></h3><p>Mitochondrial disorders affect 1 in 5,000 individuals and can present with diverse symptoms including:</p><ul><li>Neurological disorders (seizures, ataxia, neuropathy)</li><li>Cardiac disease (cardiomyopathy, arrhythmias)</li><li>Muscle weakness and exercise intolerance</li><li>Diabetes and endocrine dysfunction</li><li>Vision and hearing loss</li><li>Multi-system involvement</li></ul><p>MitoDetect enables precise diagnosis by identifying pathogenic variants and quantifying their heteroplasmy levels across the 37 mitochondrial genes.</p><h3><strong>Performance Expectations</strong></h3><ul><li><strong>Small dataset (1-5 samples, 100X coverage):</strong> 1-2 hours</li><li><strong>Standard dataset (10-20 samples, 500X coverage):</strong> 3-6 hours</li><li><strong>Large cohort (50+ samples):</strong> 8-12 hours</li><li><strong>High-depth ancient DNA:</strong> Variable, depends on coverage and sample preservation</li></ul><h3><strong>Quality Control Metrics</strong></h3><ul><li><strong>Read Quality</strong>: Per-base sequence quality, GC content, adapter contamination</li><li><strong>Mapping Statistics</strong>: mtDNA vs nuclear DNA ratio, mapping efficiency</li><li><strong>Coverage Uniformity</strong>: Even coverage across the circular mitochondrial genome</li><li><strong>Strand Bias</strong>: Detection of technical artifacts in variant calling</li><li><strong>Heteroplasmy Confidence</strong>: Statistical support for low-frequency variants</li></ul><blockquote><p><strong>Perfect for:</strong> Mitochondrial Disease Diagnostics \u2022 Cancer Research \u2022 Population Genetics \u2022 Ancient DNA \u2022 Aging Studies \u2022 Clinical Sequencing</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Input Samplesheet",
+      "name": "input",
+      "description": "CSV samplesheet with columns: sample, fastq_1, fastq_2. Each row represents one sample for mitochondrial DNA analysis.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory where variant calls, heteroplasmy quantification, QC reports, and visualizations will be saved.",
+      "defaultValue": "./mitodetect-results",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    },
+    {
+      "type": "Input",
+      "label": "Pipeline Revision",
+      "name": "revision",
+      "description": "Specify the nf-core/mitodetect pipeline version to use (e.g., 'dev', '1.0.0', '1.1.0'). Use 'dev' for latest development version.",
+      "defaultValue": "dev",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "placeholder": "dev"
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": false,
+      "description": "Select compute resources. MEDIUM recommended for most datasets. LARGE for high-coverage or many samples.",
+      "options": [
+        {
+          "label": "SMALL (8 CPUs, 45GB RAM) - Testing only",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Recommended for most datasets",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - High-coverage or large cohorts",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "medium"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

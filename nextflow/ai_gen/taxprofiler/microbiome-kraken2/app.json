@@ -1,0 +1,100 @@
+{
+  "name": "taxprofiler-microbiome-kraken2-david40962",
+  "title": "Microbiome Taxonomic Profiling: Fast Kraken2 Classification",
+  "description": "Rapidly identify and quantify microorganisms in your metagenomic samples using Kraken2, the fastest taxonomic classifier. Perfect for gut microbiome, environmental samples, and clinical metagenomics - revealing microbial community composition and diversity in minutes.",
+  "content": "<h1>Microbiome Taxonomic Profiling with Kraken2</h1><h2>What This Analysis Does</h2><p>This analysis identifies all microorganisms present in your metagenomic sequencing data and estimates their relative abundances. Using Kraken2, the fastest k-mer based taxonomic classifier, you can profile bacterial, archaeal, viral, and eukaryotic communities from shotgun sequencing in minutes. This reveals who's there and how much of each organism, from dominant species to rare community members.</p><h2>When To Use This</h2><ul><li><strong>Gut Microbiome Studies:</strong> Profile bacterial communities in fecal samples, understanding the link between microbiome composition and health, disease, or diet</li><li><strong>Environmental Metagenomics:</strong> Characterize microbial diversity in soil, water, or extreme environments</li><li><strong>Clinical Diagnostics:</strong> Rapid identification of pathogens in clinical samples without culture</li><li><strong>Host-Microbe Interactions:</strong> Study how microbiomes change with treatments, conditions, or across body sites</li><li><strong>Quality Control:</strong> Verify sample identity and check for contamination in sequencing data</li></ul><h2>What You Need</h2><h3>1. Metagenomic Sequencing Data (FASTQ Files)</h3><p>Shotgun metagenomic sequencing from your samples:</p><ul><li><strong>Sample source:</strong> Any biological sample (fecal, soil, water, clinical specimens, etc.)</li><li><strong>File format:</strong> FASTQ files from Illumina sequencing (single-end or paired-end)</li><li><strong>Read length:</strong> Typically 50-150bp (standard Illumina)</li><li><strong>Sequencing depth:</strong> 1-10 million reads for basic profiling, more for rare species</li><li><strong>Note:</strong> Works with both DNA and RNA (cDNA) metagenomic libraries</li></ul><h3>2. Sample Information Sheet (CSV File)</h3><p>Create a CSV file listing your samples with this exact format:</p><pre>sample,run_accession,instrument_platform,fastq_1,fastq_2,fasta\ngut_sample1,run001,ILLUMINA,sample1_R1.fastq.gz,sample1_R2.fastq.gz,\ngut_sample2,run002,ILLUMINA,sample2_R1.fastq.gz,sample2_R2.fastq.gz,\nsoil_sample1,run003,ILLUMINA,soil1_R1.fastq.gz,soil1_R2.fastq.gz,</pre><p><strong>Column Details:</strong></p><ul><li><strong>sample:</strong> Unique sample identifier (e.g., patient ID, sample location, condition)</li><li><strong>run_accession:</strong> Sequencing run identifier (can use same as sample if not tracking runs separately)</li><li><strong>instrument_platform:</strong> Use <code>ILLUMINA</code> for Illumina data, <code>OXFORD_NANOPORE</code> for Nanopore long reads</li><li><strong>fastq_1:</strong> Path to Read 1 file (forward reads). For single-end data, only provide this column</li><li><strong>fastq_2:</strong> Path to Read 2 file (reverse reads). Leave empty for single-end sequencing</li><li><strong>fasta:</strong> Optional pre-assembled contigs in FASTA format. Leave empty if using FASTQ</li></ul><p><strong>Important Notes:</strong></p><ul><li>You can mix single-end and paired-end samples in the same analysis</li><li>File paths can be local paths or URLs to publicly available data</li><li>Each sample will be processed independently and results combined for comparison</li></ul><h3>3. Database Information Sheet (CSV File)</h3><p>Specify which Kraken2 database(s) to use for classification:</p><pre>tool,db_name,db_params,db_type,db_path\nkraken2,standard_db,--quick,short,/path/to/kraken2_standard_db</pre><p><strong>Column Details:</strong></p><ul><li><strong>tool:</strong> Use <code>kraken2</code> for this analysis</li><li><strong>db_name:</strong> Descriptive name for your database (e.g., standard_db, custom_gut_db)</li><li><strong>db_params:</strong> Optional Kraken2 parameters. <code>--quick</code> for faster analysis (recommended), or leave empty for full sensitivity</li><li><strong>db_type:</strong> Use <code>short</code> for short-read Illumina data</li><li><strong>db_path:</strong> Full path to Kraken2 database directory or compressed .tar.gz file</li></ul><p><strong>Common Kraken2 Databases:</strong></p><ul><li><strong>Standard DB:</strong> Contains archaea, bacteria, viruses, human, plasmids (~50GB, most common)</li><li><strong>PlusPF DB:</strong> Standard + protozoa and fungi (~75GB, for eukaryotic microbiomes)</li><li><strong>PlusPFP DB:</strong> PlusPF + plant sequences (~100GB, for plant-associated microbiomes)</li><li><strong>Custom DB:</strong> User-built database for specific organisms or environments</li></ul><p><strong>For Testing:</strong> Use the nf-core test database (automatically downloaded): <code>https://github.com/nf-core/test-datasets/raw/taxprofiler/data/database/kraken2/testdb-kraken2.tar.gz</code></p><h2>What You'll Get</h2><h3>Taxonomic Classification Reports</h3><ul><li><strong>Kraken2 Reports:</strong> Detailed taxonomic breakdown showing percentage of reads classified to each organism</li><li><strong>Krona Charts:</strong> Interactive hierarchical visualization of taxonomic composition</li><li><strong>Abundance Tables:</strong> Standardized tables with relative abundances at all taxonomic levels (domain, phylum, class, order, family, genus, species)</li><li><strong>Per-Sample Results:</strong> Individual classification for each sample plus combined summary tables</li></ul><h3>Quality Control Metrics</h3><ul><li><strong>Classification Rate:</strong> Percentage of reads successfully assigned to organisms vs. unclassified</li><li><strong>Read Quality:</strong> Sequencing quality metrics (via FastQC)</li><li><strong>MultiQC Report:</strong> Comprehensive summary of all samples and quality metrics</li><li><strong>Diversity Metrics:</strong> Number of species detected, dominant organisms, rare taxa</li></ul><h3>Downstream Analysis Files</h3><ul><li><strong>OTU/ASV-like Tables:</strong> Ready for import into phyloseq (R), QIIME2, or other microbiome analysis tools</li><li><strong>Biom Format:</strong> Standardized biological observation matrix for downstream analysis</li><li><strong>Comparison Tables:</strong> Easy comparison of taxonomic profiles across all samples</li></ul><h2>Expected Analysis Time</h2><ul><li><strong>Small dataset (1-3 samples, 1M reads each):</strong> 10-30 minutes</li><li><strong>Typical dataset (5-10 samples, 5M reads each):</strong> 1-2 hours</li><li><strong>Large cohort (20-50 samples):</strong> 3-6 hours</li><li><strong>Note:</strong> Time depends on database size and read depth. Kraken2 is extremely fast (millions of reads per minute)</li></ul><h2>Scientific Background</h2><p>Kraken2 uses exact k-mer matches to a database of known genomes to rapidly assign taxonomic labels to sequencing reads. It achieves high accuracy by using a compact hash table of k-mers and their taxonomic assignments. The algorithm is optimized for speed without sacrificing sensitivity, making it ideal for routine microbiome profiling and clinical diagnostics. Kraken2 is one of the most widely-used taxonomic classifiers in the field, with thousands of citations and widespread adoption in research and clinical laboratories.</p><h2>Key Advantages of Kraken2</h2><ul><li><strong>Speed:</strong> Process millions of reads per minute, making it suitable for large-scale studies</li><li><strong>Accuracy:</strong> High precision for well-characterized organisms in the database</li><li><strong>Flexibility:</strong> Works with any custom database, allowing specialization for specific research questions</li><li><strong>Widely Used:</strong> Standard tool in the field with extensive validation and community support</li></ul><p><a href='https://nf-co.re/taxprofiler' target='_blank'>Advanced users: See full nf-core/taxprofiler documentation</a></p>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/taxprofiler/master/docs/images/nf-core-taxprofiler_logo_custom_light.png",
+  "command": "nextflow run nf-core/taxprofiler --input ${input} --databases ${databases} --outdir ${output} --run_kraken2 --run_bracken --perform_runmerging -r 1.2.3 -c /etc/mpi/nextflow.camber.config",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select compute resources. Start with XSMALL for testing with nf-core test data, scale up for production.",
+      "options": [
+        {
+          "label": "XSMALL (4 CPUs, 15GB RAM) - Testing/nf-core test data",
+          "value": "xsmall",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "SMALL (8 CPUs, 30GB RAM) - Small datasets (1-5 samples)",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Standard datasets (5-20 samples)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Large datasets (20-50 samples)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xsmall"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Information Sheet",
+      "name": "input",
+      "description": "CSV file with columns: sample, run_accession, instrument_platform, fastq_1, fastq_2, fasta. Each row represents one metagenomic sample to profile.",
+      "defaultValue": "https://raw.githubusercontent.com/nf-core/test-datasets/taxprofiler/samplesheet.csv",
+      "required": true
+    },
+    {
+      "type": "Stash File",
+      "label": "Database Information Sheet",
+      "name": "databases",
+      "description": "CSV file specifying Kraken2 database(s) to use. Format: tool, db_name, db_params, db_type, db_path. See documentation for database requirements.",
+      "defaultValue": "https://raw.githubusercontent.com/nf-core/test-datasets/taxprofiler/database_v1.2.csv",
+      "required": true
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "output",
+      "description": "Where to save taxonomic profiling results and reports",
+      "defaultValue": "./taxprofiler-results",
+      "required": true
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "name": "taxprofiler-metagenomic-profiling",
+  "title": "Taxprofiler: Metagenomic Taxonomic Profiling",
+  "description": "Multi-tool taxonomic profiling of shotgun metagenomic data. Runs Kraken2, MetaPhlAn4, Centrifuge, and Diamond to identify microbial composition with consensus analysis. Ideal for microbiome studies. Samplesheet format: `sample,run_accession,instrument_platform,fastq_1,fastq_2,fasta`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/taxprofiler --input ${input} --outdir ${outdir} --databases ${databases} --run_kraken2 --run_metaphlan -r 1.1.8 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/taxprofiler/master/docs/images/nf-core-taxprofiler_logo_light.png",
+  "content": "<h2><strong>Taxprofiler: Taxonomic Profiling</strong></h2><p>Multi-tool taxonomic classification of metagenomic sequencing data. Identifies bacteria, archaea, viruses, fungi, and eukaryotes using multiple classifiers for robust microbial community profiling.</p><h3><strong>Applications</strong></h3><ul><li><strong>Human Microbiome</strong>: Gut, oral, skin communities</li><li><strong>Environmental</strong>: Soil, water, air samples</li><li><strong>Clinical</strong>: Infection diagnostics</li><li><strong>Food Safety</strong>: Contamination screening</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Taxonomic Profiles</strong>: Abundance tables (species, genus, phylum)</li><li><strong>Consensus Classification</strong>: Agreement across tools</li><li><strong>Krona Plots</strong>: Interactive taxonomy visualization</li><li><strong>Alpha Diversity</strong>: Shannon, Simpson indices</li></ul><blockquote><p><strong>Perfect for:</strong> Microbiome profiling \u2022 Clinical metagenomics \u2022 Environmental samples \u2022 Consensus taxonomy</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV with metagenomic samples",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".csv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Database Config",
+      "name": "databases",
+      "description": "CSV with database paths (Kraken2, MetaPhlAn, etc.)",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".csv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory",
+      "defaultValue": "./taxprofiler-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "options": [
+        {
+          "label": "LARGE (Recommended)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

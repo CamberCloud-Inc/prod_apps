@@ -1,0 +1,145 @@
+{
+  "name": "metapep-epitope-prediction",
+  "title": "Epitope Prediction from Metagenomes",
+  "description": "Predict MHC-binding epitopes from metagenomic data. Integrates proteins, taxa, assemblies and bins to generate peptides and predict their MHC/HLA affinity using SYFPEITHI, MHCflurry, or MHCnuggets. Ideal for immunoinformatics, vaccine design, and host-microbiome immunology research. Samplesheet format: `condition,type,microbiome_path,alleles,weights_path`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/metapep --input ${input} --outdir ${outdir} --alleles ${alleles} --prediction_method ${prediction_method} -r 1.0.0 -c /etc/mpi/nextflow.camber.config",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/metapep/master/docs/images/nf-core-metapep_logo_light.png",
+  "content": "<h1 class=\"heading-node\">MetaPep: From Metagenomes to Epitopes</h1><p class=\"text-node\"><strong>Predict MHC-Binding Epitopes from Complex Metagenomic Communities</strong></p><p class=\"text-node\">MetaPep is a comprehensive pipeline that bridges metagenomics and immunoinformatics. It processes diverse metagenomic inputs (proteins, taxonomic IDs, genome assemblies, and bins) to generate peptides and predict their binding affinity to MHC class I and class II molecules. This enables researchers to identify potential T-cell epitopes from microbiome data, supporting vaccine development, immunotherapy design, and host-microbiome immune interaction studies.</p><img src=\"https://raw.githubusercontent.com/nf-core/metapep/master/docs/images/nf-core-metapep_logo_light.png\" alt=\"MetaPep Pipeline\" width=\"400\" height=\"200\"><h2 class=\"heading-node\">Key Features</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Flexible Input Types:</strong> Process proteins directly, download from taxonomic IDs, or predict from genome assemblies/bins using Prodigal</p></li><li><p class=\"text-node\"><strong>Multiple Prediction Tools:</strong> Choose from SYFPEITHI, MHCflurry, or MHCnuggets for epitope affinity prediction</p></li><li><p class=\"text-node\"><strong>MHC Class Support:</strong> Predict epitopes for both MHC class I and class II molecules</p></li><li><p class=\"text-node\"><strong>Parallel Processing:</strong> Automated chunking and parallel prediction for efficient large-scale analysis</p></li><li><p class=\"text-node\"><strong>Comprehensive Reports:</strong> Detailed statistics, plots, and standardized output formats</p></li></ul><h2 class=\"heading-node\">Pipeline Workflow</h2><ol class=\"list-node\"><li><p class=\"text-node\"><strong>Protein Acquisition:</strong> Downloads proteins for taxonomic IDs from NCBI Entrez or predicts proteins from assemblies/bins using Prodigal</p></li><li><p class=\"text-node\"><strong>Peptide Generation:</strong> Generates all possible peptides of specified lengths from protein sequences</p></li><li><p class=\"text-node\"><strong>Data Splitting:</strong> Intelligently chunks peptide files for parallel prediction and generates statistics</p></li><li><p class=\"text-node\"><strong>Epitope Prediction:</strong> Predicts MHC/HLA binding affinity for specified alleles using your chosen prediction tool</p></li><li><p class=\"text-node\"><strong>Results Visualization:</strong> Produces comprehensive plots and summary reports</p></li></ol><h2 class=\"heading-node\">When to Use MetaPep</h2><h3 class=\"heading-node\">Vaccine Development</h3><ul class=\"list-node\"><li><p class=\"text-node\">Identify immunogenic epitopes from pathogenic microorganisms in complex communities</p></li><li><p class=\"text-node\">Design peptide vaccines targeting specific strains or functional groups</p></li><li><p class=\"text-node\">Prioritize epitopes based on predicted binding affinity and population coverage</p></li></ul><h3 class=\"heading-node\">Immunotherapy Design</h3><ul class=\"list-node\"><li><p class=\"text-node\">Discover tumor-associated microbial epitopes for cancer immunotherapy</p></li><li><p class=\"text-node\">Identify epitopes from commensal bacteria for immune modulation strategies</p></li><li><p class=\"text-node\">Screen metagenomic datasets for novel immunotherapeutic targets</p></li></ul><h3 class=\"heading-node\">Host-Microbiome Immunology</h3><ul class=\"list-node\"><li><p class=\"text-node\">Study how microbiome-derived epitopes influence host immune responses</p></li><li><p class=\"text-node\">Investigate cross-reactivity between microbial and self-antigens</p></li><li><p class=\"text-node\">Analyze epitope diversity across different microbiome niches</p></li></ul><h3 class=\"heading-node\">Pathogen Surveillance</h3><ul class=\"list-node\"><li><p class=\"text-node\">Track epitope variation in emerging pathogens</p></li><li><p class=\"text-node\">Assess immune evasion potential through epitope mutation analysis</p></li><li><p class=\"text-node\">Monitor population-level epitope coverage for diagnostic development</p></li></ul><h2 class=\"heading-node\">Input Requirements</h2><h3 class=\"heading-node\">Sample Sheet (CSV Format)</h3><p class=\"text-node\">Your input samplesheet must be a comma-separated file with the following columns:</p><pre class=\"block-node\"><code>condition,type,microbiome_path,alleles,weights_path\ncond_1,taxa,taxids.txt,A*01:01 B*07:02,\ncond_2,assembly,contigs.fa.gz,A*01:01,contig_weights.tsv\ncond_3,proteins,proteins.fasta,A*02:01 A*24:02,</code></pre><p class=\"text-node\"><strong>Column Descriptions:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>condition:</strong> Sample or condition identifier</p></li><li><p class=\"text-node\"><strong>type:</strong> Input type - <code class=\"inline\" spellcheck=\"false\">taxa</code>, <code class=\"inline\" spellcheck=\"false\">assembly</code>, <code class=\"inline\" spellcheck=\"false\">bins</code>, or <code class=\"inline\" spellcheck=\"false\">proteins</code></p></li><li><p class=\"text-node\"><strong>microbiome_path:</strong> Path to input file (NCBI taxon IDs, genome assembly, or protein sequences)</p></li><li><p class=\"text-node\"><strong>alleles:</strong> Space-separated MHC/HLA alleles (e.g., <code class=\"inline\" spellcheck=\"false\">A*01:01 B*07:02</code>)</p></li><li><p class=\"text-node\"><strong>weights_path:</strong> Optional path to weights file for prioritizing contigs/proteins</p></li></ul><h3 class=\"heading-node\">Supported Prediction Methods</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>SYFPEITHI:</strong> Position-specific scoring matrices for MHC binding prediction</p></li><li><p class=\"text-node\"><strong>MHCflurry:</strong> Machine learning models for MHC class I binding (most accurate for class I)</p></li><li><p class=\"text-node\"><strong>MHCnuggets:</strong> Transfer learning approach for both MHC class I and II</p></li></ul><h2 class=\"heading-node\">Expected Results</h2><h3 class=\"heading-node\">Epitope Predictions</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Binding Scores:</strong> Predicted MHC/HLA binding affinities for all peptides</p></li><li><p class=\"text-node\"><strong>Ranked Epitopes:</strong> Peptides ranked by predicted binding strength</p></li><li><p class=\"text-node\"><strong>Allele-Specific Results:</strong> Separate predictions for each specified allele</p></li></ul><h3 class=\"heading-node\">Statistical Reports</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Peptide Statistics:</strong> Distribution of peptide lengths and compositions</p></li><li><p class=\"text-node\"><strong>Prediction Metrics:</strong> Coverage statistics and prediction confidence scores</p></li><li><p class=\"text-node\"><strong>Comparative Analysis:</strong> Cross-condition epitope comparison</p></li></ul><h3 class=\"heading-node\">Visualization</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Binding Affinity Plots:</strong> Distribution of predicted binding scores</p></li><li><p class=\"text-node\"><strong>Epitope Heatmaps:</strong> Allele-specific binding patterns</p></li><li><p class=\"text-node\"><strong>MultiQC Report:</strong> Comprehensive quality control summary</p></li></ul><h2 class=\"heading-node\">Technical Parameters</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Peptide Length:</strong> Typically 8-11 amino acids for MHC class I, 13-25 for class II</p></li><li><p class=\"text-node\"><strong>Allele Specification:</strong> Standard HLA nomenclature (e.g., A*02:01, DRB1*01:01)</p></li><li><p class=\"text-node\"><strong>Resource Requirements:</strong> LARGE nodes recommended for comprehensive metagenomic datasets</p></li></ul><h2 class=\"heading-node\">Performance Expectations</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Small dataset (1-5 taxa, ~1000 proteins):</strong> 1-2 hours</p></li><li><p class=\"text-node\"><strong>Medium dataset (10-20 taxa, ~10,000 proteins):</strong> 3-6 hours</p></li><li><p class=\"text-node\"><strong>Large metagenome assemblies:</strong> 8-12 hours depending on size</p></li></ul><p class=\"text-node\"><strong>Perfect for Research in:</strong> Immunoinformatics • Vaccine development • Microbiome immunology • Cancer immunotherapy • Infectious disease • Personalized medicine • Epitope discovery</p><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/metapep/1.0.0/\" target=\"_blank\">nf-core/metapep v1.0.0</a> • Containerized execution • Continuous integration tested</p><p class=\"text-node\">Developed by Léon Kuchenbecker (Kohlbacher lab), Sabrina Krakau, and Till Englert (QBiC)</p>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV file with columns: condition, type, microbiome_path, alleles, weights_path. Specifies metagenomic inputs and MHC alleles for epitope prediction.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".csv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory where epitope predictions, statistics, and reports will be saved.",
+      "defaultValue": "./metapep-results",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    },
+    {
+      "type": "Input",
+      "label": "MHC Alleles",
+      "name": "alleles",
+      "description": "Space-separated MHC/HLA alleles for epitope prediction (e.g., 'A*01:01 B*07:02 DRB1*01:01'). Can override samplesheet alleles.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "placeholder": "A*01:01 B*07:02"
+    },
+    {
+      "type": "Select",
+      "label": "Prediction Method",
+      "name": "prediction_method",
+      "description": "Choose the epitope prediction algorithm. MHCflurry is recommended for MHC class I, MHCnuggets supports both class I and II.",
+      "defaultValue": "mhcflurry",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "MHCflurry - Machine learning (best for MHC class I)",
+          "value": "mhcflurry"
+        },
+        {
+          "label": "MHCnuggets - Transfer learning (supports class I & II)",
+          "value": "mhcnuggets"
+        },
+        {
+          "label": "SYFPEITHI - Position-specific scoring matrices",
+          "value": "syfpeithi"
+        }
+      ]
+    },
+    {
+      "type": "Input",
+      "label": "Peptide Length",
+      "name": "peptide_length",
+      "description": "Comma-separated peptide lengths to generate (e.g., '9,10,11' for class I or '15,20' for class II). Leave empty for defaults.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "placeholder": "9,10,11"
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": false,
+      "description": "Computational resources. Start with MEDIUM for testing, scale to LARGE/XLARGE for production metagenomes.",
+      "options": [
+        {
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Testing & small datasets",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Recommended for production",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE (96 CPUs, 540GB RAM) - Large metagenome assemblies",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

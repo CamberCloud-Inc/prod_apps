@@ -1,0 +1,93 @@
+{
+    "name": "circdna-detection",
+    "title": "Extrachromosomal Circular DNA Detection (nf-core/circdna)",
+    "description": "Identify extrachromosomal circular DNA (ecDNA) from WGS, Circle-seq, or ATAC-seq data. Detects oncogene amplifications on circular DNA elements, which drive drug resistance and tumor evolution in cancer. Samplesheet format: `sample,bam,bai`",
+    "version": "1.0.0",
+    "engineType": "NEXTFLOW",
+    "command": "nextflow run nf-core/circdna --input ${input} --outdir ${outdir} --genome ${genome} --input_format FASTQ --circle_identifier circle_map_realign -r 1.1.0 ",
+    "imageUrl": "https://raw.githubusercontent.com/nf-core/circdna/master/docs/images/nf-core-circdna_logo_light.png",
+    "content": "<h2><strong>Extrachromosomal Circular DNA Detection</strong></h2><p>The <strong>nf-core/circdna</strong> pipeline identifies extrachromosomal circular DNA (ecDNA) from sequencing data. ecDNAs carry oncogene amplifications and are major drivers of cancer drug resistance and tumor evolution.</p><h3><strong>Why ecDNA Matters in Cancer</strong></h3><blockquote><p>Extrachromosomal DNA (ecDNA) is found in ~50% of cancers and enables:</p><ul><li><strong>Oncogene Amplification</strong>: High copy numbers of cancer-driving genes (MYC, EGFR, MDM2)</li><li><strong>Drug Resistance</strong>: Rapid adaptation to therapy through copy number changes</li><li><strong>Tumor Heterogeneity</strong>: Unequal ecDNA distribution creates diversity</li><li><strong>Poor Prognosis</strong>: Associated with aggressive cancers and treatment failure</li></ul></blockquote><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Cancer Genomics</strong>: Identify ecDNA-driven oncogene amplifications</li><li><strong>Drug Resistance</strong>: Study mechanisms of therapy resistance</li><li><strong>Precision Oncology</strong>: Target ecDNA-amplified genes</li><li><strong>Tumor Evolution</strong>: Track ecDNA dynamics during treatment</li></ul><h3><strong>Pipeline Features</strong></h3><ul><li>Detects circular DNA from WGS, ATAC-seq, or Circle-seq</li><li>Identifies amplified genes on ecDNA</li><li>Provides visualization of circular structures</li><li>Quality control and filtering</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet:</p><ul><li><code>sample</code>: Sample identifier</li><li><code>fastq_1</code>: Forward reads</li><li><code>fastq_2</code>: Reverse reads</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>ecDNA Calls</strong>: Identified circular DNA elements</li><li><strong>Amplified Genes</strong>: Genes on ecDNA</li><li><strong>Visualizations</strong>: Circos plots of ecDNA structure</li></ul><blockquote><p><strong>Perfect for:</strong> Cancer genomicists \u2022 Precision oncology \u2022 Drug resistance research \u2022 Tumor evolution studies</p></blockquote>",
+    "spec": [
+        {
+            "type": "Stash File",
+            "label": "Sample Sheet",
+            "name": "input",
+            "description": "CSV with sample information",
+            "required": true,
+            "restrictions": {
+                "allow_files": true,
+                "allow_folders": false,
+                "allowed_file_types": [
+                    ".csv"
+                ]
+            }
+        },
+        {
+            "type": "Select",
+            "label": "Reference Genome",
+            "name": "genome",
+            "description": "Reference genome",
+            "defaultValue": "GRCh38",
+            "required": true,
+            "options": [
+                {
+                    "label": "Human GRCh38",
+                    "value": "GRCh38"
+                },
+                {
+                    "label": "Mouse GRCm39",
+                    "value": "GRCm39"
+                }
+            ]
+        },
+        {
+            "type": "Stash File",
+            "label": "Output Directory",
+            "name": "outdir",
+            "description": "Output directory",
+            "defaultValue": "./circdna-results",
+            "required": true,
+            "restrictions": {
+                "allow_files": false,
+                "allow_folders": true
+            }
+        }
+    ],
+    "jobConfig": [
+        {
+            "type": "Select",
+            "label": "Compute Resources",
+            "name": "system_size",
+            "hidden": false,
+            "options": [
+                {
+                    "label": "LARGE (Recommended)",
+                    "value": "large",
+                    "mapValue": {
+                        "nodeSize": "LARGE",
+                        "numNodes": 1,
+                        "withGpu": false
+                    }
+                }
+            ],
+            "defaultValue": "large"
+        }
+    ],
+    "tags": [
+        {
+            "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+            "name": "biology",
+            "type": "field"
+        },
+        {
+            "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+            "name": "genomics",
+            "type": "subfield"
+        },
+        {
+            "id": "831477f4-f572-4e27-af83-037661489800",
+            "name": "analysis",
+            "type": "task"
+        }
+    ]
+}

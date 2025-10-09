@@ -1,0 +1,2 @@
+sample,fastq_1,fastq_2,strandedness,type
+riboseq_sample,https://raw.githubusercontent.com/nf-core/test-datasets/riboseq/testdata/SRR8669356_1.fastq.gz,https://raw.githubusercontent.com/nf-core/test-datasets/riboseq/testdata/SRR8669356_2.fastq.gz,forward,riboseq

@@ -1,0 +1,167 @@
+{
+  "name": "evexplorer-molecular-evolution",
+  "title": "EvExplorer - Extracellular Vesicle RNA Analysis",
+  "description": "Comprehensive RNA-seq analysis pipeline for extracellular vesicles (EVs). Supports nextflex, comboSeq, and Oxford Nanopore technologies with quality control, expressed region detection, normalization, and differential expression analysis. Samplesheet format: `sample,fastq_1,fastq_2,condition`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/evexplorer --input ${input} --outdir ${outdir} -r 1.0.0",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/evexplorer/master/docs/images/nf-core-evexplorer_logo_light.png",
+  "content": "<h2><strong>EvExplorer - Extracellular Vesicle RNA Analysis</strong></h2><p>Analyze RNA cargo from extracellular vesicles with comprehensive quality control, expressed region detection, normalization, and differential expression analysis. Supports multiple sequencing technologies for studying EV-mediated intercellular communication.</p><h3><strong>What are Extracellular Vesicles?</strong></h3><blockquote><p><strong>Extracellular Vesicles (EVs)</strong> are lipid bilayer-enclosed particles released by cells that carry diverse RNA cargo including mRNAs, miRNAs, lncRNAs, and circRNAs. They play crucial roles in intercellular communication, disease biomarker discovery, and therapeutic delivery.</p></blockquote><h3><strong>Why Study EV RNA?</strong></h3><ul><li><strong>Biomarker Discovery</strong>: EVs in blood, urine, and other biofluids reflect cellular states</li><li><strong>Disease Diagnostics</strong>: Liquid biopsies for cancer, neurodegenerative diseases, cardiovascular conditions</li><li><strong>Therapeutic Delivery</strong>: Natural nanocarriers for RNA therapeutics</li><li><strong>Intercellular Communication</strong>: Understanding how cells communicate via RNA transfer</li><li><strong>Minimal Invasion</strong>: Accessible from body fluids without tissue biopsies</li></ul><h3><strong>Key Features</strong></h3><ul><li><strong>Multi-Technology Support</strong>: Compatible with Nextflex, comboSeq, and Oxford Nanopore</li><li><strong>Comprehensive QC</strong>: FastQC and MultiQC for quality assessment</li><li><strong>Expressed Region Detection</strong>: Identifies active transcribed regions in EV RNA</li><li><strong>Library Normalization</strong>: Corrects for technical variation and sequencing depth</li><li><strong>Differential Expression</strong>: Statistical analysis of RNA changes between conditions</li><li><strong>Flexible Analysis</strong>: Handles single-end and paired-end sequencing data</li></ul><h3><strong>Pipeline Workflow</strong></h3><ol><li><strong>Quality Control</strong>: FastQC evaluates raw read quality</li><li><strong>Read Trimming</strong>: Removes adapters and low-quality bases (optional)</li><li><strong>Expressed Region Detection</strong>: Identifies RNA expression patterns</li><li><strong>Quantification</strong>: Counts reads per expressed region</li><li><strong>Normalization</strong>: Library size and compositional normalization</li><li><strong>Differential Expression</strong>: Statistical testing for RNA changes</li><li><strong>Visualization</strong>: Generates plots and comprehensive reports</li></ol><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Cancer Research</strong>: Tumor-derived EV RNA as liquid biopsy biomarkers</li><li><strong>Neuroscience</strong>: Brain-derived EVs for Alzheimer's and Parkinson's disease</li><li><strong>Cardiovascular Disease</strong>: Cardiac biomarkers in plasma EVs</li><li><strong>Immunology</strong>: Immune cell communication via EV RNA transfer</li><li><strong>Regenerative Medicine</strong>: Stem cell EV therapeutic potential</li><li><strong>Infectious Disease</strong>: Host-pathogen EV interactions</li></ul><h3><strong>Supported Sequencing Technologies</strong></h3><table><tr><th>Technology</th><th>Description</th><th>Best For</th></tr><tr><td><strong>Nextflex</strong></td><td>Illumina small RNA library prep</td><td>miRNA and small RNA profiling</td></tr><tr><td><strong>comboSeq</strong></td><td>Combined small and long RNA</td><td>Comprehensive EV RNA landscape</td></tr><tr><td><strong>ONT (Oxford Nanopore)</strong></td><td>Long-read sequencing</td><td>Full-length transcripts, isoforms</td></tr></table><h3><strong>Input Requirements</strong></h3><p>CSV or TSV samplesheet with the following columns:</p><ul><li><strong>sample</strong>: Unique sample identifier</li><li><strong>fastq_1</strong>: Path to Read 1 FASTQ file</li><li><strong>fastq_2</strong>: Path to Read 2 FASTQ file (for paired-end data)</li><li><strong>condition</strong>: Experimental group for differential expression</li></ul><p><strong>Example samplesheet:</strong></p><pre>sample,fastq_1,fastq_2,condition\nEV_cancer_1,cancer1_R1.fq.gz,cancer1_R2.fq.gz,cancer\nEV_cancer_2,cancer2_R1.fq.gz,cancer2_R2.fq.gz,cancer\nEV_normal_1,normal1_R1.fq.gz,normal1_R2.fq.gz,normal\nEV_normal_2,normal2_R1.fq.gz,normal2_R2.fq.gz,normal</pre><h3><strong>Recommended Sequencing Parameters</strong></h3><ul><li><strong>Read Depth</strong>: 10-20M reads per sample for small RNA, 30-50M for total RNA</li><li><strong>Read Length</strong>: 50-75bp for small RNA, 100-150bp for total RNA, variable for ONT</li><li><strong>Library Type</strong>: Strand-specific recommended for accurate quantification</li><li><strong>Replicates</strong>: Minimum 3 biological replicates per condition</li><li><strong>Quality</strong>: Phred score >30 for high-confidence analysis</li></ul><h3><strong>Main Outputs</strong></h3><ul><li><strong>Quality Control Reports</strong>: FastQC and MultiQC comprehensive QC metrics</li><li><strong>Expressed Region BED Files</strong>: Genomic coordinates of detected RNA regions</li><li><strong>Count Matrices</strong>: Read counts per expressed region per sample</li><li><strong>Normalized Expression</strong>: Library-size normalized expression values</li><li><strong>Differential Expression Results</strong>: Statistical significance, fold changes, FDR</li><li><strong>Visualization Plots</strong>: MA plots, volcano plots, PCA, heatmaps</li><li><strong>Summary Statistics</strong>: Read mapping rates, detected features, QC metrics</li></ul><h3><strong>EV RNA Analysis Workflow</strong></h3><p><strong>1. EV Isolation</strong>: Ultracentrifugation, size exclusion, or immunoaffinity capture</p><p><strong>2. RNA Extraction</strong>: Specialized kits for low-input EV RNA</p><p><strong>3. Library Preparation</strong>: Nextflex, comboSeq, or ONT protocols</p><p><strong>4. Sequencing</strong>: Illumina or Oxford Nanopore platforms</p><p><strong>5. Analysis</strong>: Run EvExplorer pipeline for comprehensive analysis</p><h3><strong>Differential Expression Analysis</strong></h3><ul><li><strong>Statistical Methods</strong>: DESeq2-like approaches for robust DRE detection</li><li><strong>Multiple Testing Correction</strong>: FDR adjustment (Benjamini-Hochberg)</li><li><strong>Fold Change Filtering</strong>: Identifies biologically meaningful changes</li><li><strong>Visualization</strong>: Volcano plots, MA plots, heatmaps for result exploration</li></ul><h3><strong>EV RNA Biomarker Applications</strong></h3><ul><li><strong>Cancer Diagnostics</strong>: Early detection through tumor EV RNA signatures</li><li><strong>Treatment Monitoring</strong>: Track therapy response via EV RNA changes</li><li><strong>Prognosis</strong>: Predict outcomes based on EV RNA profiles</li><li><strong>Minimal Residual Disease</strong>: Detect cancer recurrence from blood EVs</li><li><strong>Organ Damage</strong>: Tissue-specific EV RNA for injury assessment</li></ul><h3><strong>Technical Considerations</strong></h3><ul><li><strong>Low Input</strong>: EVs contain picogram amounts of RNA - specialized protocols required</li><li><strong>RNA Fragmentation</strong>: EV RNA can be fragmented - affects library prep choice</li><li><strong>Contamination</strong>: Ensure pure EV isolation free from cellular RNA</li><li><strong>Normalization</strong>: Account for EV number and RNA content variations</li><li><strong>Batch Effects</strong>: Control for technical variation across experiments</li></ul><h3><strong>Quality Control Metrics</strong></h3><ul><li><strong>RNA Integrity</strong>: Assess fragmentation patterns</li><li><strong>Library Complexity</strong>: Duplication rates and library diversity</li><li><strong>Mapping Statistics</strong>: Percentage of reads aligning to expressed regions</li><li><strong>Feature Detection</strong>: Number of expressed regions identified</li><li><strong>Replicate Correlation</strong>: Biological replicate consistency</li></ul><h3><strong>Advantages Over Standard RNA-seq</strong></h3><ul><li><strong>EV-Specific</strong>: Optimized for unique characteristics of EV RNA</li><li><strong>Expressed Region Focus</strong>: Identifies transcribed regions without gene annotation bias</li><li><strong>Multi-Technology</strong>: Supports diverse sequencing platforms and library preps</li><li><strong>Flexible</strong>: Handles various RNA types (mRNA, miRNA, lncRNA, circRNA)</li><li><strong>Comprehensive</strong>: End-to-end analysis from raw reads to differential expression</li></ul><h3><strong>Clinical Translation</strong></h3><ul><li><strong>Liquid Biopsy</strong>: Non-invasive sampling from blood, urine, saliva</li><li><strong>Early Detection</strong>: Identify disease signatures before symptoms</li><li><strong>Personalized Medicine</strong>: EV RNA profiles for treatment selection</li><li><strong>Treatment Monitoring</strong>: Track therapy efficacy via EV biomarkers</li><li><strong>Disease Stratification</strong>: Classify patients based on EV RNA patterns</li></ul><blockquote><p><strong>Perfect for:</strong> EV Biomarker Discovery \u2022 Liquid Biopsy \u2022 Cancer Diagnostics \u2022 Neurodegenerative Disease \u2022 Cardiovascular Research \u2022 Cell-Cell Communication \u2022 Therapeutic Development</p></blockquote>",
+  "spec": [
+    {
+      "label": "Input Samplesheet",
+      "name": "input",
+      "description": "CSV or TSV samplesheet file containing information about the samples in the experiment. Must include sample names, FASTQ file paths, and experimental conditions.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "type": "Stash File",
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
+      }
+    },
+    {
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "The output directory where the results will be saved. All pipeline outputs including QC reports, expression matrices, and differential expression results will be stored here.",
+      "defaultValue": "./evexplorer-results",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "type": "Stash File",
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    },
+    {
+      "label": "Single-end Reads",
+      "name": "single_end",
+      "description": "Specifies that the input data consists of single-end reads. Leave unchecked for paired-end sequencing data.",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Checkbox"
+    },
+    {
+      "label": "Email Address",
+      "name": "email",
+      "description": "Email address for completion summary and notifications. Will receive a report when the pipeline completes.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "MultiQC Report Title",
+      "name": "multiqc_title",
+      "description": "Custom title for the MultiQC report. This will be displayed as the page header and used in the filename.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Input"
+    },
+    {
+      "label": "Save Trimmed Reads",
+      "name": "save_trimmed",
+      "description": "Save the trimmed FASTQ files to the output directory for downstream analysis or archival purposes.",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Checkbox"
+    },
+    {
+      "label": "Skip Quality Trimming",
+      "name": "skip_trimming",
+      "description": "Skip the adapter and quality trimming step. Use only if your reads are already preprocessed.",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Checkbox"
+    },
+    {
+      "label": "Skip FastQC",
+      "name": "skip_fastqc",
+      "description": "Skip FastQC quality control step. Not recommended unless QC has been performed externally.",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Checkbox"
+    },
+    {
+      "label": "Skip MultiQC",
+      "name": "skip_multiqc",
+      "description": "Skip MultiQC report generation. MultiQC aggregates all QC metrics into a single comprehensive report.",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "type": "Checkbox"
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Resources",
+      "name": "system_size",
+      "options": [
+        {
+          "label": "LARGE (Recommended)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

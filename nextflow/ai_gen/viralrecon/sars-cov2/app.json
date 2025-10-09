@@ -1,0 +1,72 @@
+{
+  "name": "viralrecon-covid-surveillance",
+  "title": "SARS-CoV-2 Genome Surveillance",
+  "description": "Specialized pipeline for SARS-CoV-2 genome assembly and variant calling from COVID-19 samples. Provides comprehensive lineage assignment, mutation tracking, and outbreak surveillance capabilities. Samplesheet format: `sample,fastq_1,fastq_2`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/viralrecon --input ${input} --outdir ${outdir} -r 2.6.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/viralrecon/master/docs/images/nf-core-viralrecon_logo_light.png",
+  "content": "<h2><strong>Viralrecon - SARS-CoV-2 Genome Surveillance</strong></h2><p>Optimized bioinformatics pipeline for SARS-CoV-2 genome assembly, variant calling, and lineage assignment from COVID-19 patient samples. Supports both amplicon (e.g., ARTIC) and metagenomic protocols on Illumina and Nanopore platforms for comprehensive viral surveillance.</p><h3><strong>What is SARS-CoV-2 Surveillance?</strong></h3><blockquote><p><strong>Viralrecon</strong> enables real-time monitoring of SARS-CoV-2 evolution, tracking emerging variants of concern, and understanding transmission dynamics through high-quality genome sequencing and comprehensive variant analysis.</p></blockquote><h3><strong>Key Features</strong></h3><ul><li><strong>ARTIC Protocol Support</strong>: Optimized for standard amplicon methods</li><li><strong>Variant of Concern Detection</strong>: Identify Alpha, Delta, Omicron, etc.</li><li><strong>Pangolin Lineage Assignment</strong>: Automated clade classification</li><li><strong>Mutation Profiling</strong>: Track spike protein and other mutations</li><li><strong>Quality Metrics</strong>: Coverage, completeness, variant frequency</li><li><strong>Outbreak Tracking</strong>: Phylogenetic analysis ready outputs</li></ul><h3><strong>Pipeline Workflow</strong></h3><ol><li><strong>Quality Control</strong>: FastQC and sequencing metrics</li><li><strong>Primer Trimming</strong>: Remove amplicon primers (ARTIC, etc.)</li><li><strong>Read Mapping</strong>: Align to SARS-CoV-2 reference genome</li><li><strong>Variant Calling</strong>: Identify mutations with multiple callers</li><li><strong>Consensus Assembly</strong>: Generate complete viral genomes</li><li><strong>Lineage Assignment</strong>: Pangolin/Nextclade classification</li><li><strong>Mutation Annotation</strong>: Functional effect prediction</li><li><strong>Quality Reporting</strong>: MultiQC comprehensive summary</li></ol><h3><strong>Scientific Applications</strong></h3><ul><li><strong>COVID-19 Surveillance</strong>: Monitor circulating variants</li><li><strong>Outbreak Investigation</strong>: Track transmission clusters</li><li><strong>Variant Emergence</strong>: Detect new mutations early</li><li><strong>Public Health</strong>: Inform infection control measures</li><li><strong>Clinical Diagnostics</strong>: Characterize patient viral loads</li><li><strong>Vaccine Effectiveness</strong>: Monitor breakthrough infections</li></ul><h3><strong>Variant Analysis</strong></h3><ul><li><strong>Spike Protein Mutations</strong>: Track immune escape variants</li><li><strong>Lineage Classification</strong>: WHO nomenclature (Alpha, Beta, etc.)</li><li><strong>Sub-lineages</strong>: Detailed BA.1, BA.2, etc. identification</li><li><strong>Key Mutations</strong>: N501Y, E484K, L452R detection</li><li><strong>Recombinant Detection</strong>: Identify chimeric genomes</li></ul><h3><strong>Advantages</strong></h3><ul><li><strong>ARTIC Optimized</strong>: Works seamlessly with standard protocols</li><li><strong>Up-to-date</strong>: Regular updates for new variants</li><li><strong>Comprehensive</strong>: From reads to lineages</li><li><strong>Quality Focused</strong>: Stringent QC metrics</li><li><strong>Surveillance Ready</strong>: GISAID submission compatible</li></ul><h3><strong>Input Requirements</strong></h3><ul><li><strong>FASTQ Files</strong>: Illumina or Nanopore COVID-19 sequencing</li><li><strong>Sample Sheet</strong>: CSV with sample metadata</li><li><strong>Protocol</strong>: Amplicon (ARTIC) or metagenomic</li><li><strong>Optional</strong>: Primer BED file for trimming</li></ul><h3><strong>Main Outputs</strong></h3><ul><li><strong>Consensus Genomes</strong>: Complete SARS-CoV-2 sequences</li><li><strong>Variant Calls</strong>: All mutations with annotations</li><li><strong>Lineage Reports</strong>: Pangolin/Nextclade assignments</li><li><strong>Mutation Tables</strong>: Key variant positions</li><li><strong>Coverage Metrics</strong>: Genome completeness statistics</li><li><strong>QC Reports</strong>: Sample quality assessment</li><li><strong>GISAID Ready</strong>: Formatted for public submission</li></ul><blockquote><p><strong>Perfect for:</strong> COVID-19 \u2022 SARS-CoV-2 \u2022 Viral Surveillance \u2022 Outbreak Investigation \u2022 Variant Tracking</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Input",
+      "name": "input",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output",
+      "name": "outdir",
+      "defaultValue": "./viralrecon-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Resources",
+      "name": "system_size",
+      "options": [
+        {
+          "label": "LARGE",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

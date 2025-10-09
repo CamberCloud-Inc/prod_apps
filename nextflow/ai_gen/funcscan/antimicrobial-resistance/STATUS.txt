@@ -1,0 +1,4 @@
+Status: 📝 Ready
+App: funcscan-amr
+Version: 2.1.0
+Use Case: Antimicrobial resistance gene screening

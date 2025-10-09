@@ -1,0 +1,75 @@
+{
+  "name": "spatialvi-visium-analysis",
+  "title": "Visium Spatial Transcriptomics Analysis",
+  "description": "Process and analyze 10X Genomics Visium spatial transcriptomics data. Integrates tissue histology with transcriptomics for spatially-resolved gene expression analysis. Samplesheet format: `sample,image,json,fastq_dir`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/spatialvi --input ${input} --outdir ${outdir} -r dev ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/spatialvi/master/docs/images/nf-core-spatialvi_logo_light.png",
+  "content": "<h2><strong>Visium Spatial Transcriptomics</strong></h2><p><strong>10X Genomics Visium</strong> combines histology imaging with whole-transcriptome profiling at spatial resolution. Capture spots contain 1-10 cells, providing tissue-wide gene expression maps.</p><h3><strong>Visium Technology</strong></h3><blockquote><p><strong>How It Works</strong>:</p><ol><li><strong>Tissue Section</strong>: 10\u03bcm fresh-frozen tissue on slide</li><li><strong>H&E Staining</strong>: Visualize tissue morphology</li><li><strong>Permeabilization</strong>: Release mRNA</li><li><strong>Capture</strong>: mRNA binds to barcoded spots (55\u03bcm diameter)</li><li><strong>Sequencing</strong>: Each spot has unique spatial barcode</li><li><strong>Mapping</strong>: Align expression to H&E image</li></ol></blockquote><p><strong>Specifications</strong>:</p><ul><li><strong>Spots</strong>: ~5000 barcoded locations</li><li><strong>Spot Size</strong>: 55\u03bcm (1-10 cells)</li><li><strong>Genes</strong>: Whole transcriptome</li><li><strong>Resolution</strong>: ~50\u03bcm (near-cellular)</li><li><strong>Tissue Size</strong>: 6.5mm x 6.5mm</li></ul><h3><strong>Why Spatial Transcriptomics?</strong></h3><ul><li><strong>Tissue Context</strong>: See where genes are expressed in tissue</li><li><strong>Anatomical Regions</strong>: Correlate expression with histology</li><li><strong>Disease Zones</strong>: Tumor vs stroma, healthy vs diseased</li><li><strong>Cell-Cell Communication</strong>: Infer interactions from proximity</li><li><strong>Spatial Gradients</strong>: Expression patterns across tissue</li><li><strong>Validation</strong>: Confirm scRNA-seq findings in situ</li></ul><h3><strong>Scientific Applications</strong></h3><p><strong>Cancer</strong>:</p><ul><li><strong>Tumor Heterogeneity</strong>: Expression zones within tumors</li><li><strong>Immune Infiltration</strong>: T cell localization</li><li><strong>Tumor-Stroma Interface</strong>: Edge gene expression</li><li><strong>Metastatic Niches</strong>: Pre-metastatic sites</li></ul><p><strong>Neuroscience</strong>:</p><ul><li><strong>Brain Regions</strong>: Cortical layers, hippocampus subfields</li><li><strong>White vs Gray Matter</strong>: Regional differences</li><li><strong>Disease Pathology</strong>: Alzheimer's plaques, PD Lewy bodies</li></ul><p><strong>Development</strong>:</p><ul><li><strong>Organogenesis</strong>: Spatial patterning during development</li><li><strong>Tissue Boundaries</strong>: Signaling centers</li></ul><p><strong>Immunology</strong>:</p><ul><li><strong>Lymph Node Architecture</strong>: B/T cell zones</li><li><strong>Germinal Centers</strong>: Immune structure organization</li></ul><h3><strong>Pipeline Features</strong></h3><ul><li><strong>Raw Data Processing</strong>: Run Space Ranger on FASTQ files</li><li><strong>Pre-Processed Data</strong>: Use existing Space Ranger output</li><li><strong>Quality Control</strong>: Spot filtering, tissue detection</li><li><strong>Normalization</strong>: SCTransform or log-normalization</li><li><strong>Spatial Clustering</strong>: Identify tissue domains</li><li><strong>Spatial Patterns</strong>: Detect spatially variable genes</li><li><strong>Deconvolution</strong>: Infer cell type composition per spot</li><li><strong>Visualization</strong>: Gene expression overlays on H&E image</li></ul><h3><strong>Analysis Types</strong></h3><ol><li><strong>Spatial Domains</strong>: Unsupervised clustering of tissue regions</li><li><strong>Spatially Variable Genes</strong>: Genes with spatial patterns (Moran's I)</li><li><strong>Cell Type Mapping</strong>: Deconvolve spot composition</li><li><strong>Ligand-Receptor</strong>: Cell-cell communication inference</li><li><strong>Integration</strong>: Combine with scRNA-seq reference</li></ol><h3><strong>Input Requirements</strong></h3><p><strong>Option 1 - Raw Data</strong>:</p><ul><li>CSV samplesheet with: sample, fastq_dir, image, cytaimage, slide, area</li><li>FASTQ files</li><li>H&E images</li></ul><p><strong>Option 2 - Processed Data</strong>:</p><ul><li>CSV samplesheet with: sample, spaceranger_dir</li><li>Pre-computed Space Ranger outputs</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Spatial Object</strong>: Seurat or Scanpy with coordinates</li><li><strong>Expression Matrix</strong>: Genes \u00d7 spots</li><li><strong>H&E + Expression</strong>: Overlaid visualizations</li><li><strong>Spatial Clusters</strong>: Tissue domain annotations</li><li><strong>SVGs</strong>: Spatially variable genes</li><li><strong>Cell Type Maps</strong>: Deconvolved composition</li><li><strong>QC Report</strong>: HTML with spatial metrics</li></ul><blockquote><p><strong>Perfect for:</strong> Tissue architecture \u2022 Tumor microenvironment \u2022 Brain regions \u2022 Disease pathology \u2022 Spatial gene patterns \u2022 Integration with scRNA-seq</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV with Visium data (raw FASTQs or Space Ranger output)",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".csv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory",
+      "defaultValue": "./spatialvi-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "options": [
+        {
+          "label": "XLARGE (Recommended for Visium)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xlarge"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

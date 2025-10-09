@@ -1,0 +1,4 @@
+Status: 📝 Ready
+App: circdna-detection
+Version: 1.1.0
+Use Case: Extrachromosomal DNA detection in cancer

@@ -1,0 +1,176 @@
+{
+  "name": "sammyseq-chromatin-analysis",
+  "title": "Chromatin Accessibility & Heterochromatin Analysis",
+  "description": "Sequential Analysis of MacroMolecules accessibilitY (SAMMY-seq) - A fast, cost-effective method for genome-wide characterization of chromatin states and heterochromatin dynamics without crosslinking or antibodies. Samplesheet format: `sample,fastq_1,fastq_2,fraction`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/sammyseq --input ${input} --outdir ${outdir} --genome ${genome} -profile k8s -c /etc/mpi/nextflow.camber.config -r dev",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/sammyseq/master/docs/images/nf-core-sammyseq_logo_light.png",
+  "content": "<h1 class=\"heading-node\">\ud83e\uddec SAMMY-seq: Chromatin State Analysis</h1><p class=\"text-node\"><strong>Reveal Chromatin Architecture Without Antibodies</strong></p><p class=\"text-node\">SAMMY-seq (Sequential Analysis of MacroMolecules accessibilitY sequencing) is a revolutionary method for genome-wide mapping of chromatin states through sequential extraction of nuclear fractions. This technique separates chromatin by accessibility - from open euchromatin to highly condensed heterochromatin - providing comprehensive insights into chromatin organization.</p><img src=\"https://raw.githubusercontent.com/nf-core/sammyseq/master/docs/images/nf-core-sammyseq_logo_light.png\" alt=\"nf-core/sammyseq workflow\" width=\"600\" height=\"400\"><h2 class=\"heading-node\">\ud83d\udd2c What is SAMMY-seq?</h2><p class=\"text-node\">SAMMY-seq is a high-throughput sequencing-based method that characterizes chromatin dynamics by sequentially extracting distinct nuclear fractions based on their solubility and accessibility:</p><h3 class=\"heading-node\">\ud83d\udcca Sequential Extraction Fractions</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>S1 Fraction (Soluble):</strong> Freely soluble proteins and highly accessible chromatin - enriched in active euchromatin</p></li><li><p class=\"text-node\"><strong>S2 Fraction (DNase-accessible):</strong> Chromatin released after DNase treatment - moderately accessible regions</p></li><li><p class=\"text-node\"><strong>S3 Fraction (High-salt extractable):</strong> DNase-resistant chromatin extracted with high salt buffer - less accessible regions</p></li><li><p class=\"text-node\"><strong>S4 Fraction (Urea-soluble):</strong> Most condensed and insoluble chromatin extracted with urea buffer - highly condensed heterochromatin enriched in lamina-associated domains (LADs)</p></li></ul><h2 class=\"heading-node\">\ud83c\udfaf Key Advantages</h2><p class=\"text-node\"><strong>Why Choose SAMMY-seq?</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udeab No Antibodies Required:</strong> Unlike ChIP-seq, no expensive or specific antibodies needed</p></li><li><p class=\"text-node\"><strong>\ud83d\udd17 No Crosslinking:</strong> Avoids crosslinking artifacts that can affect other chromatin methods</p></li><li><p class=\"text-node\"><strong>\u26a1 Fast & Simple:</strong> Straightforward protocol, easy to perform in any molecular biology lab</p></li><li><p class=\"text-node\"><strong>\ud83d\udcb0 Cost-Effective:</strong> Cheap alternative to multiple ChIP-seq experiments</p></li><li><p class=\"text-node\"><strong>\ud83e\uddeb Primary Cells Compatible:</strong> Works with limited cell numbers, suitable for primary cells</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Robust & Reproducible:</strong> Reliable results across different labs and conditions</p></li></ul><h2 class=\"heading-node\">\ud83d\udd0d What SAMMY-seq Reveals</h2><h3 class=\"heading-node\">Chromatin Architecture</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Heterochromatin Domains:</strong> Identify regions of condensed, transcriptionally silent chromatin</p></li><li><p class=\"text-node\"><strong>Euchromatin Regions:</strong> Map accessible, transcriptionally active chromatin</p></li><li><p class=\"text-node\"><strong>LADs (Lamina-Associated Domains):</strong> S4 fraction enriched in peripheral heterochromatin</p></li><li><p class=\"text-node\"><strong>Chromatin Accessibility Gradient:</strong> Continuous spectrum from highly accessible to highly condensed</p></li></ul><h3 class=\"heading-node\">Nuclear Organization</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Compartmentalization:</strong> Define genome compartments based on biochemical properties</p></li><li><p class=\"text-node\"><strong>Nuclear Periphery:</strong> Identify genes associated with nuclear lamina</p></li><li><p class=\"text-node\"><strong>Chromatin Dynamics:</strong> Track changes in chromatin state during differentiation or disease</p></li></ul><h2 class=\"heading-node\">\ud83e\uddea Scientific Applications</h2><h3 class=\"heading-node\">Disease Research</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Hutchinson-Gilford Progeria Syndrome:</strong> Detect early-stage heterochromatin alterations in progeria fibroblasts</p></li><li><p class=\"text-node\"><strong>Cancer:</strong> Identify aberrant chromatin organization in tumor cells</p></li><li><p class=\"text-node\"><strong>Aging:</strong> Map age-related changes in heterochromatin structure</p></li><li><p class=\"text-node\"><strong>Neurodegeneration:</strong> Study chromatin dysfunction in neurodegenerative diseases</p></li></ul><h3 class=\"heading-node\">Basic Research</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Development:</strong> Track chromatin remodeling during differentiation</p></li><li><p class=\"text-node\"><strong>Cell Identity:</strong> Define cell-type specific chromatin landscapes</p></li><li><p class=\"text-node\"><strong>Epigenetic Regulation:</strong> Understand chromatin-based gene regulation</p></li><li><p class=\"text-node\"><strong>Stress Response:</strong> Monitor chromatin changes under cellular stress</p></li></ul><h2 class=\"heading-node\">\ud83d\udcca SAMMY-seq vs Other Methods</h2><table class=\"table-node\"><tr><th>Feature</th><th>SAMMY-seq</th><th>ChIP-seq</th><th>ATAC-seq</th><th>DNase-seq</th></tr><tr><td><strong>Antibodies</strong></td><td>\u274c No</td><td>\u2705 Yes (expensive)</td><td>\u274c No</td><td>\u274c No</td></tr><tr><td><strong>Crosslinking</strong></td><td>\u274c No</td><td>\u2705 Yes</td><td>\u274c No</td><td>\u274c No</td></tr><tr><td><strong>Cost</strong></td><td>\ud83d\udcb0 Low</td><td>\ud83d\udcb0\ud83d\udcb0\ud83d\udcb0 High</td><td>\ud83d\udcb0\ud83d\udcb0 Medium</td><td>\ud83d\udcb0\ud83d\udcb0 Medium</td></tr><tr><td><strong>Heterochromatin</strong></td><td>\u2705 Excellent</td><td>\u26a0\ufe0f Mark-dependent</td><td>\u274c Limited</td><td>\u274c Limited</td></tr><tr><td><strong>LADs</strong></td><td>\u2705 Yes (S4)</td><td>\u26a0\ufe0f Requires Lamin Ab</td><td>\u274c No</td><td>\u274c No</td></tr><tr><td><strong>Accessibility Gradient</strong></td><td>\u2705 4 fractions</td><td>\u274c Binary</td><td>\u2705 Yes</td><td>\u2705 Yes</td></tr><tr><td><strong>Cell Number</strong></td><td>\u2705 Low</td><td>\u26a0\ufe0f High</td><td>\u2705 Very Low</td><td>\u26a0\ufe0f High</td></tr></table><h2 class=\"heading-node\">\ud83d\udd2c Pipeline Analysis Workflow</h2><p class=\"text-node\">The nf-core/sammyseq pipeline provides comprehensive analysis:</p><ol class=\"list-node\"><li><p class=\"text-node\"><strong>Quality Control:</strong> FastQC assessment of raw sequencing reads</p></li><li><p class=\"text-node\"><strong>Trimming:</strong> Adapter removal and quality filtering</p></li><li><p class=\"text-node\"><strong>Alignment:</strong> Map reads to reference genome (BWA/Bowtie2)</p></li><li><p class=\"text-node\"><strong>Filtering:</strong> Remove duplicates, low-quality reads, blacklisted regions</p></li><li><p class=\"text-node\"><strong>Normalization:</strong> Quantile normalization across fractions</p></li><li><p class=\"text-node\"><strong>Peak Calling:</strong> Identify enriched regions in each fraction</p></li><li><p class=\"text-node\"><strong>Differential Analysis:</strong> Compare chromatin states between conditions</p></li><li><p class=\"text-node\"><strong>Compartment Calling:</strong> Define euchromatin vs heterochromatin compartments</p></li><li><p class=\"text-node\"><strong>Visualization:</strong> Generate BigWig tracks for genome browser</p></li><li><p class=\"text-node\"><strong>QC Reporting:</strong> Comprehensive MultiQC report</p></li></ol><h2 class=\"heading-node\">\ud83d\udccb Input Requirements</h2><p class=\"text-node\"><strong>Sample Sheet Format (CSV):</strong></p><pre class=\"block-node\"><code>sample,fastq_1,fastq_2,fraction\ncontrol_S1,control_S1_R1.fastq.gz,control_S1_R2.fastq.gz,S1\ncontrol_S2,control_S2_R1.fastq.gz,control_S2_R2.fastq.gz,S2\ncontrol_S3,control_S3_R1.fastq.gz,control_S3_R2.fastq.gz,S3\ncontrol_S4,control_S4_R1.fastq.gz,control_S4_R2.fastq.gz,S4\ntreated_S1,treated_S1_R1.fastq.gz,treated_S1_R2.fastq.gz,S1\ntreated_S2,treated_S2_R1.fastq.gz,treated_S2_R2.fastq.gz,S2\ntreated_S3,treated_S3_R1.fastq.gz,treated_S3_R2.fastq.gz,S3\ntreated_S4,treated_S4_R1.fastq.gz,treated_S4_R2.fastq.gz,S4</code></pre><p class=\"text-node\"><strong>Required Columns:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">sample</code> - Unique sample identifier</p></li><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">fastq_1</code> - Path to R1 FASTQ file (or URL)</p></li><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">fastq_2</code> - Path to R2 FASTQ file for paired-end (optional)</p></li><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">fraction</code> - Extraction fraction: S1, S2, S3, or S4</p></li></ul><h2 class=\"heading-node\">\ud83d\udcca Key Outputs</h2><h3 class=\"heading-node\">Alignment & Coverage</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>BAM Files:</strong> Aligned reads for each sample/fraction</p></li><li><p class=\"text-node\"><strong>BigWig Tracks:</strong> Genome browser visualization files</p></li><li><p class=\"text-node\"><strong>Coverage Plots:</strong> Chromatin accessibility profiles</p></li></ul><h3 class=\"heading-node\">Chromatin State Analysis</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Enrichment Profiles:</strong> Fraction-specific enrichment across genome</p></li><li><p class=\"text-node\"><strong>Compartment Calls:</strong> Euchromatin vs heterochromatin domains</p></li><li><p class=\"text-node\"><strong>LAD Predictions:</strong> Lamina-associated domains from S4 fraction</p></li><li><p class=\"text-node\"><strong>Differential Regions:</strong> Chromatin state changes between conditions</p></li></ul><h3 class=\"heading-node\">Quality Control</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>MultiQC Report:</strong> Comprehensive quality metrics across all samples</p></li><li><p class=\"text-node\"><strong>Fraction Statistics:</strong> Read distribution across fractions</p></li><li><p class=\"text-node\"><strong>Correlation Analysis:</strong> Sample-to-sample reproducibility</p></li></ul><h2 class=\"heading-node\">\ud83e\uddec Reference Genome Selection</h2><p class=\"text-node\">Choose from comprehensive reference genomes:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83e\uddd1 Human:</strong> GRCh37, GRCh38, hg19, hg38</p></li><li><p class=\"text-node\"><strong>\ud83d\udc2d Mouse:</strong> GRCm38, GRCm39, mm10, mm39</p></li><li><p class=\"text-node\"><strong>\ud83d\udd2c Model Organisms:</strong> Zebrafish, fly, C. elegans, yeast</p></li><li><p class=\"text-node\"><strong>\ud83c\udf31 Plants:</strong> Arabidopsis, rice, maize</p></li><li><p class=\"text-node\"><strong>\ud83d\udc04 Livestock:</strong> Cow, pig, horse, chicken</p></li></ul><h2 class=\"heading-node\">\ud83d\udcda Scientific References</h2><p class=\"text-node\"><strong>Key Publications:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\">Lucini F, et al. (2024) \"Biochemical properties of chromatin domains define genome compartmentalization.\" <em>Nucleic Acids Research</em>, 52(12)</p></li><li><p class=\"text-node\">Sebesty\u00e9n E, et al. (2020) \"SAMMY-seq reveals early alteration of heterochromatin and deregulation of bivalent genes in Hutchinson-Gilford Progeria Syndrome.\" <em>Nature Communications</em>, 11:6274</p></li></ul><h2 class=\"heading-node\">\ud83d\udca1 Analysis Tips</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Biological Replicates:</strong> Use at least 2-3 replicates per condition for robust statistics</p></li><li><p class=\"text-node\"><strong>All Fractions:</strong> Process all four fractions (S1-S4) for complete chromatin landscape</p></li><li><p class=\"text-node\"><strong>Paired-End Recommended:</strong> Better mapping quality and fragment size information</p></li><li><p class=\"text-node\"><strong>Sequencing Depth:</strong> 20-40M reads per fraction sufficient for genome-wide analysis</p></li></ul><blockquote class=\"block-node\"><p class=\"text-node\"><strong>Perfect for Research in:</strong> Chromatin organization \u2022 Heterochromatin dynamics \u2022 Nuclear architecture \u2022 Lamina-associated domains \u2022 Epigenetic regulation \u2022 Disease chromatin \u2022 Aging \u2022 Development \u2022 Cell identity \u2022 Progeria \u2022 Cancer epigenetics</p></blockquote><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> \u2022 Powered by <a class=\"link\" href=\"https://nf-co.re/sammyseq/dev/\" target=\"_blank\">nf-core/sammyseq (dev)</a> \u2022 Containerized execution \u2022 Continuous integration tested</p>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV samplesheet with columns: sample, fastq_1, fastq_2, fraction (S1/S2/S3/S4)",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory where analysis results will be saved",
+      "defaultValue": "./sammyseq-results",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome for alignment and chromatin state analysis",
+      "defaultValue": "GRCh38",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Human GRCh38 (NCBI)",
+          "value": "GRCh38"
+        },
+        {
+          "label": "Human GRCh37 (Ensembl)",
+          "value": "GRCh37"
+        },
+        {
+          "label": "Human hg38 (UCSC)",
+          "value": "hg38"
+        },
+        {
+          "label": "Human hg19 (UCSC)",
+          "value": "hg19"
+        },
+        {
+          "label": "Mouse GRCm39 (Ensembl)",
+          "value": "GRCm39"
+        },
+        {
+          "label": "Mouse GRCm38 (Ensembl)",
+          "value": "GRCm38"
+        },
+        {
+          "label": "Mouse mm39 (UCSC)",
+          "value": "mm39"
+        },
+        {
+          "label": "Mouse mm10 (UCSC)",
+          "value": "mm10"
+        },
+        {
+          "label": "Arabidopsis TAIR10 (Ensembl)",
+          "value": "TAIR10"
+        },
+        {
+          "label": "Cow UMD3.1 (Ensembl)",
+          "value": "UMD3.1"
+        },
+        {
+          "label": "C. elegans WBcel235 (Ensembl)",
+          "value": "WBcel235"
+        },
+        {
+          "label": "Zebrafish GRCz11 (Ensembl)",
+          "value": "GRCz11"
+        },
+        {
+          "label": "Zebrafish GRCz10 (Ensembl)",
+          "value": "GRCz10"
+        },
+        {
+          "label": "Fly BDGP6 (Ensembl)",
+          "value": "BDGP6"
+        },
+        {
+          "label": "Yeast R64-1-1 (Ensembl)",
+          "value": "R64-1-1"
+        },
+        {
+          "label": "Rat Rnor_6.0 (Ensembl)",
+          "value": "Rnor_6.0"
+        }
+      ]
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "description": "Select compute resources based on dataset size and complexity",
+      "hidden": false,
+      "options": [
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Recommended",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM (32 CPUs, 180GB RAM) - Small datasets",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE (96 CPUs, 540GB RAM) - Large cohorts",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

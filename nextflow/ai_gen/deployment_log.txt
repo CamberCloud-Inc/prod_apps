@@ -1,0 +1,3367 @@
+========================================
+DEPLOYING 62 FIXED NEXTFLOW APPS
+========================================
+
+----------------------------------------
+[1/62] Deploying: abotyper/blood-antigens
+App name: abotyper-blood-antigens
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                abotyper-blood-antigens
+Title:               Nanopore Genotyping
+Engine Type:         NEXTFLOW
+Description:         Characterize the Human Blood Group and Red Cell Antigens using Oxford Nanopore third-generation sequencing data. Validated pipeline for ABO blood type determination from targeted sequencing of ABO exons 6 and 7. Samplesheet format: `sample,fastq_1,fastq_2`
+Job Config:            system_size:
+    Description: Select computational resources based on dataset size and number of samples.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/abotyper --input ${input} --outdir ${outdir} --genome ${genome} -c /etc/mpi/nextflow.camber.config -profile k8s -r ${revision}
+Version:             1.0.0
+Created At:          2025-10-01T08:09:00Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: abotyper-blood-antigens
+
+----------------------------------------
+[2/62] Deploying: alleleexpression/ase-analysis
+App name: alleleexpression-ase-analysis
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                alleleexpression-ase-analysis
+Title:               ASE Detection and Quantification
+Engine Type:         NEXTFLOW
+Description:         Comprehensive allele-specific expression (ASE) analysis using STAR-WASP alignment, UMI deduplication, and Beagle phasing with phaser. Detects and quantifies differential expression between maternal and paternal alleles for studying imprinting, cis-regulatory variation, and parent-of-origin effects.
+Job Config:            system_size:
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/alleleexpression --input ${input} --outdir ${outdir} --genome ${genome} --chromosome ${chromosome} --beagle_ref ${beagle_ref} --beagle_map ${beagle_map} -r dev -profile singularity
+Version:             1.0.0
+Created At:          2025-10-01T08:09:01Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: alleleexpression-ase-analysis
+
+----------------------------------------
+[3/62] Deploying: cellpainting/phenotypic-profiling
+App name: cellpainting-phenotypic-profiling
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                cellpainting-phenotypic-profiling
+Title:               High-Content Phenotypic Profiling
+Engine Type:         NEXTFLOW
+Description:         Comprehensive morphological profiling using Cell Painting microscopy assay with automated CellProfiler analysis. Extracts ~1,500 morphological features per cell from multiplexed fluorescent staining to detect subtle phenotypic differences in cellular organization, perfect for drug discovery, toxicology screening, and cellular phenotyping.
+Job Config:            system_size:
+    Description: Choose computing resources based on dataset size and number of images to process.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             export NXF_CACHE_DIR=/camber_work/temp/.nextflow; export NXF_LOG_FILE=/home/camber/jobs/${JOB_ID}/outputs/nextflow.log; CP_MODE_FLAG=$([ "${cellprofiler_mode}" != "analysis" ] && echo "--cellprofiler_mode ${cellprofiler_mode}" || echo ""); ILLUM_PIPE=$([ "${cellprofiler_illumination_cppipe}" != "default" ] && echo "--cellprofiler_illumination_cppipe ${cellprofiler_illumination_cppipe}" || echo ""); ANALYSIS_PIPE=$([ "${cellprofiler_analysis_cppipe}" != "default" ] && echo "--cellprofiler_analysis_cppipe ${cellprofiler_analysis_cppipe}" || echo ""); ASSAY_PIPE=$([ "${cellprofiler_assaydevelopment_cppipe}" != "default" ] && echo "--cellprofiler_assaydevelopment_cppipe ${cellprofiler_assaydevelopment_cppipe}" || echo ""); STOP_FLAG=$([ "${stop_after}" != "complete" ] && echo "--stop_after ${stop_after}" || echo ""); nextflow run nf-core/cellpainting -r dev --input ${input} --outdir ${outdir} $CP_MODE_FLAG $ILLUM_PIPE $ANALYSIS_PIPE $ASSAY_PIPE $STOP_FLAG --max_time 99.h -c /etc/mpi/nextflow.camber.config -ansi-log false -profile k8s
+Version:             1.0.0
+Created At:          2025-10-01T08:09:03Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: cellpainting-phenotypic-profiling
+
+----------------------------------------
+[4/62] Deploying: createpanelrefs/reference-panels
+App name: createpanelrefs-reference-panels
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                createpanelrefs-reference-panels
+Title:               CNV & Variant Analysis References
+Engine Type:         NEXTFLOW
+Description:         Create Panel of Normals and genomic reference models for CNV detection and somatic variant calling. Build reference panels for CNVKIT, GATK Germline CNV Caller, GENS, and Mutect2 from normal sample cohorts. Samplesheet format: `sample,bam,bai,cram,crai`
+Job Config:            system_size:
+    Default: large
+    Options:
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/createpanelrefs --input ${input} --outdir ${outdir} --tools ${tools} -r dev
+Version:             1.0.0
+Created At:          2025-10-01T08:09:04Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: createpanelrefs-reference-panels
+
+----------------------------------------
+[5/62] Deploying: datasync/data-sync
+App name: datasync-data-sync
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                datasync-data-sync
+Title:               Automated File Synchronization & Validation
+Engine Type:         NEXTFLOW
+Description:         System operation pipeline for automated data synchronization, checksum validation, and data integrity verification. Handles large-scale data transfer, validation workflows, and checkpoint-based automation in data processing facilities. Samplesheet format: `sample,fastq_1,fastq_2`
+Job Config:            system_size:
+    Description: Select compute resources based on data volume. SMALL suitable for most sync operations.
+    Default: small
+    Options:
+      - small:
+          Node Size: SMALL, Num Nodes: 1, GPU: false
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/datasync --input ${input} --outdir ${outdir} --sync ${sync} -r ${revision}
+Version:             1.0.0
+Created At:          2025-10-01T08:09:06Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: datasync-data-sync
+
+----------------------------------------
+[6/62] Deploying: ddamsproteomics/tmt-labeling
+App name: ddamsproteomics-tmt-labeling
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                ddamsproteomics-tmt-labeling
+Title:               TMT Labeling Quantification
+Engine Type:         NEXTFLOW
+Description:         Quantitative proteomics workflow for TMT (Tandem Mass Tag) labeled samples using data-dependent acquisition mass spectrometry. Enables multiplexed protein quantification across up to 35 samples simultaneously with high precision, ideal for comparative studies, biomarker discovery, and differential expression analysis.
+Job Config:            system_size:
+    Description: Select compute resources based on dataset size. TMT analysis is computationally intensive - choose size based on number of fractions and samples.
+    Default: medium
+    Options:
+      - xsmall:
+          Node Size: XSMALL, Num Nodes: 1, GPU: false
+      - small:
+          Node Size: SMALL, Num Nodes: 1, GPU: false
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/quantms --input ${input} --database ${database} --outdir ${output} --acquisition_method DDA --labelling_type TMT --tmt_level 3 --search_engine msgf --enable_qc true --posterior_probabilities percolator -r 1.3.0 -c /etc/mpi/nextflow.camber.config -profile singularity
+Version:             1.0.0
+Created At:          2025-10-01T08:09:07Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: ddamsproteomics-tmt-labeling
+
+----------------------------------------
+[7/62] Deploying: deepmodeloptim/ml-optimization
+App name: deepmodeloptim-ml-optimization
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                deepmodeloptim-ml-optimization
+Title:               STIMULUS
+Engine Type:         NEXTFLOW
+Description:         Automated deep learning model testing and training data optimization pipeline. Systematically transforms data through preprocessing pipelines, tunes hyperparameters, performs sanity checks, and trains minimal models to identify optimal dataset-architecture combinations for genomics and bioinformatics applications. Samplesheet format: `gene_1:input:float,gene_2:input:float,age:meta:int,disease_status:label:binary`
+Job Config:            system_size:
+    Description: Resource allocation based on dataset size and complexity. GPU support available for large-scale experiments.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+      - large_gpu:
+          Node Size: LARGE, Num Nodes: 1, GPU: true
+
+Command:             nextflow run nf-core/deepmodeloptim --input ${input} --outdir ${outdir} -r dev -profile docker
+Version:             1.0.0
+Created At:          2025-10-01T08:09:08Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: deepmodeloptim-ml-optimization
+
+----------------------------------------
+[8/62] Deploying: deepvariant/clinical-wgs
+App name: deepvariant-clinical-wgs
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                deepvariant-clinical-wgs
+Title:               Deep Learning Variant Calling
+Engine Type:         NEXTFLOW
+Description:         Deep learning-based pipeline for highly accurate genomic variant identification from whole genome and exome sequencing data. Uses Google's DeepVariant for superior accuracy.
+Job Config:            system_size:
+    Default: large
+    Options:
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/deepvariant --input ${input} --outdir ${outdir} -r 1.5.0 
+Version:             1.0.0
+Created At:          2025-10-01T08:09:10Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: deepvariant-clinical-wgs
+
+----------------------------------------
+[9/62] Deploying: demo/demo-pipeline
+App name: demo-nfcore-demo
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                demo-nfcore-demo
+Title:               Learning & Testing
+Engine Type:         NEXTFLOW
+Description:         A simple nf-core demonstration pipeline for workshops, tutorials, and testing. Runs FastQC quality control and seqtk sequence processing with MultiQC reporting. Perfect for learning Nextflow and nf-core workflows. Samplesheet format: `sample,fastq_1,fastq_2`
+Job Config:            system_size:
+    Description: Select compute node size (SMALL recommended for demo)
+    Default: small
+    Options:
+      - small:
+          Node Size: SMALL, Num Nodes: 1, GPU: false
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/demo --input ${input} --outdir ${outdir} -r 1.0.1
+Version:             1.0.0
+Created At:          2025-10-01T08:09:11Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: demo-nfcore-demo
+
+----------------------------------------
+[10/62] Deploying: denovotranscript/de-novo-transcriptome
+App name: denovotranscript-de-novo-transcriptome
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                denovotranscript-de-novo-transcriptome
+Title:               RNA-seq Without Reference
+Engine Type:         NEXTFLOW
+Description:         Comprehensive pipeline for de novo transcriptome assembly from bulk RNA-seq data without requiring a reference genome. Supports Trinity and rnaSPAdes assemblers with quality assessment, redundancy reduction, and transcript quantification. Ideal for non-model organisms and novel transcript discovery.
+Job Config:            system_size:
+    Description: Select compute resources. XLARGE recommended for transcriptome assembly due to high memory requirements.
+    Default: xlarge
+    Options:
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/denovotranscript --input ${input} --outdir ${outdir} -r 1.2.1 
+Version:             1.0.0
+Created At:          2025-10-01T08:09:12Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: denovotranscript-de-novo-transcriptome
+
+----------------------------------------
+[11/62] Deploying: diaproteomics/dia-discovery
+App name: diaproteomics-dia-discovery
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                diaproteomics-dia-discovery
+Title:               Data-Independent Acquisition Analysis
+Engine Type:         NEXTFLOW
+Description:         Automated quantitative analysis of data-independent acquisition (DIA) proteomics mass spectrometry data using OpenSwathWorkflow. Performs library search, FDR rescoring, chromatogram alignment, and protein quantification from DIA RAW files (mzML) with optional spectral library generation from DDA measurements. Samplesheet format: `Sample,Condition,Fraction,Replicate,SpectraFile`
+Job Config:            system_size:
+    Description: Resource allocation for DIA proteomics processing. LARGE recommended for multiple samples.
+    Default: large
+    Options:
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/diaproteomics --input ${input} --outdir ${outdir} -r 1.2.4
+Version:             1.0.0
+Created At:          2025-10-01T08:09:14Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: diaproteomics-dia-discovery
+
+----------------------------------------
+[12/62] Deploying: diseasemodulediscovery/disease-networks
+App name: diseasemodulediscovery-disease-networks
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                diseasemodulediscovery-disease-networks
+Title:               Network-Based Drug Repurposing
+Engine Type:         NEXTFLOW
+Description:         Identify disease modules and potential drug targets through network medicine approaches. Discover connected subnetworks of disease-associated genes in the human interactome using multiple validated algorithms (DOMINO, DIAMOnD, ROBUST). Perfect for drug repurposing and target identification.
+Job Config:            system_size:
+    Description: Select compute resources based on network size and evaluation options. MEDIUM recommended for standard analysis, LARGE for permutation testing.
+    Default: medium
+    Options:
+      - small:
+          Node Size: SMALL, Num Nodes: 1, GPU: false
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/diseasemodulediscovery --seeds ${seeds} --outdir ${outdir} -r dev
+Version:             1.0.0
+Created At:          2025-10-01T08:09:15Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: diseasemodulediscovery-disease-networks
+
+----------------------------------------
+[13/62] Deploying: drop/rna-outliers
+App name: drop-rna-outliers
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                drop-rna-outliers
+Title:               Detection of RNA Outliers Pipeline
+Engine Type:         NEXTFLOW
+Description:         Identify aberrant gene expression, splicing, and mono-allelic expression from RNA-seq data. Powerful tool for rare disease diagnostics, detecting pathogenic variants through multi-omics integration and outlier analysis. Samplesheet format: `RNA_ID,RNA_BAM_FILE,DNA_VCF_FILE,DNA_ID,DROP_GROUP,PAIRED_END`
+Job Config:            system_size:
+    Description: Select compute resources based on cohort size. MEDIUM for 20-50 samples, LARGE for 50+ samples or deep sequencing data.
+    Default: medium
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/drop --input ${input} --outdir ${outdir} -r 1.4.0
+Version:             1.0.0
+Created At:          2025-10-01T08:09:17Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: drop-rna-outliers
+
+----------------------------------------
+[14/62] Deploying: drugresponseeval/drug-screening
+App name: drugresponseeval-drug-screening
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                drugresponseeval-drug-screening
+Title:               Pharmacogenomics Model Testing
+Engine Type:         NEXTFLOW
+Description:         Statistically rigorous framework for evaluating drug response prediction models using cross-validation, hyperparameter tuning, and robustness testing. Supports multiple datasets (CTRPv2, CCLE, GDSC) and diverse model types from statistical methods to neural networks.
+Job Config:            system_size:
+    Description: Select compute resources. Use MEDIUM for testing with small datasets, LARGE for standard pharmacogenomics databases, XLARGE for large-scale custom datasets or neural networks.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/drugresponseeval --models ${models} --baselines ${baselines} --dataset_name ${dataset_name} --outdir ${outdir} -r dev
+Version:             1.0.0
+Created At:          2025-10-01T08:09:18Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: drugresponseeval-drug-screening
+
+----------------------------------------
+[15/62] Deploying: epitopeprediction/vaccine-design
+App name: epitopeprediction-vaccine-design
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                epitopeprediction-vaccine-design
+Title:               Vaccine Design & Epitope Prediction
+Engine Type:         NEXTFLOW
+Description:         AI-powered epitope prediction pipeline for vaccine design and immunotherapy development. Predicts MHC-binding peptides from proteins, variants, or peptide sequences using state-of-the-art computational tools for precision immunology. Samplesheet format: `sample,alleles,mhc_class,filename`
+Job Config:            system_size:
+    Description: Select compute resources based on dataset size. Start with XSMALL for testing.
+    Default: xsmall
+    Options:
+      - xsmall:
+          Node Size: XSMALL, Num Nodes: 1, GPU: false
+      - small:
+          Node Size: SMALL, Num Nodes: 1, GPU: false
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             export NXF_CACHE_DIR=/camber_work/temp/.nextflow; export NXF_LOG_FILE=/home/camber/jobs/${JOB_ID}/outputs/nextflow.log; nextflow run nf-core/epitopeprediction -r 3.0.0 --input ${input} --outdir ${outdir} --max_memory 128.GB --max_cpus 32 -c /etc/mpi/nextflow.camber.config -ansi-log false -profile k8s
+Version:             1.0.0
+Created At:          2025-10-01T08:09:20Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: epitopeprediction-vaccine-design
+
+----------------------------------------
+[16/62] Deploying: fastqrepair/fastq-repair
+App name: fastqrepair-fastq-repair
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                fastqrepair-fastq-repair
+Title:               Recover and Clean Corrupted FASTQ Files
+Engine Type:         NEXTFLOW
+Description:         Recover corrupted FASTQ.gz files, drop or fix uncompliant reads, remove unpaired reads, and settle reads that became disordered. Comprehensive toolkit combining gzrt, wipertools, and BBMap for robust FASTQ file recovery. Samplesheet format: `sample,fastq_1,fastq_2`
+Job Config:            system_size:
+    Description: Compute resources for FASTQ repair. MEDIUM suitable for most repairs, LARGE for many samples or very large files.
+    Default: medium
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/fastqrepair -r 1.0.0 --input ${input} --outdir ${outdir} -c /etc/mpi/nextflow.camber.config -profile k8s
+Version:             1.0.0
+Created At:          2025-10-01T08:09:21Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: fastqrepair-fastq-repair
+
+----------------------------------------
+[17/62] Deploying: fastquorum/quality-filtering
+App name: fastquorum-quality-filtering
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                fastquorum-quality-filtering
+Title:               UMI Consensus & Quality Filtering
+Engine Type:         NEXTFLOW
+Description:         Advanced consensus read generation using Unique Molecular Identifiers (UMIs) with quality filtering. Implements fgbio Best Practices for producing high-quality consensus reads from single/multi-UMI and Duplex Sequencing data. Samplesheet format: `sample,fastq_1,fastq_2,fastq_3,fastq_4,read_structure`
+Job Config:            system_size:
+    Description: Resource allocation for the pipeline.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             if [ "${duplex_seq}" = "true" ]; then nextflow run nf-core/fastquorum --input ${input} --outdir ${outdir} --genome ${genome} --mode ${mode} --duplex_seq --skip_fastqc ${skip_fastqc} -c /etc/mpi/nextflow.camber.config -profile k8s -r 1.0.1; else nextflow run nf-core/fastquorum --input ${input} --outdir ${outdir} --genome ${genome} --mode ${mode} --skip_fastqc ${skip_fastqc} -c /etc/mpi/nextflow.camber.config -profile k8s -r 1.0.1; fi
+Version:             1.0.0
+Created At:          2025-10-01T08:09:22Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: fastquorum-quality-filtering
+
+----------------------------------------
+[18/62] Deploying: genomeannotator/eukaryote-annotation
+App name: genomeannotator-eukaryote-annotation
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                genomeannotator-eukaryote-annotation
+Title:               Eukaryotic Gene Annotation
+Engine Type:         NEXTFLOW
+Description:         Comprehensive annotation pipeline for eukaryotic genomes with focus on metazoans. Integrates protein and transcript evidence, performs ab initio prediction with AUGUSTUS and PASA, and generates consensus gene models using EvidenceModeler. Essential for genome projects and comparative genomics.
+Job Config:            system_size:
+    Description: Select compute resources. LARGE recommended for most eukaryotic genomes. XLARGE for mammalian-sized genomes with RNA-seq.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/genomeannotator --input ${input} --outdir ${outdir} -r dev 
+Version:             1.0.0
+Created At:          2025-10-01T08:09:24Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: genomeannotator-eukaryote-annotation
+
+----------------------------------------
+[19/62] Deploying: genomeassembler/short-read-assembly
+App name: genomeassembler-long-read-assembly
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                genomeassembler-long-read-assembly
+Title:               Long-Read Genome Assembly
+Engine Type:         NEXTFLOW
+Description:         Complete genome assembly pipeline for haploid and diploid inbred genomes from long reads (ONT/PacBio HiFi). Features assembly with Flye/Hifiasm, polishing using Medaka/Pilon, scaffolding via LINKS/Longstitch/RagTag, and comprehensive QC with BUSCO/QUAST/Merqury.
+Job Config:            system_size:
+    Description: Select resources based on genome size. LARGE for most genomes (100 Mb - 2 Gb). XLARGE for large or complex genomes (>2 Gb).
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/genomeassembler --input ${input} --outdir ${outdir} -r dev 
+Version:             1.0.0
+Created At:          2025-10-01T08:09:25Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: genomeassembler-long-read-assembly
+
+----------------------------------------
+[20/62] Deploying: genomeqc/genome-qc
+App name: genomeqc-genome-qc
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                genomeqc-genome-qc
+Title:               Comprehensive Genome Quality Assessment
+Engine Type:         NEXTFLOW
+Description:         Compare quality of multiple genome assemblies and annotations using BUSCO, QUAST, tidk, and Merqury. Accepts local files or NCBI accessions. Evaluates completeness, contiguity, contamination, and annotation quality for publication-ready genome assessments.
+Job Config:            system_size:
+    Description: Select compute resources. LARGE recommended for multiple large genomes, vertebrate assemblies, or when using Orthofinder/Merqury.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/genomeqc --input ${input} --outdir ${outdir} --busco_lineage ${busco_lineage} ${run_tidk} ${run_merqury} ${save_assembly} ${save_longest_isoform} -r dev 
+Version:             1.0.0
+Created At:          2025-10-01T08:09:27Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: genomeqc-genome-qc
+
+----------------------------------------
+[21/62] Deploying: genomeskim/organelle-genomes
+App name: genomeskim-organelle-genomes
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                genomeskim-organelle-genomes
+Title:               Organelle Genome Assembly
+Engine Type:         NEXTFLOW
+Description:         Extract and assemble high-quality chloroplast and mitochondrial genomes from low-coverage whole-genome sequencing data using genome skimming technology. Perfect for plant phylogenomics, biodiversity studies, and organelle genome research. Samplesheet format: `sample,fastq_1,fastq_2`
+Job Config:            system_size:
+    Description: Computational resources for organelle genome assembly. MEDIUM recommended for most datasets.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/genomeskim --input ${input} --outdir ${outdir} -profile k8s -c /etc/mpi/nextflow.camber.config -r dev
+Version:             1.0.0
+Created At:          2025-10-01T08:09:28Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: genomeskim-organelle-genomes
+
+----------------------------------------
+[22/62] Deploying: hgtseq/horizontal-gene-transfer
+App name: hgtseq-horizontal-gene-transfer
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                hgtseq-horizontal-gene-transfer
+Title:               Horizontal Gene Transfer Detection from NGS Data
+Engine Type:         NEXTFLOW
+Description:         Detect and analyze horizontal gene transfer events from whole genome or metagenomic sequencing data. Identifies non-host microbial sequences and infers potential genomic integration sites for studying bacterial gene transfer, pathogen integration, and mobile genetic elements. Samplesheet format: `sample,fastq_1,fastq_2`
+Job Config:            system_size:
+    Description: Select compute resources based on dataset size. LARGE recommended for whole genome sequencing data with comprehensive Kraken2 databases.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/hgtseq --input ${input} --outdir ${outdir} --genome ${genome} --krakendb ${krakendb} --kronadb ${kronadb} -r 1.1.0
+Version:             1.0.0
+Created At:          2025-10-01T08:09:30Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: hgtseq-horizontal-gene-transfer
+
+----------------------------------------
+[23/62] Deploying: hicar/enhancer-promoter-loops
+App name: hicar-enhancer-promoter-analysis
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                hicar-enhancer-promoter-analysis
+Title:               Chromatin Accessibility and Interaction Analysis
+Engine Type:         NEXTFLOW
+Description:         Analyzes HiCAR data for simultaneous measurement of chromatin accessibility and cis-regulatory chromatin contacts without antibodies. Ideal for studying enhancer-promoter loops and gene regulation.
+Job Config:            system_size:
+    Default: large
+    Options:
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/hicar --input ${input} --outdir ${outdir} -r 1.0.0 
+Version:             1.0.0
+Created At:          2025-10-01T08:09:31Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: hicar-enhancer-promoter-analysis
+
+----------------------------------------
+[24/62] Deploying: imcyto/imaging-mass-cytometry
+App name: imcyto-imaging-mass-cytometry
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                imcyto-imaging-mass-cytometry
+Title:               Image Mass Cytometry Analysis Pipeline
+Engine Type:         NEXTFLOW
+Description:         Comprehensive imaging mass cytometry (IMC) pipeline for image segmentation and single-cell expression data extraction. Processes high-dimensional imaging data through CellProfiler and optional Ilastik pixel classification to generate single-cell expression profiles from tissue samples.
+Job Config:            system_size:
+    Description: Select computational resources for your analysis. Larger datasets require more resources.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             mkdir -p ${outputDir} && cd ${outputDir} && rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cp prod_apps/nextflow/imcyto/imaging-mass-cytometry/platform-config.config ./ && rm -rf prod_apps && export NXF_VER=22.10.6 && if [ "${skip_ilastik}" = "true" ]; then nextflow run nf-core/imcyto -r 1.0.0 --input "${input}" --outdir results --metadata "${metadata}" --full_stack_cppipe "${full_stack_cppipe}" --ilastik_stack_cppipe "${ilastik_stack_cppipe}" --segmentation_cppipe "${segmentation_cppipe}" --plugins "${plugins}" --skip_ilastik -c /etc/mpi/nextflow.camber.config -c platform-config.config -profile singularity; else nextflow run nf-core/imcyto -r 1.0.0 --input "${input}" --outdir results --metadata "${metadata}" --full_stack_cppipe "${full_stack_cppipe}" --ilastik_stack_cppipe "${ilastik_stack_cppipe}" --segmentation_cppipe "${segmentation_cppipe}" --ilastik_training_ilp "${ilastik_training_ilp}" --plugins "${plugins}" -c /etc/mpi/nextflow.camber.config -c platform-config.config -profile singularity; fi && echo "Pipeline completed successfully"
+Version:             1.0.0
+Created At:          2025-10-01T08:09:32Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: imcyto-imaging-mass-cytometry
+
+----------------------------------------
+[25/62] Deploying: liverctanalysis/ct-analysis
+App name: liverctanalysis-ct-analysis
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                liverctanalysis-ct-analysis
+Title:               Quantitative Hepatocellular Carcinoma Imaging
+Engine Type:         NEXTFLOW
+Description:         Quantitative analysis of abdominal CT scans from hepatocellular carcinoma patients. Standardized medical imaging workflow for liver tumor assessment and diagnostic research.
+Job Config:            system_size:
+    Default: large
+    Options:
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/liverctanalysis --input ${input} --outdir ${outdir} -r 1.0.0 
+Version:             1.0.0
+Created At:          2025-10-01T08:09:34Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: liverctanalysis-ct-analysis
+
+----------------------------------------
+[26/62] Deploying: longraredisease/diagnostic-wgs
+App name: longraredisease-diagnostic-wgs
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                longraredisease-diagnostic-wgs
+Title:               Diagnostic WGS
+Engine Type:         NEXTFLOW
+Description:         Analyzes long-read sequencing data to identify structural variants, repeat expansions, and complex genomic rearrangements in rare disease patients. Ideal for diagnosing neurodevelopmental disorders and uncovering pathogenic variants missed by short-read sequencing.
+Job Config:            system_size:
+    Default: large
+    Options:
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/longraredisease --input ${input} --outdir ${outdir} -r 1.0.0 
+Version:             1.0.0
+Created At:          2025-10-01T08:09:35Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: longraredisease-diagnostic-wgs
+
+----------------------------------------
+[27/62] Deploying: lsmquant/label-free-ms
+App name: lsmquant-label-free-ms
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                lsmquant-label-free-ms
+Title:               Light-Sheet Microscopy Quantification
+Engine Type:         NEXTFLOW
+Description:         Advanced light-sheet microscopy image processing and analysis pipeline for tissue-cleared samples. Performs preprocessing, 3D reconstruction, Allen Reference Atlas registration, and automated cell nuclei quantification using 3D-Unet deep learning. Samplesheet format: `sample_id,image_directory,parameter_file`
+Job Config:            system_size:
+    Description: Light-sheet microscopy image processing requires substantial computational resources for tile stitching, 3D reconstruction, and AI-based cell detection. LARGE nodes are recommended for typical whole-organ datasets.
+    Default: large
+    Options:
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/lsmquant --input ${input} --outdir ${outdir} -r dev
+Version:             1.0.0
+Created At:          2025-10-01T08:09:36Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: lsmquant-label-free-ms
+
+----------------------------------------
+[28/62] Deploying: marsseq/mars-seq
+App name: marsseq-single-cell-rnaseq
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                marsseq-single-cell-rnaseq
+Title:               Plate-Based Single-Cell RNA-seq Analysis
+Engine Type:         NEXTFLOW
+Description:         Comprehensive preprocessing pipeline for MARS-seq v2.0 plate-based single-cell RNA sequencing. Process raw FASTQ reads into 10X v2 format with UMI counting, barcode demultiplexing, RNA velocity analysis, and ERCC spike-in support for quality control. Samplesheet format: `batch,fastq_1,fastq_2,amp_batches,seq_batches,well_cells`
+Job Config:            system_size:
+    Description: Computational resources for MARS-seq processing. LARGE recommended for typical datasets (1,000-10,000 cells).
+    Default: large
+    Options:
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/marsseq -profile docker --input ${input} --outdir ${outdir} --genome ${genome} ${velocity} ${build_references}
+Version:             1.0.0
+Created At:          2025-10-01T08:09:38Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: marsseq-single-cell-rnaseq
+
+----------------------------------------
+[29/62] Deploying: metapep/metaproteomics
+App name: metapep-epitope-prediction
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                metapep-epitope-prediction
+Title:               Epitope Prediction from Metagenomes
+Engine Type:         NEXTFLOW
+Description:         Predict MHC-binding epitopes from metagenomic data. Integrates proteins, taxa, assemblies and bins to generate peptides and predict their MHC/HLA affinity using SYFPEITHI, MHCflurry, or MHCnuggets. Ideal for immunoinformatics, vaccine design, and host-microbiome immunology research. Samplesheet format: `condition,type,microbiome_path,alleles,weights_path`
+Job Config:            system_size:
+    Description: Computational resources. Start with MEDIUM for testing, scale to LARGE/XLARGE for production metagenomes.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/metapep --input ${input} --outdir ${outdir} --alleles ${alleles} --prediction_method ${prediction_method} -r 1.0.0 -c /etc/mpi/nextflow.camber.config
+Version:             1.0.0
+Created At:          2025-10-01T08:09:39Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: metapep-epitope-prediction
+
+----------------------------------------
+[30/62] Deploying: methylarray/clinical-ewas
+App name: methylarray-clinical-ewas
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                methylarray-clinical-ewas
+Title:               Clinical EWAS Analysis
+Engine Type:         NEXTFLOW
+Description:         Epigenome-wide association study (EWAS) pipeline for clinical methylation array data. Analyze Illumina methylation arrays to discover differentially methylated positions (DMPs) and regions (DMRs) associated with disease, treatment response, or clinical phenotypes. Samplesheet format: `Sample_Name,Sentrix_ID,Sentrix_Position,condition,age,sex,batch`
+Job Config:            system_size:
+    Description: Select compute resources based on your cohort size. Start with SMALL for pilot studies (< 50 samples), use MEDIUM for standard cohorts (50-200 samples), LARGE for big studies (200-1000 samples).
+    Default: small
+    Options:
+      - xsmall:
+          Node Size: XSMALL, Num Nodes: 1, GPU: false
+      - small:
+          Node Size: SMALL, Num Nodes: 1, GPU: false
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/methylarray --input ${input} --outdir ${outdir} --array_type ${array_type} --norm_method ${norm_method} --remove_crossreactive ${remove_crossreactive} --remove_snp ${remove_snp} -r dev -profile singularity
+Version:             1.0.0
+Created At:          2025-10-01T08:09:40Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: methylarray-clinical-ewas
+
+----------------------------------------
+[31/62] Deploying: mhcquant/immunopeptidomics
+App name: mhcquant-immunopeptidomics
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                mhcquant-immunopeptidomics
+Title:               Immunopeptidomics Mass Spectrometry Analysis
+Engine Type:         NEXTFLOW
+Description:         Automated and reproducible data analysis for immunopeptidomics. Identify and quantify MHC-eluted peptides from mass spectrometry data using OpenMS, with database search (Comet), MS2Rescore prediction, and Percolator FDR rescoring. Supports multiple spectrum file formats for clinical immunotherapy research.
+Job Config:            system_size:
+    Description: Resource allocation for immunopeptidomics processing. Large cohorts require more resources for database search and rescoring.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/mhcquant --input ${input} --outdir ${outdir} --fasta ${fasta} --skip_cellbender -c /etc/mpi/nextflow.camber.config -profile k8s -r 2.6.0
+Version:             1.0.0
+Created At:          2025-10-01T08:09:42Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: mhcquant-immunopeptidomics
+
+----------------------------------------
+[32/62] Deploying: mitodetect/mitochondrial-variants
+App name: mitodetect-mitochondrial-variants
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                mitodetect-mitochondrial-variants
+Title:               Mitochondrial Variant Detection
+Engine Type:         NEXTFLOW
+Description:         Comprehensive A-Z analysis pipeline for mitochondrial NGS data. Performs quality control, read mapping, variant calling, and heteroplasmy detection from next-generation sequencing of mitochondrial DNA. Essential for mitochondrial disease research and diagnostics.
+Job Config:            system_size:
+    Description: Select compute resources. MEDIUM recommended for most datasets. LARGE for high-coverage or many samples.
+    Default: medium
+    Options:
+      - small:
+          Node Size: SMALL, Num Nodes: 1, GPU: false
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/mitodetect --input ${input} --outdir ${outdir} -r ${revision} 
+Version:             1.0.0
+Created At:          2025-10-01T08:09:43Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: mitodetect-mitochondrial-variants
+
+----------------------------------------
+[33/62] Deploying: molkart/spatial-multiomics
+App name: molkart-spatial-multiomics
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                molkart-spatial-multiomics
+Title:               Molecular Cartography Spatial Transcriptomics
+Engine Type:         NEXTFLOW
+Description:         Comprehensive spatial transcriptomics analysis for Molecular Cartography combinatorial FISH data. Processes spot positions, performs cell segmentation, assigns transcripts to cells, and generates quality metrics for spatial gene expression mapping.
+Job Config:            system_size:
+    Default: default
+    Options:
+      - default:
+          Node Size: MEDIUM, Num Nodes: 4, GPU: false
+      - small:
+          Node Size: SMALL, Num Nodes: 2, GPU: false
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 4, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 8, GPU: false
+
+Command:             rm -rf prod_apps && git clone git@github.com:CamberCloud-Inc/prod_apps.git && cd ./prod_apps/nextflow/molkart/spatial-multiomics/ && sh run_molkart.sh
+Version:             1.0.0
+Created At:          2025-10-01T08:09:45Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: molkart-spatial-multiomics
+
+----------------------------------------
+[34/62] Deploying: multiplesequencealign/protein-msa
+App name: multiplesequencealign-protein-msa
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                multiplesequencealign-protein-msa
+Title:               Systematic Evaluation and Benchmarking
+Engine Type:         NEXTFLOW
+Description:         Advanced protein multiple sequence alignment (MSA) pipeline for running and systematically evaluating popular MSA tools including FAMSA, FOLDMASON, CLUSTALO, MAFFT, MUSCLE5, and T-COFFEE. Supports both sequence-based and structure-based alignment methods with comprehensive benchmarking metrics. Samplesheet format: `id,fasta,reference,optional_data,template`
+Job Config:            system_size:
+    Description: Select compute resources based on dataset size and complexity.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/multiplesequencealign --input ${input} --tools ${tools} --outdir ${outdir} --aligner ${aligner} -r 1.1.1
+Version:             1.0.0
+Created At:          2025-10-01T08:09:46Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: multiplesequencealign-protein-msa
+
+----------------------------------------
+[35/62] Deploying: neutronstar/neutron-star-analysis
+App name: neutronstar-10x-assembly
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                neutronstar-10x-assembly
+Title:               10x Genomics De Novo Assembly
+Engine Type:         NEXTFLOW
+Description:         De novo genome assembly pipeline for 10x Genomics Chromium linked-read technology using Supernova assembler. Produces high-quality phased genome assemblies from linked-read sequencing data with scaffold N50 values exceeding traditional short-read methods.
+Job Config:            system_size:
+    Description: Linked-read assembly requires substantial computational resources. XLARGE recommended for mammalian genomes.
+    Default: xlarge
+    Options:
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/neutronstar --input ${input} --outdir ${outdir} --max_cpus ${max_cpus} --max_memory ${max_memory} -r 1.0.0 -profile k8s -c /etc/mpi/nextflow.camber.config
+Version:             1.0.0
+Created At:          2025-10-01T08:09:47Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: neutronstar-10x-assembly
+
+----------------------------------------
+[36/62] Deploying: omicsgenetraitassociation/multi-omics-gwas
+App name: omicsgenetraitassociation-multi-omics-gwas
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                omicsgenetraitassociation-multi-omics-gwas
+Title:               Multi-Omics Gene-Trait Association Analysis
+Engine Type:         NEXTFLOW
+Description:         Integrative meta-analysis pipeline for gene-trait associations across multiple omic data streams. Performs gene-level aggregation of GWAS statistics, correlated meta-analysis, and comprehensive module and GO enrichment analysis for complex trait studies. Samplesheet format: `sample,trait,pascal,twas,additional_sources`
+Job Config:            system_size:
+    Description: Select computational resources based on study size and complexity
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/omicsgenetraitassociation --input ${input} --outdir ${outdir} -r dev
+Version:             1.0.0
+Created At:          2025-10-01T08:09:49Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: omicsgenetraitassociation-multi-omics-gwas
+
+----------------------------------------
+[37/62] Deploying: pairgenomealign/synteny-analysis
+App name: pairgenomealign-synteny-analysis
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                pairgenomealign-synteny-analysis
+Title:               Synteny Analysis
+Engine Type:         NEXTFLOW
+Description:         Comparative genomics pipeline using LAST software to align query genomes to a target genome, perform synteny analysis, and generate alignment visualizations. Supports multiple alignment modes for discovering conserved genomic regions, chromosomal rearrangements, and evolutionary relationships. Samplesheet format: `sample,fasta`
+Job Config:            system_size:
+    Description: Select compute size based on genome complexity and number of comparisons.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/pairgenomealign --target ${target} --input ${input} --outdir ${outdir} --m2m ${m2m} --export_aln_to ${export_format} -r 2.2.1
+Version:             1.0.0
+Created At:          2025-10-01T08:09:50Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: pairgenomealign-synteny-analysis
+
+----------------------------------------
+[38/62] Deploying: panoramaseq/panorama-analysis
+App name: panoramaseq-panorama-analysis
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                panoramaseq-panorama-analysis
+Title:               Visium & Spatial Gene Expression Analysis
+Engine Type:         NEXTFLOW
+Description:         Comprehensive spatial transcriptomics analysis pipeline for 10x Genomics Visium and other spatially-resolved gene expression data. Process raw or pre-processed spatial transcriptomics with quality control, normalization, clustering, differential expression, and spatially-varying gene detection. Samplesheet format: `sample,fastq_1,fastq_2`
+Job Config:            system_size:
+    Description: Resource allocation for spatial transcriptomics analysis. LARGE recommended for typical Visium datasets.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             mkdir -p ${outputDir} && cd ${outputDir} && nextflow run nf-core/spatialvi -r latest --input ${input} --outdir results -profile k8s -c /etc/mpi/nextflow.camber.config --max_cpus 16 --max_memory 180.GB && echo "Pipeline completed"
+Version:             1.0.0
+Created At:          2025-10-01T08:09:52Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: panoramaseq-panorama-analysis
+
+----------------------------------------
+[39/62] Deploying: pathogensurveillance/clinical-surveillance
+App name: pathogensurveillance-clinical-surveillance
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                pathogensurveillance-clinical-surveillance
+Title:               Clinical Outbreak Detection
+Engine Type:         NEXTFLOW
+Description:         Population genomics pipeline for pathogen identification, variant detection, and biosurveillance. Automatically analyzes sequencing data to detect outbreaks, track transmission, and identify antimicrobial resistance markers in bacterial and viral pathogens.
+Job Config:            system_size:
+    Description: Select compute resources based on number of isolates and genome complexity. Start with MEDIUM for testing, scale up for large surveillance projects.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/pathogensurveillance --input ${input} --outdir ${outdir} -r 1.0.0
+Version:             1.0.0
+Created At:          2025-10-01T08:09:53Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: pathogensurveillance-clinical-surveillance
+
+----------------------------------------
+[40/62] Deploying: phaseimpute/genotype-imputation
+App name: phaseimpute-genotype-imputation
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                phaseimpute-genotype-imputation
+Title:               Genotype Imputation and Haplotype Phasing
+Engine Type:         NEXTFLOW
+Description:         Performs haplotype phasing and genotype imputation from low-pass sequencing or genotyping array data using reference panels. Ideal for cost-effective genome-wide association studies and population genomics by reconstructing missing genetic variants.
+Job Config:            system_size:
+    Default: large
+    Options:
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/phaseimpute --input ${input} --outdir ${outdir} -r 1.0.0 
+Version:             1.0.0
+Created At:          2025-10-01T08:09:54Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: phaseimpute-genotype-imputation
+
+----------------------------------------
+[41/62] Deploying: pixelator/spatial-proteomics
+App name: pixelator-spatial-proteomics
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                pixelator-spatial-proteomics
+Title:               Molecular Pixelation Spatial Proteomics
+Engine Type:         NEXTFLOW
+Description:         Advanced spatial proteomics analysis pipeline for single-cell protein abundance and protein-protein interactions using Molecular Pixelation (MPX) and Proximity Network (PNA) assays. Enables unprecedented spatial resolution of protein networks within individual cells for immunology, cancer biology, and cell signaling research. Samplesheet format: `sample,fastq_1,fastq_2,panel,panel_name,panel_version`
+Job Config:            system_size:
+    Description: Select compute resources based on experiment size and sequencing depth.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/pixelator --input ${input} --outdir ${outdir} --datatype ${datatype} -r 2.1.0 -c /etc/mpi/nextflow.camber.config -profile singularity
+Version:             1.0.0
+Created At:          2025-10-01T08:09:56Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: pixelator-spatial-proteomics
+
+----------------------------------------
+[42/62] Deploying: proteinannotator/protein-annotation
+App name: proteinannotator-protein-annotation
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                proteinannotator-protein-annotation
+Title:               Functional Protein Annotation
+Engine Type:         NEXTFLOW
+Description:         Comprehensive protein annotation pipeline for identifying protein functions from sequence data using InterProScan and seqkit. Analyzes protein FASTA files to discover functional characteristics, protein families, domains, and sites by scanning against the InterPro database. Samplesheet format: `id,fasta`
+Job Config:            system_size:
+    Description: Select compute resources based on dataset size. InterProScan is computationally intensive - use Large or XLarge for production datasets.
+    Default: large
+    Options:
+      - small:
+          Node Size: SMALL, Num Nodes: 1, GPU: false
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/proteinannotator --input ${input} --outdir ${outdir} -r dev -profile ${profile}
+Version:             1.0.0
+Created At:          2025-10-01T08:09:57Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: proteinannotator-protein-annotation
+
+----------------------------------------
+[43/62] Deploying: proteinfamilies/protein-families
+App name: proteinfamilies-protein-families
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                proteinfamilies-protein-families
+Title:               Generation and Analysis
+Engine Type:         NEXTFLOW
+Description:         Generate and update protein families from amino acid sequences using clustering, multiple sequence alignment, and Hidden Markov Model generation. Supports both de novo family creation and updating existing families with new sequences - essential for comparative genomics and metagenomics.
+Job Config:            system_size:
+    Description: Select compute resources. LARGE recommended for most analyses. XLARGE for metagenomic-scale datasets (>500K proteins).
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/proteinfamilies --input ${input} --outdir ${outdir} --clustering_tool ${clustering_tool} --alignment_tool ${alignment_tool} --trim_msa ${trim_msa} --remove_family_redundancy ${remove_family_redundancy} --remove_sequence_redundancy ${remove_sequence_redundancy} -r 1.0.0 
+Version:             1.0.0
+Created At:          2025-10-01T08:09:59Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: proteinfamilies-protein-families
+
+----------------------------------------
+[44/62] Deploying: radseq/rad-seq
+App name: radseq-variant-calling
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                radseq-variant-calling
+Title:               Variant Calling for Population Genomics
+Engine Type:         NEXTFLOW
+Description:         Restriction site-associated DNA sequencing (RAD-seq) variant-calling pipeline for population genomics and phylogenetics. Supports species with or without reference genomes, UMI-based deduplication, and comprehensive quality control. Ideal for evolutionary studies, conservation genetics, and ecological genomics. Samplesheet format: `sample,fastq_1,fastq_2`
+Job Config:            system_size:
+    Description: Select compute resources. Use MEDIUM for most RAD-seq datasets, LARGE for extensive population studies.
+    Default: medium
+    Options:
+      - small:
+          Node Size: SMALL, Num Nodes: 1, GPU: false
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/radseq --input ${input} --outdir ${outdir} --genome ${genome} -r dev
+Version:             1.0.0
+Created At:          2025-10-01T08:10:00Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: radseq-variant-calling
+
+----------------------------------------
+[45/62] Deploying: rangeland/remote-sensing
+App name: rangeland-remote-sensing
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                rangeland-remote-sensing
+Title:               Vegetation Monitoring & Land Cover Analysis
+Engine Type:         NEXTFLOW
+Description:         Comprehensive analysis pipeline for satellite imagery processing to monitor rangeland vegetation dynamics and land-cover changes. Processes multi-temporal satellite data with atmospheric correction, linear spectral unmixing, and time series analysis to detect vegetation trends and ecosystem changes.
+Job Config:            system_size:
+    Description: Select computational resources based on dataset size. LARGE recommended for regional analyses, XLARGE for continental-scale studies.
+    Default: large
+    Options:
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/rangeland --input ${input} --dem ${dem} --wvdb ${wvdb} --data_cube ${data_cube} --aoi ${aoi} --endmember ${endmember} --outdir ${outdir} -r 1.0.0
+Version:             1.0.0
+Created At:          2025-10-01T08:10:02Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: rangeland-remote-sensing
+
+----------------------------------------
+[46/62] Deploying: readsimulator/ngs-simulation
+App name: readsimulator-ngs-simulation
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                readsimulator-ngs-simulation
+Title:               Synthetic Sequencing Data Generation
+Engine Type:         NEXTFLOW
+Description:         Advanced next-generation sequencing (NGS) read simulator pipeline powered by ART (Artificial Read Technology). Generates realistic synthetic Illumina reads for amplicon, target capture, metagenome, and whole genome sequencing with empirical error models. Perfect for benchmarking bioinformatics tools, validating analysis pipelines, and method development. Samplesheet format: `sample,seed`
+Job Config:            system_size:
+    Description: Resource allocation for read simulation.
+    Default: large
+    Options:
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/readsimulator --input ${input} --outdir ${outdir} -r 1.0.1
+Version:             1.0.0
+Created At:          2025-10-01T08:10:03Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: readsimulator-ngs-simulation
+
+----------------------------------------
+[47/62] Deploying: references/reference-management
+App name: references-reference-management
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                references-reference-management
+Title:               Multi-Tool Reference Generation
+Engine Type:         NEXTFLOW
+Description:         Comprehensive reference genome index builder supporting 10+ alignment and quantification tools. Generate Bowtie, BWA, STAR, Salmon, Kallisto, HISAT2, DRAGMAP, and RSEM indexes from FASTA and GTF files. Designed to replace AWS iGenomes with modern, reproducible reference management. Samplesheet format: `sample,fastq_1,fastq_2`
+Job Config:            system_size:
+    Description: Select compute resources. LARGE recommended for human/mouse genomes, especially when building STAR indexes.
+    Default: large
+    Options:
+      - small:
+          Node Size: SMALL, Num Nodes: 1, GPU: false
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/references --input ${input} --outdir ${outdir} --genome ${genome} --fasta ${fasta} --gtf ${gtf} --build_references ${build_references} -r ${revision}
+Version:             1.0.0
+Created At:          2025-10-01T08:10:05Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: references-reference-management
+
+----------------------------------------
+[48/62] Deploying: reportho/orthology-analysis
+App name: reportho-orthology-analysis
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                reportho-orthology-analysis
+Title:               Ortholog Comparison & Consensus Analysis
+Engine Type:         NEXTFLOW
+Description:         Comprehensive comparative analysis of ortholog predictions across multiple databases. Fetches orthologs from public resources, calculates agreement statistics, generates consensus ortholog lists, and provides optional sequence alignment, structure analysis, and phylogenetic reconstruction. Samplesheet format: `id,query`
+Job Config:            system_size:
+    Description: Select compute resources based on dataset size and analyses. MEDIUM for standard runs, LARGE for >10 proteins or phylogenetic analysis.
+    Default: medium
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/reportho --input ${input} --outdir ${outdir} -r 1.0.1
+Version:             1.0.0
+Created At:          2025-10-01T08:10:06Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: reportho-orthology-analysis
+
+----------------------------------------
+[49/62] Deploying: ribomsqc/ribo-profiling-qc
+App name: riboseq-profiling-qc
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                riboseq-profiling-qc
+Title:               Translation Landscape Analysis
+Engine Type:         NEXTFLOW
+Description:         Comprehensive ribosome profiling pipeline for analyzing actively translated mRNAs using Ribo-seq data. Uncover ribosome occupancy, translation efficiency, upstream ORFs, and translational regulation across the transcriptome with quality control and quantification. Samplesheet format: `sample,fastq_1,fastq_2,strandedness,type`
+Job Config:            system_size:
+    Description: Compute resources for ribosome profiling analysis. Use MEDIUM for standard datasets, LARGE for comprehensive experiments.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/riboseq --input ${input} --outdir ${outdir} --genome ${genome} --protocol ${protocol} --aligner ${aligner} -r 1.1.0
+Version:             1.0.0
+Created At:          2025-10-01T08:10:08Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: riboseq-profiling-qc
+
+----------------------------------------
+[50/62] Deploying: rnadnavar/rna-editing-analysis
+App name: rnadnavar-rna-editing-analysis
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                rnadnavar-rna-editing-analysis
+Title:               Somatic Mutation Detection
+Engine Type:         NEXTFLOW
+Description:         Integrated RNA and DNA variant analysis for somatic mutation detection with RNA editing distinction. Uses consensus approach with multiple callers (Mutect2, Strelka2, SAGE) to identify true mutations while filtering RNA editing events, ideal for cancer research and transcriptome analysis.
+Job Config:            system_size:
+    Default: large
+    Options:
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/rnadnavar --input ${input} --outdir ${outdir} -r dev -profile docker
+Version:             1.0.0
+Created At:          2025-10-01T08:10:09Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: rnadnavar-rna-editing-analysis
+
+----------------------------------------
+[51/62] Deploying: sammyseq/sammy-analysis
+App name: sammyseq-chromatin-analysis
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                sammyseq-chromatin-analysis
+Title:               Chromatin Accessibility & Heterochromatin Analysis
+Engine Type:         NEXTFLOW
+Description:         Sequential Analysis of MacroMolecules accessibilitY (SAMMY-seq) - A fast, cost-effective method for genome-wide characterization of chromatin states and heterochromatin dynamics without crosslinking or antibodies. Samplesheet format: `sample,fastq_1,fastq_2,fraction`
+Job Config:            system_size:
+    Description: Select compute resources based on dataset size and complexity
+    Default: large
+    Options:
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/sammyseq --input ${input} --outdir ${outdir} --genome ${genome} -profile k8s -c /etc/mpi/nextflow.camber.config -r dev
+Version:             1.0.0
+Created At:          2025-10-01T08:10:10Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: sammyseq-chromatin-analysis
+
+----------------------------------------
+[52/62] Deploying: scflow/cell-type-annotation
+App name: scflow-cell-type-annotation
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                scflow-cell-type-annotation
+Title:               Automated Cell Type Annotation for Single-Cell RNA-seq
+Engine Type:         NEXTFLOW
+Description:         Complete single-cell RNA-seq analysis with automated cell type annotation using reference-based methods, dimensionality reduction, clustering, and differential expression analysis.
+Job Config:            system_size:
+    Description: Computational resources allocation for single-cell analysis
+    Default: xlarge
+    Options:
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+      - xxlarge:
+          Node Size: XXLARGE, Num Nodes: 1, GPU: false
+
+Command:             mkdir -p ${outputDir} && cd ${outputDir} && rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cp prod_apps/nextflow/scflow/cell-type-annotation/platform-constrained-config.config ./ && rm -rf prod_apps && nextflow run nf-core/scflow -r 1.0.0 --input ${input} --outdir results --manifest ${manifest} --genome ${genome} --celltype_reference ${celltype_reference} -c /etc/mpi/nextflow.camber.config -c platform-constrained-config.config -profile k8s && echo "Pipeline completed"
+Version:             1.0.0
+Created At:          2025-10-01T08:10:12Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: scflow-cell-type-annotation
+
+----------------------------------------
+[53/62] Deploying: seqinspector/sequencing-qc
+App name: seqinspector-sequencing-qc
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                seqinspector-sequencing-qc
+Title:               Multi-Platform Sequencing Quality Control
+Engine Type:         NEXTFLOW
+Description:         Comprehensive quality control pipeline for inspecting sequencing data from Illumina, Oxford Nanopore, and PacBio platforms. Performs read QC, contamination screening, adapter detection, and generates grouped reports for efficient quality assessment across large sequencing projects.
+Job Config:            system_size:
+    Description: Select compute resources. LARGE recommended for batches with 50+ samples.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/seqinspector --input ${input} --outdir ${outdir} -r dev 
+Version:             1.0.0
+Created At:          2025-10-01T08:10:13Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: seqinspector-sequencing-qc
+
+----------------------------------------
+[54/62] Deploying: spinningjenny/spatial-transcriptomics
+App name: spatialvi-spatial-transcriptomics
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                spatialvi-spatial-transcriptomics
+Title:               Visium & Spatial Gene Expression Analysis
+Engine Type:         NEXTFLOW
+Description:         Comprehensive spatial transcriptomics analysis pipeline for 10x Genomics Visium and other spatially-resolved gene expression data. Process raw or pre-processed spatial transcriptomics with quality control, normalization, clustering, differential expression, and spatially-varying gene detection. Samplesheet format: `sample,fastq_1,fastq_2`
+Job Config:            system_size:
+    Description: Resource allocation for spatial transcriptomics analysis. LARGE recommended for typical Visium datasets.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/spatialvi --input ${input} --outdir ${outdir} -r dev
+Version:             1.0.0
+Created At:          2025-10-01T08:10:15Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: spatialvi-spatial-transcriptomics
+
+----------------------------------------
+[55/62] Deploying: ssds/single-strand-dna
+App name: ssds-single-strand-dna
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                ssds-single-strand-dna
+Title:               Single-Strand DNA Sequencing
+Engine Type:         NEXTFLOW
+Description:         Analyze single-stranded DNA (ssDNA) in meiotic recombination hotspots. Map ssDNA formation during meiosis to identify recombination initiation sites, DSB hotspots, and strand-specific processes in mammalian genomes.
+Job Config:            system_size:
+    Description: Select compute resources. LARGE recommended for mammalian genomes.
+    Default: large
+    Options:
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/ssds --input ${input} --outdir ${outdir} --genome ${genome} -r dev
+Version:             1.0.0
+Created At:          2025-10-01T08:10:16Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: ssds-single-strand-dna
+
+----------------------------------------
+[56/62] Deploying: stableexpression/housekeeping-genes
+App name: stableexpression-housekeeping-genes
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                stableexpression-housekeeping-genes
+Title:               Reference Gene Identification for RT-qPCR
+Engine Type:         NEXTFLOW
+Description:         Identify the most stable housekeeping genes across expression datasets for RT-qPCR normalization. Analyzes single or multiple RNA-seq datasets to find genes with minimal expression variation, essential for accurate quantitative PCR experiments and gene expression studies.
+Job Config:            system_size:
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/stableexpression --species ${species} --datasets ${datasets} --outdir ${outdir} --normalisation_method ${normalisation_method} --nb_top_gene_candidates ${nb_top_gene_candidates} --fetch_eatlas_accessions ${fetch_eatlas_accessions} -r dev
+Version:             1.0.0
+Created At:          2025-10-01T08:10:17Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: stableexpression-housekeeping-genes
+
+----------------------------------------
+[57/62] Deploying: tbanalyzer/tb-genomics
+App name: tbprofiler-tb-genomics
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                tbprofiler-tb-genomics
+Title:               Drug Resistance & Lineage Analysis
+Engine Type:         NEXTFLOW
+Description:         Comprehensive Mycobacterium tuberculosis genomic analysis pipeline for detecting drug resistance mutations, predicting antimicrobial resistance profiles, and determining strain lineages from whole genome sequencing data. Essential for clinical diagnostics, outbreak investigation, and tuberculosis surveillance programs.
+Job Config:            system_size:
+    Description: Select compute resources based on number of samples and coverage depth. Start with SMALL for testing, scale up for production batches.
+    Default: medium
+    Options:
+      - small:
+          Node Size: SMALL, Num Nodes: 1, GPU: false
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run BCCDC-PHL/tbprofiler-nf --fastq_input ${input} --outdir ${outdir} -r main -profile singularity
+Version:             1.0.0
+Created At:          2025-10-01T08:10:19Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: tbprofiler-tb-genomics
+
+----------------------------------------
+[58/62] Deploying: tfactivity/tf-regulon-analysis
+App name: tf-regulon-analysis
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                tf-regulon-analysis
+Title:               Gene Regulatory Network Inference with SCENIC
+Engine Type:         NEXTFLOW
+Description:         Infer transcription factor regulons and gene regulatory networks from single-cell RNA-seq data using SCENIC/pySCENIC. Discover which transcription factors control cell identity, developmental trajectories, and disease states by mapping TF-target relationships with motif-enriched regulatory networks. Samplesheet format: `gene,cell_1,cell_2,cell_3,cell_4`
+Job Config:            system_size:
+    Description: Select compute resources. TF regulon analysis requires substantial memory and CPU for GRN inference.
+    Default: large
+    Options:
+      - small:
+          Node Size: SMALL, Num Nodes: 1, GPU: false
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run aertslab/SCENICprotocol --loom_input ${input} --loom_output ${outdir}/scenic_output.loom --TFs ${tf_list} --motifs ${genome} --db ${genome} --thr_min_genes 200 -r v0.12.1 -profile singularity
+Version:             1.0.0
+Created At:          2025-10-01T08:10:20Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: tf-regulon-analysis
+
+----------------------------------------
+[59/62] Deploying: troughgraph/tumor-heterogeneity
+App name: troughgraph-analysis
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                troughgraph-analysis
+Title:               Permafrost Landscape Analysis
+Engine Type:         NEXTFLOW
+Description:         Quantitative assessment pipeline for analyzing permafrost landscapes and assessing levels of permafrost thaw in polar regions. Process geospatial and environmental data with comprehensive quality control and visualization. Samplesheet format: `sample,data_file,metadata`
+Job Config:            system_size:
+    Description: Resource allocation for permafrost landscape analysis.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/troughgraph --input ${input} --outdir ${outdir} -r dev
+Version:             1.0.0
+Created At:          2025-10-01T08:10:21Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: troughgraph-analysis
+
+----------------------------------------
+[60/62] Deploying: variantbenchmarking/benchmark-analysis
+App name: variantbenchmarking-benchmark-analysis
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                variantbenchmarking-benchmark-analysis
+Title:               Comprehensive Accuracy Evaluation
+Engine Type:         NEXTFLOW
+Description:         Evaluate and validate variant calling accuracy using gold standard truth sets. Supports small variants (SNVs, INDELs), structural variants (SVs), and copy number variations (CNVs) for both germline and somatic analyses. Compare multiple variant calling methods with industry-standard benchmarking tools including hap.py, rtg vcfeval, Truvari, and more. Samplesheet format: `id,test_vcf,caller`
+Job Config:            system_size:
+    Description: Resource allocation for benchmarking analysis. Large recommended for comprehensive benchmarking.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/variantbenchmarking --input ${input} --outdir ${outdir} --genome ${genome} --analysis ${analysis} --variant_type ${variant_type} --method ${method} -r 1.2.0
+Version:             1.0.0
+Created At:          2025-10-01T08:10:23Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: variantbenchmarking-benchmark-analysis
+
+----------------------------------------
+[61/62] Deploying: variantcatalogue/population-variants
+App name: variantcatalogue-population-variants
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                variantcatalogue-population-variants
+Title:               Population Variant Database Builder
+Engine Type:         NEXTFLOW
+Description:         Generate comprehensive variant catalogues with population frequencies from whole genome sequences. Build reference databases of genetic variants and their distributions across populations using DeepVariant, GLnexus, and Hail for large-scale genomic studies. Samplesheet format: `sample,fastq_1,fastq_2,population,cohort`
+Job Config:            system_size:
+    Description: Select compute resources based on cohort size. LARGE recommended for most studies.
+    Default: large
+    Options:
+      - medium:
+          Node Size: MEDIUM, Num Nodes: 1, GPU: false
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+      - xlarge:
+          Node Size: XLARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/variantcatalogue --input ${input} --outdir ${outdir} --genome ${genome} -r dev
+Version:             1.0.0
+Created At:          2025-10-01T08:10:24Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: variantcatalogue-population-variants
+
+----------------------------------------
+[62/62] Deploying: viralintegration/hpv-integration
+App name: viralintegration-hpv-integration
+----------------------------------------
+Deleting existing app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+API error: code=500, message=Failed to delete app
+API error: code=500, message=Failed to delete app
+  (App may not exist yet)
+Creating app...
+
+🚨 Your version 1.0.38-dev is out of date!
+👉 The latest version is 1.0.39-dev.
+
+To update, run:
+  camber update
+
+⚠️ It's recommended to stay up to date for the latest features and security fixes.
+
+App created successfully
+
+======================Application Information======================
+
+Name:                viralintegration-hpv-integration
+Title:               HPV & Oncovirus Analysis
+Engine Type:         NEXTFLOW
+Description:         Detect viral DNA integration sites in host genomes using chimeric read analysis. Identifies HPV and other oncovirus integration events critical for cancer development, particularly in cervical and head/neck cancers.
+Job Config:            system_size:
+    Default: large
+    Options:
+      - large:
+          Node Size: LARGE, Num Nodes: 1, GPU: false
+
+Command:             nextflow run nf-core/viralintegration --input ${input} --outdir ${outdir} -r 0.1.1
+Version:             1.0.0
+Created At:          2025-10-01T08:10:25Z
+Author:              david40962
+Tags:                N/A
+Upstream Apps:       N/A
+Downstream Apps:     N/A
+
+✅ Successfully deployed: viralintegration-hpv-integration
+
+========================================
+DEPLOYMENT SUMMARY
+========================================
+Total apps: 62
+Successfully deployed: 62
+Failed: 0
+
+🎉 All apps deployed successfully!

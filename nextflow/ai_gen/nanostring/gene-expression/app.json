@@ -1,0 +1,97 @@
+{
+  "name": "nanostring-gene-expression",
+  "title": "NanoString: Targeted Gene Expression Profiling",
+  "description": "NanoString nCounter gene expression analysis for targeted panels (50-800 genes). Digital molecular barcoding without amplification provides precise quantification for biomarker studies and clinical diagnostics. Samplesheet format: `sample,rcc`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/nanostring --input ${input} --outdir ${outdir} --panel_type ${panel} -r 1.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/nanostring/master/docs/images/nf-core-nanostring_logo_light.png",
+  "content": "<h2><strong>NanoString Gene Expression</strong></h2><p>NanoString nCounter uses digital molecular barcoding for targeted gene expression without amplification. Highly reproducible, ideal for clinical validation and FFPE samples.</p><h3><strong>Applications</strong></h3><ul><li><strong>Biomarker Validation</strong>: Clinical gene signatures</li><li><strong>Immune Profiling</strong>: PanCancer Immune Panel</li><li><strong>FFPE Samples</strong>: Works with degraded RNA</li><li><strong>Clinical Diagnostics</strong>: FDA-cleared assays (Prosigna, Lymphmark)</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Normalized Counts</strong>: Housekeeping gene normalization</li><li><strong>DE Analysis</strong>: Differential expression results</li><li><strong>Pathway Scores</strong>: Pre-defined gene signatures</li><li><strong>QC Metrics</strong>: Positive/negative control performance</li></ul><blockquote><p><strong>Perfect for:</strong> Targeted gene expression \u2022 Clinical biomarkers \u2022 FFPE samples \u2022 Immune profiling</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV with NanoString RCC files",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".csv"
+        ]
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Panel Type",
+      "name": "panel",
+      "description": "NanoString panel",
+      "defaultValue": "custom",
+      "required": true,
+      "options": [
+        {
+          "label": "Custom Panel",
+          "value": "custom"
+        },
+        {
+          "label": "PanCancer Immune",
+          "value": "pancancer_immune"
+        },
+        {
+          "label": "PanCancer Pathways",
+          "value": "pancancer_pathways"
+        }
+      ]
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory",
+      "defaultValue": "./nanostring-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "options": [
+        {
+          "label": "SMALL (Recommended)",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "small"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

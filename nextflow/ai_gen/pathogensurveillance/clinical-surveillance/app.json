@@ -1,0 +1,94 @@
+{
+  "name": "pathogensurveillance-clinical-surveillance",
+  "title": "Clinical Outbreak Detection",
+  "description": "Population genomics pipeline for pathogen identification, variant detection, and biosurveillance. Automatically analyzes sequencing data to detect outbreaks, track transmission, and identify antimicrobial resistance markers in bacterial and viral pathogens. Samplesheet format: `sample,fastq_1,fastq_2`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/pathogensurveillance --input ${input} --outdir ${outdir} -r 1.0.0",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/pathogensurveillance/master/docs/images/nf-core-pathogensurveillance_logo_light.png",
+  "content": "<h1>Pathogen Surveillance: Clinical Outbreak Detection</h1><h2>What This Analysis Does</h2><p>This pipeline performs comprehensive genomic surveillance of bacterial and viral pathogens for outbreak detection and epidemiological tracking. It automatically identifies organisms from sequencing data, detects genetic variants, performs phylogenetic analysis to reconstruct transmission chains, and identifies antimicrobial resistance genes and virulence factors. The primary output is an interactive HTML report designed to be understandable by clinicians and public health professionals without bioinformatics expertise.</p><h2>When To Use This</h2><ul><li><strong>Outbreak Investigation:</strong> Detect and track disease outbreaks in hospitals, communities, or foodborne illness events by identifying clonal relationships between pathogen isolates</li><li><strong>Healthcare-Associated Infections:</strong> Monitor hospital-acquired infections (HAIs) to identify transmission events and infection control breaches</li><li><strong>Antimicrobial Resistance Surveillance:</strong> Track the spread of antibiotic-resistant bacteria (MRSA, CRE, VRE) and identify emerging resistance mechanisms</li><li><strong>Foodborne Pathogen Tracking:</strong> Investigate Salmonella, E. coli, Listeria outbreaks linked to contaminated food sources</li><li><strong>Tuberculosis Control:</strong> Identify M. tuberculosis transmission clusters and drug resistance patterns for public health interventions</li><li><strong>Viral Surveillance:</strong> Monitor viral pathogen evolution, identify variants of concern, and track viral transmission networks</li></ul><h2>What You Need</h2><h3>1. Sequencing Data (FASTQ Files)</h3><p>Raw sequencing reads from pathogen isolates:</p><ul><li><strong>Sample source:</strong> Clinical isolates, environmental samples, or outbreak specimens</li><li><strong>File format:</strong> FASTQ files from Illumina or other sequencing platforms (single-end or paired-end)</li><li><strong>Read length:</strong> Standard Illumina reads (50-300bp) or long reads (PacBio, Nanopore)</li><li><strong>Coverage:</strong> Minimum 20-30X genome coverage recommended for accurate variant calling</li><li><strong>Organisms:</strong> Supports both prokaryotic (bacteria) and eukaryotic (fungal, parasitic) pathogens</li></ul><h3>2. Sample Sheet (CSV/TSV File)</h3><p>Create a sample sheet listing your isolates with this format:</p><pre>sample,fastq_1,fastq_2\nisolate_001,/path/to/isolate_001_R1.fastq.gz,/path/to/isolate_001_R2.fastq.gz\nisolate_002,/path/to/isolate_002_R1.fastq.gz,/path/to/isolate_002_R2.fastq.gz\nisolate_003,/path/to/isolate_003_R1.fastq.gz,/path/to/isolate_003_R2.fastq.gz</pre><p><strong>Column Details:</strong></p><ul><li><strong>sample:</strong> Unique identifier for each pathogen isolate (e.g., patient ID, isolate number, date)</li><li><strong>fastq_1:</strong> Path to Read 1 file (forward reads). For single-end data, only provide this column</li><li><strong>fastq_2:</strong> Path to Read 2 file (reverse reads). Leave empty for single-end sequencing</li></ul><p><strong>Important Notes:</strong></p><ul><li>File paths can be local absolute paths or URLs to publicly accessible data</li><li>The pipeline will automatically identify the organism from sequencing data</li><li>For best results, include multiple isolates from the same outbreak or surveillance period for comparative analysis</li></ul><h2>What You'll Get</h2><h3>Primary Output: Interactive HTML Report</h3><p>The main deliverable is a comprehensive, interactive HTML report designed for clinical and public health users that includes:</p><ul><li><strong>Organism Identification:</strong> Species-level identification of all pathogens in your samples</li><li><strong>Phylogenetic Trees:</strong> Visual representation of genetic relationships showing transmission clusters and outbreak clades</li><li><strong>Variant Analysis:</strong> Single nucleotide polymorphisms (SNPs) and structural variants distinguishing isolates</li><li><strong>Antimicrobial Resistance (AMR) Profile:</strong> Detected resistance genes and predicted phenotypic resistance</li><li><strong>Virulence Factors:</strong> Pathogenicity genes and toxin-encoding sequences</li><li><strong>Quality Metrics:</strong> Sequencing quality, coverage depth, and assembly statistics</li></ul><h3>Detailed Analysis Files</h3><ul><li><strong>Genome Assemblies:</strong> High-quality draft genomes for each isolate in FASTA format</li><li><strong>SNP Distance Matrix:</strong> Pairwise genetic distances between all isolates for outbreak threshold analysis</li><li><strong>Phylogenetic Tree Files:</strong> Newick format trees for further analysis in specialized software</li><li><strong>Variant Calls:</strong> VCF files with all detected variants for each isolate</li><li><strong>Gene Annotations:</strong> Functional annotation of detected genes including AMR and virulence factors</li><li><strong>Reference Selection:</strong> Automatically selected reference genomes used for comparative analysis</li></ul><h3>Surveillance-Specific Outputs</h3><ul><li><strong>Cluster Assignments:</strong> Identification of related isolates that may represent transmission events</li><li><strong>Temporal Analysis:</strong> If metadata includes dates, visualization of outbreak timeline</li><li><strong>Geographic Mapping:</strong> If metadata includes locations, spatial distribution of related cases</li><li><strong>Resistance Trends:</strong> Summary of AMR genes across the surveillance population</li></ul><h2>Key Features</h2><h3>Automated Reference Selection</h3><p>The pipeline automatically selects and downloads appropriate reference genomes based on organism identification, eliminating manual reference preparation.</p><h3>Multi-Organism Support</h3><p>Works with diverse pathogens including:</p><ul><li><strong>Bacterial pathogens:</strong> Salmonella, E. coli, Staphylococcus, Streptococcus, Mycobacterium, Klebsiella, Pseudomonas, and hundreds more</li><li><strong>Viral pathogens:</strong> Influenza, SARS-CoV-2, HIV, hepatitis viruses, and other clinical viruses</li><li><strong>Fungal pathogens:</strong> Candida, Aspergillus, Cryptococcus species</li></ul><h3>Clinical-Ready Reports</h3><p>Interactive HTML reports require no bioinformatics training to interpret, making results immediately actionable for infection control teams and epidemiologists.</p><h3>Population Genomics Approach</h3><p>Comparative analysis across multiple isolates reveals transmission networks and outbreak dynamics that cannot be seen from single-isolate analysis.</p><h2>Expected Analysis Time</h2><ul><li><strong>Small outbreak (5-10 isolates):</strong> 2-4 hours</li><li><strong>Hospital surveillance (20-50 isolates):</strong> 4-8 hours</li><li><strong>Large-scale surveillance (100+ isolates):</strong> 8-16 hours</li><li><strong>Note:</strong> Time depends on genome size, sequencing depth, and number of isolates. Bacterial genomes are faster than eukaryotic pathogens.</li></ul><h2>Scientific Background</h2><p>Pathogen genomic surveillance combines whole-genome sequencing with population genomics to track infectious disease transmission at unprecedented resolution. Unlike traditional molecular typing methods (PFGE, MLST), whole-genome sequencing reveals all genetic variation between isolates, enabling precise identification of transmission events, detection of emerging variants, and comprehensive characterization of resistance and virulence mechanisms. This pipeline implements best practices from public health genomics, automating complex bioinformatics workflows into a single, reproducible analysis suitable for clinical laboratories and public health agencies.</p><h2>Use Case Examples</h2><h3>Hospital Outbreak Investigation</h3><p>When multiple patients develop infections with the same species (e.g., carbapenem-resistant Klebsiella pneumoniae), sequence all isolates to determine if they represent a single clonal outbreak requiring infection control intervention or are unrelated endemic strains.</p><h3>Food Safety Surveillance</h3><p>Public health laboratories sequence Salmonella or Listeria from clinical cases and food samples to identify contaminated products and prevent additional illnesses by linking genetically identical isolates.</p><h3>Tuberculosis Contact Tracing</h3><p>Sequence M. tuberculosis from suspected transmission clusters to confirm epidemiological links and guide contact investigation priorities based on genomic evidence.</p><p><a href='https://nf-co.re/pathogensurveillance' target='_blank'>Advanced users: See full nf-core/pathogensurveillance documentation</a></p>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV or TSV file with columns: sample, fastq_1, fastq_2. Each row represents one pathogen isolate with paths to FASTQ files (local paths or URLs).",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory for surveillance results including interactive HTML report, phylogenetic trees, AMR profiles, and variant calls.",
+      "defaultValue": "./pathogensurveillance-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": false,
+      "description": "Select compute resources based on number of isolates and genome complexity. Start with MEDIUM for testing, scale up for large surveillance projects.",
+      "options": [
+        {
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Small outbreaks (5-10 isolates)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Hospital surveillance (10-50 isolates)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE (128 CPUs, 720GB RAM) - Large-scale surveillance (50+ isolates)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

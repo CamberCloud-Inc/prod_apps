@@ -1,0 +1,149 @@
+{
+    "name": "chipseq-histone-broad",
+    "title": "ChIP-seq: Histone Modification Mapping with Broad Peak Calling",
+    "description": "Map histone modifications (H3K27me3, H3K4me3, H3K9me3, H3K36me3) across the genome using broad peak calling optimized for diffuse chromatin marks. Discover chromatin states, regulatory regions, and epigenetic landscapes. Samplesheet format: `sample,fastq_1,fastq_2,replicate,antibody,control`",
+    "content": "<h1 class=\"heading-node\">\ud83e\uddec ChIP-seq: Histone Modification Mapping with Broad Peak Calling</h1><p class=\"text-node\"><strong>Uncover Chromatin States Through Epigenetic Modifications</strong></p><p class=\"text-node\">Chromatin Immunoprecipitation sequencing (ChIP-seq) for histone modifications reveals the epigenetic landscape of your genome. This specialized pipeline uses broad peak calling optimized for diffuse histone marks like H3K27me3, H3K36me3, and H3K9me3 that spread across chromatin domains.</p><img src=\"https://raw.githubusercontent.com/nf-core/chipseq/master/docs/images/nf-core-chipseq_logo_light.png\" alt=\"nf-core/chipseq workflow\" width=\"600\" height=\"300\"><h2 class=\"heading-node\">\ud83c\udfaf What Are Histone Modifications?</h2><p class=\"text-node\">Histones are proteins that package DNA into chromatin. Chemical modifications to histones act as 'epigenetic marks' that control gene expression without changing DNA sequence. These marks can:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udd13 Activate genes:</strong> H3K4me3 (promoters), H3K27ac (enhancers), H3K36me3 (gene bodies)</p></li><li><p class=\"text-node\"><strong>\ud83d\udd12 Silence genes:</strong> H3K27me3 (Polycomb repression), H3K9me3 (heterochromatin)</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Mark chromatin states:</strong> Combinatorial patterns define regulatory elements</p></li><li><p class=\"text-node\"><strong>\ud83e\uddec Regulate development:</strong> Control cell differentiation and tissue specification</p></li></ul><h2 class=\"heading-node\">\ud83c\udfa8 Common Histone Marks and Their Biological Roles</h2><h3 class=\"heading-node\">\ud83d\udd13 Active Chromatin Marks</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>H3K4me3:</strong> Active promoters, transcription start sites (TSS)</p></li><li><p class=\"text-node\"><strong>H3K27ac:</strong> Active enhancers, super-enhancers, regulatory elements</p></li><li><p class=\"text-node\"><strong>H3K4me1:</strong> Enhancers, primed/poised regulatory regions</p></li><li><p class=\"text-node\"><strong>H3K36me3:</strong> Active gene bodies, transcription elongation</p></li></ul><h3 class=\"heading-node\">\ud83d\udd12 Repressive Chromatin Marks</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>H3K27me3:</strong> Polycomb-mediated repression, developmentally silenced genes</p></li><li><p class=\"text-node\"><strong>H3K9me3:</strong> Constitutive heterochromatin, repetitive elements</p></li><li><p class=\"text-node\"><strong>H3K9me2:</strong> Facultative heterochromatin, tissue-specific silencing</p></li></ul><h2 class=\"heading-node\">\u2699\ufe0f Broad vs Narrow Peak Calling</h2><p class=\"text-node\"><strong>This pipeline uses BROAD peak calling</strong> - essential for histone modifications:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83c\udf0a Broad peaks:</strong> Detect diffuse signals across large chromatin domains (10-100kb)</p><ul class=\"list-node\"><li><p class=\"text-node\">Perfect for: H3K27me3, H3K36me3, H3K9me3, H3K79me2</p></li><li><p class=\"text-node\">Algorithm: MACS2/MACS3 with --broad flag (broad_cutoff = 0.1)</p></li><li><p class=\"text-node\">Captures: Extended enrichment regions, chromatin domains</p></li></ul></li><li><p class=\"text-node\"><strong>\ud83d\udccd Narrow peaks (not this pipeline):</strong> Sharp, focused signals (100-1000bp)</p><ul class=\"list-node\"><li><p class=\"text-node\">Better for: Transcription factors, H3K4me3, H3K27ac</p></li><li><p class=\"text-node\">Use: Separate narrow peak pipeline for TF ChIP-seq</p></li></ul></li></ul><h2 class=\"heading-node\">\ud83e\uddea Experimental Design Requirements</h2><h3 class=\"heading-node\">Essential Components</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83e\uddeb ChIP samples:</strong> Immunoprecipitated DNA with histone-specific antibody</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Input controls:</strong> Total chromatin without IP (critical for normalization)</p></li><li><p class=\"text-node\"><strong>\ud83d\udd2c Biological replicates:</strong> Minimum 2 replicates per condition (3+ recommended)</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Sequencing depth:</strong> 20-40 million reads per sample for mammalian genomes</p></li></ul><h3 class=\"heading-node\">Data Quality Metrics</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\u2705 FRiP score:</strong> Fraction of Reads in Peaks &gt; 1-5% for histone marks</p></li><li><p class=\"text-node\"><strong>\u2705 Cross-correlation:</strong> NSC &gt; 1.05, RSC &gt; 0.8</p></li><li><p class=\"text-node\"><strong>\u2705 Library complexity:</strong> &gt; 80% non-duplicate reads</p></li></ul><h2 class=\"heading-node\">\ud83d\udccb Sample Sheet Format</h2><p class=\"text-node\">Your CSV samplesheet defines experimental structure:</p><pre class=\"block-node\"><code>sample,fastq_1,fastq_2,replicate,antibody,control,control_replicate\nH3K27me3_WT_R1,WT_H3K27me3_R1.fastq.gz,,1,H3K27me3,WT_INPUT,1\nH3K27me3_WT_R2,WT_H3K27me3_R2.fastq.gz,,2,H3K27me3,WT_INPUT,2\nH3K27me3_KO_R1,KO_H3K27me3_R1.fastq.gz,,1,H3K27me3,KO_INPUT,1\nH3K27me3_KO_R2,KO_H3K27me3_R2.fastq.gz,,2,H3K27me3,KO_INPUT,2\nWT_INPUT,WT_Input_R1.fastq.gz,,1,,,\nWT_INPUT,WT_Input_R2.fastq.gz,,2,,,\nKO_INPUT,KO_Input_R1.fastq.gz,,1,,,\nKO_INPUT,KO_Input_R2.fastq.gz,,2,,,</code></pre><p class=\"text-node\"><strong>Column Descriptions:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>sample:</strong> Unique sample name</p></li><li><p class=\"text-node\"><strong>fastq_1:</strong> Read 1 file (or single-end reads)</p></li><li><p class=\"text-node\"><strong>fastq_2:</strong> Read 2 file (leave empty for single-end)</p></li><li><p class=\"text-node\"><strong>replicate:</strong> Biological replicate number (1, 2, 3...)</p></li><li><p class=\"text-node\"><strong>antibody:</strong> Histone mark name (H3K27me3, H3K36me3, etc.)</p></li><li><p class=\"text-node\"><strong>control:</strong> Name of matching input control sample</p></li><li><p class=\"text-node\"><strong>control_replicate:</strong> Replicate number of control sample</p></li></ul><h2 class=\"heading-node\">\ud83e\uddec Reference Genome Selection</h2><p class=\"text-node\">Choose appropriate genome for your organism:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83e\uddd1 Human:</strong> GRCh38/hg38 (latest) or GRCh37/hg19 (legacy studies)</p></li><li><p class=\"text-node\"><strong>\ud83d\udc2d Mouse:</strong> GRCm39/mm39 (latest) or GRCm38/mm10 (legacy)</p></li><li><p class=\"text-node\"><strong>\ud83d\udd2c Model organisms:</strong> Zebrafish, fly, C. elegans, yeast</p></li><li><p class=\"text-node\"><strong>\ud83c\udf31 Plants:</strong> Arabidopsis TAIR10, rice, maize</p></li></ul><h2 class=\"heading-node\">\ud83d\udcca Comprehensive Results</h2><h3 class=\"heading-node\">Peak Files</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udccd BroadPeak files:</strong> Genomic coordinates of enriched regions (BED format)</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Consensus peaks:</strong> Reproducible peaks across biological replicates</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Peak annotations:</strong> Gene assignments, genomic features, distances to TSS</p></li><li><p class=\"text-node\"><strong>\ud83e\uddee Peak statistics:</strong> Signal enrichment, fold-change, FDR values</p></li></ul><h3 class=\"heading-node\">Visualization Tracks</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83c\udfa8 BigWig files:</strong> Normalized signal tracks for genome browsers (IGV, UCSC)</p></li><li><p class=\"text-node\"><strong>\ud83d\udcc8 Coverage plots:</strong> Signal distribution around genes and features</p></li><li><p class=\"text-node\"><strong>\ud83d\udd25 Heatmaps:</strong> Signal intensity across regions of interest</p></li></ul><h3 class=\"heading-node\">Quality Control</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udcc8 MultiQC Report:</strong> Comprehensive QC with interactive plots</p></li><li><p class=\"text-node\"><strong>\ud83d\udd0d Fragment analysis:</strong> Insert size distributions, read quality metrics</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Cross-correlation:</strong> Library quality scores (NSC, RSC)</p></li><li><p class=\"text-node\"><strong>\u2705 FRiP scores:</strong> Fraction of reads in peaks per sample</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Replicate concordance:</strong> IDR analysis for reproducibility</p></li></ul><h3 class=\"heading-node\">Differential Analysis (Optional)</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udd04 Differential binding:</strong> Changes between conditions (e.g., WT vs KO)</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Statistical testing:</strong> DESeq2 analysis for significant changes</p></li><li><p class=\"text-node\"><strong>\ud83c\udfa8 Volcano plots:</strong> Visualization of differential peaks</p></li></ul><h2 class=\"heading-node\">\ud83d\udd2c Biological Applications</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83e\uddec Chromatin states:</strong> Map active/repressive domains across genome</p></li><li><p class=\"text-node\"><strong>\ud83d\udd2c Development:</strong> Track epigenetic changes during differentiation</p></li><li><p class=\"text-node\"><strong>\ud83e\ude7a Cancer research:</strong> Identify aberrant silencing in tumors</p></li><li><p class=\"text-node\"><strong>\ud83d\udc8a Drug discovery:</strong> Assess epigenetic drug effects</p></li><li><p class=\"text-node\"><strong>\ud83e\uddeb Stem cells:</strong> Characterize pluripotency and lineage commitment</p></li><li><p class=\"text-node\"><strong>\ud83c\udf3f Plant biology:</strong> Study vernalization and stress responses</p></li></ul><h2 class=\"heading-node\">\u2699\ufe0f Pipeline Specifications</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udd27 Aligner:</strong> BWA-MEM (default, robust and accurate)</p></li><li><p class=\"text-node\"><strong>\ud83d\udccd Peak caller:</strong> MACS2 with --broad flag (broad_cutoff = 0.1)</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Duplicate handling:</strong> Marked and filtered (prevents PCR bias)</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Normalization:</strong> CPM (counts per million) for BigWig tracks</p></li><li><p class=\"text-node\"><strong>\u2705 Quality filters:</strong> MAPQ \u2265 20, properly paired reads</p></li></ul><p class=\"text-node\"><strong>Perfect for Research in:</strong> Epigenetics \u2022 Cancer biology \u2022 Developmental biology \u2022 Stem cell research \u2022 Chromatin biology \u2022 Gene regulation \u2022 Drug discovery \u2022 Plant epigenomics</p><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> \u2022 Powered by <a class=\"link\" href=\"https://nf-co.re/chipseq/2.1.0/\" target=\"_blank\">nf-core/chipseq v2.1.0</a> \u2022 Containerized execution \u2022 Continuous integration tested</p>",
+    "imageUrl": "https://raw.githubusercontent.com/nf-core/chipseq/master/docs/images/nf-core-chipseq_logo_light.png",
+    "command": "nextflow run nf-core/chipseq --input ${input} --outdir ${outdir} --genome ${genome} --broad_cutoff 0.1 --read_length 50 -r 2.0.0 ",
+    "engineType": "NEXTFLOW",
+    "jobConfig": [
+        {
+            "type": "Select",
+            "label": "System Size",
+            "name": "system_size",
+            "hidden": true,
+            "description": "Select compute resources. Start with XSMALL for testing, scale up for production data.",
+            "options": [
+                {
+                    "label": "XSMALL (4 CPUs, 15GB RAM) - Testing/nf-core test data",
+                    "value": "xsmall",
+                    "mapValue": {
+                        "nodeSize": "XSMALL",
+                        "numNodes": 1,
+                        "withGpu": false
+                    }
+                },
+                {
+                    "label": "SMALL (8 CPUs, 30GB RAM) - Small datasets (1-3 samples)",
+                    "value": "small",
+                    "mapValue": {
+                        "nodeSize": "SMALL",
+                        "numNodes": 1,
+                        "withGpu": false
+                    }
+                },
+                {
+                    "label": "MEDIUM (32 CPUs, 120GB RAM) - Standard datasets (5-20 samples)",
+                    "value": "medium",
+                    "mapValue": {
+                        "nodeSize": "MEDIUM",
+                        "numNodes": 1,
+                        "withGpu": false
+                    }
+                },
+                {
+                    "label": "LARGE (64 CPUs, 360GB RAM) - Large datasets (20-50 samples)",
+                    "value": "large",
+                    "mapValue": {
+                        "nodeSize": "LARGE",
+                        "numNodes": 1,
+                        "withGpu": false
+                    }
+                }
+            ],
+            "defaultValue": "xsmall"
+        }
+    ],
+    "spec": [
+        {
+            "type": "Stash File",
+            "label": "Sample Sheet",
+            "name": "input",
+            "description": "CSV file with columns: sample, fastq_1, fastq_2, antibody, control. Each row represents a ChIP sample or input control for histone modification mapping.",
+            "required": true,
+            "restrictions": {
+                "allow_files": true,
+                "allow_folders": false,
+                "allowed_file_types": [
+                    ".csv"
+                ]
+            }
+        },
+        {
+            "type": "Stash File",
+            "label": "Output Directory",
+            "name": "outdir",
+            "description": "Directory where analysis results, broad peak files, and reports will be saved",
+            "defaultValue": "./chipseq-histone-results",
+            "required": true,
+            "restrictions": {
+                "allow_files": false,
+                "allow_folders": true,
+                "allowed_file_types": []
+            }
+        },
+        {
+            "type": "Select",
+            "label": "Reference Genome",
+            "name": "genome",
+            "description": "Reference genome matching your experimental organism. Use GRCh38 for human, GRCm39 for mouse.",
+            "defaultValue": "GRCh38",
+            "required": true,
+            "options": [
+                {
+                    "label": "Human GRCh38/hg38 (latest, recommended)",
+                    "value": "GRCh38"
+                },
+                {
+                    "label": "Human GRCh37/hg19 (legacy)",
+                    "value": "GRCh37"
+                },
+                {
+                    "label": "Mouse GRCm39/mm39 (latest)",
+                    "value": "GRCm39"
+                },
+                {
+                    "label": "Mouse GRCm38/mm10 (widely used)",
+                    "value": "GRCm38"
+                },
+                {
+                    "label": "Rat Rnor_6.0",
+                    "value": "Rnor_6.0"
+                },
+                {
+                    "label": "Zebrafish GRCz11",
+                    "value": "GRCz11"
+                },
+                {
+                    "label": "Fruit Fly BDGP6",
+                    "value": "BDGP6"
+                },
+                {
+                    "label": "C. elegans WBcel235",
+                    "value": "WBcel235"
+                },
+                {
+                    "label": "Yeast R64-1-1",
+                    "value": "R64-1-1"
+                }
+            ]
+        }
+    ],
+    "tags": [
+        {
+            "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+            "name": "biology",
+            "type": "field"
+        },
+        {
+            "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+            "name": "genomics",
+            "type": "subfield"
+        },
+        {
+            "id": "831477f4-f572-4e27-af83-037661489800",
+            "name": "analysis",
+            "type": "task"
+        }
+    ]
+}

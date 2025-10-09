@@ -1,0 +1,72 @@
+{
+  "name": "longraredisease-diagnostic-wgs",
+  "title": "Diagnostic WGS",
+  "description": "Analyzes long-read sequencing data to identify structural variants, repeat expansions, and complex genomic rearrangements in rare disease patients. Ideal for diagnosing neurodevelopmental disorders and uncovering pathogenic variants missed by short-read sequencing. Samplesheet format: `deletions,duplications,inversions,translocations`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/longraredisease --input ${input} --outdir ${outdir} -r 1.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/longraredisease/master/docs/images/nf-core-longraredisease_logo_light.png",
+  "content": "<h2><strong>Long-read Rare Disease - Diagnostic Whole Genome Sequencing</strong></h2><p>Specialized pipeline for identifying disease-causing genetic variants in rare disease patients using long-read sequencing technologies (PacBio HiFi, Oxford Nanopore). Unlike short-read sequencing, long reads excel at detecting structural variants, repeat expansions, and complex genomic rearrangements that are frequently responsible for rare diseases.</p><h3><strong>What is Long-read Rare Disease Analysis?</strong></h3><blockquote><p><strong>Long-read sequencing</strong> generates DNA reads spanning 10,000-100,000+ base pairs, enabling comprehensive detection of structural variants (SVs), tandem repeat expansions, and copy number variations (CNVs) that cause many neurodevelopmental disorders and rare genetic diseases.</p></blockquote><h3><strong>Key Features</strong></h3><ul><li><strong>Structural Variant Detection</strong>: Identifies deletions, duplications, inversions, translocations > 50bp</li><li><strong>Repeat Expansion Analysis</strong>: Detects pathogenic tandem repeat expansions in disease-associated loci</li><li><strong>Complete Haplotype Phasing</strong>: Resolves compound heterozygosity and inheritance patterns</li><li><strong>Complex Region Resolution</strong>: Sequences through low-complexity and repetitive genomic regions</li><li><strong>CNV Calling</strong>: Accurate copy number variant identification across genome</li><li><strong>Small Variant Detection</strong>: SNVs and indels with high accuracy (>99.9% for HiFi)</li></ul><h3><strong>Pipeline Workflow</strong></h3><ol><li><strong>Quality Control</strong>: Assess read length, quality scores, and coverage distribution</li><li><strong>Read Alignment</strong>: Map long reads to reference genome with specialized aligners</li><li><strong>Structural Variant Calling</strong>: Identify SVs using multiple complementary callers</li><li><strong>Repeat Expansion Detection</strong>: Screen known disease-associated repeat loci</li><li><strong>SNV/Indel Calling</strong>: Call small variants with long-read-specific tools</li><li><strong>Haplotype Phasing</strong>: Phase variants into maternal/paternal chromosomes</li><li><strong>Annotation</strong>: Annotate variants with clinical databases (ClinVar, OMIM, HGMD)</li><li><strong>Prioritization</strong>: Rank variants by pathogenicity and disease relevance</li></ol><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Neurodevelopmental Disorders</strong>: Autism, intellectual disability, epilepsy</li><li><strong>Repeat Expansion Diseases</strong>: Fragile X, Huntington's, myotonic dystrophy, spinocerebellar ataxias</li><li><strong>Structural Variant Disorders</strong>: Genomic deletion/duplication syndromes</li><li><strong>Undiagnosed Disease Programs</strong>: Cases unsolved by short-read sequencing</li><li><strong>Complex Locus Analysis</strong>: HLA typing, pharmacogenomics (CYP2D6), SMN1/SMN2</li><li><strong>De Novo Mutation Discovery</strong>: Sporadic cases with no family history</li></ul><h3><strong>Advantages Over Short-read Sequencing</strong></h3><ul><li><strong>Better SV Detection</strong>: 10-100x more sensitive for structural variants > 50bp</li><li><strong>Repeat Expansion Calling</strong>: Can sequence through tandem repeats impossible for short reads</li><li><strong>Complete Phasing</strong>: Phase entire chromosomes without family trios</li><li><strong>Mappability</strong>: Resolves 99% of genome including difficult regions</li><li><strong>Diagnostic Yield</strong>: 10-40% increased diagnostic rate in rare disease cohorts</li></ul><h3><strong>Input Requirements</strong></h3><ul><li><strong>Long-read FASTQ/BAM</strong>: PacBio HiFi reads (Q20+) or Nanopore reads (Q10+)</li><li><strong>Sample Sheet</strong>: CSV with sample information and read file locations</li><li><strong>Reference Genome</strong>: GRCh38/hg38 with annotations</li><li><strong>Optional</strong>: Parental samples for trio analysis and de novo variant detection</li></ul><h3><strong>Main Outputs</strong></h3><ul><li><strong>Structural Variants</strong>: VCF files with deletions, duplications, inversions, translocations</li><li><strong>Repeat Expansions</strong>: Identified pathogenic repeat expansions with exact sizes</li><li><strong>SNV/Indel VCF</strong>: Small variants with genotype quality scores</li><li><strong>Phased Variants</strong>: Haplotype-resolved variant calls</li><li><strong>Clinical Report</strong>: Prioritized list of candidate pathogenic variants</li><li><strong>QC Metrics</strong>: Coverage, read quality, variant calling statistics</li></ul><blockquote><p><strong>Perfect for:</strong> Rare Disease Diagnostics • Neurodevelopmental Disorders • Structural Variant Detection • Repeat Expansion Diseases • Undiagnosed Cases • Complex Genomic Regions • Clinical Genomics</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Input",
+      "name": "input",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output",
+      "name": "outdir",
+      "defaultValue": "./longraredisease-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Resources",
+      "name": "system_size",
+      "options": [
+        {
+          "label": "LARGE",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

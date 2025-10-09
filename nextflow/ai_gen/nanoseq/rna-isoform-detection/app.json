@@ -1,0 +1,186 @@
+{
+  "name": "nanoseq-rna-isoform-detection",
+  "title": "Nanoseq RNA Isoform Detection: Full-Length Transcript Analysis",
+  "description": "Oxford Nanopore direct RNA sequencing pipeline for detecting full-length transcript isoforms, alternative splicing events, and RNA modifications. Ideal for transcriptomics researchers studying isoform diversity, splice variants, and gene expression without assembly artifacts.",
+  "content": "<h1 class=\"heading-node\">\ud83e\uddec Nanoseq RNA Isoform Detection: Full-Length Transcript Analysis</h1><p class=\"text-node\"><strong>Discover Complete Transcript Isoforms with Long-Read RNA Sequencing</strong></p><p class=\"text-node\">Oxford Nanopore direct RNA sequencing provides full-length transcript reads without fragmentation or assembly, enabling accurate detection of splice isoforms, gene fusions, and RNA modifications that short-read sequencing cannot resolve.</p><img src=\"https://raw.githubusercontent.com/nf-core/nanoseq/master/docs/images/nf-core-nanoseq_logo_light.png\" alt=\"nf-core/nanoseq workflow\" width=\"600\" height=\"300\"><h2 class=\"heading-node\">\ud83c\udfaf Why Long-Read RNA-Seq?</h2><h3 class=\"heading-node\">\ud83d\udd2c Full-Length Transcripts</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83c\udfaf No assembly required:</strong> Direct sequencing of complete transcripts from 5' to 3'</p></li><li><p class=\"text-node\"><strong>\ud83e\udde9 Resolve complex isoforms:</strong> Accurately identify all exon combinations and splice junctions</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca True isoform quantification:</strong> Count full-length isoforms without computational inference</p></li><li><p class=\"text-node\"><strong>\u2705 Best for:</strong> Alternative splicing studies, fusion detection, novel isoform discovery</p></li></ul><h3 class=\"heading-node\">\u26a1 Direct RNA Advantages</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83e\uddec Native RNA sequencing:</strong> No reverse transcription or amplification bias</p></li><li><p class=\"text-node\"><strong>\ud83d\udd0d RNA modifications:</strong> Detect m6A, pseudouridine, and other modifications</p></li><li><p class=\"text-node\"><strong>\ud83d\udccf Poly(A) tail length:</strong> Measure poly(A) tail lengths directly</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Strand-specific:</strong> Inherently strand-specific sequencing</p></li></ul><h2 class=\"heading-node\">\ud83e\uddea Analysis Modes</h2><h3 class=\"heading-node\">\ud83d\udcca Isoform Detection Tools</h3><p class=\"text-node\">Choose the optimal transcript reconstruction approach:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83e\uddec Bambu</strong> - Recommended for comprehensive isoform discovery</p><ul class=\"list-node\"><li><p class=\"text-node\">Context-aware transcript reconstruction</p></li><li><p class=\"text-node\">Novel isoform detection with high precision</p></li><li><p class=\"text-node\">Integrated quantification of known and novel transcripts</p></li><li><p class=\"text-node\">Best for: Discovery-focused experiments</p></li></ul></li><li><p class=\"text-node\"><strong>\ud83d\udd2c StringTie2</strong> - Reference-guided assembly</p><ul class=\"list-node\"><li><p class=\"text-node\">Accurate transcript assembly and quantification</p></li><li><p class=\"text-node\">Handles multi-sample experiments efficiently</p></li><li><p class=\"text-node\">Outputs GTF files for downstream analysis</p></li><li><p class=\"text-node\">Best for: Known isoform quantification</p></li></ul></li></ul><h3 class=\"heading-node\">\ud83e\uddec RNA Modification Detection</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>m6anet:</strong> N6-methyladenosine (m6A) modification detection</p></li><li><p class=\"text-node\"><strong>xpore:</strong> Differential RNA modification analysis across conditions</p></li><li><p class=\"text-node\"><strong>Applications:</strong> Epitranscriptomics, RNA regulation, disease mechanisms</p></li></ul><h3 class=\"heading-node\">\ud83d\udd17 RNA Fusion Detection</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>JAFFAL:</strong> Sensitive fusion transcript detection</p></li><li><p class=\"text-node\"><strong>No assembly artifacts:</strong> Fusions detected from full-length reads</p></li><li><p class=\"text-node\"><strong>Applications:</strong> Cancer genomics, oncogene discovery</p></li></ul><h2 class=\"heading-node\">\ud83d\udccb Input Data Formats</h2><p class=\"text-node\">The pipeline accepts multiple input formats:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>FASTQ files:</strong> Pre-basecalled Nanopore reads (most common)</p></li><li><p class=\"text-node\"><strong>FAST5 files:</strong> Raw signal data for basecalling with Guppy/Dorado</p></li><li><p class=\"text-node\"><strong>BAM files:</strong> Pre-aligned reads for downstream analysis only</p></li></ul><h3 class=\"heading-node\">\ud83d\udcca Sample Sheet Format</h3><p class=\"text-node\">Your CSV samplesheet defines the experiment structure:</p><pre class=\"block-node\"><code>sample,fastq,barcode\ncontrol_rep1,control_1.fastq.gz,\ncontrol_rep2,control_2.fastq.gz,\ntreated_rep1,treated_1.fastq.gz,\ntreated_rep2,treated_2.fastq.gz,</code></pre><h2 class=\"heading-node\">\ud83e\uddec Reference Genome Selection</h2><p class=\"text-node\">Choose from comprehensive reference genomes:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83e\uddd1 Human:</strong> GRCh37, GRCh38, CHM13 - optimized for human transcriptome studies</p></li><li><p class=\"text-node\"><strong>\ud83d\udc2d Model Organisms:</strong> Mouse (GRCm38, GRCm39), zebrafish, fly</p></li><li><p class=\"text-node\"><strong>\ud83c\udf31 Plants:</strong> Arabidopsis, rice, maize - plant transcriptomics</p></li><li><p class=\"text-node\"><strong>\ud83e\udda0 Microbes:</strong> Yeast, bacteria - microbial transcriptome profiling</p></li></ul><p class=\"text-node\">All genomes include comprehensive gene annotations for accurate isoform identification.</p><h2 class=\"heading-node\">\ud83d\udcca Comprehensive Results</h2><h3 class=\"heading-node\">Transcript Isoform Data</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udcca Isoform Counts:</strong> Transcript-level expression matrices</p></li><li><p class=\"text-node\"><strong>\ud83e\uddec Novel Isoforms:</strong> Newly discovered splice variants with annotations</p></li><li><p class=\"text-node\"><strong>\ud83d\udd17 Fusion Transcripts:</strong> Gene fusion events with breakpoint details</p></li><li><p class=\"text-node\"><strong>\ud83d\udccf Transcript Structures:</strong> GTF/GFF files of reconstructed transcripts</p></li></ul><h3 class=\"heading-node\">RNA Modifications</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83e\uddea Modification Sites:</strong> Positions and confidence scores</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Differential Modifications:</strong> Condition-specific modification patterns</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Functional Context:</strong> Modifications mapped to transcript features</p></li></ul><h3 class=\"heading-node\">Quality Control</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udcc8 Read Statistics:</strong> Length distribution, quality scores, throughput</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Alignment Metrics:</strong> Mapping rates, coverage uniformity</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca MultiQC Report:</strong> Comprehensive analysis summary with interactive plots</p></li></ul><h3 class=\"heading-node\">Differential Analysis</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83e\uddee DESeq2:</strong> Differential gene expression analysis</p></li><li><p class=\"text-node\"><strong>\ud83e\uddec DEXSeq:</strong> Differential exon usage and isoform switching</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Visualization:</strong> Volcano plots, MA plots, isoform switch graphs</p></li></ul><h2 class=\"heading-node\">\ud83d\udd2c Scientific Applications</h2><p class=\"text-node\"><strong>Perfect for Research in:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83e\uddec Alternative Splicing:</strong> Tissue-specific and disease-associated splice variants</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Isoform Diversity:</strong> Complete isoform catalogs without assembly bias</p></li><li><p class=\"text-node\"><strong>\ud83d\udd2c Epitranscriptomics:</strong> m6A and other RNA modifications</p></li><li><p class=\"text-node\"><strong>\ud83e\uddea Cancer Genomics:</strong> Fusion transcript detection and characterization</p></li><li><p class=\"text-node\"><strong>\ud83c\udf31 Plant Biology:</strong> Complex plant transcriptomes with polyploidy</p></li><li><p class=\"text-node\"><strong>\ud83e\udde0 Neuroscience:</strong> Neuronal isoform diversity and complexity</p></li><li><p class=\"text-node\"><strong>\ud83d\udc8a Drug Discovery:</strong> Target isoform identification and validation</p></li></ul><h2 class=\"heading-node\">\ud83d\udcd6 Test Data Available</h2><p class=\"text-node\">The pipeline includes built-in test profiles using:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Data Source:</strong> Singapore Nanopore Expression Consortium (SG-NEx)</p></li><li><p class=\"text-node\"><strong>Cell Lines:</strong> Cancer cell lines (HepG2, K562, MCF7, A549, Hct116)</p></li><li><p class=\"text-node\"><strong>Protocol:</strong> Direct cDNA and native RNA sequencing</p></li><li><p class=\"text-node\"><strong>Test Command:</strong> Use <code class=\"inline\" spellcheck=\"false\">-profile test</code> for rapid validation</p></li></ul><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> \u2022 Powered by <a class=\"link\" href=\"https://nf-co.re/nanoseq/3.1.0/\" target=\"_blank\">nf-core/nanoseq v3.1.0</a> \u2022 Containerized execution \u2022 Continuous integration tested</p>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/nanoseq/master/docs/images/nf-core-nanoseq_logo_light.png",
+  "command": "nextflow run nf-core/nanoseq --input ${input} --outdir ${outputDir} --protocol cDNA --skip_demultiplexing --quantification_method bambu -r 3.1.0 ",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select compute resources. Start with XSMALL for testing, scale up for production data.",
+      "options": [
+        {
+          "label": "XSMALL (4 CPUs, 15GB RAM) - Testing/nf-core test data",
+          "value": "xsmall",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "SMALL (8 CPUs, 30GB RAM) - Small datasets (1-3 samples)",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Standard datasets (5-20 samples)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Large datasets (20-50 samples)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xsmall"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV samplesheet with columns: sample, fastq, barcode (optional). Use test profile with 'https://raw.githubusercontent.com/nf-core/test-datasets/nanoseq/samplesheet_nobc_dx.csv' for testing.",
+      "defaultValue": "https://raw.githubusercontent.com/nf-core/test-datasets/nanoseq/samplesheet_nobc_dx.csv",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outputDir",
+      "description": "Output directory for analysis results.",
+      "defaultValue": "./",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Isoform Quantification Method",
+      "name": "quantification_method",
+      "description": "Choose transcript reconstruction and quantification tool.",
+      "defaultValue": "bambu",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "bambu - Context-aware novel isoform discovery (Recommended)",
+          "value": "bambu"
+        },
+        {
+          "label": "stringtie2 - Reference-guided transcript assembly",
+          "value": "stringtie2"
+        }
+      ]
+    },
+    {
+      "type": "Switch",
+      "label": "Skip Quantification",
+      "name": "skip_quantification",
+      "description": "Skip transcript quantification (alignment only).",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Skip BigBed Generation",
+      "name": "skip_bigbed",
+      "description": "Skip BigBed format generation (saves time and space).",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Skip BigWig Generation",
+      "name": "skip_bigwig",
+      "description": "Skip BigWig coverage track generation (saves time and space).",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Skip Fusion Analysis",
+      "name": "skip_fusion_analysis",
+      "description": "Skip RNA fusion detection with JAFFAL.",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Skip Modification Analysis",
+      "name": "skip_modification_analysis",
+      "description": "Skip RNA modification detection (m6anet, xpore).",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Skip Differential Analysis",
+      "name": "skip_differential_analysis",
+      "description": "Skip differential expression analysis (DESeq2, DEXSeq).",
+      "defaultValue": true,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

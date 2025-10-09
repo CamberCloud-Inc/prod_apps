@@ -1,0 +1,142 @@
+{
+  "name": "marsseq-single-cell-rnaseq",
+  "title": "Plate-Based Single-Cell RNA-seq Analysis",
+  "description": "Comprehensive preprocessing pipeline for MARS-seq v2.0 plate-based single-cell RNA sequencing. Process raw FASTQ reads into 10X v2 format with UMI counting, barcode demultiplexing, RNA velocity analysis, and ERCC spike-in support for quality control. Samplesheet format: `batch,fastq_1,fastq_2,amp_batches,seq_batches,well_cells`",
+  "version": "1.0.3",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/marsseq -profile docker --input ${input} --outdir ${outdir} --genome ${genome} ${velocity} ${build_references}",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/marsseq/master/docs/images/nf-core-marsseq_logo_light.png",
+  "content": "<h1 class=\"heading-node\">🧬 MARS-Seq: Plate-Based Single-Cell RNA-seq</h1><p class=\"text-node\"><strong>High-Throughput Single-Cell Transcriptomics with FACS Integration</strong></p><p class=\"text-node\">MARS-seq (Massively Parallel Single-Cell RNA-Sequencing) v2.0 is a powerful plate-based method for profiling transcriptomes of thousands of individual cells. This pipeline processes MARS-seq data with comprehensive quality control, UMI deduplication, and optional RNA velocity analysis to study cell dynamics and developmental trajectories.</p><img src=\"https://raw.githubusercontent.com/nf-core/marsseq/master/docs/images/nf-core-marsseq_logo_light.png\" alt=\"nf-core/marsseq workflow\" width=\"600\" height=\"300\"><h2 class=\"heading-node\">🎯 What is MARS-Seq?</h2><p class=\"text-node\">MARS-seq is a plate-based single-cell RNA-sequencing technique developed for high-throughput profiling:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔬 Plate-Based Format:</strong> Process 384 cells per plate with precise well-to-cell mapping</p></li><li><p class=\"text-node\"><strong>🎯 FACS Integration:</strong> Compatible with fluorescence-activated cell sorting for rare populations</p></li><li><p class=\"text-node\"><strong>🧮 UMI Counting:</strong> Unique Molecular Identifiers for accurate transcript quantification</p></li><li><p class=\"text-node\"><strong>📊 High Throughput:</strong> Scalable to thousands of cells per experiment</p></li><li><p class=\"text-node\"><strong>✅ Quality Control:</strong> ERCC spike-ins for technical validation</p></li><li><p class=\"text-node\"><strong>⚡ RNA Velocity:</strong> Optional velocity analysis to infer cell state transitions</p></li></ul><h2 class=\"heading-node\">🔧 Pipeline Features</h2><h3 class=\"heading-node\">Data Processing Workflow</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Quality Control:</strong> Cutadapt adapter trimming and quality filtering</p></li><li><p class=\"text-node\"><strong>Read Alignment:</strong> STAR or Bowtie2 mapping to reference genomes</p></li><li><p class=\"text-node\"><strong>UMI Deduplication:</strong> Accurate transcript counting using molecular barcodes</p></li><li><p class=\"text-node\"><strong>Cell Barcode Demultiplexing:</strong> Assign reads to individual cells from well positions</p></li><li><p class=\"text-node\"><strong>Count Matrix Generation:</strong> Gene expression matrices in 10X v2 format</p></li><li><p class=\"text-node\"><strong>ERCC Spike-in Analysis:</strong> Technical variation assessment and normalization</p></li></ul><h3 class=\"heading-node\">Advanced Analysis Options</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>RNA Velocity:</strong> StarSolo-based velocity analysis for developmental trajectories</p></li><li><p class=\"text-node\"><strong>Multi-Genome Support:</strong> Human (GRCh38), mouse (mm10/mm39), and custom genomes</p></li><li><p class=\"text-node\"><strong>Reference Building:</strong> Automatic ERCC spike-in integration into genome references</p></li><li><p class=\"text-node\"><strong>Batch Processing:</strong> Handle multiple amplification and sequencing batches</p></li><li><p class=\"text-node\"><strong>10X Compatibility:</strong> Output compatible with Seurat, Scanpy, and other tools</p></li></ul><h2 class=\"heading-node\">📋 Sample Sheet Format</h2><p class=\"text-node\">Your CSV samplesheet defines MARS-seq experimental batches:</p><pre class=\"block-node\"><code>batch,fastq_1,fastq_2,amp_batches,seq_batches,well_cells\nSB26,Undetermined_S0_L001_R1_001.fastq.gz,Undetermined_S0_L001_R2_001.fastq.gz,amp_batches.xlsx,seq_batches.xlsx,wells_cells.xlsx\nSB27,Undetermined_S0_L002_R1_001.fastq.gz,Undetermined_S0_L002_R2_001.fastq.gz,amp_batches.xlsx,seq_batches.xlsx,wells_cells.xlsx\nSB28,Undetermined_S0_L003_R1_001.fastq.gz,Undetermined_S0_L003_R2_001.fastq.gz,amp_batches.xlsx,seq_batches.xlsx,wells_cells.xlsx</code></pre><p class=\"text-node\"><strong>Column Descriptions:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>batch:</strong> Unique sequencing batch identifier (e.g., SB26, SB27)</p></li><li><p class=\"text-node\"><strong>fastq_1:</strong> Path to Read 1 FASTQ file (UMIs and cell barcodes)</p></li><li><p class=\"text-node\"><strong>fastq_2:</strong> Path to Read 2 FASTQ file (transcript sequences)</p></li><li><p class=\"text-node\"><strong>amp_batches:</strong> Path to Excel file with amplification batch metadata</p></li><li><p class=\"text-node\"><strong>seq_batches:</strong> Path to Excel file with sequencing batch metadata</p></li><li><p class=\"text-node\"><strong>well_cells:</strong> Path to Excel file mapping well positions to cell identifiers</p></li></ul><h3 class=\"heading-node\">Required Metadata Files</h3><p class=\"text-node\">In addition to the samplesheet, provide three Excel files for batch tracking:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>amp_batches.xlsx:</strong> Amplification batch information (PCR cycles, dates, reagents)</p></li><li><p class=\"text-node\"><strong>seq_batches.xlsx:</strong> Sequencing run details (lanes, flow cells, sequencing dates)</p></li><li><p class=\"text-node\"><strong>wells_cells.xlsx:</strong> Mapping of 384-well plate positions to cell IDs/types</p></li></ul><h2 class=\"heading-node\">🧪 Scientific Applications</h2><h3 class=\"heading-node\">Immunology</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔬 Rare Cell Populations:</strong> FACS sorting enables profiling of rare immune cell subsets</p></li><li><p class=\"text-node\"><strong>🦠 Immune Response:</strong> Track T cell, B cell, and myeloid cell responses to infection</p></li><li><p class=\"text-node\"><strong>🎯 Cell Differentiation:</strong> Map immune cell development and activation states</p></li><li><p class=\"text-node\"><strong>🧬 Lineage Tracing:</strong> Follow immune cell fate decisions during development</p></li></ul><h3 class=\"heading-node\">Neuroscience</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🧠 Brain Cell Atlas:</strong> Profile neuronal and glial cell type diversity</p></li><li><p class=\"text-node\"><strong>🔬 Disease Models:</strong> Study neurodegenerative disease mechanisms at single-cell resolution</p></li><li><p class=\"text-node\"><strong>🌱 Development:</strong> Track neuronal differentiation and circuit formation</p></li></ul><h3 class=\"heading-node\">Cancer Biology</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🎯 Tumor Heterogeneity:</strong> Profile diverse cancer cell populations within tumors</p></li><li><p class=\"text-node\"><strong>🔬 Tumor Microenvironment:</strong> Characterize immune infiltration and stromal cells</p></li><li><p class=\"text-node\"><strong>💊 Drug Resistance:</strong> Identify resistant cell populations and mechanisms</p></li></ul><h3 class=\"heading-node\">Developmental Biology</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🌱 Organogenesis:</strong> Map cell fate transitions during organ development</p></li><li><p class=\"text-node\"><strong>⚡ RNA Velocity:</strong> Infer developmental trajectories and lineage relationships</p></li><li><p class=\"text-node\"><strong>📊 Stem Cells:</strong> Characterize stem cell differentiation pathways</p></li></ul><h2 class=\"heading-node\">⚙️ Key Pipeline Parameters</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>--genome:</strong> Reference genome (mm10, mm9, GRCh38_v43, or custom)</p></li><li><p class=\"text-node\"><strong>--velocity:</strong> Enable RNA velocity analysis using StarSolo (flag)</p></li><li><p class=\"text-node\"><strong>--build_references:</strong> Generate genome references with ERCC spike-ins (recommended for first use)</p></li><li><p class=\"text-node\"><strong>--input:</strong> Path to CSV samplesheet</p></li><li><p class=\"text-node\"><strong>--outdir:</strong> Output directory for results</p></li></ul><h2 class=\"heading-node\">📊 Comprehensive Results</h2><h3 class=\"heading-node\">Expression Matrices</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📁 10X v2 Format:</strong> Gene expression count matrices compatible with downstream tools</p><ul class=\"list-node\"><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">matrix.mtx</code> - Sparse count matrix</p></li><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">genes.tsv</code> - Gene identifiers and names</p></li><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">barcodes.tsv</code> - Cell barcode identifiers</p></li></ul></li><li><p class=\"text-node\"><strong>🧮 UMI Counts:</strong> Deduplicated unique molecular identifier counts per gene per cell</p></li><li><p class=\"text-node\"><strong>📊 Raw and Filtered:</strong> Both unfiltered and quality-filtered matrices</p></li></ul><h3 class=\"heading-node\">Quality Control Metrics</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📈 MultiQC Report:</strong> Comprehensive quality control dashboard with:</p><ul class=\"list-node\"><li><p class=\"text-node\">Read quality and adapter content</p></li><li><p class=\"text-node\">Alignment statistics (% mapped, uniquely mapped)</p></li><li><p class=\"text-node\">UMI deduplication rates</p></li><li><p class=\"text-node\">Gene detection sensitivity</p></li></ul></li><li><p class=\"text-node\"><strong>🔬 ERCC Metrics:</strong> Spike-in control analysis for technical variation</p></li><li><p class=\"text-node\"><strong>📊 Per-Cell Statistics:</strong> Reads, genes, and UMIs per cell</p></li></ul><h3 class=\"heading-node\">RNA Velocity Results (Optional)</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>⚡ Velocity Matrices:</strong> Spliced and unspliced count matrices</p></li><li><p class=\"text-node\"><strong>📈 Velocity Estimates:</strong> Cell state transition velocities</p></li><li><p class=\"text-node\"><strong>🗺️ Trajectory Inference:</strong> Developmental or differentiation trajectories</p></li></ul><h3 class=\"heading-node\">Visualizations</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🎨 QC Plots:</strong> Distribution of reads, genes, and UMIs per cell</p></li><li><p class=\"text-node\"><strong>📊 Alignment Statistics:</strong> Mapping rates and gene assignment plots</p></li><li><p class=\"text-node\"><strong>🔥 ERCC Validation:</strong> Spike-in detection curves</p></li></ul><h2 class=\"heading-node\">🔬 MARS-Seq vs Other Methods</h2><table><tr><th>Feature</th><th>MARS-Seq v2.0</th><th>10x Chromium</th><th>Smart-seq2</th></tr><tr><td>Format</td><td>Plate-based (384-well)</td><td>Droplet-based</td><td>Plate-based</td></tr><tr><td>Throughput</td><td>~10,000 cells/run</td><td>~10,000 cells/run</td><td>~96 cells/plate</td></tr><tr><td>Sensitivity</td><td>2,000-3,000 genes/cell</td><td>1,500-2,500 genes/cell</td><td>6,000-10,000 genes/cell</td></tr><tr><td>FACS Compatible</td><td>Yes (pre-sorting)</td><td>Limited</td><td>Yes</td></tr><tr><td>Full-Length</td><td>3' only</td><td>3' or 5' only</td><td>Full-length</td></tr><tr><td>Cost/Cell</td><td>Medium</td><td>Low</td><td>High</td></tr><tr><td>UMI Support</td><td>Yes</td><td>Yes</td><td>Optional</td></tr></table><h2 class=\"heading-node\">💡 Experimental Best Practices</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔬 Cell Sorting:</strong> Ensure single-cell sorting into 384-well plates</p></li><li><p class=\"text-node\"><strong>📊 ERCC Spike-ins:</strong> Include spike-ins for quality control and normalization</p></li><li><p class=\"text-node\"><strong>🧮 Sequencing Depth:</strong> Target 50,000-100,000 reads per cell</p></li><li><p class=\"text-node\"><strong>📋 Metadata Tracking:</strong> Maintain detailed records of batches and well positions</p></li><li><p class=\"text-node\"><strong>🎯 Positive Controls:</strong> Include known cell types for validation</p></li><li><p class=\"text-node\"><strong>⚡ RNA Velocity:</strong> Ensure sufficient read depth (>100K reads/cell) for velocity</p></li></ul><h2 class=\"heading-node\">🎓 Quality Metrics to Check</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>✅ Mapping Rate:</strong> >60% uniquely mapped reads</p></li><li><p class=\"text-node\"><strong>✅ Gene Detection:</strong> 1,500-3,000 genes detected per cell (cell-type dependent)</p></li><li><p class=\"text-node\"><strong>✅ UMI Deduplication:</strong> 20-50% duplication rate is normal</p></li><li><p class=\"text-node\"><strong>✅ ERCC Detection:</strong> Linear relationship between spike-in concentration and counts</p></li><li><p class=\"text-node\"><strong>✅ Doublet Rate:</strong> <5% estimated doublets (check in downstream analysis)</p></li></ul><h2 class=\"heading-node\">📚 Scientific Citation</h2><blockquote class=\"block-node\"><p class=\"text-node\"><strong>MARS-seq2.0:</strong> Keren-Shaul et al. (2019). \"MARS-seq2.0: an experimental and analytical pipeline for indexed sorting combined with single-cell RNA sequencing.\" <em>Nature Protocols</em>, 14(6), 1841-1862.</p></blockquote><h2 class=\"heading-node\">🔧 Downstream Analysis</h2><p class=\"text-node\">The 10X v2 formatted output is compatible with:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Seurat (R):</strong> Standard single-cell analysis workflow</p></li><li><p class=\"text-node\"><strong>Scanpy (Python):</strong> Scalable single-cell analysis</p></li><li><p class=\"text-node\"><strong>Velocyto/scVelo:</strong> RNA velocity analysis and visualization</p></li><li><p class=\"text-node\"><strong>Monocle:</strong> Pseudotime and trajectory inference</p></li><li><p class=\"text-node\"><strong>CellRanger:</strong> 10x Genomics analysis suite</p></li></ul><blockquote class=\"block-node\"><p class=\"text-node\"><strong>Perfect for:</strong> FACS-Sorted Cells • Rare Populations • Immune Profiling • Development • RNA Velocity • High-Throughput scRNA-seq • Cell Atlas Projects</p></blockquote><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/marsseq/1.0.3/\" target=\"_blank\">nf-core/marsseq v1.0.3</a> • Developed by Martin Proks • Containerized execution • Continuous integration tested</p>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV samplesheet with columns: batch, fastq_1, fastq_2, amp_batches, seq_batches, well_cells. Defines MARS-seq experimental batches and metadata files.",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory for preprocessed count matrices, QC reports, and optional RNA velocity results.",
+      "defaultValue": "./marsseq-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome for alignment. Choose organism matching your experimental system.",
+      "required": true,
+      "options": [
+        {
+          "label": "Mouse mm10 (recommended for mouse)",
+          "value": "mm10"
+        },
+        {
+          "label": "Mouse mm9 (legacy)",
+          "value": "mm9"
+        },
+        {
+          "label": "Human GRCh38 v43",
+          "value": "GRCh38_v43"
+        }
+      ],
+      "defaultValue": "mm10"
+    },
+    {
+      "type": "Select",
+      "label": "RNA Velocity Analysis",
+      "name": "velocity",
+      "description": "Enable RNA velocity analysis using StarSolo to infer cell dynamics and developmental trajectories.",
+      "required": false,
+      "options": [
+        {
+          "label": "Disabled (faster processing)",
+          "value": ""
+        },
+        {
+          "label": "Enabled (includes spliced/unspliced counts)",
+          "value": "--velocity"
+        }
+      ],
+      "defaultValue": ""
+    },
+    {
+      "type": "Select",
+      "label": "Build References",
+      "name": "build_references",
+      "description": "Generate genome references incorporating ERCC spike-ins. Recommended for first-time use or when references need updating.",
+      "required": false,
+      "options": [
+        {
+          "label": "No (use existing references)",
+          "value": ""
+        },
+        {
+          "label": "Yes (build references with ERCC)",
+          "value": "--build_references"
+        }
+      ],
+      "defaultValue": ""
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "description": "Computational resources for MARS-seq processing. LARGE recommended for typical datasets (1,000-10,000 cells).",
+      "options": [
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Recommended for typical MARS-seq datasets",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE (96 CPUs, 540GB RAM) - Large experiments (>10,000 cells)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

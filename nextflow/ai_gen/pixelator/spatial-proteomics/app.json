@@ -1,0 +1,120 @@
+{
+  "name": "pixelator-spatial-proteomics",
+  "title": "Molecular Pixelation Spatial Proteomics",
+  "description": "Advanced spatial proteomics analysis pipeline for single-cell protein abundance and protein-protein interactions using Molecular Pixelation (MPX) and Proximity Network (PNA) assays. Enables unprecedented spatial resolution of protein networks within individual cells for immunology, cancer biology, and cell signaling research. Samplesheet format: `sample,fastq_1,fastq_2,panel,panel_name,panel_version`",
+  "version": "2.1.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/pixelator --input ${input} --outdir ${outdir} --datatype ${datatype} -r 2.1.0 -c /etc/mpi/nextflow.camber.config -profile singularity",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/pixelator/master/docs/images/nf-core-pixelator_logo_light.png",
+  "content": "<h1 class=\"heading-node\">\ud83d\udd2c Pixelator: Molecular Pixelation Spatial Proteomics</h1><p class=\"text-node\"><strong>Map Protein Networks at Single-Cell Resolution</strong></p><p class=\"text-node\">Molecular Pixelation is a revolutionary technology that combines antibody-based detection with sequencing to reveal spatial protein organization and protein-protein interactions within individual cells. Unlike traditional proteomics that averages across millions of cells, Molecular Pixelation preserves the spatial context of protein networks, uncovering cell-to-cell variability and rare cellular states.</p><img src=\"https://raw.githubusercontent.com/nf-core/pixelator/master/docs/images/nf-core-pixelator_logo_light.png\" alt=\"nf-core/pixelator workflow\" width=\"600\" height=\"400\"><h2 class=\"heading-node\">\ud83c\udfaf What This Pipeline Does</h2><p class=\"text-node\">The Pixelator pipeline processes raw sequencing data from Molecular Pixelation experiments through a comprehensive analysis workflow:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udcca Quality Control:</strong> Rigorous QC of sequencing reads to ensure data quality</p></li><li><p class=\"text-node\"><strong>\ud83e\uddec Amplicon Processing:</strong> Assembly and validation of molecular barcodes</p></li><li><p class=\"text-node\"><strong>\ud83c\udff7\ufe0f Marker Assignment:</strong> Maps antibody markers to their targets with high precision</p></li><li><p class=\"text-node\"><strong>\u2705 Error Correction:</strong> Advanced algorithms to minimize sequencing and PCR errors</p></li><li><p class=\"text-node\"><strong>\ud83d\udd78\ufe0f Graph Generation:</strong> Creates cellular protein networks showing spatial relationships</p></li><li><p class=\"text-node\"><strong>\ud83e\uddee Spatial Analysis:</strong> Quantifies protein colocalization and proximity patterns</p></li><li><p class=\"text-node\"><strong>\ud83c\udfa8 3D Visualization:</strong> Generates interactive 3D graph layouts of protein networks</p></li><li><p class=\"text-node\"><strong>\ud83d\udcc8 Statistical Reports:</strong> Comprehensive analysis reports with quality metrics</p></li></ul><h2 class=\"heading-node\">\ud83d\udd2c Experimental Designs Supported</h2><h3 class=\"heading-node\">MPX (Molecular Pixelation) Assays</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83c\udfaf Application:</strong> Spatial proteomics with subcellular resolution</p></li><li><p class=\"text-node\"><strong>\ud83e\uddec Technology:</strong> Antibody-DNA conjugates on solid phase</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Output:</strong> Protein abundance maps with spatial coordinates</p></li><li><p class=\"text-node\"><strong>\u2705 Best for:</strong> Mapping protein distribution patterns in single cells</p></li></ul><h3 class=\"heading-node\">PNA (Proximity Network Assay)</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83c\udfaf Application:</strong> Protein-protein interaction networks</p></li><li><p class=\"text-node\"><strong>\ud83e\uddec Technology:</strong> Proximity-based ligation of antibody markers</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Output:</strong> Interaction graphs showing direct protein relationships</p></li><li><p class=\"text-node\"><strong>\u2705 Best for:</strong> Discovering protein complexes and signaling networks</p></li></ul><h2 class=\"heading-node\">\ud83d\udccb Required Inputs</h2><h3 class=\"heading-node\">1. Sample Sheet (CSV Format)</h3><p class=\"text-node\">Create a samplesheet describing your Molecular Pixelation experiment:</p><pre class=\"block-node\"><code>sample,fastq_1,fastq_2,panel,panel_name,panel_version\ncontrol_1,control_R1.fastq.gz,control_R2.fastq.gz,panel.txt,immune_panel,v1\ntreatment_1,treat_R1.fastq.gz,treat_R2.fastq.gz,panel.txt,immune_panel,v1</code></pre><p class=\"text-node\"><strong>Column Descriptions:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>sample:</strong> Unique identifier for each sample</p></li><li><p class=\"text-node\"><strong>fastq_1:</strong> Path or URL to Read 1 FASTQ file (contains barcodes)</p></li><li><p class=\"text-node\"><strong>fastq_2:</strong> Path or URL to Read 2 FASTQ file (contains UMIs)</p></li><li><p class=\"text-node\"><strong>panel:</strong> Path to antibody panel specification file</p></li><li><p class=\"text-node\"><strong>panel_name:</strong> Descriptive name for the antibody panel used</p></li><li><p class=\"text-node\"><strong>panel_version:</strong> Version identifier for reproducibility</p></li></ul><h3 class=\"heading-node\">2. Antibody Panel File</h3><p class=\"text-node\">Defines the antibody markers used in your experiment with their sequences. Provided by Pixelgen Technologies or custom designed for your targets.</p><h3 class=\"heading-node\">3. Data Type Selection</h3><p class=\"text-node\">Specify whether your experiment uses:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>MPX:</strong> Standard Molecular Pixelation protocol</p></li><li><p class=\"text-node\"><strong>PNA:</strong> Proximity Network Assay protocol</p></li></ul><h2 class=\"heading-node\">\ud83d\udcca Analysis Outputs</h2><h3 class=\"heading-node\">Processed Data Files (PXL Format)</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udce6 PXL Files:</strong> Pixelator's native format containing all cellular data</p></li><li><p class=\"text-node\"><strong>\ud83e\uddec Count Matrices:</strong> Protein expression per cell</p></li><li><p class=\"text-node\"><strong>\ud83d\udd78\ufe0f Graph Data:</strong> Cellular protein network structures</p></li><li><p class=\"text-node\"><strong>\ud83d\udccd Spatial Coordinates:</strong> Protein localization information</p></li></ul><h3 class=\"heading-node\">Quality Control Reports</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udcc8 MultiQC Report:</strong> Comprehensive quality metrics across all samples</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Read Statistics:</strong> Sequencing depth and barcode quality</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Marker Detection:</strong> Antibody-specific performance metrics</p></li><li><p class=\"text-node\"><strong>\ud83e\uddee Cell Counts:</strong> Number of cells detected per sample</p></li></ul><h3 class=\"heading-node\">Visualization Files</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83c\udfa8 3D Graph Layouts:</strong> Interactive protein network visualizations</p></li><li><p class=\"text-node\"><strong>\ud83d\udccd Spatial Maps:</strong> Protein distribution heatmaps</p></li><li><p class=\"text-node\"><strong>\ud83d\udd17 Colocalization Plots:</strong> Protein-protein proximity analysis</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Summary Plots:</strong> Per-sample and per-marker statistics</p></li></ul><h3 class=\"heading-node\">Statistical Analysis</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83e\uddee Polarization Scores:</strong> Asymmetric protein distributions within cells</p></li><li><p class=\"text-node\"><strong>\ud83d\udd2c Colocalization Metrics:</strong> Statistical significance of protein proximity</p></li><li><p class=\"text-node\"><strong>\ud83d\udcc8 Marker Abundance:</strong> Quantitative protein levels per cell</p></li><li><p class=\"text-node\"><strong>\ud83d\udd78\ufe0f Network Statistics:</strong> Graph connectivity and topology metrics</p></li></ul><h2 class=\"heading-node\">\ud83e\uddea Scientific Applications</h2><p class=\"text-node\"><strong>This technology is ideal for research in:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83e\udda0 Immunology:</strong> Map immune receptor organization and signaling complexes</p></li><li><p class=\"text-node\"><strong>\ud83e\uddec Cancer Biology:</strong> Discover oncogenic protein networks and drug resistance mechanisms</p></li><li><p class=\"text-node\"><strong>\ud83e\udde0 Neuroscience:</strong> Study synaptic protein organization and neuronal signaling</p></li><li><p class=\"text-node\"><strong>\ud83d\udc8a Drug Discovery:</strong> Identify therapeutic targets within protein complexes</p></li><li><p class=\"text-node\"><strong>\ud83d\udd2c Cell Biology:</strong> Understand organelle proteomes and cellular compartmentation</p></li><li><p class=\"text-node\"><strong>\ud83e\uddeb Stem Cell Research:</strong> Track protein network changes during differentiation</p></li><li><p class=\"text-node\"><strong>\ud83d\udd25 Inflammation:</strong> Characterize inflammatory signaling cascades</p></li><li><p class=\"text-node\"><strong>\ud83c\udf1f Rare Cell Types:</strong> Profile protein networks in rare cellular populations</p></li></ul><h2 class=\"heading-node\">\ud83c\udfaf Key Advantages Over Traditional Proteomics</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udd0d Single-Cell Resolution:</strong> No averaging across cell populations</p></li><li><p class=\"text-node\"><strong>\ud83d\udccd Spatial Context:</strong> Preserves protein localization information</p></li><li><p class=\"text-node\"><strong>\ud83d\udd78\ufe0f Interaction Networks:</strong> Direct measurement of protein-protein relationships</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Targeted Sensitivity:</strong> Antibody-based detection with high specificity</p></li><li><p class=\"text-node\"><strong>\ud83d\udcb0 Cost-Effective:</strong> NGS-based approach scalable to many cells</p></li><li><p class=\"text-node\"><strong>\ud83e\uddec Complementary to scRNA-seq:</strong> Protein validation of transcript predictions</p></li></ul><h2 class=\"heading-node\">\u2699\ufe0f Technical Specifications</h2><p class=\"text-node\"><strong>Computational Requirements:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Memory:</strong> Minimum 32GB RAM, 64GB recommended for large experiments</p></li><li><p class=\"text-node\"><strong>Storage:</strong> 50-100GB per sample depending on sequencing depth</p></li><li><p class=\"text-node\"><strong>Runtime:</strong> 2-6 hours per sample on LARGE compute nodes</p></li></ul><p class=\"text-node\"><strong>Data Requirements:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Sequencing Depth:</strong> Typically 50,000-200,000 reads per cell</p></li><li><p class=\"text-node\"><strong>Read Format:</strong> Paired-end Illumina sequencing</p></li><li><p class=\"text-node\"><strong>Panel Size:</strong> 40-150 antibody markers typical</p></li></ul><h2 class=\"heading-node\">\ud83d\udcda Scientific Background</h2><p class=\"text-node\">Molecular Pixelation was developed based on the principle that proteins found in close proximity are likely to interact functionally. The technology uses antibody-DNA conjugates and proximity ligation to create molecular barcodes that encode both protein identity and spatial relationships. By sequencing these barcodes and reconstructing the spatial graph, researchers can map the protein interaction landscape of single cells.</p><p class=\"text-node\">The approach was published in <strong>Nature Methods (2024)</strong> and represents a breakthrough in spatial proteomics, enabling researchers to see protein organization patterns that were previously invisible to traditional mass spectrometry or Western blot approaches.</p><h2 class=\"heading-node\">\ud83d\udee0\ufe0f Pipeline Workflow</h2><p class=\"text-node\"><strong>For MPX Data:</strong></p><ol class=\"list-node\"><li><p class=\"text-node\">Amplicon building from raw reads</p></li><li><p class=\"text-node\">Read quality control and filtering</p></li><li><p class=\"text-node\">Marker assignment to antibodies</p></li><li><p class=\"text-node\">Error correction (sequencing and PCR)</p></li><li><p class=\"text-node\">Graph component computation</p></li><li><p class=\"text-node\">Cell annotation and filtering</p></li><li><p class=\"text-node\">Polarization and colocalization analysis</p></li><li><p class=\"text-node\">3D graph layout generation</p></li><li><p class=\"text-node\">Report generation</p></li></ol><p class=\"text-node\"><strong>For PNA Data:</strong></p><ol class=\"list-node\"><li><p class=\"text-node\">Quality control of reads</p></li><li><p class=\"text-node\">Amplicon building</p></li><li><p class=\"text-node\">Marker-based grouping</p></li><li><p class=\"text-node\">Molecule derivation</p></li><li><p class=\"text-node\">Graph component computation</p></li><li><p class=\"text-node\">Cell graph denoising</p></li><li><p class=\"text-node\">Spatial analysis</p></li><li><p class=\"text-node\">3D graph layout generation</p></li><li><p class=\"text-node\">Report generation</p></li></ol><h2 class=\"heading-node\">\ud83d\udca1 Tips for Success</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Panel Design:</strong> Choose antibodies targeting proteins with known interactions</p></li><li><p class=\"text-node\"><strong>Sequencing Depth:</strong> Higher depth improves graph connectivity and protein detection</p></li><li><p class=\"text-node\"><strong>Quality Control:</strong> Review MultiQC reports to identify problematic samples early</p></li><li><p class=\"text-node\"><strong>Biological Replicates:</strong> Include replicates to distinguish true biology from technical variation</p></li><li><p class=\"text-node\"><strong>Positive Controls:</strong> Use well-characterized cell types to validate marker performance</p></li></ul><h2 class=\"heading-node\">\ud83d\udcd6 Citation and Documentation</h2><p class=\"text-node\">When using this pipeline, please cite:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Pipeline:</strong> nf-core/pixelator (DOI: 10.5281/zenodo.10015112)</p></li><li><p class=\"text-node\"><strong>Technology:</strong> Molecular Pixelation publication in Nature Methods (2024)</p></li><li><p class=\"text-node\"><strong>nf-core:</strong> The nf-core framework (DOI: 10.1038/s41587-020-0439-x)</p></li></ul><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> \u2022 Powered by <a class=\"link\" href=\"https://nf-co.re/pixelator/2.1.0/\" target=\"_blank\">nf-core/pixelator v2.1.0</a> \u2022 Containerized execution \u2022 Developed by Pixelgen Technologies AB</p>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV file with columns: sample, fastq_1, fastq_2, panel, panel_name, panel_version. Defines your Molecular Pixelation experiment.",
+      "defaultValue": "https://raw.githubusercontent.com/nf-core/test-datasets/pixelator/testdata/samplesheet.csv",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".csv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory for processed PXL files, QC reports, and visualizations.",
+      "defaultValue": "./pixelator-results",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Data Type",
+      "name": "datatype",
+      "description": "Experimental design: MPX (Molecular Pixelation) or PNA (Proximity Network Assay)",
+      "defaultValue": "mpx",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "MPX - Molecular Pixelation (spatial proteomics)",
+          "value": "mpx"
+        },
+        {
+          "label": "PNA - Proximity Network Assay (protein interactions)",
+          "value": "pna"
+        }
+      ]
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select compute resources based on experiment size and sequencing depth.",
+      "options": [
+        {
+          "label": "Medium (32 CPUs, 180GB RAM) - Small experiments",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Large (64 CPUs, 360GB RAM) - Recommended for most experiments",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLarge (96 CPUs, 540GB RAM) - Deep sequencing or many samples",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+Status: 📝 Ready
+App: airrflow-repertoire
+Version: 4.3.1
+Use Case: BCR/TCR immune repertoire analysis

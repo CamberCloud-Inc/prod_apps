@@ -1,0 +1,75 @@
+{
+    "name": "demultiplex-ngs",
+    "title": "NGS Demultiplexing (nf-core/demultiplex)",
+    "description": "Demultiplex sequencing data from Illumina platforms. Separates pooled samples by barcodes/indices into individual FASTQ files for downstream analysis. Essential preprocessing step for multiplexed sequencing runs. Samplesheet format: `sample,fastq`",
+    "version": "1.0.0",
+    "engineType": "NEXTFLOW",
+    "command": "nextflow run nf-core/demultiplex --input ${input} --outdir ${outdir} -r 1.5.1 ",
+    "imageUrl": "https://raw.githubusercontent.com/nf-core/demultiplex/master/docs/images/nf-core-demultiplex_logo_light.png",
+    "content": "<h2><strong>NGS Demultiplexing</strong></h2><p>The <strong>nf-core/demultiplex</strong> pipeline separates pooled sequencing samples by their barcodes/indices into individual FASTQ files. Essential first step for multiplexed sequencing runs.</p><h3><strong>Applications</strong></h3><ul><li>Separate samples from multiplexed Illumina runs</li><li>Handle single and dual indexing</li><li>Support for various index formats</li><li>Quality metrics and statistics</li></ul><blockquote><p><strong>Perfect for:</strong> Core facilities \u2022 Sequencing centers \u2022 Any multiplexed NGS project</p></blockquote>",
+    "spec": [
+        {
+            "type": "Stash File",
+            "label": "Sample Sheet",
+            "name": "input",
+            "description": "CSV with sample and barcode information",
+            "required": true,
+            "restrictions": {
+                "allow_files": true,
+                "allow_folders": false,
+                "allowed_file_types": [
+                    ".csv"
+                ]
+            }
+        },
+        {
+            "type": "Stash File",
+            "label": "Output Directory",
+            "name": "outdir",
+            "description": "Output directory for demultiplexed FASTQ files",
+            "defaultValue": "./demultiplex-results",
+            "required": true,
+            "restrictions": {
+                "allow_files": false,
+                "allow_folders": true
+            }
+        }
+    ],
+    "jobConfig": [
+        {
+            "type": "Select",
+            "label": "Compute Resources",
+            "name": "system_size",
+            "hidden": false,
+            "options": [
+                {
+                    "label": "MEDIUM (Recommended)",
+                    "value": "medium",
+                    "mapValue": {
+                        "nodeSize": "MEDIUM",
+                        "numNodes": 1,
+                        "withGpu": false
+                    }
+                }
+            ],
+            "defaultValue": "medium"
+        }
+    ],
+    "tags": [
+        {
+            "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+            "name": "biology",
+            "type": "field"
+        },
+        {
+            "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+            "name": "genomics",
+            "type": "subfield"
+        },
+        {
+            "id": "831477f4-f572-4e27-af83-037661489800",
+            "name": "analysis",
+            "type": "task"
+        }
+    ]
+}

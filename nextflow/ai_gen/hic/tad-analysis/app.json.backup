@@ -1,0 +1,101 @@
+{
+  "name": "hic-tad-analysis",
+  "title": "Hi-C TAD Boundary & Loop Analysis",
+  "description": "Focused Hi-C analysis for detecting TAD boundaries, chromatin loops, and CTCF/cohesin-mediated 3D structures. Identifies regulatory domain disruptions in disease. Samplesheet format: `sample,replicate,fastq_1,fastq_2`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/hic --input ${input} --outdir ${outdir} --genome ${genome} -r 2.1.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/hic/master/docs/images/nf-core-hic_logo_light.png",
+  "content": "<h2><strong>Hi-C TAD & Loop Analysis</strong></h2><p>Specialized analysis focusing on <strong>TADs</strong> (Topologically Associating Domains) and <strong>chromatin loops</strong> - the fundamental units of 3D genome organization that define regulatory domains and enable enhancer-promoter communication.</p><h3><strong>What are TADs?</strong></h3><blockquote><p><strong>TADs</strong> are genomic regions (100kb-1Mb) with high internal interaction frequency but low inter-TAD contacts. They form the basic structural units of chromosome folding.</p><p><strong>Key Properties</strong>:</p><ul><li><strong>Size</strong>: Typically 100kb-1Mb (median ~880kb in human)</li><li><strong>Conservation</strong>: Highly conserved across cell types (~70-90%)</li><li><strong>Boundaries</strong>: Marked by CTCF, cohesin, housekeeping genes, tRNAs</li><li><strong>Function</strong>: Regulatory domains - enhancers preferentially activate genes within same TAD</li></ul></blockquote><h3><strong>TAD Boundaries</strong></h3><p><strong>What Defines TAD Boundaries?</strong></p><ul><li><strong>CTCF</strong>: Insulator protein, binds ~50-100K sites</li><li><strong>Cohesin</strong>: Ring complex (RAD21, SMC1, SMC3), extrudes chromatin loops</li><li><strong>Convergent CTCF motifs</strong>: → ← orientation at loop anchors</li><li><strong>Active Promoters</strong>: Transcriptionally active genes</li><li><strong>tRNA Genes</strong>: Pol III-transcribed genes</li><li><strong>Housekeeping Genes</strong>: Ubiquitously expressed</li></ul><p><strong>Boundary Strength</strong>:</p><ul><li><strong>Strong boundaries</strong>: CTCF + cohesin + active transcription</li><li><strong>Weak boundaries</strong>: Single factor (less insulation)</li><li><strong>Dynamic boundaries</strong>: Change during development/activation</li></ul><h3><strong>Chromatin Loops</strong></h3><p><strong>Types of Loops</strong>:</p><ul><li><strong>Structural Loops</strong>: CTCF-CTCF loops at TAD boundaries</li><li><strong>Enhancer-Promoter Loops</strong>: Regulatory interactions (often Mediator/Cohesin-mediated)</li><li><strong>Polycomb Loops</strong>: H3K27me3-marked repressive contacts</li><li><strong>Super-Enhancer Loops</strong>: Dense regulatory hubs contacting key genes</li></ul><p><strong>Loop Extrusion Model</strong>:</p><ol><li><strong>Cohesin loads</strong> onto chromatin</li><li><strong>Extrudes loop</strong> by pushing chromatin through ring</li><li><strong>Stops at CTCF</strong> (convergent motifs)</li><li><strong>Forms loop</strong> between two CTCF sites</li></ol><h3><strong>Why TADs Matter for Biology</strong></h3><blockquote><p><strong>Regulatory Domains</strong>:</p><ul><li>Enhancers in TAD-A activate genes in TAD-A (not TAD-B)</li><li>TAD boundaries insulate against inappropriate enhancer-gene contacts</li><li>Disruption → disease (enhancer hijacking)</li></ul><p><strong>Dosage-Sensitive Genes</strong>:</p><ul><li>Developmental genes (HOX, SOX9, SHH) require precise expression</li><li>TAD integrity ensures proper enhancer wiring</li></ul></blockquote><h3><strong>TAD Disruption Mechanisms</strong></h3><p><strong>Structural Variants Breaking TADs</strong>:</p><ul><li><strong>Deletions</strong>: Remove TAD boundary → fusion of adjacent TADs</li><li><strong>Inversions</strong>: Flip genomic segment → alter enhancer-gene topology</li><li><strong>Duplications</strong>: Create ectopic contacts</li><li><strong>Translocations</strong>: Fuse TADs from different chromosomes</li></ul><p><strong>Disease Examples</strong>:</p><blockquote><p><strong>Limb Malformations</strong>:</p><ul><li><strong>Gene</strong>: EPHA4 (normally inactive in limb)</li><li><strong>Mutation</strong>: Deletion removes TAD boundary upstream</li><li><strong>Result</strong>: WNT6 enhancer (adjacent TAD) now contacts EPHA4</li><li><strong>Outcome</strong>: Ectopic EPHA4 expression → F-syndrome (limb/rib defects)</li></ul><p><strong>Brain Disorders</strong>:</p><ul><li><strong>Gene</strong>: FOXG1 (forebrain development)</li><li><strong>Mutation</strong>: Boundary deletion</li><li><strong>Result</strong>: Inappropriate enhancer contacts → FOXG1 misexpression</li><li><strong>Outcome</strong>: Rett-like syndrome</li></ul><p><strong>Cancer (Enhancer Hijacking)</strong>:</p><ul><li><strong>Gene</strong>: TAL1 (oncogene in T-ALL)</li><li><strong>Mutation</strong>: Deletion removes boundary</li><li><strong>Result</strong>: TAL1 contacts MYB super-enhancer</li><li><strong>Outcome</strong>: TAL1 overexpression → leukemia</li></ul></blockquote><h3><strong>Pipeline Focus</strong></h3><ol><li><strong>High-Resolution TAD Calling</strong>: Identify domain boundaries at 40-100kb resolution</li><li><strong>Boundary Annotation</strong>: CTCF, cohesin, RNA Pol II ChIP-seq overlap</li><li><strong>Loop Detection</strong>: Significant focal interactions (HiCCUPS, HOMER)</li><li><strong>Boundary Strength</strong>: Insulation score quantification</li><li><strong>Differential TADs</strong>: Compare conditions (development, disease)</li><li><strong>Structural Variant Impact</strong>: Predict TAD disruption from SVs</li><li><strong>Virtual 4C</strong>: Interaction profile from candidate loci</li></ol><h3><strong>Analysis Strategies</strong></h3><p><strong>TAD Calling Algorithms</strong>:</p><ul><li><strong>Insulation Score</strong>: Local contact depletion at boundaries</li><li><strong>Directionality Index</strong>: Asymmetry of contacts (upstream vs downstream)</li><li><strong>Arrowhead</strong>: Detects corner peaks in contact matrices</li><li><strong>TADbit</strong>: Statistical modeling of TAD structure</li></ul><p><strong>Boundary Strength Metrics</strong>:</p><ul><li><strong>Insulation score</strong>: Lower = stronger boundary</li><li><strong>Boundary score</strong>: Sharpness of transition</li><li><strong>Conservation</strong>: Presence across cell types/species</li></ul><h3><strong>Scientific Questions</strong></h3><ul><li><strong>TAD Disruption</strong>: Do patient SVs break TAD boundaries?</li><li><strong>Enhancer Wiring</strong>: Which enhancers contact which promoters within TADs?</li><li><strong>Boundary Dynamics</strong>: How do TAD boundaries change during differentiation?</li><li><strong>CTCF/Cohesin Depletion</strong>: What happens to TADs without cohesin?</li><li><strong>Disease Prediction</strong>: Can we predict pathogenic SVs from TAD maps?</li><li><strong>Evolutionary Conservation</strong>: Are TADs conserved across species?</li></ul><h3><strong>Applications</strong></h3><p><strong>Structural Variant Interpretation</strong>:</p><ul><li><strong>Clinical Genomics</strong>: Predict pathogenicity of deletions/inversions near developmental genes</li><li><strong>Cancer Genomics</strong>: Identify enhancer hijacking events</li><li><strong>Rare Disease</strong>: Explain non-coding mutations disrupting TADs</li></ul><p><strong>Functional Genomics</strong>:</p><ul><li><strong>CRISPR Screening</strong>: Validate TAD boundary elements</li><li><strong>Enhancer Discovery</strong>: Link distal enhancers to target genes via loops</li><li><strong>3D Genome Editing</strong>: Engineer TAD boundaries</li></ul><p><strong>Drug Discovery</strong>:</p><ul><li><strong>Cohesin Inhibitors</strong>: Cancer therapy (cohesinopathies, AML)</li><li><strong>Epigenetic Drugs</strong>: Alter 3D chromatin (BET inhibitors, HDAC inhibitors)</li></ul><h3><strong>Experimental Design</strong></h3><p><strong>Resolution Requirements</strong>:</p><ul><li><strong>TAD Calling</strong>: 40-100kb bins (100-500M reads)</li><li><strong>Loop Detection</strong>: 5-10kb bins (1-5B reads)</li><li><strong>Boundary Fine-Mapping</strong>: 1-5kb bins (>5B reads)</li></ul><p><strong>Recommended Depth</strong>:</p><ul><li><strong>TAD Discovery</strong>: 300-500M valid pairs</li><li><strong>Loop Analysis</strong>: 1-2B valid pairs</li><li><strong>High-Resolution</strong>: 5-10B valid pairs</li></ul><h3><strong>Integration with Other Data</strong></h3><ul><li><strong>ChIP-seq</strong>: CTCF, cohesin, H3K27ac at boundaries and loops</li><li><strong>RNA-seq</strong>: Gene expression changes correlate with TAD disruption</li><li><strong>ATAC-seq</strong>: Open chromatin at TAD boundaries</li><li><strong>Whole Genome Sequencing</strong>: Map SVs disrupting TADs</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with columns:</p><ul><li><strong>sample</strong>: Sample name</li><li><strong>fastq_1</strong>: Path to R1 FASTQ</li><li><strong>fastq_2</strong>: Path to R2 FASTQ</li><li><strong>replicate</strong>: Biological replicate</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>TAD Boundaries</strong>: Genomic coordinates (BED)</li><li><strong>Insulation Scores</strong>: Boundary strength (bedGraph)</li><li><strong>Chromatin Loops</strong>: Loop anchors (BEDPE)</li><li><strong>Loop Categories</strong>: CTCF, enhancer-promoter, Polycomb</li><li><strong>Boundary Annotations</strong>: CTCF/cohesin overlap</li><li><strong>Differential TADs</strong>: Condition-specific boundaries</li><li><strong>Virtual 4C</strong>: Locus-specific contact profiles</li><li><strong>Contact Matrices</strong>: Heatmaps at TAD resolution</li></ul><blockquote><p><strong>Perfect for:</strong> TAD boundaries • Chromatin loops • Structural variant interpretation • Enhancer-gene wiring • Disease genomics • CTCF/cohesin</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV with Hi-C samples",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".csv"
+        ]
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome",
+      "defaultValue": "GRCh38",
+      "required": true,
+      "options": [
+        {
+          "label": "Human GRCh38",
+          "value": "GRCh38"
+        },
+        {
+          "label": "Mouse GRCm39",
+          "value": "GRCm39"
+        },
+        {
+          "label": "Human GRCh37",
+          "value": "GRCh37"
+        },
+        {
+          "label": "Mouse GRCm38",
+          "value": "GRCm38"
+        }
+      ]
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory",
+      "defaultValue": "./hic-tad-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "options": [
+        {
+          "label": "XLARGE (Recommended for Hi-C)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xlarge"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

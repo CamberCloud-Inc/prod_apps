@@ -1,0 +1,224 @@
+{
+  "name": "imcyto-imaging-mass-cytometry",
+  "title": "Image Mass Cytometry Analysis Pipeline",
+  "description": "Comprehensive imaging mass cytometry (IMC) pipeline for image segmentation and single-cell expression data extraction. Processes high-dimensional imaging data through CellProfiler and optional Ilastik pixel classification to generate single-cell expression profiles from tissue samples. Samplesheet format: `architectures,overlapping`",
+  "content": "<h1 class=\"heading-node\">🔬 IMCyto: Image Mass Cytometry Analysis</h1><p class=\"text-node\"><strong>Extract Single-Cell Expression Data from High-Dimensional Tissue Images</strong></p><p class=\"text-node\">Imaging Mass Cytometry (IMC) enables simultaneous measurement of 40+ protein markers at single-cell resolution in tissue sections. This pipeline automates the complete workflow from raw IMC data to single-cell expression matrices, combining powerful image processing tools for accurate cell segmentation and quantification.</p><img src=\"https://raw.githubusercontent.com/nf-core/imcyto/master/docs/images/imcyto_workflow.png\" alt=\"nf-core/imcyto workflow\" width=\"700\" height=\"400\"><h2 class=\"heading-node\">🎯 Pipeline Workflow</h2><p class=\"text-node\">The pipeline performs stepwise analysis of IMC data through several key stages:</p><h3 class=\"heading-node\">1. Image File Processing</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📁 Format Conversion:</strong> Converts MCD files to individual channel TIFFs using imctools</p></li><li><p class=\"text-node\"><strong>🔧 Image Splitting:</strong> Separates multi-channel data into individual metal/marker channels</p></li><li><p class=\"text-node\"><strong>🎨 Stack Generation:</strong> Creates composite images for visualization and analysis</p></li></ul><h3 class=\"heading-node\">2. Image Preprocessing (CellProfiler)</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🌟 Full Stack:</strong> Preprocesses all marker channels for comprehensive analysis</p></li><li><p class=\"text-node\"><strong>🎯 Ilastik Stack:</strong> Prepares specific channels for pixel classification (membrane, nuclear, cytoplasmic markers)</p></li><li><p class=\"text-node\"><strong>🔍 Quality Enhancement:</strong> Applies filters to improve signal-to-noise ratio</p></li></ul><h3 class=\"heading-node\">3. Pixel Classification (Optional Ilastik)</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🧠 Machine Learning:</strong> Trains or applies supervised pixel classification models</p></li><li><p class=\"text-node\"><strong>📊 Probability Maps:</strong> Generates probability images for cellular compartments (membrane, nucleus, background)</p></li><li><p class=\"text-node\"><strong>⚡ Bypass Option:</strong> Use <code class=\"inline\" spellcheck=\"false\">--skip_ilastik</code> for CellProfiler-only workflows</p></li></ul><h3 class=\"heading-node\">4. Cell Segmentation (CellProfiler)</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔵 Nuclear Detection:</strong> Identifies nuclei as primary objects using nuclear markers</p></li><li><p class=\"text-node\"><strong>⭕ Cell Boundary Detection:</strong> Defines whole cells as secondary objects using membrane probability maps</p></li><li><p class=\"text-node\"><strong>🎭 Mask Generation:</strong> Creates single-cell segmentation masks for expression extraction</p></li></ul><h3 class=\"heading-node\">5. Single-Cell Data Extraction</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📈 Expression Quantification:</strong> Measures mean marker intensity per cell across all channels</p></li><li><p class=\"text-node\"><strong>📋 Metadata Integration:</strong> Combines expression data with cell morphology and spatial coordinates</p></li><li><p class=\"text-node\"><strong>💾 Matrix Export:</strong> Generates analysis-ready CSV files with single-cell expression profiles</p></li></ul><h2 class=\"heading-node\">📋 Input Requirements</h2><h3 class=\"heading-node\">Required Files</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔬 IMC Data Files:</strong> Raw imaging data in supported formats:</p><ul class=\"list-node\"><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">*.mcd</code> - Fluidigm MCD format (most common)</p></li><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">*.ome.tiff</code> - OME-TIFF format</p></li><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">*.txt</code> - Text-based formats</p></li></ul></li><li><p class=\"text-node\"><strong>📊 Metadata CSV:</strong> Channel selection file with 3 columns:</p><ul class=\"list-node\"><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">metal</code> - Metal isotope/marker name</p></li><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">full_stack</code> - Include in full analysis (1) or exclude (0)</p></li><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">ilastik_stack</code> - Include in Ilastik classification (1) or exclude (0)</p></li></ul></li></ul><h3 class=\"heading-node\">CellProfiler Pipeline Files (*.cppipe)</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔧 Full Stack Preprocessing:</strong> Pipeline for processing all marker channels</p></li><li><p class=\"text-node\"><strong>🎯 Ilastik Stack Preprocessing:</strong> Pipeline for preparing Ilastik input channels</p></li><li><p class=\"text-node\"><strong>✂️ Segmentation Pipeline:</strong> Pipeline for cell segmentation using probability maps</p></li></ul><h3 class=\"heading-node\">Ilastik Configuration (Optional)</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🧠 Training Parameter File:</strong> Pre-trained Ilastik model (*.ilp format)</p></li><li><p class=\"text-node\">Contains pixel classification model for membrane/nucleus/background detection</p></li><li><p class=\"text-node\">Can be skipped with <code class=\"inline\" spellcheck=\"false\">--skip_ilastik</code> flag for CellProfiler-only workflows</p></li></ul><h3 class=\"heading-node\">CellProfiler Plugins (Optional)</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔌 Custom Plugins:</strong> Directory containing Python plugin files for CellProfiler</p></li><li><p class=\"text-node\">Required if custom CellProfiler modules are used in pipeline files</p></li></ul><h2 class=\"heading-node\">⚙️ Configuration Options</h2><h3 class=\"heading-node\">Processing Modes</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔬 Standard Mode:</strong> Full workflow with Ilastik pixel classification (default)</p><ul class=\"list-node\"><li><p class=\"text-node\">Best for: Complex tissue architectures, overlapping cells, high-quality segmentation</p></li><li><p class=\"text-node\">Requires: All input files including Ilastik training parameters</p></li></ul></li><li><p class=\"text-node\"><strong>⚡ CellProfiler-Only Mode:</strong> Bypass Ilastik using <code class=\"inline\" spellcheck=\"false\">--skip_ilastik</code></p><ul class=\"list-node\"><li><p class=\"text-node\">Best for: Simple tissue structures, well-defined cell boundaries, faster processing</p></li><li><p class=\"text-node\">Requires: Ilastik training parameter file can be omitted</p></li></ul></li></ul><h3 class=\"heading-node\">Metadata Configuration</h3><p class=\"text-node\">The metadata CSV controls which markers are used in each analysis stage:</p><pre class=\"block-node\"><code>metal,full_stack,ilastik_stack\nDNA1,1,1\nHistone,1,1\nCD45,1,0\nCD3,1,0\nCD20,1,0\nPanCK,1,1</code></pre><ul class=\"list-node\"><li><p class=\"text-node\"><strong>full_stack=1:</strong> Include marker in final expression matrix and visualization</p></li><li><p class=\"text-node\"><strong>ilastik_stack=1:</strong> Use marker for pixel classification (typically structural markers)</p></li><li><p class=\"text-node\"><strong>Strategy:</strong> Use structural markers (DNA, membrane, cytoplasm) for Ilastik, all markers for full stack</p></li></ul><h2 class=\"heading-node\">📊 Output Files</h2><h3 class=\"heading-node\">Single-Cell Expression Data</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📈 Expression Matrix (CSV):</strong> Cell × marker expression values</p><ul class=\"list-node\"><li><p class=\"text-node\">Mean intensity per cell for all markers</p></li><li><p class=\"text-node\">Cell morphology features (area, perimeter, shape descriptors)</p></li><li><p class=\"text-node\">Spatial coordinates (X, Y positions in tissue)</p></li></ul></li></ul><h3 class=\"heading-node\">Segmentation Results</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🎭 Cell Masks (TIFF):</strong> Single-cell segmentation masks</p><ul class=\"list-node\"><li><p class=\"text-node\">Each cell assigned unique integer ID</p></li><li><p class=\"text-node\">Directly overlays original images</p></li><li><p class=\"text-node\">Compatible with visualization tools (QuPath, ImageJ, napari)</p></li></ul></li></ul><h3 class=\"heading-node\">Processed Images</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📁 Full Stack TIFFs:</strong> Preprocessed marker images ready for downstream analysis</p></li><li><p class=\"text-node\"><strong>🎨 Ilastik Probability Maps:</strong> Pixel classification probability images</p><ul class=\"list-node\"><li><p class=\"text-node\">Probabilities_0: Membrane probability</p></li><li><p class=\"text-node\">Probabilities_1: Nucleus probability (if applicable)</p></li><li><p class=\"text-node\">Probabilities_2: Background probability</p></li></ul></li></ul><h3 class=\"heading-node\">Quality Control</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📊 MultiQC Report:</strong> Comprehensive quality metrics and processing statistics</p></li><li><p class=\"text-node\"><strong>🔍 CellProfiler Logs:</strong> Detailed processing information and warnings</p></li><li><p class=\"text-node\"><strong>📈 Summary Statistics:</strong> Cell counts, marker distributions, segmentation quality metrics</p></li></ul><h2 class=\"heading-node\">🧪 Use Cases</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🎗️ Cancer Research:</strong> Tumor microenvironment characterization, immune cell infiltration analysis</p></li><li><p class=\"text-node\"><strong>🔬 Immunology:</strong> Immune cell phenotyping, spatial organization of immune populations</p></li><li><p class=\"text-node\"><strong>🧬 Developmental Biology:</strong> Tissue organization during development, lineage tracing</p></li><li><p class=\"text-node\"><strong>🏥 Clinical Pathology:</strong> Biomarker discovery, patient stratification, diagnostic applications</p></li><li><p class=\"text-node\"><strong>🧠 Neuroscience:</strong> Brain tissue analysis, neuronal population characterization</p></li><li><p class=\"text-node\"><strong>🦠 Infectious Disease:</strong> Host-pathogen interactions in tissue context</p></li></ul><h2 class=\"heading-node\">⚠️ Important Notes</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔧 Nextflow Version:</strong> This pipeline uses DSL1 and requires Nextflow version ≤22.10.6</p></li><li><p class=\"text-node\"><strong>💻 Computational Resources:</strong> IMC analysis is memory-intensive; recommend large system size for full datasets</p></li><li><p class=\"text-node\"><strong>📦 Container Support:</strong> Fully containerized with Docker and Singularity for reproducibility</p></li><li><p class=\"text-node\"><strong>🎓 CellProfiler Knowledge:</strong> Familiarity with CellProfiler pipelines helpful for customization</p></li></ul><h2 class=\"heading-node\">🚀 Downstream Analysis</h2><p class=\"text-node\">Pipeline outputs are compatible with:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🐍 Python:</strong> scanpy, anndata, squidpy for spatial analysis</p></li><li><p class=\"text-node\"><strong>📊 R:</strong> Seurat, SingleCellExperiment, imcRtools for single-cell analysis</p></li><li><p class=\"text-node\"><strong>🖼️ Visualization:</strong> QuPath, ImageJ/Fiji, napari for spatial visualization</p></li><li><p class=\"text-node\"><strong>📈 Statistical Analysis:</strong> Standard tools for differential expression, clustering, spatial statistics</p></li></ul><p class=\"text-node\"><strong>Perfect for:</strong> Spatial biology • Tissue imaging • Single-cell proteomics • Tumor microenvironment • Biomarker discovery • Clinical research • Immunology • Cancer biology</p><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/imcyto/1.0.0/\" target=\"_blank\">nf-core/imcyto v1.0.0</a> • CellProfiler • Ilastik • imctools • Containerized execution</p>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/imcyto/master/docs/images/nf-core-imcyto_logo_light.png",
+  "command": "mkdir -p ${outputDir} && cd ${outputDir} && rm -rf prod_apps && git clone https://github.com/CamberCloud-Inc/prod_apps.git && cp prod_apps/nextflow/imcyto/imaging-mass-cytometry/platform-config.config ./ && rm -rf prod_apps && export NXF_VER=22.10.6 && if [ \"${skip_ilastik}\" = \"true\" ]; then nextflow run nf-core/imcyto -r 1.0.0 --input \"${input}\" --outdir results --metadata \"${metadata}\" --full_stack_cppipe \"${full_stack_cppipe}\" --ilastik_stack_cppipe \"${ilastik_stack_cppipe}\" --segmentation_cppipe \"${segmentation_cppipe}\" --plugins \"${plugins}\" --skip_ilastik -c /etc/mpi/nextflow.camber.config -c platform-config.config -profile singularity; else nextflow run nf-core/imcyto -r 1.0.0 --input \"${input}\" --outdir results --metadata \"${metadata}\" --full_stack_cppipe \"${full_stack_cppipe}\" --ilastik_stack_cppipe \"${ilastik_stack_cppipe}\" --segmentation_cppipe \"${segmentation_cppipe}\" --ilastik_training_ilp \"${ilastik_training_ilp}\" --plugins \"${plugins}\" -c /etc/mpi/nextflow.camber.config -c platform-config.config -profile singularity; fi && echo \"Pipeline completed successfully\"",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select computational resources for your analysis. Larger datasets require more resources.",
+      "options": [
+        {
+          "label": "Medium (32 CPUs, 180GB RAM) - Small images",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Large (64 CPUs, 360GB RAM) - Recommended",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLarge (96 CPUs, 540GB RAM) - Large datasets",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Input Data Files",
+      "name": "input",
+      "description": "Path to IMC input data file(s). Supports: *.mcd (Fluidigm format), *.ome.tiff, *.txt. Use quotes for glob patterns (e.g., \"*.mcd\").",
+      "defaultValue": "https://raw.githubusercontent.com/nf-core/test-datasets/imcyto/inputs/20191121_BRAC3438.6f.mcd",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": true,
+        "allowed_file_types": [
+          ".mcd",
+          ".ome.tiff",
+          ".tiff",
+          ".txt"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outputDir",
+      "description": "Directory for analysis results including single-cell expression matrices, segmentation masks, and QC reports.",
+      "defaultValue": "./",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Metadata CSV",
+      "name": "metadata",
+      "description": "CSV file with 3 columns: 'metal' (marker name), 'full_stack' (1/0 to include/exclude), 'ilastik_stack' (1/0 for Ilastik).",
+      "defaultValue": "https://raw.githubusercontent.com/nf-core/test-datasets/imcyto/inputs/metadata.csv",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".csv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Full Stack Preprocessing Pipeline",
+      "name": "full_stack_cppipe",
+      "description": "CellProfiler pipeline file (*.cppipe) for preprocessing all marker channels.",
+      "defaultValue": "https://raw.githubusercontent.com/nf-core/test-datasets/imcyto/plugins/full_stack_preprocessing.cppipe",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".cppipe"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Ilastik Stack Preprocessing Pipeline",
+      "name": "ilastik_stack_cppipe",
+      "description": "CellProfiler pipeline file (*.cppipe) for preprocessing Ilastik input channels.",
+      "defaultValue": "https://raw.githubusercontent.com/nf-core/test-datasets/imcyto/plugins/ilastik_stack_preprocessing.cppipe",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".cppipe"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Segmentation Pipeline",
+      "name": "segmentation_cppipe",
+      "description": "CellProfiler pipeline file (*.cppipe) for cell segmentation using probability maps or preprocessed images.",
+      "defaultValue": "https://raw.githubusercontent.com/nf-core/test-datasets/imcyto/plugins/segmentation.cppipe",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".cppipe"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Ilastik Training Parameters",
+      "name": "ilastik_training_ilp",
+      "description": "Pre-trained Ilastik model file (*.ilp) for pixel classification. Not required if using --skip_ilastik option.",
+      "defaultValue": "https://raw.githubusercontent.com/nf-core/test-datasets/imcyto/plugins/ilastik_training_params.ilp",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".ilp"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "CellProfiler Plugins Directory",
+      "name": "plugins",
+      "description": "Directory containing CellProfiler Python plugin files. Required if custom modules are used in pipeline files.",
+      "defaultValue": "https://raw.githubusercontent.com/nf-core/test-datasets/imcyto/plugins/cp_plugins/",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": true,
+        "allowed_file_types": [
+          ".py"
+        ]
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Skip Ilastik Pixel Classification",
+      "name": "skip_ilastik",
+      "description": "Bypass Ilastik step for faster processing using CellProfiler-only workflow. Best for simple tissue structures.",
+      "defaultValue": "false",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "No - Use full workflow with Ilastik (recommended)",
+          "value": "false"
+        },
+        {
+          "label": "Yes - Skip Ilastik, use CellProfiler only",
+          "value": "true"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "name": "rangeland-remote-sensing",
+  "title": "Vegetation Monitoring & Land Cover Analysis",
+  "description": "Comprehensive analysis pipeline for satellite imagery processing to monitor rangeland vegetation dynamics and land-cover changes. Processes multi-temporal satellite data with atmospheric correction, linear spectral unmixing, and time series analysis to detect vegetation trends and ecosystem changes. Samplesheet format: `LND04,LND05,LND07`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/rangeland --input ${input} --dem ${dem} --wvdb ${wvdb} --data_cube ${data_cube} --aoi ${aoi} --endmember ${endmember} --outdir ${outdir} -r 1.0.0",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/rangeland/master/docs/images/nf-core-rangeland_logo_light.png",
+  "content": "<h1 class=\"heading-node\">Rangeland Remote Sensing: Vegetation Monitoring & Land Cover Analysis</h1><p class=\"text-node\"><strong>Transform Satellite Imagery into Actionable Insights on Vegetation Dynamics</strong></p><p class=\"text-node\">The nf-core/rangeland pipeline is a specialized geographical best-practice analysis workflow for processing remotely sensed imagery. It analyzes satellite data alongside auxiliary information to produce comprehensive trend files related to land-cover changes, vegetation dynamics, and ecosystem monitoring over time.</p><img src=\"https://raw.githubusercontent.com/nf-core/rangeland/master/docs/images/nf-core-rangeland_logo_light.png\" alt=\"Rangeland Pipeline\" width=\"400\" height=\"200\"><h2 class=\"heading-node\">What is Remote Sensing for Rangeland Monitoring?</h2><p class=\"text-node\"><strong>Remote sensing</strong> uses satellite or airborne sensors to collect data about Earth's surface without physical contact. For rangeland ecosystems, this technology enables:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Vegetation Health Assessment</strong>: Monitor plant productivity, biomass, and species composition</p></li><li><p class=\"text-node\"><strong>Land Cover Classification</strong>: Identify different vegetation types, bare soil, water bodies</p></li><li><p class=\"text-node\"><strong>Temporal Change Detection</strong>: Track ecosystem changes over months, years, or decades</p></li><li><p class=\"text-node\"><strong>Drought Monitoring</strong>: Detect water stress and vegetation decline</p></li><li><p class=\"text-node\"><strong>Grazing Impact</strong>: Assess overgrazing and land degradation</p></li><li><p class=\"text-node\"><strong>Ecosystem Services</strong>: Quantify carbon sequestration and biodiversity</p></li></ul><h2 class=\"heading-node\">Pipeline Workflow</h2><p class=\"text-node\">The rangeland pipeline processes satellite imagery through multiple sophisticated steps:</p><h3 class=\"heading-node\">1. Data Ingestion & Preparation</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Satellite Imagery</strong>: Read multi-temporal satellite data (Landsat, Sentinel-2, etc.)</p></li><li><p class=\"text-node\"><strong>Digital Elevation Model (DEM)</strong>: Incorporate terrain information for topographic correction</p></li><li><p class=\"text-node\"><strong>Water Vapor Database (WVDB)</strong>: Atmospheric data for correction algorithms</p></li><li><p class=\"text-node\"><strong>Endmember Definitions</strong>: Spectral signatures of pure land cover types</p></li><li><p class=\"text-node\"><strong>Datacube Definition</strong>: Spatial and temporal extent configuration</p></li><li><p class=\"text-node\"><strong>Area of Interest (AOI)</strong>: Define geographical boundaries for analysis</p></li></ul><h3 class=\"heading-node\">2. Preprocessing & Quality Control</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Atmospheric Correction</strong>: Remove atmospheric effects to get true surface reflectance</p></li><li><p class=\"text-node\"><strong>Cloud Masking</strong>: Identify and mask clouds and cloud shadows</p></li><li><p class=\"text-node\"><strong>Topographic Correction</strong>: Adjust for terrain-induced illumination differences</p></li><li><p class=\"text-node\"><strong>Analysis Mask Generation</strong>: Create allow lists for valid pixels</p></li></ul><h3 class=\"heading-node\">3. Data Fusion & Harmonization</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Spatial Merging</strong>: Combine overlapping satellite tiles</p></li><li><p class=\"text-node\"><strong>Temporal Merging</strong>: Stack images from different acquisition dates</p></li><li><p class=\"text-node\"><strong>Gap Filling</strong>: Interpolate missing data due to clouds or sensor issues</p></li></ul><h3 class=\"heading-node\">4. Land Cover Classification</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Linear Spectral Unmixing</strong>: Decompose mixed pixels into fractional cover of pure materials</p></li><li><p class=\"text-node\"><strong>Endmember Analysis</strong>: Determine proportion of vegetation, soil, water in each pixel</p></li><li><p class=\"text-node\"><strong>Pixel Classification</strong>: Assign land cover classes based on spectral signatures</p></li></ul><h3 class=\"heading-node\">5. Time Series Analysis</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Vegetation Trends</strong>: Detect long-term changes in greenness and productivity</p></li><li><p class=\"text-node\"><strong>Phenology Metrics</strong>: Extract growing season parameters</p></li><li><p class=\"text-node\"><strong>Anomaly Detection</strong>: Identify unusual vegetation responses</p></li><li><p class=\"text-node\"><strong>Trend Analysis</strong>: Calculate temporal slopes and change rates</p></li></ul><h3 class=\"heading-node\">6. Visualization & Output Generation</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Mosaic Generation</strong>: Create seamless image composites</p></li><li><p class=\"text-node\"><strong>Pyramid Processing</strong>: Generate multi-resolution tiles for efficient visualization</p></li><li><p class=\"text-node\"><strong>Time Series Stacks</strong>: Multi-temporal data cubes for analysis</p></li><li><p class=\"text-node\"><strong>Trend Maps</strong>: Spatial maps of vegetation change rates</p></li></ul><h2 class=\"heading-node\">Key Features & Capabilities</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Multi-Sensor Support</strong>: Process data from various satellite platforms</p></li><li><p class=\"text-node\"><strong>Automated Workflow</strong>: Streamlined processing from raw imagery to analysis-ready data</p></li><li><p class=\"text-node\"><strong>Scalable Processing</strong>: Handle large-scale regional to continental analyses</p></li><li><p class=\"text-node\"><strong>Quality Assurance</strong>: Comprehensive QC metrics and reporting</p></li><li><p class=\"text-node\"><strong>Reproducible Science</strong>: Containerized execution with documented parameters</p></li><li><p class=\"text-node\"><strong>Best Practice Standards</strong>: Follows nf-core community standards</p></li></ul><h2 class=\"heading-node\">Scientific Applications</h2><h3 class=\"heading-node\">Rangeland Management</h3><ul class=\"list-node\"><li><p class=\"text-node\">Monitor grazing intensity and carrying capacity</p></li><li><p class=\"text-node\">Detect overgrazing and land degradation</p></li><li><p class=\"text-node\">Assess vegetation recovery after fire or drought</p></li><li><p class=\"text-node\">Optimize rotational grazing strategies</p></li></ul><h3 class=\"heading-node\">Climate Change Research</h3><ul class=\"list-node\"><li><p class=\"text-node\">Track vegetation responses to climate variability</p></li><li><p class=\"text-node\">Quantify carbon sequestration potential</p></li><li><p class=\"text-node\">Monitor drought impacts on ecosystems</p></li><li><p class=\"text-node\">Assess climate change vulnerability</p></li></ul><h3 class=\"heading-node\">Conservation & Biodiversity</h3><ul class=\"list-node\"><li><p class=\"text-node\">Map habitat suitability and connectivity</p></li><li><p class=\"text-node\">Monitor protected area effectiveness</p></li><li><p class=\"text-node\">Detect invasive species encroachment</p></li><li><p class=\"text-node\">Track ecosystem restoration success</p></li></ul><h3 class=\"heading-node\">Agriculture & Food Security</h3><ul class=\"list-node\"><li><p class=\"text-node\">Estimate forage production and quality</p></li><li><p class=\"text-node\">Predict livestock feed availability</p></li><li><p class=\"text-node\">Support pastoral decision-making</p></li><li><p class=\"text-node\">Early warning systems for food insecurity</p></li></ul><h2 class=\"heading-node\">Input Requirements</h2><p class=\"text-node\">The rangeland pipeline requires six essential input components for comprehensive satellite imagery analysis. Unlike traditional bioinformatics pipelines that use samplesheets, this geospatial workflow requires multiple specialized data files and configuration parameters.</p><h3 class=\"heading-node\">1. Satellite Imagery (--input)</h3><p class=\"text-node\"><strong>Primary remote sensing data for analysis</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Supported Sensors</strong>: Landsat 4, 5, 7, 8, 9; Sentinel-2 (configurable via <code class=\"inline\" spellcheck=\"false\">--sensors_level2</code>)</p></li><li><p class=\"text-node\"><strong>File Formats</strong>: GeoTIFF (.tif), HDF, or compressed archives (.tar, .tar.gz)</p></li><li><p class=\"text-node\"><strong>Directory Structure</strong>: Organized as root/path-row/scene/band files (standard Landsat structure)</p></li><li><p class=\"text-node\"><strong>Temporal Range</strong>: Define analysis period with <code class=\"inline\" spellcheck=\"false\">--start_date</code> and <code class=\"inline\" spellcheck=\"false\">--end_date</code> (YYYY-MM-DD format)</p></li><li><p class=\"text-node\"><strong>Recommended Acquisition</strong>: 1984-2006 for Landsat 4/5/7; 2013+ for Landsat 8/9; 2015+ for Sentinel-2</p></li></ul><h3 class=\"heading-node\">2. Digital Elevation Model (--dem)</h3><p class=\"text-node\"><strong>Terrain data for topographic correction</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>File Format</strong>: Directory containing .vrt (Virtual Raster) file and associated .tif tiles</p></li><li><p class=\"text-node\"><strong>Recommended Sources</strong>: Copernicus DEM (30m), SRTM (30m or 90m), ASTER GDEM (30m)</p></li><li><p class=\"text-node\"><strong>Coverage</strong>: Must cover entire area of interest with adequate buffer</p></li><li><p class=\"text-node\"><strong>Compression</strong>: Supports .tar or .tar.gz archives</p></li><li><p class=\"text-node\"><strong>Projection</strong>: Should match or be reprojectable to datacube projection</p></li></ul><h3 class=\"heading-node\">3. Water Vapor Database (--wvdb)</h3><p class=\"text-node\"><strong>Atmospheric water vapor data for correction algorithms</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>File Structure</strong>: Directory containing daily water vapor measurement files</p></li><li><p class=\"text-node\"><strong>Temporal Coverage</strong>: Must span the satellite imagery acquisition dates</p></li><li><p class=\"text-node\"><strong>Recommended Source</strong>: Global water vapor database from Zenodo (DOI: 10.5281/zenodo.4468701)</p></li><li><p class=\"text-node\"><strong>Format</strong>: Binary or text files with daily atmospheric water vapor content</p></li><li><p class=\"text-node\"><strong>Purpose</strong>: Essential for accurate atmospheric correction and surface reflectance retrieval</p></li></ul><h3 class=\"heading-node\">4. Datacube Configuration (--data_cube)</h3><p class=\"text-node\"><strong>Defines the spatial reference grid and analysis parameters</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>File Type</strong>: Single text configuration file (.prj, .txt, or .ini)</p></li><li><p class=\"text-node\"><strong>Contents</strong>: Projection system, spatial extent (bounding box), pixel resolution, tile size</p></li><li><p class=\"text-node\"><strong>Projection</strong>: Coordinate reference system (CRS) for output products</p></li><li><p class=\"text-node\"><strong>Resolution</strong>: Output pixel size (default: 30m, configurable via <code class=\"inline\" spellcheck=\"false\">--resolution</code>)</p></li><li><p class=\"text-node\"><strong>Tiling Scheme</strong>: Grid cell size for parallel processing</p></li></ul><pre class=\"block-node\"><code>Example datacube parameters:\nPROJECTION: UTM Zone 12N (EPSG:32612)\nEXTENT: -120.5, 38.5, -119.5, 39.5 (W,S,E,N)\nRESOLUTION: 30m\nTILE_SIZE: 3000x3000 pixels</code></pre><h3 class=\"heading-node\">5. Area of Interest (--aoi)</h3><p class=\"text-node\"><strong>Vector boundaries defining the study region</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Supported Formats</strong>: Shapefile (.shp + .shx + .dbf + .prj), GeoJSON (.geojson), KML (.kml), GeoPackage (.gpkg)</p></li><li><p class=\"text-node\"><strong>Geometry Type</strong>: Polygon or MultiPolygon features</p></li><li><p class=\"text-node\"><strong>Projection</strong>: Any projection (will be reprojected to match datacube)</p></li><li><p class=\"text-node\"><strong>Purpose</strong>: Limits processing to relevant geographic area, reducing computation time</p></li><li><p class=\"text-node\"><strong>Multiple Regions</strong>: Can contain multiple polygon features for discontiguous study areas</p></li></ul><h3 class=\"heading-node\">6. Endmember Library (--endmember)</h3><p class=\"text-node\"><strong>Spectral signatures for land cover classification</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>File Format</strong>: Text file (.txt, .csv) or spectral library (.sli)</p></li><li><p class=\"text-node\"><strong>Contents</strong>: Pure spectral signatures for: vegetation (photosynthetic vegetation, PV), non-photosynthetic vegetation (NPV), bare soil, water, snow/ice</p></li><li><p class=\"text-node\"><strong>Structure</strong>: Reflectance values per spectral band for each endmember class</p></li><li><p class=\"text-node\"><strong>Source</strong>: Field measurements, laboratory spectra, or image-derived endmembers</p></li><li><p class=\"text-node\"><strong>Purpose</strong>: Used in linear spectral unmixing to estimate fractional land cover</p></li></ul><pre class=\"block-node\"><code>Example endmember format (6 spectral bands):\n# Endmember    Blue   Green   Red    NIR    SWIR1  SWIR2\nGreenVeg       0.04   0.06    0.05   0.45   0.20   0.10\nDryVeg         0.12   0.18    0.24   0.35   0.42   0.38\nBareSoil       0.18   0.22    0.28   0.32   0.35   0.34\nWater          0.08   0.04    0.02   0.01   0.01   0.00</code></pre><h3 class=\"heading-node\">Additional Configuration Parameters</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>--sensors_level2</strong>: Select satellite sensors (default: \"LND04,LND05,LND07\")</p></li><li><p class=\"text-node\"><strong>--resolution</strong>: Output pixel resolution in meters (default: 30)</p></li><li><p class=\"text-node\"><strong>--start_date / --end_date</strong>: Temporal analysis window (format: YYYY-MM-DD)</p></li><li><p class=\"text-node\"><strong>--indexes</strong>: Spectral vegetation indices to compute (NDVI, EVI, NDMI, etc.)</p></li><li><p class=\"text-node\"><strong>--return_tss</strong>: Enable time series stack output for detailed temporal analysis</p></li></ul><h3 class=\"heading-node\">Example Pipeline Execution</h3><pre class=\"block-node\"><code>nextflow run nf-core/rangeland \\\n  -profile docker \\\n  --input /data/landsat_archive/ \\\n  --dem /data/dem/copernicus_30m/ \\\n  --wvdb /data/water_vapor_db/ \\\n  --data_cube /config/datacube_utm12n.prj \\\n  --aoi /vectors/study_area.shp \\\n  --endmember /config/endmembers_rangeland.txt \\\n  --start_date 2015-01-01 \\\n  --end_date 2023-12-31 \\\n  --sensors_level2 \"LND08,LND09\" \\\n  --resolution 30 \\\n  --indexes \"NDVI,EVI,NDMI\" \\\n  --outdir ./rangeland_results</code></pre><h3 class=\"heading-node\">Input Preparation Tips</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Data Organization</strong>: Maintain standard satellite directory structures for automated scene detection</p></li><li><p class=\"text-node\"><strong>Coverage Check</strong>: Ensure DEM and water vapor data cover all satellite image extents</p></li><li><p class=\"text-node\"><strong>Projection Consistency</strong>: While reprojection is automatic, consistent projections improve processing efficiency</p></li><li><p class=\"text-node\"><strong>Temporal Alignment</strong>: Water vapor database must span all imagery acquisition dates</p></li><li><p class=\"text-node\"><strong>Endmember Selection</strong>: Use region-appropriate spectral signatures for accurate land cover classification</p></li></ul><h2 class=\"heading-node\">Output Products</h2><h3 class=\"heading-node\">Analysis-Ready Data (ARD)</h3><ul class=\"list-node\"><li><p class=\"text-node\">Atmospherically corrected surface reflectance</p></li><li><p class=\"text-node\">Cloud-masked and quality-filtered imagery</p></li><li><p class=\"text-node\">Topographically corrected data products</p></li></ul><h3 class=\"heading-node\">Classification & Trend Files</h3><ul class=\"list-node\"><li><p class=\"text-node\">Land cover fraction maps (vegetation, soil, rock, etc.)</p></li><li><p class=\"text-node\">Vegetation trend statistics (slope, significance)</p></li><li><p class=\"text-node\">Time series stacks for temporal analysis</p></li><li><p class=\"text-node\">Phenology metrics (green-up, peak, senescence)</p></li></ul><h3 class=\"heading-node\">Visualization Products</h3><ul class=\"list-node\"><li><p class=\"text-node\">Seamless mosaics for multiple time periods</p></li><li><p class=\"text-node\">Multi-resolution pyramids for web mapping</p></li><li><p class=\"text-node\">RGB composites and false-color visualizations</p></li><li><p class=\"text-node\">Change detection maps highlighting degradation/recovery</p></li></ul><h3 class=\"heading-node\">Quality Control Reports</h3><ul class=\"list-node\"><li><p class=\"text-node\">Processing logs and metadata</p></li><li><p class=\"text-node\">Quality metrics per scene and pixel</p></li><li><p class=\"text-node\">MultiQC comprehensive analysis report</p></li></ul><h2 class=\"heading-node\">Why Use This Pipeline?</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Specialized for Rangelands</strong>: Optimized algorithms for vegetation monitoring</p></li><li><p class=\"text-node\"><strong>Comprehensive Processing</strong>: End-to-end workflow from raw data to insights</p></li><li><p class=\"text-node\"><strong>Research-Grade Quality</strong>: Implements state-of-the-art correction algorithms</p></li><li><p class=\"text-node\"><strong>Scalable & Efficient</strong>: Nextflow parallelization for large-scale processing</p></li><li><p class=\"text-node\"><strong>Reproducible</strong>: Containerized dependencies ensure consistent results</p></li><li><p class=\"text-node\"><strong>Community Support</strong>: Part of nf-core ecosystem with active development</p></li><li><p class=\"text-node\"><strong>Open Science</strong>: FONDA initiative for large-scale scientific data analysis</p></li></ul><p class=\"text-node\"><strong>Perfect for:</strong> Rangeland management \u2022 Vegetation monitoring \u2022 Climate change research \u2022 Drought assessment \u2022 Land degradation studies \u2022 Ecosystem conservation \u2022 Agricultural planning \u2022 Biodiversity mapping</p><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> \u2022 Powered by <a class=\"link\" href=\"https://nf-co.re/rangeland/1.0.0/\" target=\"_blank\">nf-core/rangeland v1.0.0</a> \u2022 Developed through <a class=\"link\" href=\"https://fonda.hu-berlin.de/\" target=\"_blank\">FONDA</a> initiative</p>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Satellite Imagery Input",
+      "name": "input",
+      "description": "Directory or file list containing satellite imagery (Landsat, Sentinel-2, etc.) in standard formats (GeoTIFF, HDF).",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Digital Elevation Model (DEM)",
+      "name": "dem",
+      "description": "Digital elevation model for topographic correction. Must cover the area of interest.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".tif",
+          ".tiff",
+          ".hgt"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Water Vapor Database (WVDB)",
+      "name": "wvdb",
+      "description": "Water vapor database for atmospheric correction. Contains atmospheric water vapor content.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": []
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Datacube Configuration",
+      "name": "data_cube",
+      "description": "Datacube specification defining spatial extent, resolution, projection, and temporal range for analysis.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".txt",
+          ".prj",
+          ".ini"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Area of Interest (AOI)",
+      "name": "aoi",
+      "description": "Vector file defining the geographical boundaries of the study area (shapefile, GeoJSON, or similar).",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".shp",
+          ".geojson",
+          ".kml",
+          ".gpkg"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Endmember Library",
+      "name": "endmember",
+      "description": "Spectral endmember definitions for land cover types (vegetation, soil, water, etc.) used in spectral unmixing.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".txt",
+          ".csv",
+          ".sli"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory for all analysis results including ARD, trend files, mosaics, and reports.",
+      "defaultValue": "./rangeland-results",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "description": "Select computational resources based on dataset size. LARGE recommended for regional analyses, XLARGE for continental-scale studies.",
+      "options": [
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Recommended",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE (96 CPUs, 540GB RAM) - Large-scale studies",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

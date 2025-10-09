@@ -1,0 +1,88 @@
+{
+  "name": "hlatyping-hla-genotyping-ngs",
+  "title": "HLA Typing: High-Resolution HLA Genotyping",
+  "description": "High-resolution HLA typing from WGS/WES/RNA-seq using OptiType and HISAT2. Essential for transplantation matching, pharmacogenomics, and autoimmune disease research. Samplesheet format: `sample,bam`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/hlatyping --input ${input} --outdir ${outdir} --seqtype ${seqtype} -r 2.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/hlatyping/master/docs/images/nf-core-hlatyping_logo_light.png",
+  "content": "<h2><strong>HLA Typing</strong></h2><p>High-resolution HLA genotyping for transplantation, pharmacogenomics, and disease associations.</p><blockquote><p><strong>Perfect for:</strong> Transplant matching • Drug hypersensitivity • Autoimmune disease</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Input",
+      "name": "input",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [
+          ".csv"
+        ]
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Seq Type",
+      "name": "seqtype",
+      "defaultValue": "dna",
+      "required": true,
+      "options": [
+        {
+          "label": "DNA",
+          "value": "dna"
+        },
+        {
+          "label": "RNA",
+          "value": "rna"
+        }
+      ]
+    },
+    {
+      "type": "Stash File",
+      "label": "Output",
+      "name": "outdir",
+      "defaultValue": "./hlatyping-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Resources",
+      "name": "system_size",
+      "options": [
+        {
+          "label": "MEDIUM",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "medium"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

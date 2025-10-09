@@ -1,0 +1,123 @@
+{
+    "name": "cutandrun-tf-profiling",
+    "title": "CUT&RUN Transcription Factor Binding",
+    "description": "Map transcription factor binding sites with high precision using CUT&RUN. Requires fewer cells than ChIP-seq with superior signal-to-noise for TF binding analysis. Samplesheet format: `sample,fastq_1,fastq_2,replicate,antibody,control`",
+    "version": "1.0.0",
+    "engineType": "NEXTFLOW",
+    "command": "nextflow run nf-core/cutandrun --input ${input} --outdir ${outdir} --genome ${genome} --peakcaller ${peakcaller} -r 3.2.2 ",
+    "imageUrl": "https://raw.githubusercontent.com/nf-core/cutandrun/master/docs/images/nf-core-cutandrun_logo_light.png",
+    "content": "<h2><strong>CUT&RUN for Transcription Factors</strong></h2><p><strong>CUT&RUN</strong> revolutionizes transcription factor mapping by eliminating ChIP-seq's limitations: no crosslinking artifacts, requires 100x fewer cells, and delivers exceptionally low background for clean TF binding profiles.</p><h3><strong>Why CUT&RUN for TFs?</strong></h3><blockquote><p><strong>ChIP-seq Challenges</strong>:</p><ul><li>Requires 1-10 million cells</li><li>Crosslinking can create artifacts</li><li>High background from non-specific antibody binding</li><li>Expensive antibody consumption</li><li>Some TFs don't crosslink well</li></ul><p><strong>CUT&RUN Solutions</strong>:</p><ul><li>Works with 10-100K cells (100x less!)</li><li>No crosslinking = no artifacts, native binding</li><li>In situ digestion = only target DNA released</li><li>Less antibody needed</li><li>Captures dynamic/transient TF binding</li></ul></blockquote><h3><strong>CUT&RUN vs ChIP-seq for TFs</strong></h3><table><tr><th>Feature</th><th>CUT&RUN</th><th>ChIP-seq</th></tr><tr><td><strong>Cell Input</strong></td><td>10-100K</td><td>1-10M</td></tr><tr><td><strong>Background</strong></td><td>Ultra-low</td><td>High</td></tr><tr><td><strong>Peak Sharpness</strong></td><td>Very sharp</td><td>Broader</td></tr><tr><td><strong>Transient Binding</strong></td><td>\u2705 Captured</td><td>\u274c Often missed</td></tr><tr><td><strong>Antibody</strong></td><td>1-5 \u03bcg</td><td>10-20 \u03bcg</td></tr><tr><td><strong>Protocol Time</strong></td><td>1 day</td><td>3-4 days</td></tr><tr><td><strong>Rare Cell Types</strong></td><td>\u2705 Feasible</td><td>\u274c Difficult</td></tr></table><h3><strong>Transcription Factor Applications</strong></h3><p><strong>Nuclear Receptors</strong>:</p><ul><li><strong>ER\u03b1</strong>: Estrogen receptor in breast cancer</li><li><strong>AR</strong>: Androgen receptor in prostate cancer</li><li><strong>GR</strong>: Glucocorticoid receptor in immune response</li><li><strong>PPAR\u03b3</strong>: Metabolic regulation</li></ul><p><strong>Master Regulators</strong>:</p><ul><li><strong>OCT4, SOX2, NANOG</strong>: Pluripotency (stem cells)</li><li><strong>MYOD</strong>: Muscle differentiation</li><li><strong>PAX6</strong>: Eye development</li><li><strong>GATA</strong> family: Hematopoiesis</li></ul><p><strong>Signal-Responsive TFs</strong>:</p><ul><li><strong>NF-\u03baB</strong>: Inflammatory response (transient binding!)</li><li><strong>STAT</strong> family: Cytokine signaling</li><li><strong>AP-1</strong> (FOS/JUN): Stress response</li><li><strong>NFAT</strong>: T cell activation</li></ul><p><strong>Chromatin Organizers</strong>:</p><ul><li><strong>CTCF</strong>: Insulator, TAD boundaries (excellent with CUT&RUN)</li><li><strong>Cohesin</strong>: Chromatin loops</li></ul><h3><strong>Capturing Transient TF Binding</strong></h3><blockquote><p><strong>Problem with ChIP-seq</strong>:</p><ul><li>Crosslinking \"freezes\" binding at moment of fixation</li><li>Dynamic TFs (NF-\u03baB, STATs) may not be well-captured</li><li>Some TFs have low crosslinking efficiency</li></ul><p><strong>CUT&RUN Advantage</strong>:</p><ul><li>No crosslinking = captures TFs in native state</li><li>MNase cuts immediately around bound TF</li><li>Can detect rapid binding/unbinding events</li><li>Better for stimulus-induced TFs</li></ul></blockquote><h3><strong>Pipeline Analysis</strong></h3><ol><li><strong>Quality Control</strong>: FastQC, fragment size (<120bp for TFs)</li><li><strong>Alignment</strong>: Bowtie2 maps paired-end reads</li><li><strong>Spike-in Normalization</strong>: Quantitative comparison</li><li><strong>Peak Calling</strong>: SEACR (narrow peaks for TFs)</li><li><strong>Motif Analysis</strong>: HOMER finds TF motifs in peaks</li><li><strong>Footprinting</strong>: Fine-map exact binding sites within peaks</li><li><strong>Target Gene Assignment</strong>: Link TF binding to nearby genes</li><li><strong>Pathway Enrichment</strong>: What pathways are TF-regulated?</li></ol><h3><strong>Fragment Size Interpretation</strong></h3><p>CUT&RUN fragment sizes reveal binding mode:</p><ul><li><strong><120bp</strong>: TF bound to DNA (nucleosome-free)</li><li><strong>~180bp</strong>: TF + partial nucleosome wrapping</li><li><strong>>200bp</strong>: Background/non-specific cutting</li></ul><p><strong>For TFs</strong>: Most signal should be <120bp (sharp, nucleosome-free binding)</p><h3><strong>Scientific Questions</strong></h3><ul><li><strong>TF Binding Sites</strong>: Where does this TF bind genome-wide?</li><li><strong>Co-factor Recruitment</strong>: Does TF-A recruit TF-B?</li><li><strong>Dynamic Binding</strong>: How does binding change with stimulus?</li><li><strong>Rare Cell Types</strong>: TF binding in purified populations (e.g., FACS-sorted)</li><li><strong>Drug Response</strong>: Do drugs alter TF binding?</li><li><strong>Disease Variants</strong>: SNPs disrupting TF sites</li></ul><h3><strong>Low Cell Input Use Cases</strong></h3><blockquote><p><strong>Rare Cell Populations</strong>:</p><ul><li>FACS-sorted immune subsets (Tregs, Th17, etc.)</li><li>Neural stem cells from single brain region</li><li>Primary tumor infiltrating lymphocytes</li><li>Specific developmental stage embryos</li></ul><p><strong>Patient Samples</strong>:</p><ul><li>Limited biopsy material</li><li>Rare disease samples</li><li>Precious primary cells</li></ul></blockquote><h3><strong>Applications</strong></h3><ul><li><strong>Cancer</strong>: Oncogenic TF binding (MYC, p53 mutants, ER\u03b1 in breast cancer)</li><li><strong>Immunology</strong>: T cell activation (NFAT, NF-\u03baB), cytokine response</li><li><strong>Stem Cells</strong>: Pluripotency network (OCT4/SOX2/NANOG), reprogramming</li><li><strong>Development</strong>: Master regulators during differentiation</li><li><strong>Drug Discovery</strong>: Nuclear receptor agonists/antagonists</li><li><strong>Disease Modeling</strong>: Aberrant TF binding in disease</li></ul><h3><strong>Recommended Workflow</strong></h3><p><strong>Step 1: Optimize CUT&RUN</strong></p><ul><li>Start with 100K cells per sample</li><li>Titrate antibody (typically 1-5 \u03bcg)</li><li>Include IgG negative control</li><li>Add spike-in chromatin (Drosophila)</li></ul><p><strong>Step 2: Run Pipeline</strong></p><ul><li>Paired-end sequencing (25M reads)</li><li>Call peaks with SEACR (optimized for CUT&RUN)</li><li>Spike-in normalize for quantitative comparison</li></ul><p><strong>Step 3: Validate</strong></p><ul><li>Check fragment size (<120bp for TFs)</li><li>Confirm expected motif enrichment</li><li>Compare to ChIP-seq if available</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with columns:</p><ul><li><strong>group</strong>: Sample group name</li><li><strong>replicate</strong>: Replicate number</li><li><strong>fastq_1</strong>: Path to R1 FASTQ</li><li><strong>fastq_2</strong>: Path to R2 FASTQ</li><li><strong>control</strong>: IgG control sample name</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>TF Peak Calls</strong>: SEACR narrow peaks (BED)</li><li><strong>Spike-in Normalized Tracks</strong>: Quantitative BigWigs</li><li><strong>Fragment Size Distribution</strong>: QC (<120bp for good TF signal)</li><li><strong>Motif Enrichment</strong>: Expected TF motifs in peaks</li><li><strong>Target Genes</strong>: TF-regulated gene lists</li><li><strong>Differential Binding</strong>: Condition-specific TF binding</li><li><strong>QC Report</strong>: MultiQC summary</li></ul><blockquote><p><strong>Perfect for:</strong> TF binding \u2022 Low cell input \u2022 Rare cell types \u2022 Dynamic binding \u2022 No crosslinking \u2022 High resolution</p></blockquote>",
+    "spec": [
+        {
+            "type": "Stash File",
+            "label": "Sample Sheet",
+            "name": "input",
+            "description": "CSV with CUT&RUN samples",
+            "required": true,
+            "restrictions": {
+                "allow_files": true,
+                "allow_folders": false,
+                "allowed_file_types": [
+                    ".csv"
+                ]
+            }
+        },
+        {
+            "type": "Select",
+            "label": "Reference Genome",
+            "name": "genome",
+            "description": "Reference genome",
+            "defaultValue": "GRCh38",
+            "required": true,
+            "options": [
+                {
+                    "label": "Human GRCh38",
+                    "value": "GRCh38"
+                },
+                {
+                    "label": "Mouse GRCm39",
+                    "value": "GRCm39"
+                },
+                {
+                    "label": "Human GRCh37",
+                    "value": "GRCh37"
+                },
+                {
+                    "label": "Mouse GRCm38",
+                    "value": "GRCm38"
+                }
+            ]
+        },
+        {
+            "type": "Select",
+            "label": "Peak Caller",
+            "name": "peakcaller",
+            "description": "Peak calling algorithm",
+            "defaultValue": "seacr",
+            "required": true,
+            "options": [
+                {
+                    "label": "SEACR (Recommended for CUT&RUN)",
+                    "value": "seacr"
+                },
+                {
+                    "label": "MACS2",
+                    "value": "MACS2"
+                },
+                {
+                    "label": "Both SEACR + MACS2",
+                    "value": "seacr,MACS2"
+                }
+            ]
+        },
+        {
+            "type": "Stash File",
+            "label": "Output Directory",
+            "name": "outdir",
+            "description": "Output directory",
+            "defaultValue": "./cutandrun-tf-results",
+            "required": true,
+            "restrictions": {
+                "allow_files": false,
+                "allow_folders": true
+            }
+        }
+    ],
+    "jobConfig": [
+        {
+            "type": "Select",
+            "label": "Compute Resources",
+            "name": "system_size",
+            "hidden": false,
+            "options": [
+                {
+                    "label": "LARGE (Recommended)",
+                    "value": "large",
+                    "mapValue": {
+                        "nodeSize": "LARGE",
+                        "numNodes": 1,
+                        "withGpu": false
+                    }
+                }
+            ],
+            "defaultValue": "large"
+        }
+    ],
+    "tags": [
+        {
+            "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+            "name": "biology",
+            "type": "field"
+        },
+        {
+            "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+            "name": "genomics",
+            "type": "subfield"
+        },
+        {
+            "id": "831477f4-f572-4e27-af83-037661489800",
+            "name": "analysis",
+            "type": "task"
+        }
+    ]
+}

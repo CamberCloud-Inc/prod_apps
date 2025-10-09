@@ -1,0 +1,120 @@
+{
+  "name": "lncpipe-lncrna-discovery",
+  "title": "lncPipe - Long Non-coding RNA Discovery & Analysis",
+  "description": "Comprehensive pipeline for long non-coding RNA (lncRNA) discovery, annotation, and differential expression analysis from RNA-seq data. Identifies novel lncRNAs and characterizes their expression patterns. Samplesheet format: `Human,mouse,or`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/lncpipe --input ${input} --outdir ${outdir} --genome ${genome} --fasta ${fasta} -r 1.0.0",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/lncpipe/master/docs/images/nf-core-lncpipe_logo_light.png",
+  "content": "<h2><strong>lncPipe - Long Non-coding RNA Discovery</strong></h2><p><strong>lncPipe</strong> is a comprehensive bioinformatics pipeline for identifying, annotating, and analyzing long non-coding RNAs (lncRNAs) from RNA-seq datasets. It enables genome-wide discovery of novel lncRNAs and differential expression analysis between conditions.</p><h3><strong>What are Long Non-coding RNAs (lncRNAs)?</strong></h3><blockquote><p><strong>The Biology</strong>:</p><ul><li><strong>Definition</strong>: RNA transcripts longer than 200 nucleotides that do not encode proteins</li><li><strong>Abundance</strong>: Tens of thousands of lncRNAs in mammalian genomes</li><li><strong>Location</strong>: Intergenic (lincRNAs), intronic, antisense, or overlapping protein-coding genes</li><li><strong>Conservation</strong>: Generally less conserved than mRNAs but functionally important</li><li><strong>Expression</strong>: Often tissue-specific and developmentally regulated</li></ul></blockquote><h3><strong>Why Study lncRNAs?</strong></h3><ul><li><strong>Gene Regulation</strong>: Control transcription, splicing, and translation</li><li><strong>Chromatin Remodeling</strong>: Guide chromatin-modifying complexes to specific loci</li><li><strong>Nuclear Organization</strong>: Form nuclear bodies and compartments</li><li><strong>Disease Relevance</strong>: Implicated in cancer, neurological disorders, cardiovascular disease</li><li><strong>Therapeutic Targets</strong>: Emerging as potential drug targets and biomarkers</li><li><strong>Cellular Identity</strong>: Define cell types and developmental states</li><li><strong>X-inactivation</strong>: XIST lncRNA silences entire chromosome</li></ul><h3><strong>lncRNA Functions</strong></h3><table><tr><th>Function</th><th>Mechanism</th><th>Examples</th></tr><tr><td><strong>Transcriptional Regulation</strong></td><td>Recruit TFs or chromatin modifiers</td><td>HOTAIR, MALAT1</td></tr><tr><td><strong>Splicing Regulation</strong></td><td>Modulate splicing machinery</td><td>MALAT1</td></tr><tr><td><strong>Translation Control</strong></td><td>Compete with mRNAs for ribosomes</td><td>lincRNA-p21</td></tr><tr><td><strong>Protein Scaffolds</strong></td><td>Bring proteins together</td><td>NEAT1, HOTAIR</td></tr><tr><td><strong>miRNA Sponges</strong></td><td>Sequester miRNAs (ceRNAs)</td><td>H19, LINC00161</td></tr><tr><td><strong>Enhancer RNAs</strong></td><td>Activate nearby genes</td><td>eRNAs</td></tr></table><h3><strong>lncPipe Pipeline Workflow</strong></h3><ol><li><strong>Quality Control</strong>: FastQC assesses raw read quality</li><li><strong>Adapter Trimming</strong>: Remove sequencing adapters and low-quality bases</li><li><strong>Alignment</strong>: Map reads to reference genome (STAR/HISAT2)</li><li><strong>Transcript Assembly</strong>: De novo assembly of transcripts (StringTie/Cufflinks)</li><li><strong>lncRNA Identification</strong>: Distinguish lncRNAs from protein-coding transcripts<ul><li>ORF prediction and filtering</li><li>Coding potential assessment (CPAT, CPC2, PLEK)</li><li>Domain homology filtering (Pfam)</li><li>Known annotation comparison</li></ul></li><li><strong>Annotation</strong>: Classify lncRNAs (intergenic, antisense, intronic)</li><li><strong>Quantification</strong>: Expression levels across samples</li><li><strong>Differential Expression</strong>: Identify condition-specific lncRNAs (DESeq2/edgeR)</li><li><strong>Quality Metrics</strong>: Comprehensive QC reports (MultiQC)</li></ol><h3><strong>lncRNA Identification Strategy</strong></h3><p><strong>Coding Potential Assessment</strong>:</p><ul><li><strong>CPAT</strong>: Alignment-free coding potential calculator</li><li><strong>CPC2</strong>: Coding Potential Calculator based on sequence features</li><li><strong>PLEK</strong>: Predictor of long non-coding RNAs and mRNAs based on k-mer scheme</li><li><strong>Consensus Approach</strong>: Combine multiple tools for robust classification</li></ul><p><strong>Filtering Criteria</strong>:</p><ul><li><strong>Length</strong>: >200 nucleotides (by definition)</li><li><strong>ORF Length</strong>: Short open reading frames (<100 amino acids)</li><li><strong>Expression</strong>: Minimum expression threshold (FPKM/TPM)</li><li><strong>Exon Count</strong>: Typically multi-exonic (though some lncRNAs are single-exon)</li><li><strong>Coding Potential Score</strong>: Below threshold for all prediction tools</li><li><strong>Pfam Domain</strong>: No known protein domains</li></ul><h3><strong>lncRNA Classification</strong></h3><ul><li><strong>Long Intergenic Non-coding RNAs (lincRNAs)</strong>: Between protein-coding genes</li><li><strong>Antisense lncRNAs</strong>: Transcribed from opposite strand of protein-coding gene</li><li><strong>Intronic lncRNAs</strong>: Within introns of protein-coding genes</li><li><strong>Sense Overlapping</strong>: Overlap protein-coding genes on same strand</li><li><strong>Bidirectional Promoter lncRNAs</strong>: Share promoter with protein-coding gene</li><li><strong>Enhancer RNAs (eRNAs)</strong>: Transcribed from enhancer regions</li></ul><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Cancer Research</strong>: Oncogenic and tumor-suppressor lncRNAs<ul><li>MALAT1: Metastasis-associated lung adenocarcinoma transcript</li><li>HOTAIR: HOX transcript antisense RNA, promotes metastasis</li><li>H19: Imprinted lncRNA with tumor-specific roles</li></ul></li><li><strong>Development</strong>: Lineage specification and differentiation<ul><li>XIST: X-chromosome inactivation</li><li>NEAT1: Nuclear paraspeckle formation</li><li>SOX2-OT: Neural stem cell maintenance</li></ul></li><li><strong>Immunology</strong>: Immune cell differentiation and response<ul><li>lincRNA-Cox2: Inflammatory gene regulation</li><li>NRON: Nuclear receptor repressor</li></ul></li><li><strong>Neuroscience</strong>: Brain development and neurological disorders<ul><li>BDNF-AS: Brain-derived neurotrophic factor antisense</li><li>MIAT: Myocardial infarction associated transcript (neuronal function)</li></ul></li><li><strong>Cardiovascular Disease</strong>: Cardiac development and disease<ul><li>ANRIL: Antisense non-coding RNA in INK4 locus</li><li>MHRT: Myosin heavy-chain-associated RNA transcript</li></ul></li></ul><h3><strong>Pipeline Features</strong></h3><ul><li><strong>Multi-Tool Integration</strong>: Combines multiple coding potential calculators for robust classification</li><li><strong>De Novo Discovery</strong>: Identifies novel lncRNAs not in existing annotations</li><li><strong>Differential Expression</strong>: Statistical analysis of condition-specific expression</li><li><strong>Comprehensive Annotation</strong>: Classifies lncRNA biotypes and genomic context</li><li><strong>Quality Control</strong>: Extensive QC metrics throughout pipeline</li><li><strong>Reproducible</strong>: Containerized tools ensure consistent results</li><li><strong>Scalable</strong>: Handles large RNA-seq datasets efficiently</li></ul><h3><strong>Input Requirements</strong></h3><p>CSV samplesheet with RNA-seq data:</p><ul><li><strong>sample</strong>: Sample identifier</li><li><strong>fastq_1</strong>: Path to R1 FASTQ file (or single-end reads)</li><li><strong>fastq_2</strong>: Path to R2 FASTQ file (for paired-end)</li><li><strong>strandedness</strong>: Library strandedness (unstranded/forward/reverse)</li></ul><p><strong>Recommended RNA-seq Data</strong>:</p><ul><li><strong>Depth</strong>: >50M reads per sample for comprehensive discovery</li><li><strong>Read Length</strong>: \u226575bp paired-end preferred</li><li><strong>Library Type</strong>: Total RNA or polyA+ RNA (ribo-depleted better for lncRNA detection)</li><li><strong>Replicates</strong>: \u22653 biological replicates per condition</li><li><strong>Strand-specific</strong>: Recommended for accurate antisense lncRNA detection</li></ul><h3><strong>Reference Requirements</strong></h3><ul><li><strong>Genome FASTA</strong>: Reference genome sequence</li><li><strong>Gene Annotation</strong>: GTF/GFF file with known genes (optional but recommended)</li><li><strong>Supported Genomes</strong>: Human, mouse, or any species with reference genome</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Novel lncRNA Catalog</strong>: GTF/BED files with newly identified lncRNAs</li><li><strong>Coding Potential Scores</strong>: Classification scores from multiple tools</li><li><strong>Expression Matrix</strong>: Quantification across all samples (FPKM/TPM)</li><li><strong>Differential Expression Results</strong>: Condition-specific lncRNAs with statistics</li><li><strong>lncRNA Annotations</strong>: Biotype classification, genomic context</li><li><strong>Sequence Files</strong>: FASTA files of lncRNA sequences</li><li><strong>Quality Reports</strong>: MultiQC comprehensive QC report</li><li><strong>Alignment Statistics</strong>: Mapping rates, duplication metrics</li></ul><h3><strong>QC Metrics</strong></h3><ul><li><strong>Read Quality</strong>: Per-base quality scores, adapter content</li><li><strong>Mapping Statistics</strong>: Alignment rate, uniquely mapped reads</li><li><strong>Gene Body Coverage</strong>: 5' to 3' coverage bias</li><li><strong>Duplication Rate</strong>: PCR duplication levels</li><li><strong>Library Complexity</strong>: Saturation analysis</li><li><strong>Coding Potential Distribution</strong>: Score distributions across tools</li><li><strong>lncRNA Characteristics</strong>: Length distribution, exon count, expression levels</li></ul><h3><strong>Downstream Analysis Suggestions</strong></h3><ul><li><strong>Functional Enrichment</strong>: Identify enriched pathways near lncRNAs</li><li><strong>Co-expression Networks</strong>: Find lncRNA-mRNA regulatory relationships</li><li><strong>WGCNA</strong>: Weighted gene co-expression network analysis</li><li><strong>Motif Analysis</strong>: Identify sequence motifs in lncRNAs</li><li><strong>Structure Prediction</strong>: Secondary structure prediction (RNAfold)</li><li><strong>Conservation Analysis</strong>: PhyloP/PhastCons scores</li><li><strong>GWAS Integration</strong>: Link lncRNAs to disease-associated loci</li><li><strong>ceRNA Analysis</strong>: Competing endogenous RNA network reconstruction</li></ul><h3><strong>Comparison: lncRNAs vs mRNAs</strong></h3><table><tr><th>Feature</th><th>lncRNAs</th><th>mRNAs</th></tr><tr><td><strong>Length</strong></td><td>>200 nt</td><td>Variable</td></tr><tr><td><strong>Coding Potential</strong></td><td>Non-coding</td><td>Protein-coding</td></tr><tr><td><strong>Expression</strong></td><td>Lower, tissue-specific</td><td>Higher, broad</td></tr><tr><td><strong>Conservation</strong></td><td>Lower sequence conservation</td><td>High conservation</td></tr><tr><td><strong>Exon Count</strong></td><td>Fewer exons (typically 2-3)</td><td>More exons</td></tr><tr><td><strong>Splicing</strong></td><td>Yes, but less efficient</td><td>Yes, highly efficient</td></tr><tr><td><strong>Localization</strong></td><td>Nuclear or cytoplasmic</td><td>Cytoplasmic (translated)</td></tr><tr><td><strong>PolyA Tail</strong></td><td>Most are polyadenylated</td><td>Polyadenylated</td></tr></table><h3><strong>Disease-Associated lncRNAs</strong></h3><ul><li><strong>MALAT1</strong>: Lung cancer metastasis</li><li><strong>HOTAIR</strong>: Breast cancer progression</li><li><strong>ANRIL</strong>: Cardiovascular disease, diabetes</li><li><strong>H19</strong>: Cancer, Beckwith-Wiedemann syndrome</li><li><strong>XIST</strong>: X-linked disorders</li><li><strong>MEG3</strong>: Tumor suppressor, multiple cancers</li><li><strong>UCA1</strong>: Bladder cancer</li><li><strong>TUG1</strong>: Retinal development, cancer</li></ul><blockquote><p><strong>Perfect for:</strong> lncRNA discovery \u2022 Transcriptome annotation \u2022 Cancer research \u2022 Developmental biology \u2022 Biomarker identification \u2022 Non-coding RNA catalogs</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV with RNA-seq samples (columns: sample, fastq_1, fastq_2, strandedness)",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome (iGenomes ID)",
+      "defaultValue": "GRCh38",
+      "required": false,
+      "options": [
+        {
+          "label": "Human GRCh38",
+          "value": "GRCh38"
+        },
+        {
+          "label": "Human GRCh37",
+          "value": "GRCh37"
+        },
+        {
+          "label": "Mouse GRCm39",
+          "value": "GRCm39"
+        },
+        {
+          "label": "Mouse GRCm38",
+          "value": "GRCm38"
+        }
+      ]
+    },
+    {
+      "type": "Input",
+      "label": "Genome FASTA (Optional)",
+      "name": "fasta",
+      "description": "Path or URL to genome FASTA file (overrides --genome)",
+      "placeholder": "https://ftp.ensembl.org/pub/release-110/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz",
+      "required": false
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Results output directory",
+      "defaultValue": "./lncpipe-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "description": "LARGE node recommended for lncRNA discovery and annotation",
+      "options": [
+        {
+          "label": "LARGE (Recommended)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

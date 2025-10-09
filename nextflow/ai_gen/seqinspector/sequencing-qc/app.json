@@ -1,0 +1,84 @@
+{
+  "name": "seqinspector-sequencing-qc",
+  "title": "Multi-Platform Sequencing Quality Control",
+  "description": "Comprehensive quality control pipeline for inspecting sequencing data from Illumina, Oxford Nanopore, and PacBio platforms. Performs read QC, contamination screening, adapter detection, and generates grouped reports for efficient quality assessment across large sequencing projects. Samplesheet format: `sample,fastq_1,fastq_2,rundir,tags`",
+  "version": "dev",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/seqinspector --input ${input} --outdir ${outdir} -r dev ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/seqinspector/master/docs/images/nf-core-seqinspector_logo_light.png",
+  "content": "<h2><strong>SeqInspector: Multi-Platform Sequencing Quality Control</strong></h2><p>Comprehensive quality control inspection for sequencing data across all major platforms. Rapidly assess read quality, detect contamination, identify adapters, and generate organized reports for efficient quality review of large-scale sequencing projects.</p><h3><strong>What is SeqInspector?</strong></h3><blockquote><p><strong>SeqInspector</strong> provides standardized, reproducible quality control for next-generation sequencing data. Unlike basic QC tools, it offers contamination screening, flexible grouping, and comprehensive multi-sample reporting - perfect for sequencing facilities and large research projects.</p></blockquote><h3><strong>Key Features</strong></h3><ul><li><strong>Multi-Platform Support</strong>: Illumina, Oxford Nanopore, PacBio - all in one pipeline</li><li><strong>Comprehensive QC Metrics</strong>: Quality scores, duplication, complexity, GC content</li><li><strong>Contamination Detection</strong>: Screen against common biological contaminants</li><li><strong>Adapter Identification</strong>: Detect and quantify adapter sequences</li><li><strong>Flexible Grouping</strong>: Generate reports per project, run, or custom tags</li><li><strong>Efficient Subsampling</strong>: Fast QC on large datasets without full processing</li><li><strong>Batch Processing</strong>: Handle hundreds of samples simultaneously</li></ul><h3><strong>Pipeline Workflow</strong></h3><ol><li><strong>Read Subsampling</strong>: Seqtk samples reads for rapid QC (configurable depth)</li><li><strong>FastQC Analysis</strong>: Comprehensive quality metrics per sample</li><li><strong>FastQ Screen</strong>: Map reads to contamination reference databases</li><li><strong>SeqFu Statistics</strong>: Detailed sequence quality and composition metrics</li><li><strong>MultiQC Reports</strong>: Generate global report + grouped reports by tags</li></ol><h3><strong>Quality Control Components</strong></h3><h4><strong>FastQC - Read Quality Assessment</strong></h4><ul><li><strong>Per-base quality scores</strong>: Identify quality drops across read length</li><li><strong>Sequence duplication</strong>: Detect over-amplification or low complexity</li><li><strong>GC content</strong>: Identify contamination or bias</li><li><strong>Adapter content</strong>: Quantify adapter sequences remaining</li><li><strong>Overrepresented sequences</strong>: Find technical artifacts</li><li><strong>K-mer profiles</strong>: Identify sequence bias patterns</li></ul><h4><strong>FastQ Screen - Contamination Detection</strong></h4><ul><li><strong>Species identification</strong>: Map reads to multiple reference genomes</li><li><strong>Common contaminants</strong>: Screen for bacteria, phage, adapters, vectors</li><li><strong>Cross-species contamination</strong>: Detect sample mix-ups</li><li><strong>Percentage mapping</strong>: Quantify contamination levels</li><li><strong>Multiple hits</strong>: Identify ambiguous or chimeric reads</li></ul><h4><strong>SeqFu Stats - Comprehensive Metrics</strong></h4><ul><li><strong>Read count and length</strong>: Total reads, length distribution</li><li><strong>Quality statistics</strong>: Mean/median quality scores</li><li><strong>Base composition</strong>: A/T/G/C percentages, GC content</li><li><strong>N content</strong>: Ambiguous base detection</li></ul><h3><strong>Input Requirements</strong></h3><p><strong>Samplesheet Format (CSV/TSV):</strong></p><pre>sample,fastq_1,fastq_2,rundir,tags\nsample1,sample1_R1.fastq.gz,sample1_R2.fastq.gz,/run/240101,project1:illumina:batch1\nsample2,sample2_R1.fastq.gz,sample2_R2.fastq.gz,/run/240101,project1:illumina:batch1\nsample3,sample3.fastq.gz,,,project2:nanopore:batch2</pre><p><strong>Column Descriptions:</strong></p><ul><li><strong>sample</strong>: Unique sample identifier (required)</li><li><strong>fastq_1</strong>: Path to R1 or single-end reads, gzipped (required)</li><li><strong>fastq_2</strong>: Path to R2 for paired-end reads, gzipped (optional)</li><li><strong>rundir</strong>: Path to sequencing run folder (optional)</li><li><strong>tags</strong>: Colon-separated tags for grouping (optional, e.g., project:platform:batch)</li></ul><h3><strong>Tagging System for Organized Reports</strong></h3><p>The flexible tagging system allows custom grouping of samples:</p><ul><li><strong>By Project</strong>: <code>project_A</code>, <code>project_B</code></li><li><strong>By Platform</strong>: <code>illumina</code>, <code>nanopore</code>, <code>pacbio</code></li><li><strong>By Batch/Run</strong>: <code>run_2024_01</code>, <code>batch_5</code></li><li><strong>By Sample Type</strong>: <code>tissue</code>, <code>blood</code>, <code>environment</code></li><li><strong>Custom Combinations</strong>: <code>projectA:illumina:batch1</code></li></ul><p>Each unique tag generates a separate MultiQC report, enabling:</p><ul><li>Project-specific quality summaries</li><li>Platform comparison reports</li><li>Batch effect detection</li><li>Time-series quality tracking</li></ul><h3><strong>Main Outputs</strong></h3><h4><strong>Global Reports</strong></h4><ul><li><strong>Master MultiQC report</strong>: HTML summary of all samples combined</li><li><strong>All-sample metrics</strong>: Comprehensive quality table across entire dataset</li></ul><h4><strong>Grouped Reports</strong></h4><ul><li><strong>Tag-specific MultiQC</strong>: Separate report for each unique tag combination</li><li><strong>Subset analysis</strong>: Compare quality within projects or batches</li></ul><h4><strong>Per-Sample Results</strong></h4><ul><li><strong>FastQC HTML reports</strong>: Individual quality reports per sample</li><li><strong>FastQ Screen results</strong>: Contamination screening per sample</li><li><strong>SeqFu TSV files</strong>: Detailed statistics tables</li></ul><h4><strong>Raw Data</strong></h4><ul><li><strong>Subsampled FASTQ</strong>: Downsampled reads used for QC (optional)</li><li><strong>JSON/CSV metrics</strong>: Machine-readable quality data for custom analysis</li></ul><h3><strong>Use Cases</strong></h3><h4><strong>Sequencing Core Facilities</strong></h4><ul><li><strong>Run QC</strong>: Assess quality of sequencing runs before data delivery</li><li><strong>Quality tracking</strong>: Monitor instrument performance over time</li><li><strong>Client reports</strong>: Generate professional QC reports for customers</li><li><strong>Batch comparison</strong>: Identify systematic quality issues</li></ul><h4><strong>Large-Scale Genomics Projects</strong></h4><ul><li><strong>Pre-processing QC</strong>: Screen samples before expensive downstream analysis</li><li><strong>Sample triage</strong>: Identify low-quality samples for re-sequencing</li><li><strong>Project management</strong>: Track quality across sub-projects and collaborators</li><li><strong>Publication QC</strong>: Generate supplementary QC reports for papers</li></ul><h4><strong>Clinical Sequencing</strong></h4><ul><li><strong>Sample acceptance</strong>: Verify quality meets clinical standards</li><li><strong>Contamination screening</strong>: Critical for patient sample identity</li><li><strong>Quality assurance</strong>: Document QC for regulatory compliance</li><li><strong>Batch monitoring</strong>: Detect systematic technical issues</li></ul><h3><strong>Supported Sequencing Platforms</strong></h3><table><tr><th>Platform</th><th>Read Types</th><th>FastQC</th><th>FastQ Screen</th><th>SeqFu</th></tr><tr><td><strong>Illumina</strong></td><td>Single/Paired-end</td><td>\u2705</td><td>\u2705</td><td>\u2705</td></tr><tr><td><strong>Oxford Nanopore</strong></td><td>Long reads</td><td>\u2705</td><td>\u2705</td><td>\u2705</td></tr><tr><td><strong>PacBio</strong></td><td>HiFi/CLR</td><td>\u2705</td><td>\u2705</td><td>\u2705</td></tr><tr><td><strong>MGI/BGI</strong></td><td>Single/Paired-end</td><td>\u2705</td><td>\u2705</td><td>\u2705</td></tr></table><h3><strong>Key Quality Metrics Assessed</strong></h3><h4><strong>Read Quality</strong></h4><ul><li><strong>Phred scores</strong>: Per-base and mean quality</li><li><strong>Quality distribution</strong>: Consistency across read positions</li><li><strong>Low-quality reads</strong>: Percentage below quality thresholds</li></ul><h4><strong>Sequence Content</strong></h4><ul><li><strong>GC content</strong>: Expected vs. observed distribution</li><li><strong>N content</strong>: Ambiguous bases indicating quality issues</li><li><strong>Base composition</strong>: Bias at read positions</li></ul><h4><strong>Library Quality</strong></h4><ul><li><strong>Duplication rate</strong>: PCR over-amplification or low input</li><li><strong>Sequence complexity</strong>: Library diversity</li><li><strong>Insert size</strong>: Fragment length distribution (paired-end)</li></ul><h4><strong>Technical Artifacts</strong></h4><ul><li><strong>Adapter content</strong>: Incomplete adapter removal</li><li><strong>Overrepresented sequences</strong>: Contamination or bias</li><li><strong>K-mer enrichment</strong>: Sequence-specific artifacts</li></ul><h3><strong>Subsampling Strategy</strong></h3><p>For large datasets, SeqInspector uses intelligent subsampling to accelerate QC:</p><ul><li><strong>Configurable depth</strong>: Default 1M reads, adjustable per dataset</li><li><strong>Representative sampling</strong>: Seqtk ensures unbiased read selection</li><li><strong>Memory efficient</strong>: Process 100s of samples without excessive storage</li><li><strong>Accuracy preserved</strong>: Sufficient depth for reliable quality metrics</li></ul><blockquote><p><strong>Tip:</strong> For final QC reports, increase subsampling depth to 5-10M reads for more precise metrics.</p></blockquote><h3><strong>Best Practices</strong></h3><ul><li><strong>Tag Consistently</strong>: Use standardized tagging schemes across projects</li><li><strong>Include Controls</strong>: Add positive/negative controls to detect systematic issues</li><li><strong>Run Early</strong>: QC immediately after sequencing, before costly analysis</li><li><strong>Archive Reports</strong>: Save MultiQC reports for long-term quality tracking</li><li><strong>Set Thresholds</strong>: Define quality acceptance criteria for your application</li><li><strong>Compare Batches</strong>: Use grouped reports to identify batch effects</li></ul><h3><strong>Integration with Analysis Pipelines</strong></h3><p>SeqInspector serves as the quality gateway before downstream analysis:</p><ol><li><strong>Initial QC</strong>: Run SeqInspector on raw data</li><li><strong>Review Reports</strong>: Assess quality, contamination, artifacts</li><li><strong>Sample Triage</strong>: Remove/re-sequence poor quality samples</li><li><strong>Trimming Parameters</strong>: Inform adapter/quality trimming settings</li><li><strong>Proceed to Analysis</strong>: Continue with assembly, alignment, variant calling, etc.</li></ol><h3><strong>Performance and Scalability</strong></h3><ul><li><strong>Throughput</strong>: 50-100 samples per hour (with subsampling)</li><li><strong>Parallelization</strong>: Process hundreds of samples simultaneously</li><li><strong>Memory footprint</strong>: Low (1-2GB per sample with subsampling)</li><li><strong>Storage</strong>: ~100MB per sample for all QC results</li></ul><h3><strong>Development Status</strong></h3><blockquote><p><strong>Note:</strong> SeqInspector is in development (dev branch). While functional and actively used by the Swedish National Genomics Infrastructure, features may evolve. Use <code>-r dev</code> for the latest version.</p></blockquote><h3><strong>Comparison with Other QC Tools</strong></h3><table><tr><th>Feature</th><th>SeqInspector</th><th>FastQC Alone</th><th>MultiQC Alone</th></tr><tr><td><strong>Multi-Sample</strong></td><td>\u2705 Optimized</td><td>\u26a0\ufe0f Manual</td><td>\u2705 Yes</td></tr><tr><td><strong>Contamination</strong></td><td>\u2705 Integrated</td><td>\u274c No</td><td>\u26a0\ufe0f If run separately</td></tr><tr><td><strong>Grouping</strong></td><td>\u2705 Tag-based</td><td>\u274c No</td><td>\u26a0\ufe0f Limited</td></tr><tr><td><strong>Subsampling</strong></td><td>\u2705 Built-in</td><td>\u274c Manual</td><td>\u274c No</td></tr><tr><td><strong>Workflow</strong></td><td>\u2705 Automated</td><td>\u26a0\ufe0f Manual steps</td><td>\u26a0\ufe0f Requires inputs</td></tr></table><blockquote><p><strong>Perfect for:</strong> Sequencing facilities \u2022 Large genomics projects \u2022 Quality assurance \u2022 Contamination screening \u2022 Multi-platform sequencing \u2022 Clinical genomics \u2022 Batch quality tracking \u2022 Production pipelines</p></blockquote><p>Built with <a href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> \u2022 Powered by <a href=\"https://nf-co.re/seqinspector/\" target=\"_blank\">nf-core/seqinspector (dev)</a> \u2022 Developed by Swedish National Genomics Infrastructure \u2022 Containerized execution</p>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV or TSV samplesheet with columns: sample (unique ID), fastq_1 (R1 or single-end reads), fastq_2 (optional R2), rundir (optional), tags (optional colon-separated tags for grouping).",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory for QC reports, FastQC results, contamination screening, and statistics.",
+      "defaultValue": "./seqinspector-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "description": "Select compute resources. LARGE recommended for batches with 50+ samples.",
+      "options": [
+        {
+          "label": "MEDIUM (32 CPUs, 180GB RAM) - Small batches (<50 samples)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Recommended for most projects",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

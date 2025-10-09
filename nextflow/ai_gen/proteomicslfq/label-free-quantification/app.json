@@ -1,0 +1,111 @@
+{
+  "name": "proteomicslfq-quantification",
+  "title": "Proteomics Label-Free Quantification (nf-core/proteomicslfq)",
+  "description": "Quantitative proteomics analysis using label-free quantification. Performs peptide identification, protein inference, and differential abundance analysis from mass spectrometry mzML data.",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/proteomicslfq --input ${input} --database ${database} --expdesign ${expdesign} --outdir ${outdir} -r 1.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/proteomicslfq/master/docs/images/nf-core-proteomicslfq_logo.png",
+  "content": "<h2><strong>Proteomics Label-Free Quantification</strong></h2><p>The <strong>nf-core/proteomicslfq</strong> pipeline performs comprehensive label-free quantitative proteomics analysis from mass spectrometry data (mzML format).</p><h3><strong>Scientific Applications</strong></h3><blockquote><ul><li><strong>Biomarker Discovery</strong>: Identify disease-associated proteins</li><li><strong>Drug Target Validation</strong>: Quantify protein expression changes</li><li><strong>Pathway Analysis</strong>: Study protein-level regulation</li><li><strong>Clinical Proteomics</strong>: Diagnostic and prognostic markers</li><li><strong>Systems Biology</strong>: Multi-omics integration</li><li><strong>Post-translational Modifications</strong>: PTM localization and quantification</li></ul></blockquote><h3><strong>Pipeline Features</strong></h3><ul><li><strong>Database Search</strong>: Multiple search engines (Comet, X!Tandem, MS-GF+)</li><li><strong>FDR Control</strong>: Percolator re-scoring and filtering</li><li><strong>Protein Inference</strong>: Group related proteins</li><li><strong>LFQ Methods</strong>: Spectral counting or feature-based quantification</li><li><strong>Statistical Analysis</strong>: MSstats for differential abundance</li><li><strong>Quality Control</strong>: PTXQC comprehensive QC metrics</li></ul><h3><strong>Input Requirements</strong></h3><p>Three required inputs:</p><ol><li><strong>mzML files</strong>: Raw mass spectrometry data (converted from vendor formats)</li><li><strong>Protein Database</strong>: FASTA file with protein sequences</li><li><strong>Experimental Design</strong>: TSV file mapping samples to conditions</li></ol><h3><strong>Key Outputs</strong></h3><ul><li><strong>Protein Quantification</strong>: Abundance matrices across samples</li><li><strong>Differential Abundance</strong>: Statistical comparisons between conditions</li><li><strong>PTM Localization</strong>: Modification site assignments</li><li><strong>Quality Metrics</strong>: Comprehensive QC reports</li></ul><blockquote><p><strong>Perfect for:</strong> Proteomics researchers \u2022 Clinical labs \u2022 Drug discovery \u2022 Biomarker studies \u2022 Systems biology</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Input mzML Files",
+      "name": "input",
+      "description": "Glob pattern or directory containing mzML files",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": true
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Protein Database (FASTA)",
+      "name": "database",
+      "description": "FASTA file with protein sequences for database search",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".fasta",
+          ".fa"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Experimental Design (TSV)",
+      "name": "expdesign",
+      "description": "TSV file mapping samples to experimental conditions",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".tsv",
+          ".txt"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory",
+      "defaultValue": "./proteomicslfq-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "options": [
+        {
+          "label": "LARGE (Recommended)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE (Many samples)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

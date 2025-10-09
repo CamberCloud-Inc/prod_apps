@@ -1,0 +1,138 @@
+{
+  "name": "proteinannotator-protein-annotation",
+  "title": "Functional Protein Annotation",
+  "description": "Comprehensive protein annotation pipeline for identifying protein functions from sequence data using InterProScan and seqkit. Analyzes protein FASTA files to discover functional characteristics, protein families, domains, and sites by scanning against the InterPro database. Samplesheet format: `id,fasta`",
+  "version": "dev",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/proteinannotator --input ${input} --outdir ${outdir} -r dev -profile ${profile}",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/proteinannotator/master/docs/images/nf-core-proteinannotator_logo_light.png",
+  "content": "<h1 class=\"heading-node\">\ud83e\uddec Protein Annotator: Functional Protein Annotation</h1><p class=\"text-node\"><strong>Discover Protein Function Through Sequence Analysis</strong></p><p class=\"text-node\">Protein annotation reveals the functional characteristics of proteins by analyzing their sequences against comprehensive databases, identifying protein families, domains, functional sites, and biological roles.</p><img src=\"https://raw.githubusercontent.com/nf-core/proteinannotator/master/docs/images/nf-core-proteinannotator_logo_light.png\" alt=\"nf-core/proteinannotator workflow\" width=\"400\" height=\"200\"><h2 class=\"heading-node\">\ud83c\udfaf Pipeline Overview</h2><p class=\"text-node\">The nf-core/proteinannotator pipeline performs comprehensive protein sequence analysis:</p><h3 class=\"heading-node\">\ud83d\udd2c Analysis Tools</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udcca seqkit stats:</strong> Generate statistics and summaries of input protein FASTA files</p></li><li><p class=\"text-node\"><strong>\ud83d\udd0d InterProScan:</strong> Scan protein sequences against InterPro database signatures</p></li><li><p class=\"text-node\"><strong>\ud83d\udccb MultiQC:</strong> Comprehensive quality control reporting</p></li></ul><h3 class=\"heading-node\">\ud83e\uddec Functional Annotation Features</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83c\udff7\ufe0f Protein Families:</strong> Identify membership in known protein families</p></li><li><p class=\"text-node\"><strong>\ud83e\udde9 Domain Detection:</strong> Discover functional domains within protein sequences</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Site Identification:</strong> Locate active sites, binding sites, and post-translational modification sites</p></li><li><p class=\"text-node\"><strong>\ud83d\udcd6 GO Terms:</strong> Assign Gene Ontology terms for biological process, molecular function, and cellular component</p></li><li><p class=\"text-node\"><strong>\ud83e\uddea Pathway Mapping:</strong> Link proteins to biological pathways and networks</p></li></ul><h2 class=\"heading-node\">\ud83d\udccb Sample Sheet Format</h2><p class=\"text-node\">Your CSV samplesheet defines the protein sequences to analyze:</p><pre class=\"block-node\"><code>id,fasta\nspecies1,/path/to/species1_proteins.fasta\nspecies2,/path/to/species2_proteins.fasta\necoli,/path/to/ecoli_proteins.fasta</code></pre><p class=\"text-node\">Each row represents protein sequences from a single species or sample:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>id:</strong> Unique identifier for the sample/species</p></li><li><p class=\"text-node\"><strong>fasta:</strong> Path to protein FASTA file containing sequences</p></li></ul><h2 class=\"heading-node\">\ud83d\udcca Comprehensive Results</h2><h3 class=\"heading-node\">Annotation Data</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udcca InterProScan Results:</strong> Detailed functional annotations in TSV, XML, and GFF3 formats</p></li><li><p class=\"text-node\"><strong>\ud83c\udff7\ufe0f Protein Families:</strong> Family classifications and membership information</p></li><li><p class=\"text-node\"><strong>\ud83e\uddec Domain Architecture:</strong> Complete domain organization and structure</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Functional Sites:</strong> Active sites, binding sites, and conserved regions</p></li></ul><h3 class=\"heading-node\">Quality Control</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udcc8 MultiQC Report:</strong> Comprehensive analysis summary with interactive plots</p></li><li><p class=\"text-node\"><strong>\ud83d\udd0d Sequence Statistics:</strong> Length distributions, composition analysis, quality metrics</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Annotation Coverage:</strong> Percentage of proteins annotated, database hit rates</p></li></ul><h3 class=\"heading-node\">Analysis-Ready Outputs</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udccb TSV Tables:</strong> Tab-separated annotation tables for downstream analysis</p></li><li><p class=\"text-node\"><strong>\ud83d\uddc2\ufe0f GFF3 Files:</strong> Genomic feature format files for genome browsers</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Summary Reports:</strong> High-level summaries of annotation results</p></li></ul><h2 class=\"heading-node\">\ud83e\uddea Applications</h2><p class=\"text-node\"><strong>Perfect for Research in:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\">\ud83e\udda0 Microbial genomics \u2022 Comparative proteomics</p></li><li><p class=\"text-node\">\ud83e\uddec Functional genomics \u2022 Protein evolution</p></li><li><p class=\"text-node\">\ud83c\udf31 Plant biology \u2022 Metagenomics</p></li><li><p class=\"text-node\">\ud83d\udd2c Structural biology \u2022 Drug discovery</p></li><li><p class=\"text-node\">\ud83e\uddeb Synthetic biology \u2022 Biotechnology</p></li></ul><p class=\"text-node\"><strong>Data Types Supported:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\">Protein FASTA files from any organism</p></li><li><p class=\"text-node\">Translated gene predictions</p></li><li><p class=\"text-node\">Proteome assemblies</p></li><li><p class=\"text-node\">Metagenomic protein sequences</p></li></ul><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> \u2022 Powered by <a class=\"link\" href=\"https://nf-co.re/proteinannotator/dev/\" target=\"_blank\">nf-core/proteinannotator dev</a> \u2022 Containerized execution \u2022 Continuous integration tested</p>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV samplesheet with columns: id (sample identifier) and fasta (path to protein FASTA file). Each row represents protein sequences from a single species or sample.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory for storing annotation results, quality control reports, and analysis summaries.",
+      "defaultValue": "./proteinannotator-results",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Execution Profile",
+      "name": "profile",
+      "description": "Select the execution profile for container management and resource configuration.",
+      "defaultValue": "docker",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Docker (Recommended)",
+          "value": "docker"
+        },
+        {
+          "label": "Singularity",
+          "value": "singularity"
+        },
+        {
+          "label": "Conda",
+          "value": "conda"
+        },
+        {
+          "label": "Test Dataset",
+          "value": "test"
+        }
+      ]
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": false,
+      "description": "Select compute resources based on dataset size. InterProScan is computationally intensive - use Large or XLarge for production datasets.",
+      "options": [
+        {
+          "label": "Small (8 CPUs, 45GB RAM) - Test datasets",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Medium (32 CPUs, 180GB RAM) - Small proteomes",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Large (64 CPUs, 360GB RAM) - Recommended",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLarge (96 CPUs, 540GB RAM) - Large proteomes",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

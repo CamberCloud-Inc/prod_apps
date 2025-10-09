@@ -1,0 +1,183 @@
+{
+  "name": "proteinfamilies-protein-families",
+  "title": "Generation and Analysis",
+  "description": "Generate and update protein families from amino acid sequences using clustering, multiple sequence alignment, and Hidden Markov Model generation. Supports both de novo family creation and updating existing families with new sequences - essential for comparative genomics and metagenomics. Samplesheet format: `distribution,diversity`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/proteinfamilies --input ${input} --outdir ${outdir} --clustering_tool ${clustering_tool} --alignment_tool ${alignment_tool} --trim_msa ${trim_msa} --remove_family_redundancy ${remove_family_redundancy} --remove_sequence_redundancy ${remove_sequence_redundancy} -r 1.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/proteinfamilies/master/docs/images/nf-core-proteinfamilies_logo_light.png",
+  "content": "<h2><strong>Protein Families: Generation and Analysis</strong></h2><p>A comprehensive bioinformatics pipeline for generating and updating protein families from amino acid sequences. Performs intelligent clustering, multiple sequence alignment, and Hidden Markov Model (HMM) generation to organize proteins into functional families.</p><h3><strong>What are Protein Families?</strong></h3><blockquote><p><strong>Protein families</strong> are groups of evolutionarily related proteins that share common sequence features, structural domains, and often similar functions. Organizing proteins into families enables functional prediction, evolutionary analysis, and comparative genomics across diverse organisms.</p></blockquote><h3><strong>Key Features</strong></h3><ul><li><strong>Dual Modes</strong>: Create new families or update existing ones with new sequences</li><li><strong>Flexible Clustering</strong>: Choose between MMseqs2 linclust (fast, large datasets) or cluster (sensitive, medium datasets)</li><li><strong>Multiple Aligners</strong>: FAMSA (recommended, fast) or MAFFT (thorough) for MSA generation</li><li><strong>Quality Control</strong>: Optional gap trimming with ClipKIT for cleaner alignments</li><li><strong>Redundancy Removal</strong>: Eliminate redundant families and sequences for streamlined results</li><li><strong>HMM Generation</strong>: Create profile HMMs for each family using HMMER for sensitive sequence searches</li></ul><h3><strong>Pipeline Workflow</strong></h3><h4><strong>Family Creation Mode</strong></h4><ol><li><strong>Sequence Statistics</strong>: Generate input sequence statistics with SeqKit</li><li><strong>Sequence Clustering</strong>: Cluster proteins by similarity using MMseqs2</li><li><strong>Multiple Sequence Alignment</strong>: Align each cluster with FAMSA or MAFFT</li><li><strong>MSA Trimming (Optional)</strong>: Remove gap-rich regions with ClipKIT</li><li><strong>HMM Generation</strong>: Build profile HMMs from alignments using HMMER</li><li><strong>Redundancy Removal (Optional)</strong>: Remove overlapping families and duplicate sequences</li></ol><h4><strong>Family Update Mode</strong></h4><ol><li><strong>Family Matching</strong>: Compare new sequences against existing HMMs using hmmsearch</li><li><strong>Sequence Extraction</strong>: Extract sequences belonging to each family</li><li><strong>Sequence Concatenation</strong>: Combine existing and new sequences</li><li><strong>Realignment</strong>: Generate updated MSAs with combined sequences</li><li><strong>HMM Updating</strong>: Rebuild family HMMs with expanded sequence sets</li></ol><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Metagenomics</strong>: Organize millions of metagenomic proteins into functional families</li><li><strong>Comparative Genomics</strong>: Identify orthologs and paralogs across genomes</li><li><strong>Functional Annotation</strong>: Predict function for uncharacterized proteins via family assignment</li><li><strong>Evolutionary Studies</strong>: Track protein family expansion, contraction, and divergence</li><li><strong>Structural Genomics</strong>: Group proteins for structural prediction and modeling</li><li><strong>Pangenomics</strong>: Characterize core and accessory gene families in bacterial pangenomes</li></ul><h3><strong>Clustering Strategy</strong></h3><h4><strong>MMseqs2 Linclust</strong></h4><ul><li><strong>Algorithm</strong>: Linear-time clustering using k-mer similarity</li><li><strong>Speed</strong>: Extremely fast, handles millions of sequences</li><li><strong>Best for</strong>: Large datasets (>100,000 proteins), metagenomic studies</li><li><strong>Sensitivity</strong>: Moderate - may miss distant relationships</li></ul><h4><strong>MMseqs2 Cluster</strong></h4><ul><li><strong>Algorithm</strong>: Cascaded clustering with sequence alignment</li><li><strong>Speed</strong>: Slower but more thorough</li><li><strong>Best for</strong>: Medium datasets (<100,000 proteins), comparative genomics</li><li><strong>Sensitivity</strong>: High - detects more distant homologs</li></ul><h3><strong>Alignment Tools</strong></h3><h4><strong>FAMSA (Recommended)</strong></h4><ul><li><strong>Algorithm</strong>: Fast and accurate MSA using guide trees</li><li><strong>Speed</strong>: Very fast, suitable for large family sizes</li><li><strong>Accuracy</strong>: High quality alignments for most protein families</li><li><strong>Best for</strong>: General use, large-scale analyses</li></ul><h4><strong>MAFFT</strong></h4><ul><li><strong>Algorithm</strong>: FFT-based progressive alignment</li><li><strong>Speed</strong>: Slower, especially with large families</li><li><strong>Accuracy</strong>: Excellent, particularly for difficult sequences</li><li><strong>Best for</strong>: Small to medium families requiring maximum accuracy</li></ul><h3><strong>Input Requirements</strong></h3><p>Provide a CSV samplesheet with the following structure:</p><h4><strong>Family Creation</strong></h4><pre>sample,fasta\nspecies1,proteins.fasta\nmetagenome_sample,metagenomic_proteins.fasta</pre><h4><strong>Family Update</strong></h4><pre>sample,fasta,hmm_tarballs,msa_tarballs\nspecies1,new_proteins.fasta,existing_families.hmm.tar.gz,existing_families.msa.tar.gz</pre><ul><li><strong>sample</strong>: Unique identifier for the sample/dataset</li><li><strong>fasta</strong>: Path to protein FASTA file with amino acid sequences</li><li><strong>hmm_tarballs</strong>: (Update mode) Compressed existing family HMMs</li><li><strong>msa_tarballs</strong>: (Update mode) Compressed existing family MSAs</li></ul><h3><strong>Main Outputs</strong></h3><ul><li><strong>Protein Families</strong>: Organized clusters of related proteins</li><li><strong>Multiple Sequence Alignments</strong>: FASTA format MSAs for each family</li><li><strong>Profile HMMs</strong>: HMMER format models for sensitive sequence searches</li><li><strong>Cluster Assignments</strong>: Tables mapping proteins to families</li><li><strong>Family Statistics</strong>: Size distribution, diversity metrics</li><li><strong>Quality Metrics</strong>: Alignment quality, clustering statistics</li><li><strong>MultiQC Report</strong>: Comprehensive summary of the entire analysis</li></ul><h3><strong>Optional Processing Steps</strong></h3><h4><strong>MSA Gap Trimming (ClipKIT)</strong></h4><p>Remove gap-rich and poorly aligned regions to improve alignment quality and downstream phylogenetic analysis:</p><ul><li>Eliminates columns with excessive gaps</li><li>Removes low-information positions</li><li>Produces cleaner, more informative alignments</li><li>Particularly useful for divergent protein families</li></ul><h4><strong>Family Redundancy Removal</strong></h4><p>Identify and merge overlapping families using hmmsearch comparisons:</p><ul><li>Detects families with significant HMM-HMM similarity</li><li>Merges redundant families into single representative families</li><li>Reduces computational overhead for downstream analyses</li><li>Provides cleaner family organization</li></ul><h4><strong>Sequence Redundancy Removal</strong></h4><p>Eliminate highly similar sequences within families:</p><ul><li>Clusters sequences within families at high identity threshold</li><li>Retains one representative per redundant cluster</li><li>Reduces bias from overrepresented sequences</li><li>Speeds up alignment and HMM building</li></ul><h3><strong>Use Cases</strong></h3><h4><strong>Metagenomic Analysis</strong></h4><ul><li>Organize millions of predicted proteins from metagenomes</li><li>Identify novel protein families in environmental samples</li><li>Compare functional composition across microbiomes</li><li>Track family abundance in different environments</li></ul><h4><strong>Comparative Genomics</strong></h4><ul><li>Define orthologous groups across multiple genomes</li><li>Identify species-specific gene families</li><li>Study gene family evolution and expansion</li><li>Characterize core vs accessory genomes</li></ul><h4><strong>Functional Annotation</strong></h4><ul><li>Assign unknown proteins to characterized families</li><li>Transfer functional annotations within families</li><li>Predict protein function from family membership</li><li>Prioritize proteins for experimental characterization</li></ul><h4><strong>Database Updates</strong></h4><ul><li>Incrementally update existing protein family databases</li><li>Incorporate newly sequenced genomes</li><li>Refine family definitions with additional sequences</li><li>Maintain consistent family numbering across versions</li></ul><h3><strong>Performance Expectations</strong></h3><ul><li><strong>Small dataset (1,000-10,000 proteins):</strong> 30 minutes - 2 hours</li><li><strong>Medium dataset (10,000-100,000 proteins):</strong> 2-6 hours</li><li><strong>Large dataset (100,000-1,000,000 proteins):</strong> 6-24 hours</li><li><strong>Metagenomic scale (>1,000,000 proteins):</strong> 1-3 days</li></ul><p><em>Time varies with clustering method, alignment tool, and number of families generated.</em></p><h3><strong>Computational Considerations</strong></h3><ul><li><strong>Memory Requirements</strong>: Scale with largest family size (MAFFT is memory-intensive)</li><li><strong>CPU Usage</strong>: Highly parallelizable - more CPUs = faster completion</li><li><strong>Storage</strong>: MSAs and HMMs require substantial disk space for large analyses</li><li><strong>Clustering Thresholds</strong>: Lower thresholds create larger, more diverse families</li></ul><blockquote><p><strong>Perfect for:</strong> Metagenomics \u2022 Comparative Genomics \u2022 Functional Annotation \u2022 Evolutionary Analysis \u2022 Pangenomics \u2022 Database Curation</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Input Samplesheet",
+      "name": "input",
+      "description": "CSV file with columns: sample, fasta, and optionally hmm_tarballs/msa_tarballs for family updates. Each row represents a protein dataset for family creation or updating.",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory for pipeline results including protein families, MSAs, HMMs, and comprehensive reports.",
+      "defaultValue": "./proteinfamilies-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Clustering Tool",
+      "name": "clustering_tool",
+      "description": "MMseqs2 clustering method: linclust (faster, linear-time for large datasets >100K proteins) or cluster (more sensitive, for medium datasets <100K proteins)",
+      "options": [
+        {
+          "label": "Linclust - Fast, linear-time (large datasets >100K proteins)",
+          "value": "linclust"
+        },
+        {
+          "label": "Cluster - Sensitive, cascaded clustering (medium datasets <100K)",
+          "value": "cluster"
+        }
+      ],
+      "defaultValue": "linclust",
+      "required": false
+    },
+    {
+      "type": "Select",
+      "label": "Alignment Tool",
+      "name": "alignment_tool",
+      "description": "Multiple sequence alignment tool. FAMSA recommended for speed and accuracy.",
+      "options": [
+        {
+          "label": "FAMSA - Fast and accurate (recommended)",
+          "value": "famsa"
+        },
+        {
+          "label": "MAFFT - Thorough but slower",
+          "value": "mafft"
+        }
+      ],
+      "defaultValue": "famsa",
+      "required": false
+    },
+    {
+      "type": "Select",
+      "label": "Trim MSA",
+      "name": "trim_msa",
+      "description": "Enable MSA gap trimming using ClipKIT to remove poorly aligned and gap-rich regions, improving alignment quality for downstream analysis.",
+      "options": [
+        {
+          "label": "Yes - Trim gaps and low-quality regions",
+          "value": "true"
+        },
+        {
+          "label": "No - Keep full alignment",
+          "value": "false"
+        }
+      ],
+      "defaultValue": "true",
+      "required": false
+    },
+    {
+      "type": "Select",
+      "label": "Remove Family Redundancy",
+      "name": "remove_family_redundancy",
+      "description": "Remove redundant families by detecting and merging families with significant HMM-HMM similarity via hmmsearch.",
+      "options": [
+        {
+          "label": "Yes - Merge redundant families",
+          "value": "true"
+        },
+        {
+          "label": "No - Keep all families",
+          "value": "false"
+        }
+      ],
+      "defaultValue": "true",
+      "required": false
+    },
+    {
+      "type": "Select",
+      "label": "Remove Sequence Redundancy",
+      "name": "remove_sequence_redundancy",
+      "description": "Remove highly similar sequences within families via MMseqs2 clustering to reduce bias and improve HMM quality.",
+      "options": [
+        {
+          "label": "Yes - Remove redundant sequences",
+          "value": "true"
+        },
+        {
+          "label": "No - Keep all sequences",
+          "value": "false"
+        }
+      ],
+      "defaultValue": "true",
+      "required": false
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Resources",
+      "name": "system_size",
+      "description": "Select compute resources. LARGE recommended for most analyses. XLARGE for metagenomic-scale datasets (>500K proteins).",
+      "options": [
+        {
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Small datasets (<10K proteins)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Recommended for most analyses",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE (96 CPUs, 540GB RAM) - Metagenomic scale (>500K proteins)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

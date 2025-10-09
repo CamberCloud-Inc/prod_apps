@@ -1,0 +1,181 @@
+{
+  "name": "methylarray-clinical-ewas",
+  "title": "Clinical EWAS Analysis",
+  "description": "Epigenome-wide association study (EWAS) pipeline for clinical methylation array data. Analyze Illumina methylation arrays to discover differentially methylated positions (DMPs) and regions (DMRs) associated with disease, treatment response, or clinical phenotypes. Samplesheet format: `Sample_Name,Sentrix_ID,Sentrix_Position,condition,age,sex,batch`",
+  "content": "<h1 class=\"heading-node\">\ud83e\uddec DNA Methylation Array: Clinical EWAS Analysis</h1><p class=\"text-node\"><strong>Discover Epigenetic Biomarkers in Clinical Studies</strong></p><p class=\"text-node\">Epigenome-wide association studies (EWAS) use DNA methylation arrays to identify epigenetic changes associated with disease, environmental exposures, clinical outcomes, and treatment responses. This pipeline provides comprehensive analysis of Illumina methylation array data from clinical cohorts, including quality control, normalization, cell type deconvolution, and statistical analysis to identify differentially methylated probes (DMPs) and regions (DMRs).</p><img src=\"https://raw.githubusercontent.com/nf-core/methylarray/dev/docs/images/nf-core-methylarray_logo_light.png\" alt=\"nf-core/methylarray workflow\" width=\"600\" height=\"300\"><h2 class=\"heading-node\">\ud83c\udfaf What is EWAS?</h2><p class=\"text-node\">Epigenome-wide association studies (EWAS) examine DNA methylation patterns across hundreds of thousands of CpG sites genome-wide to:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udd0d Identify disease biomarkers:</strong> Discover methylation changes associated with disease diagnosis or progression</p></li><li><p class=\"text-node\"><strong>\ud83d\udc8a Predict treatment response:</strong> Find epigenetic markers that predict therapeutic outcomes</p></li><li><p class=\"text-node\"><strong>\ud83e\uddea Understand disease mechanisms:</strong> Reveal epigenetic dysregulation in pathological states</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Clinical stratification:</strong> Classify patients into molecular subtypes for precision medicine</p></li><li><p class=\"text-node\"><strong>\ud83c\udf0d Environmental exposures:</strong> Detect methylation changes from toxins, diet, or lifestyle factors</p></li></ul><h2 class=\"heading-node\">\ud83d\udd2c Supported Illumina Array Platforms</h2><p class=\"text-node\">This pipeline supports all major Illumina methylation arrays:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\u2713 EPIC v2 Array:</strong> Latest platform with ~935,000 CpG sites (recommended for new studies)</p></li><li><p class=\"text-node\"><strong>\u2713 EPIC v1 Array:</strong> Industry standard with ~850,000 CpG sites (MethylationEPIC BeadChip)</p></li><li><p class=\"text-node\"><strong>\u2713 450K Array:</strong> Legacy platform with ~450,000 CpG sites (HumanMethylation450)</p></li><li><p class=\"text-node\"><strong>\u2713 27K Array:</strong> Original platform with ~27,000 CpG sites (HumanMethylation27)</p></li></ul><p class=\"text-node\">The pipeline automatically detects your array type from IDAT files and applies appropriate annotation and filtering.</p><h2 class=\"heading-node\">\ud83d\udccb Input Requirements</h2><h3 class=\"heading-node\">1. IDAT Files (required)</h3><p class=\"text-node\">Raw methylation array data consists of paired IDAT files for each sample:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Red channel:</strong> SampleID_R01C01_Red.idat</p></li><li><p class=\"text-node\"><strong>Green channel:</strong> SampleID_R01C01_Grn.idat</p></li></ul><p class=\"text-node\">These binary files contain raw fluorescence intensities from the array scanner.</p><h3 class=\"heading-node\">2. Sample Sheet (required)</h3><p class=\"text-node\">CSV file mapping samples to clinical metadata:</p><pre class=\"block-node\"><code>Sample_Name,Sentrix_ID,Sentrix_Position,condition,age,sex,batch\nPatient_001,203901230056,R01C01,case,65,M,1\nPatient_002,203901230056,R02C01,control,62,F,1\nPatient_003,203901230057,R01C01,case,58,M,2\nPatient_004,203901230057,R02C01,control,60,F,2</code></pre><p class=\"text-node\"><strong>Required columns:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Sample_Name:</strong> Unique sample identifier</p></li><li><p class=\"text-node\"><strong>Sentrix_ID:</strong> Array chip barcode (from IDAT filename)</p></li><li><p class=\"text-node\"><strong>Sentrix_Position:</strong> Position on chip (e.g., R01C01)</p></li><li><p class=\"text-node\"><strong>condition:</strong> Primary experimental variable (case vs control, treated vs untreated)</p></li></ul><p class=\"text-node\"><strong>Optional but recommended:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>age, sex:</strong> Demographics for cell type estimation and covariate adjustment</p></li><li><p class=\"text-node\"><strong>batch:</strong> Technical batch information for batch effect correction</p></li><li><p class=\"text-node\"><strong>cell_type:</strong> If samples are from different tissues or sorted cells</p></li></ul><h2 class=\"heading-node\">\ud83d\udcca Comprehensive Analysis Pipeline</h2><h3 class=\"heading-node\">1. Quality Control & Preprocessing</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udcc8 Read IDAT files:</strong> Import raw fluorescence data using minfi</p></li><li><p class=\"text-node\"><strong>\ud83d\udd0d QC metrics:</strong> Assess sample quality, detection p-values, bisulfite conversion</p></li><li><p class=\"text-node\"><strong>\u274c Sample filtering:</strong> Remove failed samples based on QC thresholds</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Control probes:</strong> Evaluate array performance using built-in controls</p></li></ul><h3 class=\"heading-node\">2. Normalization & Correction</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\u2696\ufe0f Quantile normalization:</strong> Correct for technical variation between samples (preprocessQuantile)</p></li><li><p class=\"text-node\"><strong>\ud83d\udd27 Functional normalization:</strong> Alternative method using control probes (preprocessFunnorm)</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Beta/M-values:</strong> Calculate methylation values (beta: 0-1 scale, M: log2 ratio)</p></li><li><p class=\"text-node\"><strong>\ud83e\uddf9 Batch correction:</strong> Remove technical batch effects while preserving biological signal</p></li></ul><h3 class=\"heading-node\">3. Probe Filtering & Quality Control</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\u274c Cross-reactive probes:</strong> Remove probes with off-target binding using DNAmCrosshyb</p></li><li><p class=\"text-node\"><strong>\ud83e\uddec SNP probes:</strong> Filter probes overlapping common genetic variants</p></li><li><p class=\"text-node\"><strong>\u26a7\ufe0f Sex chromosome probes:</strong> Remove X/Y probes or analyze separately</p></li><li><p class=\"text-node\"><strong>\ud83d\udd0d Detection p-value filtering:</strong> Remove poorly detected probes (p > 0.01)</p></li><li><p class=\"text-node\"><strong>\ud83d\udcc9 Low-variance probes:</strong> Optional filtering of non-variable CpG sites</p></li></ul><h3 class=\"heading-node\">4. Cell Type Deconvolution (Blood Samples)</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83e\ude78 Cell composition estimation:</strong> Estimate proportions of blood cell types (T cells, B cells, monocytes, granulocytes, NK cells)</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Houseman method:</strong> Reference-based deconvolution using cell-specific methylation signatures</p></li><li><p class=\"text-node\"><strong>\ud83d\udd27 Adjustment:</strong> Correct for cell type heterogeneity in differential methylation analysis</p></li></ul><h3 class=\"heading-node\">5. Differential Methylation Analysis</h3><h4 class=\"heading-node\">Differentially Methylated Positions (DMPs)</h4><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83c\udfaf Probe-level analysis:</strong> Test each CpG site for association with condition</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Linear models:</strong> Account for covariates (age, sex, cell type, batch)</p></li><li><p class=\"text-node\"><strong>\ud83d\udcc8 Effect sizes:</strong> Calculate methylation differences (delta beta values)</p></li><li><p class=\"text-node\"><strong>\ud83d\udd2c Statistical significance:</strong> FDR-adjusted p-values for multiple testing correction</p></li></ul><h4 class=\"heading-node\">Differentially Methylated Regions (DMRs)</h4><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83e\uddec Regional analysis:</strong> Identify genomic regions with coordinated methylation changes</p></li><li><p class=\"text-node\"><strong>\ud83d\udccd Bump hunting:</strong> Detect clusters of differentially methylated CpG sites</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Gene-centric DMRs:</strong> Focus on promoters, gene bodies, CpG islands</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Regional statistics:</strong> Combine evidence across multiple probes for robust detection</p></li></ul><h3 class=\"heading-node\">6. Biological Annotation & Interpretation</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83e\uddec Gene annotation:</strong> Map CpG sites to nearest genes and genomic features</p></li><li><p class=\"text-node\"><strong>\ud83d\udccd Genomic context:</strong> Classify probes (promoter, gene body, intergenic, CpG island, shore, shelf)</p></li><li><p class=\"text-node\"><strong>\ud83d\udd2c Functional enrichment:</strong> Pathway analysis of genes with differential methylation</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca UCSC tracks:</strong> Generate browser tracks for visualization</p></li></ul><h2 class=\"heading-node\">\ud83d\udcca Results & Outputs</h2><h3 class=\"heading-node\">Quality Control Reports</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udcc8 QC plots:</strong> Detection p-values, bisulfite conversion, signal intensities</p></li><li><p class=\"text-node\"><strong>\ud83c\udfa8 PCA plots:</strong> Sample clustering and batch effect visualization</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Density plots:</strong> Beta value distributions before/after normalization</p></li><li><p class=\"text-node\"><strong>\ud83d\udd0d Sex prediction:</strong> Verify sample sex matches metadata</p></li><li><p class=\"text-node\"><strong>\ud83e\ude78 Cell type composition:</strong> Estimated proportions of blood cell types</p></li></ul><h3 class=\"heading-node\">Differential Methylation Tables</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udccb DMP table:</strong> All tested CpG sites with statistics (p-value, FDR, delta beta, gene annotation)</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Top DMPs:</strong> Significant probes meeting FDR and effect size thresholds</p></li><li><p class=\"text-node\"><strong>\ud83e\uddec DMR table:</strong> Differentially methylated regions with genomic coordinates</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Annotated results:</strong> Gene names, chromosomal locations, functional context</p></li></ul><h3 class=\"heading-node\">Visualizations</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83c\udf0b Volcano plots:</strong> Visualize effect size vs statistical significance</p></li><li><p class=\"text-node\"><strong>\ud83d\udd25 Heatmaps:</strong> Hierarchical clustering of top DMPs across samples</p></li><li><p class=\"text-node\"><strong>\ud83d\udccd Manhattan plots:</strong> Genome-wide view of differential methylation</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca QQ plots:</strong> Assess test statistic distributions and inflation</p></li><li><p class=\"text-node\"><strong>\ud83c\udfa8 Beta value plots:</strong> Sample-level methylation at individual CpG sites</p></li></ul><h3 class=\"heading-node\">Processed Data Matrices</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udcca Normalized beta values:</strong> Quality-controlled methylation matrix for downstream analysis</p></li><li><p class=\"text-node\"><strong>\ud83d\udcc8 M-values:</strong> Log2-transformed values for statistical modeling</p></li><li><p class=\"text-node\"><strong>\ud83d\udd0d Filtered probes:</strong> Clean dataset after removing problematic probes</p></li></ul><h2 class=\"heading-node\">\ud83e\uddea Clinical Applications</h2><h3 class=\"heading-node\">Cancer Epigenetics</h3><p class=\"text-node\">Identify tumor-specific methylation changes, classify cancer subtypes, discover prognostic biomarkers, and detect early cancer signatures in liquid biopsies.</p><h3 class=\"heading-node\">Cardiovascular Disease</h3><p class=\"text-node\">Find methylation markers associated with heart disease risk, atherosclerosis progression, and response to cardiovascular medications.</p><h3 class=\"heading-node\">Neurological Disorders</h3><p class=\"text-node\">Discover epigenetic changes in Alzheimer's, Parkinson's, schizophrenia, autism, and neurodevelopmental disorders.</p><h3 class=\"heading-node\">Immunology & Inflammation</h3><p class=\"text-node\">Study methylation in autoimmune diseases (RA, lupus, IBD), chronic inflammation, and immune cell dysfunction.</p><h3 class=\"heading-node\">Aging & Longevity</h3><p class=\"text-node\">Develop epigenetic clocks, predict biological age, identify factors associated with healthy aging and longevity.</p><h3 class=\"heading-node\">Environmental Epidemiology</h3><p class=\"text-node\">Detect methylation changes from environmental toxins, air pollution, smoking, diet, and occupational exposures.</p><h3 class=\"heading-node\">Pharmacoepigenomics</h3><p class=\"text-node\">Predict drug response, identify resistance mechanisms, discover methylation biomarkers for treatment stratification.</p><h3 class=\"heading-node\">Developmental Origins of Disease</h3><p class=\"text-node\">Study early-life exposures, maternal effects, birth cohorts, and developmental programming of adult disease.</p><h2 class=\"heading-node\">\u2699\ufe0f Key Parameters & Options</h2><h3 class=\"heading-node\">Normalization Methods</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Quantile (default):</strong> Robust normalization using subset quantile normalization</p></li><li><p class=\"text-node\"><strong>Functional:</strong> Uses control probes to correct for technical variation</p></li><li><p class=\"text-node\"><strong>Raw:</strong> No normalization (for method comparison studies)</p></li></ul><h3 class=\"heading-node\">Statistical Thresholds</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>FDR cutoff:</strong> 0.05 (adjustable for sensitivity/specificity trade-off)</p></li><li><p class=\"text-node\"><strong>Delta beta threshold:</strong> 0.05-0.20 (minimum methylation difference)</p></li><li><p class=\"text-node\"><strong>Detection p-value:</strong> 0.01 (probe quality threshold)</p></li></ul><h3 class=\"heading-node\">Probe Filtering Options</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Remove cross-reactive:</strong> Recommended (removes ~43K problematic probes)</p></li><li><p class=\"text-node\"><strong>Remove SNP probes:</strong> Recommended (removes probes affected by genetic variants)</p></li><li><p class=\"text-node\"><strong>Remove sex chromosomes:</strong> Optional (depends on study design)</p></li></ul><h2 class=\"heading-node\">\ud83d\udcc8 Study Design Recommendations</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udcca Sample size:</strong> Minimum 20 samples per group for adequate power; 50+ per group ideal</p></li><li><p class=\"text-node\"><strong>\u2696\ufe0f Balanced groups:</strong> Equal numbers of cases and controls improves statistical power</p></li><li><p class=\"text-node\"><strong>\ud83d\udd04 Technical replicates:</strong> Include a few duplicate samples to assess reproducibility</p></li><li><p class=\"text-node\"><strong>\ud83d\udce6 Batch design:</strong> Randomize samples across array chips to avoid confounding</p></li><li><p class=\"text-node\"><strong>\ud83d\udcdd Metadata collection:</strong> Record age, sex, cell counts, medication use, smoking status</p></li><li><p class=\"text-node\"><strong>\ud83e\uddca DNA quality:</strong> Use high-quality genomic DNA (>500ng, OD 260/280 ~1.8)</p></li><li><p class=\"text-node\"><strong>\ud83e\ude78 Sample type:</strong> Whole blood most common; specify tissue for appropriate reference panel</p></li></ul><h2 class=\"heading-node\">\u23f1\ufe0f Expected Runtime & Resources</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\u23f1\ufe0f Small study:</strong> 30-60 minutes (20-50 samples)</p></li><li><p class=\"text-node\"><strong>\u23f1\ufe0f Medium study:</strong> 1-3 hours (50-200 samples)</p></li><li><p class=\"text-node\"><strong>\u23f1\ufe0f Large cohort:</strong> 3-8 hours (200-1000+ samples)</p></li><li><p class=\"text-node\"><strong>\ud83d\udcbe Memory:</strong> 16-32GB for typical studies; 64GB+ for very large cohorts</p></li><li><p class=\"text-node\"><strong>\ud83d\udcbb Node size:</strong> SMALL for pilot studies, MEDIUM for standard cohorts, LARGE for 500+ samples</p></li></ul><h2 class=\"heading-node\">\ud83c\udf93 Understanding Results</h2><h3 class=\"heading-node\">Interpreting Delta Beta Values</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\u0394\u03b2 > +0.20:</strong> Strong hypermethylation in cases (20% increase)</p></li><li><p class=\"text-node\"><strong>\u0394\u03b2 +0.10 to +0.20:</strong> Moderate hypermethylation</p></li><li><p class=\"text-node\"><strong>\u0394\u03b2 -0.10 to -0.20:</strong> Moderate hypomethylation</p></li><li><p class=\"text-node\"><strong>\u0394\u03b2 < -0.20:</strong> Strong hypomethylation in cases (20% decrease)</p></li></ul><h3 class=\"heading-node\">Statistical Significance</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>FDR < 0.05:</strong> Genome-wide significant (< 5% false discoveries expected)</p></li><li><p class=\"text-node\"><strong>FDR 0.05-0.10:</strong> Suggestive association (may warrant validation)</p></li><li><p class=\"text-node\"><strong>FDR > 0.10:</strong> Not significant after multiple testing correction</p></li></ul><h3 class=\"heading-node\">Biological Context</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Promoter hypermethylation:</strong> Often associated with gene silencing</p></li><li><p class=\"text-node\"><strong>Promoter hypomethylation:</strong> May indicate gene activation</p></li><li><p class=\"text-node\"><strong>CpG island shores:</strong> Frequently show tissue-specific methylation</p></li><li><p class=\"text-node\"><strong>Gene body methylation:</strong> Complex relationship with expression (context-dependent)</p></li></ul><h2 class=\"heading-node\">\ud83d\udcda Next Steps After EWAS</h2><ol class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udd2c Validation:</strong> Confirm top findings in independent cohort using pyrosequencing or targeted sequencing</p></li><li><p class=\"text-node\"><strong>\ud83e\uddec Functional studies:</strong> Test whether methylation changes affect gene expression (integrate with RNA-seq)</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Mechanism:</strong> Investigate what causes methylation changes (genetic variants, environment, disease process)</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Pathway analysis:</strong> Use enrichment tools (GREAT, Ingenuity, GOseq) to identify affected biological pathways</p></li><li><p class=\"text-node\"><strong>\ud83c\udfe5 Clinical utility:</strong> Develop biomarker panels, risk scores, or diagnostic tests</p></li><li><p class=\"text-node\"><strong>\ud83d\udcd6 Literature:</strong> Search PubMed for known associations with your top differentially methylated genes</p></li><li><p class=\"text-node\"><strong>\ud83d\uddc3\ufe0f Public databases:</strong> Compare findings to EWAS Catalog, EWAS Atlas, MethBank</p></li></ol><h2 class=\"heading-node\">\ud83d\udd0d Quality Control Checklist</h2><p class=\"text-node\">After analysis, verify these quality metrics:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\u2713 Sample call rate:</strong> > 98% probes detected per sample</p></li><li><p class=\"text-node\"><strong>\u2713 Detection p-values:</strong> < 1% probes with p > 0.01</p></li><li><p class=\"text-node\"><strong>\u2713 Bisulfite conversion:</strong> > 90% efficiency</p></li><li><p class=\"text-node\"><strong>\u2713 Sex concordance:</strong> Predicted sex matches reported sex</p></li><li><p class=\"text-node\"><strong>\u2713 Sample outliers:</strong> No extreme outliers in PCA or clustering</p></li><li><p class=\"text-node\"><strong>\u2713 Batch effects:</strong> Minimal separation by technical factors in PCA</p></li><li><p class=\"text-node\"><strong>\u2713 Inflation factor:</strong> Genomic inflation \u03bb \u2248 1.0 (no systematic bias)</p></li></ul><p class=\"text-node\"><strong>Ideal for:</strong> Clinical epigenetics \u2022 Cancer research \u2022 Disease biomarkers \u2022 Precision medicine \u2022 Environmental health \u2022 Aging research \u2022 Pharmacogenomics \u2022 Epidemiology \u2022 Translational medicine \u2022 Biomarker discovery</p><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> \u2022 Powered by <a class=\"link\" href=\"https://nf-co.re/methylarray/dev/\" target=\"_blank\">nf-core/methylarray (dev)</a> \u2022 Analysis by <a class=\"link\" href=\"https://bioconductor.org/packages/minfi/\" target=\"_blank\">minfi</a> \u2022 Containerized execution \u2022 Reproducible results \u2022 Publication-ready outputs</p>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/methylarray/dev/docs/images/nf-core-methylarray_logo_light.png",
+  "command": "nextflow run nf-core/methylarray --input ${input} --outdir ${outdir} --array_type ${array_type} --norm_method ${norm_method} --remove_crossreactive ${remove_crossreactive} --remove_snp ${remove_snp} -r dev -profile singularity",
+  "engineType": "NEXTFLOW",
+  "version": "dev",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV file with columns: Sample_Name, Sentrix_ID, Sentrix_Position, condition (and optional: age, sex, batch, cell_type). Maps IDAT files to sample metadata and experimental groups.",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".csv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory where analysis results, QC reports, differential methylation tables, and visualizations will be saved",
+      "defaultValue": "./methylarray-ewas-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Array Type",
+      "name": "array_type",
+      "description": "Illumina methylation array platform used in your study. The pipeline will auto-detect if not specified, but explicit selection ensures correct annotation.",
+      "defaultValue": "EPIC",
+      "required": false,
+      "options": [
+        {
+          "label": "Auto-detect from IDAT files",
+          "value": "auto"
+        },
+        {
+          "label": "EPIC v2 (935K CpGs, latest platform)",
+          "value": "EPICv2"
+        },
+        {
+          "label": "EPIC v1 (850K CpGs, industry standard)",
+          "value": "EPIC"
+        },
+        {
+          "label": "450K Array (450K CpGs, legacy)",
+          "value": "450K"
+        },
+        {
+          "label": "27K Array (27K CpGs, original)",
+          "value": "27K"
+        }
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Normalization Method",
+      "name": "norm_method",
+      "description": "Method for normalizing methylation data to remove technical variation. Quantile normalization is recommended for most studies.",
+      "defaultValue": "quantile",
+      "required": true,
+      "options": [
+        {
+          "label": "Quantile (recommended, robust method)",
+          "value": "quantile"
+        },
+        {
+          "label": "Functional (uses control probes)",
+          "value": "functional"
+        },
+        {
+          "label": "Raw (no normalization)",
+          "value": "raw"
+        }
+      ]
+    },
+    {
+      "type": "Switch",
+      "label": "Remove Cross-Reactive Probes",
+      "name": "remove_crossreactive",
+      "description": "Remove probes that hybridize to multiple genomic locations. Highly recommended to avoid false positives from off-target binding.",
+      "defaultValue": true,
+      "required": false
+    },
+    {
+      "type": "Switch",
+      "label": "Remove SNP-Affected Probes",
+      "name": "remove_snp",
+      "description": "Remove probes overlapping common genetic variants (SNPs) that can confound methylation measurements. Recommended for clinical EWAS.",
+      "defaultValue": true,
+      "required": false
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select compute resources based on your cohort size. Start with SMALL for pilot studies (< 50 samples), use MEDIUM for standard cohorts (50-200 samples), LARGE for big studies (200-1000 samples).",
+      "options": [
+        {
+          "label": "XSMALL (4 CPUs, 15GB RAM) - Testing/nf-core test data",
+          "value": "xsmall",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "SMALL (8 CPUs, 30GB RAM) - Pilot studies (< 50 samples)",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Standard cohorts (50-200 samples)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Large cohorts (200-1000 samples)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE (128 CPUs, 450GB RAM) - Very large cohorts (1000+ samples)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "small"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

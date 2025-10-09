@@ -1,0 +1,93 @@
+{
+  "name": "isoseq-pacbio-isoforms",
+  "title": "Iso-Seq: PacBio Full-Length Transcript Sequencing",
+  "description": "PacBio Iso-Seq (Isoform Sequencing) captures full-length cDNA for comprehensive transcript isoform discovery. High-accuracy HiFi reads reveal alternative splicing, fusion transcripts, and novel isoforms without assembly. Samplesheet format: `sample,fastq`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/isoseq --input ${input} --outdir ${outdir} --genome ${genome} -r 2.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/isoseq/master/docs/images/nf-core-isoseq_logo_light.png",
+  "content": "<h2><strong>Iso-Seq: Full-Length Transcripts</strong></h2><p>PacBio Iso-Seq generates high-accuracy HiFi reads of full-length cDNA molecules (5' cap to poly(A) tail), enabling unambiguous isoform identification without computational assembly.</p><h3><strong>Applications</strong></h3><ul><li><strong>Isoform Discovery</strong>: Novel splice variants</li><li><strong>Fusion Transcripts</strong>: Cancer gene fusions</li><li><strong>Alternative Polyadenylation</strong>: 3' UTR diversity</li><li><strong>Allele-Specific Expression</strong>: Phased isoforms</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>Full-Length Transcripts</strong>: Complete isoform sequences</li><li><strong>Isoform Annotations</strong>: Novel vs known</li><li><strong>Fusion Detection</strong>: Gene fusion calls</li><li><strong>Quantification</strong>: Isoform-level counts</li></ul><blockquote><p><strong>Perfect for:</strong> Isoform discovery \u2022 Fusion transcripts \u2022 Complex splicing \u2022 Transcriptome annotation</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV with PacBio Iso-Seq data",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".csv"
+        ]
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome",
+      "defaultValue": "GRCh38",
+      "required": true,
+      "options": [
+        {
+          "label": "Human GRCh38",
+          "value": "GRCh38"
+        },
+        {
+          "label": "Mouse GRCm39",
+          "value": "GRCm39"
+        }
+      ]
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory",
+      "defaultValue": "./isoseq-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "options": [
+        {
+          "label": "LARGE (Recommended)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

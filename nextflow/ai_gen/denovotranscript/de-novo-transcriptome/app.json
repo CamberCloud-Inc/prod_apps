@@ -1,0 +1,84 @@
+{
+    "name": "denovotranscript-de-novo-transcriptome",
+    "title": "RNA-seq Without Reference",
+    "description": "Comprehensive pipeline for de novo transcriptome assembly from bulk RNA-seq data without requiring a reference genome. Supports Trinity and rnaSPAdes assemblers with quality assessment, redundancy reduction, and transcript quantification. Ideal for non-model organisms and novel transcript discovery. Samplesheet format: `format,gzip`",
+    "version": "1.2.1",
+    "engineType": "NEXTFLOW",
+    "command": "nextflow run nf-core/denovotranscript --input ${input} --outdir ${outdir} -r 1.2.1 ",
+    "imageUrl": "https://raw.githubusercontent.com/nf-core/denovotranscript/master/docs/images/nf-core-denovotranscript_logo_light.png",
+    "content": "<h2><strong>De Novo Transcriptome Assembly: RNA-seq Without Reference</strong></h2><p>Reconstruct complete transcriptomes from bulk RNA-seq data without requiring a reference genome. This comprehensive pipeline performs end-to-end analysis from raw paired-end reads to annotated transcript assemblies, making it essential for non-model organism research and novel transcript discovery.</p><h3><strong>What is De Novo Transcriptome Assembly?</strong></h3><blockquote><p><strong>De novo assembly</strong> reconstructs RNA transcripts directly from sequencing reads without relying on a reference genome. This approach is crucial when studying organisms without high-quality genome assemblies or when discovering novel transcripts, isoforms, and expressed sequences.</p></blockquote><h3><strong>Key Features</strong></h3><ul><li><strong>Multiple Assemblers</strong>: Choose between Trinity and rnaSPAdes, or run both</li><li><strong>Normalization Options</strong>: Trinity supports normalized and non-normalized assembly</li><li><strong>Comprehensive QC</strong>: FastQC for reads, BUSCO for completeness, TransRate for quality</li><li><strong>Contamination Removal</strong>: Optional rRNA and mitochondrial DNA filtering</li><li><strong>Redundancy Reduction</strong>: Evidential Gene removes redundant transcripts</li><li><strong>Expression Quantification</strong>: Salmon for fast, accurate transcript abundance</li></ul><h3><strong>Pipeline Workflow</strong></h3><ol><li><strong>Read Quality Control</strong>: FastQC assessment of raw sequencing data</li><li><strong>Adapter Trimming</strong>: fastp removes adapters and low-quality bases</li><li><strong>rRNA Removal</strong>: Optional SortMeRNA filtering (recommended)</li><li><strong>De Novo Assembly</strong>: Trinity or rnaSPAdes reconstruction of transcripts</li><li><strong>Redundancy Reduction</strong>: Evidential Gene tr2aacds filters redundant sequences</li><li><strong>Quality Assessment</strong>: BUSCO completeness, TransRate metrics, rnaQUAST statistics</li><li><strong>Quantification</strong>: Salmon pseudo-alignment and abundance estimation</li><li><strong>Comprehensive Reporting</strong>: MultiQC summary of all metrics</li></ol><h3><strong>Assembly Methods</strong></h3><h4><strong>Trinity (Default)</strong></h4><ul><li><strong>Approach</strong>: De Bruijn graph-based assembly with Inchworm, Chrysalis, and Butterfly modules</li><li><strong>Strengths</strong>: Excellent for complex transcriptomes, isoform detection, widely validated</li><li><strong>Options</strong>: Normalized (faster, reduces redundancy) or non-normalized (more comprehensive)</li><li><strong>Best for</strong>: High-quality assemblies, alternative splicing studies, eukaryotic transcriptomes</li></ul><h4><strong>rnaSPAdes</strong></h4><ul><li><strong>Approach</strong>: SPAdes assembler optimized for transcriptome data</li><li><strong>Strengths</strong>: Fast, memory-efficient, handles uneven coverage well</li><li><strong>Filtering Levels</strong>: Multiple stringency options for transcript filtering</li><li><strong>Best for</strong>: Large datasets, prokaryotic/viral transcriptomes, rapid assembly</li></ul><h3><strong>Quality Assessment Tools</strong></h3><ul><li><strong>BUSCO</strong>: Benchmarking Universal Single-Copy Orthologs - measures assembly completeness</li><li><strong>TransRate</strong>: Reference-free assembly quality metrics including read support</li><li><strong>rnaQUAST</strong>: Comprehensive transcriptome assembly evaluation</li><li><strong>Salmon Mapping Rate</strong>: Percentage of reads mapping back to assembly</li></ul><h3><strong>Input Requirements</strong></h3><p><strong>Samplesheet Format (CSV):</strong></p><pre>sample,fastq_1,fastq_2\nsample1,sample1_R1.fastq.gz,sample1_R2.fastq.gz\nsample2,sample2_R1.fastq.gz,sample2_R2.fastq.gz\nsample3,sample3_R1.fastq.gz,sample3_R2.fastq.gz</pre><p><strong>Requirements:</strong></p><ul><li><strong>Paired-end reads</strong>: FASTQ format, gzip compressed (.fastq.gz)</li><li><strong>Quality</strong>: Standard Illumina sequencing (>Q30 for majority of bases)</li><li><strong>Depth</strong>: 20-40 million read pairs recommended for comprehensive assembly</li><li><strong>Multiple samples</strong>: Can be pooled for assembly or assembled separately</li></ul><h3><strong>Main Outputs</strong></h3><h4><strong>Transcriptome Assembly</strong></h4><ul><li><strong>Assembled transcripts</strong>: FASTA file with complete transcriptome</li><li><strong>Filtered assembly</strong>: Redundancy-reduced, high-quality transcript set</li><li><strong>Assembly metrics</strong>: N50, total transcripts, total length, GC content</li></ul><h4><strong>Quality Control</strong></h4><ul><li><strong>BUSCO scores</strong>: Completeness percentages (Complete, Fragmented, Missing)</li><li><strong>TransRate metrics</strong>: Read support, contig quality, segmentation scores</li><li><strong>MultiQC report</strong>: Comprehensive HTML summary of all QC metrics</li></ul><h4><strong>Expression Data</strong></h4><ul><li><strong>Salmon quantification</strong>: TPM (Transcripts Per Million) values for each transcript</li><li><strong>Count matrices</strong>: Raw and normalized expression counts</li><li><strong>Mapping statistics</strong>: Alignment rates and concordance metrics</li></ul><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Non-Model Organisms</strong>: Study species without reference genomes</li><li><strong>Novel Transcript Discovery</strong>: Identify unannotated genes and isoforms</li><li><strong>Comparative Transcriptomics</strong>: Compare gene expression across species</li><li><strong>Functional Genomics</strong>: Annotate genes and predict functions</li><li><strong>Evolutionary Studies</strong>: Analyze transcript evolution and conservation</li><li><strong>Environmental Samples</strong>: Transcriptomics of complex communities</li><li><strong>Crop Improvement</strong>: Agricultural genomics for non-sequenced varieties</li></ul><h3><strong>When to Use This Pipeline</strong></h3><blockquote><p><strong>Choose de novo assembly when:</strong></p><ul><li>No reference genome is available for your organism</li><li>Reference genome quality is poor or incomplete</li><li>Discovering novel genes, transcripts, or isoforms</li><li>Studying rapidly evolving species or populations</li><li>Working with environmental or metagenomic RNA samples</li><li>Investigating organisms with complex genomes (polyploidy, high repeats)</li></ul></blockquote><h3><strong>Best Practices</strong></h3><ul><li><strong>rRNA Removal</strong>: Always enable for eukaryotic samples (reduces assembly complexity)</li><li><strong>Read Depth</strong>: Use 30-50M read pairs for comprehensive transcriptome coverage</li><li><strong>Read Quality</strong>: Ensure high-quality sequencing (Q30+ for 90%+ bases)</li><li><strong>Multiple Samples</strong>: Pool biological replicates for better assembly completeness</li><li><strong>Normalization</strong>: Use Trinity normalization for very deep sequencing (>100M reads)</li><li><strong>BUSCO Lineage</strong>: Select appropriate lineage database for accurate completeness assessment</li><li><strong>Downstream Annotation</strong>: Use assembled transcripts with Trinotate or eggNOG-mapper</li></ul><h3><strong>Comparison: De Novo vs Reference-Based</strong></h3><table><tr><th>Feature</th><th>De Novo Assembly</th><th>Reference-Based</th></tr><tr><td><strong>Reference Genome</strong></td><td>\u274c Not required</td><td>\u2705 Required</td></tr><tr><td><strong>Novel Transcripts</strong></td><td>\u2705 Discovers all</td><td>\u26a0\ufe0f Limited</td></tr><tr><td><strong>Computational Cost</strong></td><td>\u26a0\ufe0f High (CPU/RAM intensive)</td><td>\u2705 Lower</td></tr><tr><td><strong>Assembly Accuracy</strong></td><td>\u26a0\ufe0f More challenging</td><td>\u2705 Higher</td></tr><tr><td><strong>Runtime</strong></td><td>\u26a0\ufe0f Hours to days</td><td>\u2705 Minutes to hours</td></tr><tr><td><strong>Best for</strong></td><td>Non-model organisms</td><td>Well-studied species</td></tr></table><h3><strong>Technical Requirements</strong></h3><ul><li><strong>Memory</strong>: 100-200GB RAM recommended (depends on read depth and assembler)</li><li><strong>CPUs</strong>: 32-64 cores for optimal performance</li><li><strong>Storage</strong>: 100-500GB for intermediate files and results</li><li><strong>Runtime</strong>: 6-24 hours typical (varies by dataset size and assembler)</li></ul><blockquote><p><strong>Perfect for Research in:</strong> Non-model organisms \u2022 Novel gene discovery \u2022 Evolutionary genomics \u2022 Functional annotation \u2022 Comparative transcriptomics \u2022 Agricultural genomics \u2022 Environmental biology \u2022 Emerging model systems</p></blockquote><p>Built with <a href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> \u2022 Powered by <a href=\"https://nf-co.re/denovotranscript/1.2.1/\" target=\"_blank\">nf-core/denovotranscript v1.2.1</a> \u2022 Containerized execution \u2022 Continuous integration tested</p>",
+    "spec": [
+        {
+            "type": "Stash File",
+            "label": "Sample Sheet",
+            "name": "input",
+            "description": "CSV samplesheet with columns: sample, fastq_1, fastq_2. Each row represents a paired-end RNA-seq sample for assembly.",
+            "required": true,
+            "restrictions": {
+                "allow_files": true,
+                "allowed_file_types": [
+                    ".csv",
+                    ".tsv"
+                ]
+            }
+        },
+        {
+            "type": "Stash File",
+            "label": "Output Directory",
+            "name": "outdir",
+            "description": "Output directory for assembled transcriptomes, quality metrics, and expression quantification results.",
+            "defaultValue": "./denovotranscript-results",
+            "required": true,
+            "restrictions": {
+                "allow_files": false,
+                "allow_folders": true
+            }
+        }
+    ],
+    "jobConfig": [
+        {
+            "type": "Select",
+            "label": "System Size",
+            "name": "system_size",
+            "description": "Select compute resources. XLARGE recommended for transcriptome assembly due to high memory requirements.",
+            "options": [
+                {
+                    "label": "LARGE (64 CPUs, 360GB RAM) - Small datasets",
+                    "value": "large",
+                    "mapValue": {
+                        "nodeSize": "LARGE",
+                        "numNodes": 1,
+                        "withGpu": false
+                    }
+                },
+                {
+                    "label": "XLARGE (96 CPUs, 540GB RAM) - Recommended for most assemblies",
+                    "value": "xlarge",
+                    "mapValue": {
+                        "nodeSize": "XLARGE",
+                        "numNodes": 1,
+                        "withGpu": false
+                    }
+                }
+            ],
+            "defaultValue": "xlarge"
+        }
+    ],
+    "tags": [
+        {
+            "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+            "name": "biology",
+            "type": "field"
+        },
+        {
+            "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+            "name": "genomics",
+            "type": "subfield"
+        },
+        {
+            "id": "831477f4-f572-4e27-af83-037661489800",
+            "name": "analysis",
+            "type": "task"
+        }
+    ]
+}

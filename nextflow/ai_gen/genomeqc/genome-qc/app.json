@@ -1,0 +1,133 @@
+{
+  "name": "genomeqc-genome-qc",
+  "title": "Comprehensive Genome Quality Assessment",
+  "description": "Compare quality of multiple genome assemblies and annotations using BUSCO, QUAST, tidk, and Merqury. Accepts local files or NCBI accessions. Evaluates completeness, contiguity, contamination, and annotation quality for publication-ready genome assessments. Samplesheet format: `species,refseq,fasta,gff,fastq`",
+  "version": "dev",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/genomeqc --input ${input} --outdir ${outdir} --busco_lineage ${busco_lineage} ${run_tidk} ${run_merqury} ${save_assembly} ${save_longest_isoform} -r dev ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/genomeqc/master/docs/images/nf-core-genomeqc_logo_light.png",
+  "content": "<h2><strong>Genome QC - Comprehensive Quality Assessment</strong></h2><p>A bioinformatics pipeline that evaluates and compares the quality of multiple genome assemblies and their annotations. Provides publication-ready metrics for genome completeness, contiguity, accuracy, contamination, and annotation quality.</p><h3><strong>Why Genome Quality Control?</strong></h3><blockquote><p><strong>Genome quality assessment</strong> is essential before publishing, depositing in databases, or using assemblies for downstream analysis. Poor-quality genomes lead to incorrect biological conclusions, failed experiments, and wasted resources. This pipeline provides standardized, reproducible quality metrics.</p></blockquote><h3><strong>Key Features</strong></h3><ul><li><strong>Dual Input Modes</strong>: Local files or direct NCBI accession downloads</li><li><strong>Comprehensive Metrics</strong>: BUSCO, QUAST, Merqury, contamination screening</li><li><strong>Batch Processing</strong>: Compare multiple genomes simultaneously</li><li><strong>Annotation Assessment</strong>: Evaluate annotation quality and gene overlaps</li><li><strong>Telomere Detection</strong>: Identify telomeric repeats with tidk</li><li><strong>Contamination Screening</strong>: FCS-GX, FCS-adaptor, and Tiara analysis</li><li><strong>Comparative Reports</strong>: Side-by-side quality comparison across genomes</li></ul><h3><strong>Pipeline Modes</strong></h3><h4><strong>Mode 1: Genome-Only Analysis</strong></h4><p>Minimal analysis with FASTA files only:</p><ul><li>BUSCO gene completeness assessment</li><li>QUAST assembly statistics</li><li>Optional tidk telomere identification</li><li>Optional Merqury k-mer analysis</li><li>Contamination screening</li><li>MultiQC summary report</li></ul><h4><strong>Mode 2: Genome + Annotation Analysis</strong></h4><p>Complete analysis with FASTA and GFF/GTF files:</p><ul><li>All genome-only features PLUS:</li><li>Annotation description and statistics</li><li>Gene overlap analysis</li><li>Longest protein isoform extraction</li><li>Orthologous gene identification (Orthofinder)</li><li>Phylogenetic tree generation</li><li>Annotation quality metrics</li></ul><h3><strong>Quality Control Tools</strong></h3><h4><strong>BUSCO - Gene Completeness</strong></h4><ul><li><strong>Purpose</strong>: Assess genome completeness using conserved single-copy orthologs</li><li><strong>Metrics</strong>: Complete, Fragmented, Missing, Duplicated BUSCOs</li><li><strong>Interpretation</strong>: High-quality genomes have >90% complete BUSCOs</li><li><strong>Lineages</strong>: Bacteria, Fungi, Metazoa, Vertebrata, Plants, etc.</li><li><strong>Output</strong>: Percentage completeness and ideogram showing BUSCO locations</li></ul><h4><strong>QUAST - Assembly Contiguity</strong></h4><ul><li><strong>Purpose</strong>: Evaluate assembly contiguity and basic statistics</li><li><strong>Metrics</strong>: N50, L50, total length, number of contigs, GC content</li><li><strong>Interpretation</strong>: Higher N50 and fewer contigs indicate better assemblies</li><li><strong>Comparison</strong>: Provides relative ranking of multiple assemblies</li></ul><h4><strong>Merqury - K-mer Based Accuracy</strong></h4><ul><li><strong>Purpose</strong>: Evaluate genome completeness and base-level accuracy using k-mers</li><li><strong>Requires</strong>: Original sequencing reads (FASTQ files)</li><li><strong>Metrics</strong>: Quality value (QV), k-mer completeness, copy number spectrum</li><li><strong>Interpretation</strong>: QV >40 indicates high-quality assembly (>99.99% accurate)</li></ul><h4><strong>tidk - Telomere Detection</strong></h4><ul><li><strong>Purpose</strong>: Identify and visualize telomeric repeats</li><li><strong>Application</strong>: Eukaryotic genomes, chromosome-level assemblies</li><li><strong>Metrics</strong>: Telomere presence, location, repeat type</li><li><strong>Interpretation</strong>: Telomeres at scaffold ends indicate chromosome-scale assembly</li></ul><h4><strong>Contamination Screening</strong></h4><ul><li><strong>FCS-GX</strong>: NCBI Foreign Contamination Screen for detecting contaminant sequences</li><li><strong>FCS-adaptor</strong>: Identifies sequencing adapter contamination</li><li><strong>Tiara</strong>: Classifies sequences into eukaryotic, prokaryotic, organellar, or unknown</li><li><strong>Purpose</strong>: Ensure assembly purity before database submission</li></ul><h3><strong>Annotation Quality Assessment</strong></h3><h4><strong>AGAT Annotation Description</strong></h4><ul><li>Gene count and distribution</li><li>Exon count per gene</li><li>Gene length statistics</li><li>Coding vs non-coding features</li><li>Annotation format validation</li></ul><h4><strong>Gene Overlap Analysis</strong></h4><ul><li>Identify overlapping gene models</li><li>Detect annotation errors</li><li>Flag suspicious gene structures</li><li>Quality control for annotation pipelines</li></ul><h4><strong>Longest Isoform Extraction</strong></h4><ul><li>One representative protein per gene</li><li>Useful for downstream analyses</li><li>Reduces redundancy in protein sets</li><li>Standard for comparative genomics</li></ul><h4><strong>Orthofinder Analysis</strong></h4><ul><li>Identify orthologous genes across genomes</li><li>Build phylogenetic trees</li><li>Compare gene content</li><li>Evolutionary relationships</li></ul><h3><strong>Input Requirements</strong></h3><p>Provide a CSV samplesheet with the following columns:</p><pre>species,refseq,fasta,gff,fastq | species1,GCF_000001405.40,,, | species2,,genome.fasta,annotation.gff,reads.fastq.gz | species3,,genome.fasta,,</pre><h4><strong>Column Descriptions</strong></h4><ul><li><strong>species</strong>: Unique identifier for the genome</li><li><strong>refseq</strong>: NCBI RefSeq accession (optional, for automatic download)</li><li><strong>fasta</strong>: Path to local genome FASTA file (if not using RefSeq)</li><li><strong>gff</strong>: Path to annotation GFF/GTF file (optional)</li><li><strong>fastq</strong>: Path to sequencing reads for Merqury (optional)</li></ul><h3><strong>Input Flexibility</strong></h3><ul><li><strong>NCBI Download</strong>: Provide RefSeq accession, pipeline downloads genome automatically</li><li><strong>Local Files</strong>: Provide paths to your own FASTA and GFF files</li><li><strong>Mixed</strong>: Some genomes from NCBI, others local</li><li><strong>Annotation Optional</strong>: Can assess genomes without annotations</li></ul><h3><strong>Main Outputs</strong></h3><h4><strong>Quality Metrics</strong></h4><ul><li><strong>BUSCO Reports</strong>: Completeness percentages and ideograms for each genome</li><li><strong>QUAST Summary</strong>: Comparative table of N50, contig counts, lengths</li><li><strong>Merqury QV</strong>: Base-level accuracy scores (if reads provided)</li><li><strong>Contamination Reports</strong>: List of potential contaminant sequences</li><li><strong>Telomere Maps</strong>: Visualization of telomeric repeat locations</li></ul><h4><strong>Annotation Metrics</strong></h4><ul><li><strong>Gene Statistics</strong>: Counts, lengths, exon numbers across genomes</li><li><strong>Overlap Analysis</strong>: Tables of overlapping gene models</li><li><strong>Longest Isoforms</strong>: FASTA files of representative proteins</li><li><strong>Ortholog Tables</strong>: Orthologous groups across species</li><li><strong>Phylogenetic Trees</strong>: Evolutionary relationships based on orthologs</li></ul><h4><strong>Comprehensive Reports</strong></h4><ul><li><strong>MultiQC Dashboard</strong>: Interactive HTML with all metrics</li><li><strong>Comparative Plots</strong>: Side-by-side visualization of quality metrics</li><li><strong>Summary Tables</strong>: Publication-ready quality comparison tables</li></ul><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Pre-Publication QC</strong>: Validate genome quality before submission</li><li><strong>Database Submission</strong>: Ensure genomes meet NCBI/ENA standards</li><li><strong>Assembly Comparison</strong>: Choose best assembly from multiple attempts</li><li><strong>Method Evaluation</strong>: Compare different assembly or annotation pipelines</li><li><strong>Genome Project Planning</strong>: Determine if more sequencing is needed</li><li><strong>Collaborative Projects</strong>: Standardized QC across multiple labs</li><li><strong>Annotation Validation</strong>: Assess gene prediction quality</li></ul><h3><strong>Quality Benchmarks</strong></h3><h4><strong>Draft Genome</strong></h4><ul><li>BUSCO: >80% complete</li><li>N50: >100 kb</li><li>Contigs: <10,000</li><li>Purpose: Initial analyses, proof of concept</li></ul><h4><strong>High-Quality Genome</strong></h4><ul><li>BUSCO: >90% complete</li><li>N50: >1 Mb</li><li>Contigs: <1,000</li><li>Purpose: Most research applications</li></ul><h4><strong>Reference-Quality Genome</strong></h4><ul><li>BUSCO: >95% complete</li><li>N50: >10 Mb (chromosome-scale)</li><li>Contigs: <100 (ideally chromosome number)</li><li>QV: >40</li><li>Purpose: Database reference, comparative genomics</li></ul><h3><strong>BUSCO Lineage Selection</strong></h3><p><strong>Important:</strong> Manually specify lineage - 'auto' mode may cause errors.</p><ul><li><strong>bacteria_odb10</strong>: Bacterial genomes</li><li><strong>fungi_odb10</strong>: Fungal genomes</li><li><strong>metazoa_odb10</strong>: Animal genomes (general)</li><li><strong>vertebrata_odb10</strong>: Vertebrate animals</li><li><strong>arthropoda_odb10</strong>: Insects and arthropods</li><li><strong>viridiplantae_odb10</strong>: Plants and algae</li><li><strong>mammalia_odb10</strong>: Mammals</li><li>See BUSCO website for complete list of 150+ lineages</li></ul><h3><strong>Performance Expectations</strong></h3><ul><li><strong>Small genome (1-10 Mb, bacteria):</strong> 30 minutes - 1 hour</li><li><strong>Medium genome (100-500 Mb, insect):</strong> 2-4 hours</li><li><strong>Large genome (1-3 Gb, vertebrate):</strong> 4-8 hours</li><li><strong>Multiple genomes (5-10):</strong> Add 2-4 hours</li><li><strong>With Merqury:</strong> Add 2-6 hours depending on read count</li><li><strong>With Orthofinder:</strong> Add 1-4 hours depending on genome count</li></ul><h3><strong>Best Practices</strong></h3><ul><li><strong>Always Specify BUSCO Lineage</strong>: Avoid 'auto' mode for reliability</li><li><strong>Include Multiple Genomes</strong>: Comparative analysis is more informative</li><li><strong>Provide Reads for Merqury</strong>: Get base-level accuracy assessment</li><li><strong>Use Reference Accessions</strong>: Compare to published genomes for context</li><li><strong>Enable tidk for Eukaryotes</strong>: Verify chromosome-scale assemblies</li><li><strong>Check Contamination</strong>: Essential for database submission</li></ul><blockquote><p><strong>Perfect for:</strong> Genome Quality Control \u2022 Pre-Publication Validation \u2022 Assembly Comparison \u2022 NCBI Submission \u2022 Annotation Assessment \u2022 Method Benchmarking</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Input Samplesheet",
+      "name": "input",
+      "description": "CSV with columns: species, refseq (NCBI accession, optional), fasta (genome file), gff (annotation, optional), fastq (reads for Merqury, optional). Mix NCBI downloads and local files.",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [
+          ".csv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory for QC reports, BUSCO results, QUAST statistics, contamination reports, and comparative visualizations.",
+      "defaultValue": "./genomeqc-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    },
+    {
+      "type": "Input",
+      "label": "BUSCO Lineage",
+      "name": "busco_lineage",
+      "description": "BUSCO lineage dataset (REQUIRED - specify manually, do NOT use 'auto'). Examples: bacteria_odb10, metazoa_odb10, vertebrata_odb10, fungi_odb10, viridiplantae_odb10.",
+      "defaultValue": "metazoa_odb10",
+      "required": true,
+      "placeholder": "e.g., bacteria_odb10, metazoa_odb10, vertebrata_odb10"
+    },
+    {
+      "type": "Switch",
+      "label": "Run tidk",
+      "name": "run_tidk",
+      "description": "Enable tidk for telomeric repeat identification and visualization. Recommended for eukaryotic genomes to assess chromosome-scale assembly quality.",
+      "defaultValue": false,
+      "required": false
+    },
+    {
+      "type": "Switch",
+      "label": "Run Merqury",
+      "name": "run_merqury",
+      "description": "Enable Merqury for k-mer based genome completeness and quality value (QV) assessment. Requires fastq column in samplesheet with sequencing reads.",
+      "defaultValue": false,
+      "required": false
+    },
+    {
+      "type": "Switch",
+      "label": "Save Assembly",
+      "name": "save_assembly",
+      "description": "Save downloaded/processed genome assemblies to output directory. Useful when downloading from NCBI via RefSeq accessions.",
+      "defaultValue": false,
+      "required": false
+    },
+    {
+      "type": "Switch",
+      "label": "Save Longest Isoform",
+      "name": "save_longest_isoform",
+      "description": "Save the longest protein isoform per gene from annotation files. Creates non-redundant protein sets for comparative genomics and functional analysis.",
+      "defaultValue": false,
+      "required": false
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "description": "Select compute resources. LARGE recommended for multiple large genomes, vertebrate assemblies, or when using Orthofinder/Merqury.",
+      "options": [
+        {
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Small genomes (<500 Mb) or few samples",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (64 CPUs, 360GB RAM) - Recommended for most projects",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE (96 CPUs, 540GB RAM) - Many large genomes with Merqury",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

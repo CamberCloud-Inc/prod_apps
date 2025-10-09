@@ -1,0 +1,76 @@
+{
+    "name": "ampliseq-16s-microbiome",
+    "title": "Ampliseq: 16S rRNA Microbiome Profiling",
+    "description": "16S rRNA amplicon sequencing analysis for bacterial/archaeal community profiling. DADA2 ASV calling, taxonomy assignment, diversity analysis. Standard for microbiome studies. Samplesheet format: `sampleID,forwardReads,reverseReads`",
+    "version": "1.0.0",
+    "engineType": "NEXTFLOW",
+    "command": "nextflow run nf-core/ampliseq --input ${input} --outdir ${outdir} --FW_primer CCTACGGGNGGCWGCAG --RV_primer GACTACHVGGGTATCTAATCC -r 2.11.0 ",
+    "imageUrl": "https://raw.githubusercontent.com/nf-core/ampliseq/master/docs/images/nf-core-ampliseq_logo_light.png",
+    "content": "<h2><strong>Ampliseq: 16S Microbiome</strong></h2><p>Gold-standard 16S rRNA gene amplicon sequencing for bacterial microbiome profiling. Uses DADA2 for ASV (Amplicon Sequence Variant) calling with single-nucleotide resolution.</p><h3><strong>Applications</strong></h3><ul><li><strong>Human Microbiome</strong>: Gut (V3-V4), oral, skin</li><li><strong>Disease Association</strong>: IBD, obesity, autism</li><li><strong>Clinical Trials</strong>: Probiotic efficacy</li><li><strong>Environmental</strong>: Soil, water communities</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>ASV Table</strong>: Feature counts per sample</li><li><strong>Taxonomy</strong>: Silva/GTDB classification</li><li><strong>Diversity</strong>: Alpha (Shannon, Chao1), Beta (Bray-Curtis)</li><li><strong>PCoA Plots</strong>: Sample clustering</li></ul><blockquote><p><strong>Perfect for:</strong> Bacterial microbiome \u2022 16S amplicon \u2022 Community profiling \u2022 Clinical microbiome studies</p></blockquote>",
+    "spec": [
+        {
+            "type": "Stash File",
+            "label": "Sample Sheet",
+            "name": "input",
+            "description": "TSV with sample paths and metadata",
+            "required": true,
+            "restrictions": {
+                "allow_files": true,
+                "allow_folders": false,
+                "allowed_file_types": [
+                    ".tsv",
+                    ".csv"
+                ]
+            }
+        },
+        {
+            "type": "Stash File",
+            "label": "Output Directory",
+            "name": "outdir",
+            "description": "Output directory",
+            "defaultValue": "./ampliseq-16s-results",
+            "required": true,
+            "restrictions": {
+                "allow_files": false,
+                "allow_folders": true
+            }
+        }
+    ],
+    "jobConfig": [
+        {
+            "type": "Select",
+            "label": "Compute Resources",
+            "name": "system_size",
+            "hidden": false,
+            "options": [
+                {
+                    "label": "MEDIUM (Recommended)",
+                    "value": "medium",
+                    "mapValue": {
+                        "nodeSize": "MEDIUM",
+                        "numNodes": 1,
+                        "withGpu": false
+                    }
+                }
+            ],
+            "defaultValue": "medium"
+        }
+    ],
+    "tags": [
+        {
+            "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+            "name": "biology",
+            "type": "field"
+        },
+        {
+            "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+            "name": "genomics",
+            "type": "subfield"
+        },
+        {
+            "id": "831477f4-f572-4e27-af83-037661489800",
+            "name": "analysis",
+            "type": "task"
+        }
+    ]
+}

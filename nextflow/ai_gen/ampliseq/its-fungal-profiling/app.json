@@ -1,0 +1,92 @@
+{
+    "name": "ampliseq-its-fungal",
+    "title": "ITS Fungal Community Profiling (nf-core/ampliseq)",
+    "description": "Characterize fungal communities from ITS amplicon sequencing data using the nf-core/ampliseq pipeline. Performs quality control, ASV inference with DADA2, taxonomic classification using UNITE database, and generates comprehensive diversity metrics for mycobiome research and plant pathology studies.",
+    "version": "1.0.0",
+    "engineType": "NEXTFLOW",
+    "command": "nextflow run nf-core/ampliseq --input ${input} --outdir ${outdir} --FW_primer GTGARTCATCGAATCTTTG --RV_primer TCCTCCGCTTATTGATATGC --illumina_pe_its -r 2.9.0 -profile docker ",
+    "imageUrl": "https://raw.githubusercontent.com/nf-core/ampliseq/master/docs/images/nf-core-ampliseq_logo_flat_light.png",
+    "content": "<h2><strong>ITS Fungal Community Profiling</strong></h2><p>The <strong>nf-core/ampliseq</strong> pipeline analyzes ITS (Internal Transcribed Spacer) amplicon sequencing data to characterize fungal communities. This Camber app is pre-configured with ITS2 region primers and the UNITE taxonomic database for robust fungal identification in mycobiome and plant pathology research.</p><h3><strong>What This Pipeline Does</strong></h3><ul><li><strong>Quality Control</strong>: Assess read quality with FastQC</li><li><strong>Primer Trimming</strong>: Remove primers using Cutadapt</li><li><strong>ASV Inference</strong>: Generate Amplicon Sequence Variants with DADA2, optimized for ITS length variability</li><li><strong>Taxonomic Classification</strong>: Assign taxonomy using UNITE database for fungi</li><li><strong>Diversity Analysis</strong>: Calculate alpha and beta diversity metrics</li><li><strong>Visualization</strong>: Generate interactive reports and taxonomic plots</li></ul><h3><strong>Input Requirements</strong></h3><p>Provide a CSV samplesheet with the following columns:</p><ul><li><code>sampleID</code>: Unique sample identifier</li><li><code>forwardReads</code>: Path/URL to R1 FASTQ file</li><li><code>reverseReads</code>: Path/URL to R2 FASTQ file</li><li><code>run</code>: (Optional) Sequencing run identifier</li></ul><h3><strong>Key Outputs</strong></h3><ul><li><strong>ASV Table</strong>: <code>dada2/ASV_table.tsv</code> - Fungal ASV counts per sample</li><li><strong>Taxonomy</strong>: <code>dada2/ASV_tax.tsv</code> - UNITE taxonomic assignments</li><li><strong>Diversity Metrics</strong>: <code>qiime2/diversity/</code> - Alpha/beta diversity analysis</li><li><strong>QC Report</strong>: <code>multiqc/multiqc_report.html</code> - Comprehensive quality control</li></ul><h3><strong>Biological Context</strong></h3><p>This pipeline targets the <strong>ITS2 region</strong> of the fungal ribosomal RNA gene complex, the standard marker for fungal identification. The ITS region shows high variability in length between different fungal taxa, requiring special handling with the <code>--illumina_pe_its</code> flag for optimal paired-end read merging.</p><blockquote><p><strong>Use Cases:</strong></p><ul><li><strong>Mycobiome Research</strong>: Characterize fungal communities in environmental samples</li><li><strong>Plant Pathology</strong>: Identify fungal pathogens in plant tissues</li><li><strong>Agricultural Studies</strong>: Assess soil fungal diversity and plant-fungal interactions</li><li><strong>Clinical Mycology</strong>: Profile fungal populations in clinical samples</li></ul></blockquote><blockquote><p><strong>Note:</strong> Primers are hardcoded for the ITS2 region (GTGARTCATCGAATCTTTG / TCCTCCGCTTATTGATATGC). UNITE database is automatically downloaded during pipeline execution. The <code>--illumina_pe_its</code> flag ensures proper handling of ITS length variability.</p></blockquote>",
+    "spec": [
+        {
+            "name": "input",
+            "label": "Sample Sheet",
+            "description": "CSV file with columns: sampleID, forwardReads, reverseReads. Each row represents one sample with paths or URLs to paired-end FASTQ files from ITS amplicon sequencing.",
+            "type": "Stash File",
+            "required": true,
+            "placeholder": "samplesheet.csv",
+            "defaultValue": "",
+            "disabled": false,
+            "hidden": false,
+            "options": null
+        },
+        {
+            "name": "outdir",
+            "label": "Output Directory",
+            "description": "Directory where all pipeline results will be saved, including ASV tables, taxonomic assignments from UNITE, diversity metrics, and QC reports.",
+            "type": "Stash File",
+            "required": true,
+            "placeholder": "results",
+            "defaultValue": "",
+            "disabled": false,
+            "hidden": false,
+            "options": null
+        }
+    ],
+    "jobConfig": [
+        {
+            "type": "Select",
+            "label": "Compute Resources",
+            "name": "system_size",
+            "hidden": false,
+            "description": "Select computational resources based on dataset size. MEDIUM is recommended for typical ITS fungal studies (20-100 samples).",
+            "options": [
+                {
+                    "label": "SMALL (Test/Demo datasets, <10 samples)",
+                    "value": "small",
+                    "mapValue": {
+                        "nodeSize": "SMALL",
+                        "numNodes": 1,
+                        "withGpu": false
+                    }
+                },
+                {
+                    "label": "MEDIUM (Recommended, 20-100 samples)",
+                    "value": "default",
+                    "mapValue": {
+                        "nodeSize": "MEDIUM",
+                        "numNodes": 1,
+                        "withGpu": false
+                    }
+                },
+                {
+                    "label": "LARGE (Large studies, >100 samples)",
+                    "value": "large",
+                    "mapValue": {
+                        "nodeSize": "LARGE",
+                        "numNodes": 1,
+                        "withGpu": false
+                    }
+                }
+            ],
+            "defaultValue": "default"
+        }
+    ],
+    "tags": [
+        {
+            "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+            "name": "biology",
+            "type": "field"
+        },
+        {
+            "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+            "name": "genomics",
+            "type": "subfield"
+        },
+        {
+            "id": "831477f4-f572-4e27-af83-037661489800",
+            "name": "analysis",
+            "type": "task"
+        }
+    ]
+}

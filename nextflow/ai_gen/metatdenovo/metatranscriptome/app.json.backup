@@ -1,0 +1,71 @@
+{
+  "name": "metatdenovo-metatranscriptome-assembly",
+  "title": "Metatranscriptome Assembly",
+  "description": "De novo assembly and annotation of metatranscriptomic data from prokaryotes, eukaryotes, and viruses. Performs comprehensive quality control, flexible assembly workflows, and multi-level functional annotation. Samplesheet format: `sample,fastq_1,fastq_2`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/metatdenovo --input ${input} --outdir ${outdir} -r 1.0.0 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/metatdenovo/master/docs/images/nf-core-metatdenovo_logo_light.png",
+  "content": "<h2><strong>Metatdenovo - Metatranscriptome Assembly</strong></h2><p>Comprehensive bioinformatics pipeline for de novo assembly and annotation of metatranscriptomic and metagenomic data targeting prokaryotes, eukaryotes, and viruses. Provides flexible workflows with multiple tool options for quality control, assembly, and functional annotation.</p><h3><strong>What is Metatdenovo?</strong></h3><blockquote><p><strong>Metatdenovo</strong> enables researchers to assemble and annotate complex microbial communities from RNA-seq data without requiring reference genomes, making it ideal for studying novel or uncultured organisms.</p></blockquote><h3><strong>Key Features</strong></h3><ul><li><strong>Multi-Organism Support</strong>: Prokaryotes, eukaryotes, and viruses</li><li><strong>Automated QC</strong>: Comprehensive preprocessing and quality control</li><li><strong>Flexible Assembly</strong>: Multiple assembler options (RNAspades, Megahit)</li><li><strong>ORF Prediction</strong>: TransDecoder, Prokka, Prodigal</li><li><strong>Functional Annotation</strong>: eggNOG-mapper, KofamScan, HMMER</li><li><strong>Taxonomic Classification</strong>: EUKulele, Diamond</li></ul><h3><strong>Pipeline Workflow</strong></h3><ol><li><strong>Quality Control</strong>: FastQC assessment and read quality metrics</li><li><strong>Read Processing</strong>: Trim Galore for adapter removal and trimming</li><li><strong>Optional Filtering</strong>: BBduk sequence filtering and BBnorm depth normalization</li><li><strong>De Novo Assembly</strong>: RNAspades or Megahit for contig generation</li><li><strong>ORF Identification</strong>: Predict open reading frames with organism-specific tools</li><li><strong>Functional Annotation</strong>: Annotate genes with pathway and protein family information</li><li><strong>Taxonomic Annotation</strong>: Classify sequences to taxonomic groups</li></ol><h3><strong>Scientific Applications</strong></h3><ul><li><strong>Metagenomic Research</strong>: Study complex microbial communities</li><li><strong>Environmental Samples</strong>: Analyze soil, water, or gut microbiomes</li><li><strong>Microbial Diversity</strong>: Characterize genetic diversity across organisms</li><li><strong>Novel Organism Discovery</strong>: Identify uncultured or unknown species</li><li><strong>Functional Profiling</strong>: Understand metabolic potential of communities</li></ul><h3><strong>Advantages</strong></h3><ul><li><strong>Reference-Free</strong>: No need for pre-existing reference genomes</li><li><strong>Community Best Practices</strong>: Curated by bioinformatics experts</li><li><strong>Automated Testing</strong>: Continuous integration for reliability</li><li><strong>Standardized Output</strong>: Consistent format for downstream analysis</li><li><strong>Highly Configurable</strong>: Choose tools based on your data type</li></ul><h3><strong>Input Requirements</strong></h3><ul><li><strong>FASTQ Files</strong>: Single or paired-end RNA-seq reads</li><li><strong>Sample Sheet</strong>: CSV with sample and file path information</li><li><strong>Optional</strong>: Reference databases for annotation</li></ul><h3><strong>Main Outputs</strong></h3><ul><li><strong>Assembled Contigs</strong>: De novo assembled sequences</li><li><strong>ORF Predictions</strong>: Predicted protein-coding regions</li><li><strong>Functional Annotations</strong>: Pathway and protein family assignments</li><li><strong>Taxonomic Classifications</strong>: Species/genus level identifications</li><li><strong>QC Reports</strong>: MultiQC summary of all quality metrics</li></ul><blockquote><p><strong>Perfect for:</strong> Metatranscriptomics • Microbial Communities • Environmental Samples • Functional Profiling • Novel Organism Discovery</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Input",
+      "name": "input",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [
+          ".csv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output",
+      "name": "outdir",
+      "defaultValue": "./metatdenovo-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Resources",
+      "name": "system_size",
+      "options": [
+        {
+          "label": "LARGE",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

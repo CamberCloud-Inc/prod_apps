@@ -1,0 +1,144 @@
+{
+  "name": "rarevariantburden-rare-disease-burden",
+  "title": "Rare Variant Burden Testing (CoCoRV-nf)",
+  "description": "Summary count-based rare variant burden testing for case-only sequencing data. Compare your sequenced cases against public control databases (gnomAD) to identify disease-associated genes through consistent variant filtering, ethnicity stratification, and statistical association testing.",
+  "content": "<h1 class=\"heading-node\">Rare Variant Burden Testing (CoCoRV-nf)</h1><p class=\"text-node\"><strong>Discover Disease Genes Through Case-Control Association Testing</strong></p><p class=\"text-node\">When you have sequenced case samples but no matched controls, this pipeline enables powerful rare variant burden testing by leveraging public summary count data from gnomAD (Genome Aggregation Database). Identify genes with significant enrichment of rare variants in your disease cohort compared to the general population.</p><img src=\"https://raw.githubusercontent.com/nf-core/rarevariantburden/master/docs/images/nf-core-rarevariantburden_logo_light.png\" alt=\"nf-core/rarevariantburden pipeline\" width=\"600\" height=\"400\"><h2 class=\"heading-node\">What This Analysis Does</h2><p class=\"text-node\">This pipeline performs comprehensive rare variant burden testing to identify genes associated with your disease of interest. It takes your joint-called VCF file of case samples and performs consistent variant filtering, quality control, annotation, and statistical association testing against public control data.</p><p class=\"text-node\">The analysis supports multiple genome builds (GRCh37, GRCh38), ethnicity stratification, sex-stratified analysis, and both dominant and recessive inheritance models. Results include inflation factor estimates, QQ plots, and False Discovery Rate (FDR) control for robust statistical inference.</p><h2 class=\"heading-node\">Key Features</h2><h3 class=\"heading-node\">Statistical Rigor</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Consistent Variant Filtering:</strong> Apply uniform quality filters across cases and controls</p></li><li><p class=\"text-node\"><strong>Multiple Testing Correction:</strong> FDR control to manage false positives</p></li><li><p class=\"text-node\"><strong>Inflation Factor Estimation:</strong> Assess and correct for population stratification</p></li><li><p class=\"text-node\"><strong>QQ Plot Generation:</strong> Visualize test statistics distribution for quality assessment</p></li></ul><h3 class=\"heading-node\">Flexible Analysis Options</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Ethnicity Stratification:</strong> Analyze cases stratified by predicted ancestry groups</p></li><li><p class=\"text-node\"><strong>Sex-Stratified Analysis:</strong> Separate analyses for male and female cohorts</p></li><li><p class=\"text-node\"><strong>Recessive Model Support:</strong> Test for compound heterozygous and homozygous recessive effects</p></li><li><p class=\"text-node\"><strong>Multiple Genome Builds:</strong> Support for GRCh37 and GRCh38 reference genomes</p></li></ul><h3 class=\"heading-node\">Comprehensive Annotation</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Annovar Integration:</strong> Functional annotation with gene-based predictions</p></li><li><p class=\"text-node\"><strong>VEP Support:</strong> Variant Effect Predictor annotation option</p></li><li><p class=\"text-node\"><strong>GDS Format Conversion:</strong> Efficient storage and analysis with Genomic Data Storage format</p></li><li><p class=\"text-node\"><strong>Ethnicity Prediction:</strong> Automatic ancestry inference for samples</p></li></ul><h2 class=\"heading-node\">Supported Control Datasets</h2><p class=\"text-node\">The pipeline supports comparison against multiple gnomAD releases:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>gnomAD v2 exome (GRCh37):</strong> 125,748 exomes from diverse populations</p></li><li><p class=\"text-node\"><strong>gnomAD v4.1 exome (GRCh38):</strong> 730,947 exomes with expanded coverage</p></li><li><p class=\"text-node\"><strong>gnomAD v4.1 genome (GRCh38):</strong> 76,156 whole genomes for comprehensive variant detection</p></li></ul><h2 class=\"heading-node\">When To Use This Pipeline</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Case-Only Studies:</strong> You have sequenced disease cases but no matched controls</p></li><li><p class=\"text-node\"><strong>Gene Discovery:</strong> Searching for novel disease-associated genes</p></li><li><p class=\"text-node\"><strong>Rare Disease Research:</strong> Investigating genetic architecture of rare conditions</p></li><li><p class=\"text-node\"><strong>Complex Trait Analysis:</strong> Assessing rare variant contribution to complex diseases</p></li><li><p class=\"text-node\"><strong>Population Comparison:</strong> Comparing your cohort against large public databases</p></li><li><p class=\"text-node\"><strong>Validation Studies:</strong> Confirming candidate genes from other approaches</p></li></ul><h2 class=\"heading-node\">What You Need</h2><h3 class=\"heading-node\">1. Joint-Called VCF File</h3><p class=\"text-node\">A multi-sample VCF file containing variant calls for all your case samples:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Format:</strong> VCF or compressed VCF.GZ format</p></li><li><p class=\"text-node\"><strong>Content:</strong> Joint-called variants across all case samples (not single-sample VCFs)</p></li><li><p class=\"text-node\"><strong>Quality:</strong> Variants should be filtered and quality-controlled</p></li><li><p class=\"text-node\"><strong>Source:</strong> Whole exome sequencing (WES) or whole genome sequencing (WGS)</p></li></ul><h3 class=\"heading-node\">2. Sample ID List</h3><p class=\"text-node\">A text file listing the sample IDs to include in the analysis (one per line):</p><pre class=\"block-node\"><code>sample001\nsample002\nsample003</code></pre><h3 class=\"heading-node\">3. Reference Genome</h3><p class=\"text-node\">Specify which reference genome build your VCF uses:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>GRCh37:</strong> Use with gnomAD v2 exome controls</p></li><li><p class=\"text-node\"><strong>GRCh38:</strong> Use with gnomAD v4.1 exome or genome controls</p></li></ul><h3 class=\"heading-node\">4. Control Dataset Resources</h3><p class=\"text-node\">Download pre-processed control data from AWS S3 (see pipeline documentation for access instructions)</p><h2 class=\"heading-node\">Pipeline Workflow</h2><p class=\"text-node\">The analysis proceeds through these automated steps:</p><ol class=\"list-node\"><li><p class=\"text-node\"><strong>VCF Splitting:</strong> Split input VCF by chromosome for parallel processing</p></li><li><p class=\"text-node\"><strong>Normalization & QC:</strong> Normalize variants and apply quality filters</p></li><li><p class=\"text-node\"><strong>Annotation:</strong> Functional annotation with Annovar or VEP</p></li><li><p class=\"text-node\"><strong>GDS Conversion:</strong> Convert to efficient GDS format for analysis</p></li><li><p class=\"text-node\"><strong>Ethnicity Prediction:</strong> Infer sample ancestry for stratified analysis</p></li><li><p class=\"text-node\"><strong>Association Testing:</strong> Perform burden tests with multiple models</p></li><li><p class=\"text-node\"><strong>Results Merging:</strong> Combine and rank significant associations</p></li></ol><h2 class=\"heading-node\">What You'll Get</h2><h3 class=\"heading-node\">Association Results</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Gene-Level P-values:</strong> Statistical significance for each gene tested</p></li><li><p class=\"text-node\"><strong>Burden Test Results:</strong> Variant counts and frequencies in cases vs. controls</p></li><li><p class=\"text-node\"><strong>FDR-Adjusted P-values:</strong> Multiple testing corrected significance values</p></li><li><p class=\"text-node\"><strong>Ranked Gene Lists:</strong> Top candidate disease-associated genes</p></li></ul><h3 class=\"heading-node\">Quality Control</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>QQ Plots:</strong> Assess test statistic distribution and genomic inflation</p></li><li><p class=\"text-node\"><strong>Inflation Factors (\u03bb):</strong> Quantify population stratification effects</p></li><li><p class=\"text-node\"><strong>Sample QC Metrics:</strong> Quality statistics for included samples</p></li><li><p class=\"text-node\"><strong>Variant Filtering Stats:</strong> Counts of variants passing each filter</p></li></ul><h3 class=\"heading-node\">Annotated Variants</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Functional Annotations:</strong> Gene names, transcript effects, protein changes</p></li><li><p class=\"text-node\"><strong>Population Frequencies:</strong> Allele frequencies in gnomAD populations</p></li><li><p class=\"text-node\"><strong>Predicted Impact:</strong> Consequence predictions for each variant</p></li><li><p class=\"text-node\"><strong>GDS Files:</strong> Efficient format for downstream custom analyses</p></li></ul><h2 class=\"heading-node\">Example Use Cases</h2><h3 class=\"heading-node\">Case Study 1: Novel Gene Discovery</h3><p class=\"text-node\">A research team has exome sequencing data from 200 patients with a rare developmental disorder. By comparing against gnomAD v4.1 exomes (730K controls), they identify three genes with significant burden of loss-of-function variants, leading to the discovery of new disease mechanisms.</p><h3 class=\"heading-node\">Case Study 2: Population-Specific Effects</h3><p class=\"text-node\">Researchers studying a cardiovascular condition in East Asian populations use ethnicity stratification to identify population-specific risk genes that were masked in pan-ethnic analyses.</p><h3 class=\"heading-node\">Case Study 3: Recessive Disease</h3><p class=\"text-node\">A study of consanguineous families with autosomal recessive disease uses the recessive model testing to identify genes with excess homozygous loss-of-function variants, pinpointing the causative gene for clinical validation.</p><h2 class=\"heading-node\">Scientific Background</h2><p class=\"text-node\">This pipeline implements the CoCoRV (Case-Control Rare Variant) methodology for burden testing when matched controls are unavailable. Developed by researchers at St. Jude Children's Research Hospital and Mayo Clinic, it enables rigorous statistical testing against large public databases while accounting for population structure, test statistic inflation, and multiple testing.</p><p class=\"text-node\">The approach uses summary-level allele count data from gnomAD, avoiding the need to access individual-level control genotypes while maintaining statistical power. Ethnicity prediction ensures appropriate population matching, and multiple inheritance models capture different genetic architectures.</p><h2 class=\"heading-node\">Resource Requirements</h2><p class=\"text-node\"><strong>Computational Needs:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Recommended:</strong> LARGE node (64 CPUs, 360GB RAM)</p></li><li><p class=\"text-node\"><strong>Runtime:</strong> 4-8 hours for typical exome cohort (100-500 samples)</p></li><li><p class=\"text-node\"><strong>Storage:</strong> ~50-200GB for intermediate files and results</p></li></ul><p class=\"text-node\"><strong>Input Requirements:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Sample Size:</strong> Minimum 20-30 cases recommended for statistical power</p></li><li><p class=\"text-node\"><strong>Sequencing Quality:</strong> Standard WES/WGS quality (>20x coverage, >90% target coverage)</p></li><li><p class=\"text-node\"><strong>VCF Format:</strong> Standard VCF 4.x format with proper FORMAT fields</p></li></ul><h2 class=\"heading-node\">Getting Started</h2><p class=\"text-node\"><strong>Step 1:</strong> Prepare your joint-called VCF file with all case samples</p><p class=\"text-node\"><strong>Step 2:</strong> Create a sample ID list text file</p><p class=\"text-node\"><strong>Step 3:</strong> Download required control dataset files from AWS S3 (see documentation)</p><p class=\"text-node\"><strong>Step 4:</strong> Download annotation resources (Annovar or VEP databases)</p><p class=\"text-node\"><strong>Step 5:</strong> Run the pipeline with your parameters</p><p class=\"text-node\"><strong>Step 6:</strong> Review QQ plots and inflation factors to assess result quality</p><p class=\"text-node\"><strong>Step 7:</strong> Examine top-ranked genes and their burden statistics</p><p class=\"text-node\"><a href='https://nf-co.re/rarevariantburden' target='_blank'>View full pipeline documentation and setup instructions</a></p><p class=\"text-node\"><strong>Developers:</strong> Saima Sultana Tithi (St. Jude Children's Research Hospital) and Wenan Chen (Mayo Clinic)</p><p class=\"text-node\">Built with <a href='https://www.nextflow.io/' target='_blank'>Nextflow</a> \u2022 Part of the <a href='https://nf-co.re/' target='_blank'>nf-core</a> community \u2022 MIT License</p>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/rarevariantburden/master/docs/images/nf-core-rarevariantburden_logo_light.png",
+  "command": "nextflow run nf-core/rarevariantburden --caseJointVCF ${caseJointVCF} --caseSample ${caseSample} --reference ${reference} --controlDataFolder ${controlDataFolder} --outdir ${outdir} -r ${revision}",
+  "engineType": "NEXTFLOW",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Case Joint VCF",
+      "name": "caseJointVCF",
+      "description": "Multi-sample VCF file containing joint-called variants for all case samples. Must be bgzipped and tabix-indexed (VCF.GZ format).",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [
+          ".vcf",
+          ".vcf.gz"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Case Sample List",
+      "name": "caseSample",
+      "description": "Text file with sample IDs to include in analysis (one sample ID per line). Sample IDs must match those in the VCF header.",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [
+          ".txt",
+          ".list"
+        ]
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "reference",
+      "description": "Reference genome build used for variant calling. Must match your VCF file and determines compatible control datasets.",
+      "defaultValue": "GRCh38",
+      "required": true,
+      "options": [
+        {
+          "label": "GRCh38 (Use with gnomAD v4.1)",
+          "value": "GRCh38"
+        },
+        {
+          "label": "GRCh37 (Use with gnomAD v2)",
+          "value": "GRCh37"
+        }
+      ]
+    },
+    {
+      "type": "Stash File",
+      "label": "Control Data Folder",
+      "name": "controlDataFolder",
+      "description": "Directory containing pre-processed gnomAD control data. Download from AWS S3 following pipeline documentation instructions.",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory for analysis results including association statistics, QC plots, annotated variants, and summary reports.",
+      "defaultValue": "./rarevariantburden-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    },
+    {
+      "type": "Input",
+      "label": "Pipeline Revision",
+      "name": "revision",
+      "description": "Pipeline version to use. Use 'dev' for latest development version or specify a release tag.",
+      "defaultValue": "dev",
+      "required": true
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Computational resources for the analysis. LARGE recommended for most cohorts.",
+      "options": [
+        {
+          "label": "Medium (32 CPUs, 180GB RAM) - Small cohorts (<50 samples)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Large (64 CPUs, 360GB RAM) - Recommended for most analyses",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLarge (96 CPUs, 540GB RAM) - Large cohorts (>500 samples)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

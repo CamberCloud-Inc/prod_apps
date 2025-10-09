@@ -1,0 +1,121 @@
+{
+  "name": "mhcquant-immunopeptidomics",
+  "title": "Immunopeptidomics Mass Spectrometry Analysis",
+  "description": "Automated and reproducible data analysis for immunopeptidomics. Identify and quantify MHC-eluted peptides from mass spectrometry data using OpenMS, with database search (Comet), MS2Rescore prediction, and Percolator FDR rescoring. Supports multiple spectrum file formats for clinical immunotherapy research. Samplesheet format: `Curated,high`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/mhcquant --input ${input} --outdir ${outdir} --fasta ${fasta} --skip_cellbender -c /etc/mpi/nextflow.camber.config -profile k8s -r 2.6.0",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/mhcquant/master/docs/images/nf-core-mhcquant_logo_light.png",
+  "content": "<h1 class=\"heading-node\">🧬 MHCquant: Immunopeptidomics Mass Spectrometry Analysis</h1><p class=\"text-node\"><strong>Discover Tumor Antigens and Refine Immunotherapy Targets</strong></p><p class=\"text-node\">MHCquant is a cutting-edge bioinformatics pipeline for processing immunopeptidomics mass spectrometry data. It identifies and quantifies peptides presented on major histocompatibility complex (MHC) molecules, enabling T cell-centric immunotherapy research and tumor antigen discovery.</p><img src=\"https://raw.githubusercontent.com/nf-core/mhcquant/master/docs/images/nf-core-mhcquant_logo_light.png\" alt=\"nf-core/mhcquant logo\" width=\"500\" height=\"200\"><h2 class=\"heading-node\">🎯 Key Features</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🚀 OpenMS Framework:</strong> Built on the C++ OpenMS framework for computational mass spectrometry</p></li><li><p class=\"text-node\"><strong>📊 Multiple Format Support:</strong> Accepts mzML, Thermo raw, and Bruker tdf spectrum files</p></li><li><p class=\"text-node\"><strong>🔬 Advanced Identification:</strong> Database search with Comet for peptide-spectrum matching</p></li><li><p class=\"text-node\"><strong>🎓 Machine Learning:</strong> MS2Rescore for peptide property prediction</p></li><li><p class=\"text-node\"><strong>📈 Statistical Rigor:</strong> Percolator FDR rescoring using competitive target-decoy approach</p></li><li><p class=\"text-node\"><strong>📉 Label-Free Quantification:</strong> Retention time alignment for accurate quantification</p></li><li><p class=\"text-node\"><strong>✅ Quality Control:</strong> Comprehensive QC metrics via MultiQC reporting</p></li></ul><h2 class=\"heading-node\">🔄 MHCquant2 Workflow</h2><p class=\"text-node\">The pipeline implements the latest MHCquant2 methodology (2025) with significant improvements in peptide identification:</p><ol class=\"list-node\"><li><p class=\"text-node\"><strong>Spectrum Preparation:</strong> Convert and prepare MS/MS spectrum files (mzML/raw/tdf formats)</p></li><li><p class=\"text-node\"><strong>Decoy Database Creation:</strong> Generate reversed decoy sequences for FDR estimation</p></li><li><p class=\"text-node\"><strong>Peptide Identification:</strong> Comet database search against protein FASTA</p></li><li><p class=\"text-node\"><strong>Protein Reference Refresh:</strong> Update protein mappings for identified peptides</p></li><li><p class=\"text-node\"><strong>Merge Identifications:</strong> Combine PSMs from multiple files</p></li><li><p class=\"text-node\"><strong>Property Prediction:</strong> MS2Rescore for retention time and MS2 intensity prediction</p></li><li><p class=\"text-node\"><strong>Feature Extraction:</strong> Extract PSM features for rescoring</p></li><li><p class=\"text-node\"><strong>Percolator Rescoring:</strong> Apply machine learning for improved PSM confidence</p></li><li><p class=\"text-node\"><strong>FDR Filtering:</strong> Filter peptide identifications at 1% FDR threshold</p></li><li><p class=\"text-node\"><strong>Result Export:</strong> Generate tab-separated and mzTab output files</p></li><li><p class=\"text-node\"><strong>Label-Free Quantification:</strong> Align retention times and quantify peptides</p></li><li><p class=\"text-node\"><strong>Quality Reports:</strong> Comprehensive MultiQC report generation</p></li></ol><img src=\"https://raw.githubusercontent.com/nf-core/mhcquant/master/docs/images/workflow_overview.png\" alt=\"MHCquant workflow\" width=\"700\" height=\"400\"><h2 class=\"heading-node\">📋 Input Requirements</h2><h3 class=\"heading-node\">Sample Sheet Format (TSV)</h3><p class=\"text-node\">Your TSV samplesheet defines the experiment structure with these columns:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>ID:</strong> Unique sample identifier</p></li><li><p class=\"text-node\"><strong>Sample:</strong> Sample name</p></li><li><p class=\"text-node\"><strong>Condition:</strong> Experimental condition or group</p></li><li><p class=\"text-node\"><strong>ReplicateFileName:</strong> Path to spectrum file</p></li></ul><pre class=\"block-node\"><code>ID\\tSample\\tCondition\\tReplicateFileName\nsample1\\tPatient1\\tTumor\\tdata/spectra/patient1_tumor.raw\nsample2\\tPatient1\\tNormal\\tdata/spectra/patient1_normal.raw\nsample3\\tPatient2\\tTumor\\tdata/spectra/patient2_tumor.raw\nsample4\\tPatient2\\tNormal\\tdata/spectra/patient2_normal.raw</code></pre><h3 class=\"heading-node\">Supported File Formats</h3><ul class=\"list-node\"><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">.raw</code> or <code class=\"inline\" spellcheck=\"false\">.RAW</code> - Thermo raw files</p></li><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">.mzML</code> or <code class=\"inline\" spellcheck=\"false\">.mzML.gz</code> - Open standard mzML format</p></li><li><p class=\"text-node\"><code class=\"inline\" spellcheck=\"false\">.d</code>, <code class=\"inline\" spellcheck=\"false\">.d.tar.gz</code>, <code class=\"inline\" spellcheck=\"false\">.d.zip</code> - Bruker tdf files</p></li></ul><h3 class=\"heading-node\">Protein Database (FASTA)</h3><p class=\"text-node\">Provide a protein database in FASTA format for peptide identification. Common sources:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>SwissProt:</strong> Curated, high-quality human proteome</p></li><li><p class=\"text-node\"><strong>UniProt:</strong> Comprehensive protein sequence database</p></li><li><p class=\"text-node\"><strong>RefSeq:</strong> NCBI reference sequences</p></li><li><p class=\"text-node\"><strong>Ensembl:</strong> Genome annotation-derived proteins</p></li></ul><h2 class=\"heading-node\">📊 Performance Improvements (MHCquant2)</h2><p class=\"text-node\">Compared to MHCquant1, the updated MHCquant2 methodology (Genome Biology 2025) delivers:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📈 +26.9%</strong> increase in HLA class I binders identified at 1% FDR</p></li><li><p class=\"text-node\"><strong>📈 +13.0%</strong> increase in HLA class II peptides identified at 1% FDR</p></li><li><p class=\"text-node\"><strong>🎯 Enhanced sensitivity</strong> for detecting rare tumor-specific antigens</p></li><li><p class=\"text-node\"><strong>🔬 Improved specificity</strong> through MS2Rescore integration</p></li></ul><h2 class=\"heading-node\">📊 Comprehensive Results</h2><h3 class=\"heading-node\">Identification Results</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📄 PSM Tables:</strong> Peptide-spectrum matches with confidence scores</p></li><li><p class=\"text-node\"><strong>🧬 Peptide Lists:</strong> Filtered peptide identifications at 1% FDR</p></li><li><p class=\"text-node\"><strong>🏷️ Protein Inference:</strong> Protein-level identification and grouping</p></li><li><p class=\"text-node\"><strong>📊 mzTab Export:</strong> Standardized output for downstream analysis</p></li></ul><h3 class=\"heading-node\">Quantification Data</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📈 Intensity Matrices:</strong> Label-free quantification across samples</p></li><li><p class=\"text-node\"><strong>⏱️ Retention Time Alignment:</strong> Corrected RT for accurate quantification</p></li><li><p class=\"text-node\"><strong>📊 Statistical Analysis:</strong> Differential abundance testing between conditions</p></li></ul><h3 class=\"heading-node\">Quality Control</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>📈 MultiQC Report:</strong> Interactive HTML report with comprehensive QC metrics</p></li><li><p class=\"text-node\"><strong>🔍 Identification Metrics:</strong> PSM counts, peptide FDR, protein coverage</p></li><li><p class=\"text-node\"><strong>📊 MS1/MS2 Statistics:</strong> Spectrum quality, peak intensities, mass accuracy</p></li><li><p class=\"text-node\"><strong>📉 Quantification QC:</strong> CV analysis, missing value patterns, sample correlations</p></li></ul><h2 class=\"heading-node\">🧪 Applications</h2><p class=\"text-node\"><strong>Perfect for Research in:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🎯 Cancer Immunotherapy:</strong> Discover tumor-specific neoantigens for personalized vaccines</p></li><li><p class=\"text-node\"><strong>🔬 Antigen Presentation:</strong> Study MHC class I and class II presentation pathways</p></li><li><p class=\"text-node\"><strong>💉 Vaccine Development:</strong> Identify immunogenic peptides for therapeutic vaccines</p></li><li><p class=\"text-node\"><strong>🧬 Autoimmune Diseases:</strong> Characterize self-peptide presentation in autoimmunity</p></li><li><p class=\"text-node\"><strong>🦠 Infectious Diseases:</strong> Map pathogen-derived epitopes presented to T cells</p></li><li><p class=\"text-node\"><strong>🧪 Transplantation:</strong> Assess HLA-peptide compatibility in transplant immunology</p></li><li><p class=\"text-node\"><strong>📊 Biomarker Discovery:</strong> Identify disease-specific peptide signatures</p></li></ul><h2 class=\"heading-node\">⚙️ Technical Specifications</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔧 Search Engine:</strong> Comet with optimized immunopeptidomics settings</p></li><li><p class=\"text-node\"><strong>🤖 Rescoring:</strong> MS2Rescore + Percolator for enhanced PSM confidence</p></li><li><p class=\"text-node\"><strong>📊 FDR Control:</strong> Target-decoy competitive scoring at 1% peptide FDR</p></li><li><p class=\"text-node\"><strong>🧮 Quantification:</strong> Label-free with RT alignment using OpenMS algorithms</p></li><li><p class=\"text-node\"><strong>📦 Containerization:</strong> Full Docker/Singularity support for reproducibility</p></li><li><p class=\"text-node\"><strong>☁️ Cloud-Ready:</strong> Tested on AWS, supports distributed computing</p></li></ul><h2 class=\"heading-node\">🎓 Citation</h2><p class=\"text-node\">If you use MHCquant in your research, please cite:</p><blockquote class=\"block-node\"><p class=\"text-node\"><strong>MHCquant2:</strong> Bichmann, L., et al. (2025). &quot;MHCquant2 refines immunopeptidomics tumor antigen discovery.&quot; <em>Genome Biology</em>.</p><p class=\"text-node\"><strong>MHCquant1:</strong> Bichmann, L., et al. (2019). &quot;MHCquant: Automated and Reproducible Data Analysis for Immunopeptidomics.&quot; <em>Journal of Proteome Research</em>, 18(11), 3876-3884.</p></blockquote><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/mhcquant/2.6.0/\" target=\"_blank\">nf-core/mhcquant v2.6.0</a> • Containerized execution • Continuous integration tested</p>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet (TSV)",
+      "name": "input",
+      "description": "TSV samplesheet with columns: ID, Sample, Condition, ReplicateFileName. Spectrum files can be mzML, Thermo raw, or Bruker tdf formats.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Protein Database (FASTA)",
+      "name": "fasta",
+      "description": "Protein database in FASTA format for peptide identification. Use SwissProt, UniProt, or custom proteome databases.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".fasta",
+          ".fa",
+          ".fasta.gz",
+          ".fa.gz"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory for analysis results including PSM tables, peptide lists, quantification matrices, and MultiQC reports.",
+      "defaultValue": "./mhcquant-results",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Resource allocation for immunopeptidomics processing. Large cohorts require more resources for database search and rescoring.",
+      "options": [
+        {
+          "label": "Medium (32 CPUs, 180GB RAM) - Small experiments (<10 samples)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Large (64 CPUs, 360GB RAM) - Recommended for most studies",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLarge (96 CPUs, 540GB RAM) - Large cohorts (>20 samples)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

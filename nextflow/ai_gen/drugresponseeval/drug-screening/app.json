@@ -1,0 +1,174 @@
+{
+  "name": "drugresponseeval-drug-screening",
+  "title": "Pharmacogenomics Model Testing",
+  "description": "Statistically rigorous framework for evaluating drug response prediction models using cross-validation, hyperparameter tuning, and robustness testing. Supports multiple datasets (CTRPv2, CCLE, GDSC) and diverse model types from statistical methods to neural networks. Samplesheet format: `cell_line,drug1,drug2,drug3`",
+  "content": "<h1 class=\"heading-node\">\ud83d\udc8a Drug Response Evaluation: Pharmacogenomics Model Testing</h1><p class=\"text-node\"><strong>Ensure Statistically Sound Drug Response Predictions</strong></p><p class=\"text-node\">DrEval (Drug Response Evaluation) is a comprehensive bioinformatics framework for evaluating drug response prediction models with statistical rigor and biological soundness. Whether you're developing machine learning models for precision oncology or comparing predictive approaches, this pipeline provides standardized, reproducible evaluation workflows.</p><img src=\"https://raw.githubusercontent.com/nf-core/drugresponseeval/master/docs/images/nf-core-drugresponseeval_logo_light.png\" alt=\"nf-core/drugresponseeval\" width=\"600\" height=\"300\"><h2 class=\"heading-node\">\ud83c\udfaf What This Pipeline Does</h2><p class=\"text-node\">DrEval implements a rigorous evaluation framework that:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udd04 Cross-Validation</strong>: Performs stratified k-fold cross-validation with proper train/test splits</p></li><li><p class=\"text-node\"><strong>\u2699\ufe0f Hyperparameter Tuning</strong>: Grid search optimization to find best model parameters</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Multiple Metrics</strong>: Evaluates performance using correlation, R\u00b2, MSE, and MAE</p></li><li><p class=\"text-node\"><strong>\ud83c\udfb2 Robustness Testing</strong>: Optional randomization tests to validate model significance</p></li><li><p class=\"text-node\"><strong>\ud83d\udd2c Baseline Comparison</strong>: Compares advanced models against naive predictors</p></li><li><p class=\"text-node\"><strong>\ud83d\udcc8 Rich Visualizations</strong>: Generates comprehensive plots comparing model performance</p></li></ul><h2 class=\"heading-node\">\ud83e\uddec Perfect For These Applications</h2><h3 class=\"heading-node\">Precision Oncology</h3><p class=\"text-node\">Develop and validate models predicting patient response to cancer therapies based on genomic profiles, enabling personalized treatment selection.</p><h3 class=\"heading-node\">Drug Discovery</h3><p class=\"text-node\">Screen compound libraries against cancer cell lines to identify promising drug candidates and understand structure-activity relationships.</p><h3 class=\"heading-node\">Pharmacogenomics Research</h3><p class=\"text-node\">Investigate how genetic variation influences drug sensitivity and resistance mechanisms across diverse cancer types.</p><h3 class=\"heading-node\">Machine Learning Development</h3><p class=\"text-node\">Benchmark new ML algorithms against established methods using standardized evaluation protocols and public datasets.</p><h3 class=\"heading-node\">Clinical Translation</h3><p class=\"text-node\">Validate predictive biomarkers before clinical deployment by testing generalization across independent datasets.</p><h2 class=\"heading-node\">\ud83e\uddea Evaluation Workflow</h2><p class=\"text-node\">The pipeline implements a comprehensive 6-step evaluation process:</p><ol class=\"list-node\"><li><p class=\"text-node\"><strong>Load Response Data</strong>: Import drug response measurements from public datasets or custom experiments</p></li><li><p class=\"text-node\"><strong>Cross-Validation Setup</strong>: Create stratified train/test splits ensuring balanced representation</p></li><li><p class=\"text-node\"><strong>Hyperparameter Tuning</strong>: Grid search across parameter space on training data</p></li><li><p class=\"text-node\"><strong>Model Training</strong>: Fit models with optimal parameters discovered via grid search</p></li><li><p class=\"text-node\"><strong>Test Set Prediction</strong>: Evaluate generalization on held-out test data</p></li><li><p class=\"text-node\"><strong>Robustness Analysis</strong>: Optional randomization and cross-study validation tests</p></li></ol><h2 class=\"heading-node\">\ud83e\udd16 Supported Model Types</h2><h3 class=\"heading-node\">Machine Learning Models</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Random Forest</strong>: Ensemble method with feature importance ranking</p></li><li><p class=\"text-node\"><strong>Gradient Boosting</strong>: XGBoost/LightGBM for high-performance predictions</p></li><li><p class=\"text-node\"><strong>Elastic Net</strong>: Linear models with L1/L2 regularization</p></li><li><p class=\"text-node\"><strong>Support Vector Machines</strong>: Kernel-based regression for nonlinear relationships</p></li><li><p class=\"text-node\"><strong>Neural Networks</strong>: Deep learning architectures for complex patterns</p></li></ul><h3 class=\"heading-node\">Baseline Predictors</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>NaiveMeanEffectsPredictor</strong>: Simple mean-based predictions for comparison</p></li><li><p class=\"text-node\"><strong>DrugMeanPredictor</strong>: Per-drug average responses</p></li><li><p class=\"text-node\"><strong>CellLineMeanPredictor</strong>: Per-cell line average sensitivities</p></li></ul><h3 class=\"heading-node\">Model Architectures</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Single-Drug Models</strong>: Fit one model per drug (captures drug-specific patterns)</p></li><li><p class=\"text-node\"><strong>Multi-Drug Models</strong>: Fit one model for all drugs (learns shared features)</p></li></ul><h2 class=\"heading-node\">\ud83d\udcca Supported Datasets</h2><h3 class=\"heading-node\">Public Pharmacogenomics Databases</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>CTRPv2</strong>: Cancer Therapeutics Response Portal - 860+ compounds, 800+ cell lines</p></li><li><p class=\"text-node\"><strong>GDSC</strong>: Genomics of Drug Sensitivity in Cancer - comprehensive dose-response data</p></li><li><p class=\"text-node\"><strong>CCLE</strong>: Cancer Cell Line Encyclopedia - multi-omic profiles with drug screens</p></li><li><p class=\"text-node\"><strong>PRISM</strong>: Profiling Relative Inhibition Simultaneously in Mixtures</p></li><li><p class=\"text-node\"><strong>gCSI</strong>: Genentech Cell Screening Initiative dataset</p></li></ul><h3 class=\"heading-node\">Custom Datasets</h3><p class=\"text-node\">Upload your own drug screening data with cell line features and response measurements in CSV/TSV format.</p><h2 class=\"heading-node\">\ud83d\udccb Input Requirements</h2><h3 class=\"heading-node\">1. Model Specification (required)</h3><p class=\"text-node\">Comma-separated list of models to evaluate:</p><pre class=\"block-node\"><code>--models RandomForest,ElasticNet,XGBoost</code></pre><h3 class=\"heading-node\">2. Baseline Methods (required)</h3><p class=\"text-node\">Comparison baselines for performance benchmarking:</p><pre class=\"block-node\"><code>--baselines NaiveMeanEffectsPredictor,DrugMeanPredictor</code></pre><h3 class=\"heading-node\">3. Dataset Selection (choose one)</h3><p class=\"text-node\"><strong>Public Dataset</strong>: Use built-in pharmacogenomics databases:</p><pre class=\"block-node\"><code>--dataset_name CTRPv2</code></pre><p class=\"text-node\"><strong>Custom Dataset</strong>: Provide your own drug response data with cell line features and response matrix.</p><h3 class=\"heading-node\">4. Response Matrix (for custom data)</h3><p class=\"text-node\">Drug response measurements in CSV format:</p><pre class=\"block-node\"><code># cell_line,drug1,drug2,drug3\nA549,0.45,0.78,0.23\nMCF7,0.67,0.34,0.89\nHCT116,0.23,0.91,0.45</code></pre><h3 class=\"heading-node\">5. Feature Matrix (for custom data)</h3><p class=\"text-node\">Cell line genomic/molecular features (mutations, expression, copy number):</p><pre class=\"block-node\"><code># cell_line,feature1,feature2,feature3\nA549,0.5,1.2,0.0\nMCF7,1.0,0.8,1.0\nHCT116,0.0,1.5,0.0</code></pre><h2 class=\"heading-node\">\ud83d\udcca Comprehensive Results</h2><h3 class=\"heading-node\">Performance Metrics</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udcc8 Pearson Correlation</strong>: Measures linear relationship between predicted and actual responses</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Spearman Correlation</strong>: Rank-based correlation for nonlinear relationships</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf R\u00b2 Score</strong>: Proportion of variance explained by the model</p></li><li><p class=\"text-node\"><strong>\ud83d\udcc9 MSE/MAE</strong>: Mean squared and absolute errors for prediction accuracy</p></li></ul><h3 class=\"heading-node\">Visualization Suite</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udcca Performance Comparison Plots</strong>: Box plots comparing models across metrics</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Scatter Plots</strong>: Predicted vs observed response for each model</p></li><li><p class=\"text-node\"><strong>\ud83d\udcc8 Learning Curves</strong>: Model performance vs training set size</p></li><li><p class=\"text-node\"><strong>\ud83d\udd25 Feature Importance Heatmaps</strong>: Top predictive features across drugs</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Cross-Validation Summaries</strong>: Performance stability across folds</p></li></ul><h3 class=\"heading-node\">Statistical Reports</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udccb Summary Tables</strong>: Performance metrics for all model-drug combinations</p></li><li><p class=\"text-node\"><strong>\ud83c\udfb2 Randomization Test Results</strong>: P-values for model significance</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Hyperparameter Tables</strong>: Optimal parameters discovered for each model</p></li><li><p class=\"text-node\"><strong>\ud83d\udd0d Cross-Study Validation</strong>: Generalization performance on independent datasets</p></li></ul><h3 class=\"heading-node\">Analysis-Ready Outputs</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udcbe Trained Models</strong>: Serialized models for deployment and further analysis</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Prediction Files</strong>: CSV tables with predictions for all test samples</p></li><li><p class=\"text-node\"><strong>\ud83d\udd2c R/Python Objects</strong>: Compatible with downstream analysis pipelines</p></li></ul><h2 class=\"heading-node\">\u2699\ufe0f Advanced Configuration Options</h2><h3 class=\"heading-node\">Cross-Validation Strategy</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>K-Fold CV</strong>: Specify number of folds (default: 5)</p></li><li><p class=\"text-node\"><strong>Stratification</strong>: Ensure balanced drug/cell line representation</p></li><li><p class=\"text-node\"><strong>Random Seed</strong>: Set seed for reproducible splits</p></li></ul><h3 class=\"heading-node\">Hyperparameter Tuning</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Grid Search</strong>: Exhaustive search over parameter space</p></li><li><p class=\"text-node\"><strong>Custom Grids</strong>: Define model-specific parameter ranges</p></li><li><p class=\"text-node\"><strong>Inner CV</strong>: Nested cross-validation for unbiased evaluation</p></li></ul><h3 class=\"heading-node\">Robustness Testing</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Randomization Tests</strong>: Permute response labels to assess significance</p></li><li><p class=\"text-node\"><strong>Cross-Study Validation</strong>: Train on one dataset, test on another</p></li><li><p class=\"text-node\"><strong>Feature Ablation</strong>: Test importance of feature groups</p></li></ul><h2 class=\"heading-node\">\ud83d\udcc8 Expected Runtime & Resources</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\u23f1\ufe0f Test Data</strong>: 15-30 minutes (small dataset, 2-3 models)</p></li><li><p class=\"text-node\"><strong>\u23f1\ufe0f CTRPv2 Dataset</strong>: 2-6 hours (full dataset, multiple models)</p></li><li><p class=\"text-node\"><strong>\u23f1\ufe0f Custom Large-Scale</strong>: 4-12 hours (100+ drugs, neural networks)</p></li><li><p class=\"text-node\"><strong>\ud83d\udcbe Memory</strong>: 16-32GB for standard datasets, 64GB+ for large neural networks</p></li><li><p class=\"text-node\"><strong>\ud83d\udcbb Node Size</strong>: MEDIUM for testing, LARGE for production</p></li></ul><h2 class=\"heading-node\">\ud83c\udf93 Interpretation Guide</h2><h3 class=\"heading-node\">Understanding Performance Metrics</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Pearson r &gt; 0.6</strong>: Strong predictive performance for drug response</p></li><li><p class=\"text-node\"><strong>R\u00b2 &gt; 0.4</strong>: Model explains substantial variance in responses</p></li><li><p class=\"text-node\"><strong>Better than baseline</strong>: Model captures meaningful biological signal</p></li><li><p class=\"text-node\"><strong>Consistent across folds</strong>: Robust, generalizable predictions</p></li></ul><h3 class=\"heading-node\">What to Look For</h3><ol class=\"list-node\"><li><p class=\"text-node\"><strong>Model Comparison</strong>: Which models perform best for your drug set?</p></li><li><p class=\"text-node\"><strong>Drug-Specific Patterns</strong>: Are some drugs more predictable than others?</p></li><li><p class=\"text-node\"><strong>Feature Importance</strong>: Which genomic features drive predictions?</p></li><li><p class=\"text-node\"><strong>Baseline Beat</strong>: Does ML outperform simple averages?</p></li><li><p class=\"text-node\"><strong>Robustness</strong>: Do models generalize to new datasets?</p></li></ol><h2 class=\"heading-node\">\ud83d\udcda Next Steps After Evaluation</h2><ol class=\"list-node\"><li><p class=\"text-node\"><strong>Feature Analysis</strong>: Identify key genomic biomarkers of drug response</p></li><li><p class=\"text-node\"><strong>Pathway Enrichment</strong>: Map predictive features to biological pathways</p></li><li><p class=\"text-node\"><strong>Clinical Validation</strong>: Test top models on patient-derived samples</p></li><li><p class=\"text-node\"><strong>Model Deployment</strong>: Integrate best models into clinical decision support</p></li><li><p class=\"text-node\"><strong>Mechanism Discovery</strong>: Investigate why certain features predict response</p></li></ol><h2 class=\"heading-node\">\ud83d\udcc4 Citation</h2><p class=\"text-node\">If you use DrEval in your research, please cite:</p><p class=\"text-node\"><strong>Bernett, J., Blumenthal, D. B., Grimm, D. G., Haselbeck, F., Iversen, P., Kerssemakers, J., ... &amp; Picciani, M.</strong> (2024). From Hype to Health Check: Critical Evaluation of Drug Response Prediction Models with DrEval. <em>bioRxiv</em>.</p><h2 class=\"heading-node\">\ud83d\udc65 Development Team</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Judith Bernett</strong> - Technical University of Munich (TUM)</p></li><li><p class=\"text-node\"><strong>Pascal Iversen</strong> - Freie Universit\u00e4t Berlin (FU Berlin)</p></li><li><p class=\"text-node\"><strong>Mario Picciani</strong> - Technical University of Munich (TUM)</p></li></ul><p class=\"text-node\"><strong>Perfect for</strong>: Precision oncology \u2022 Drug discovery \u2022 Pharmacogenomics \u2022 Machine learning research \u2022 Clinical translation \u2022 Biomarker discovery \u2022 Cancer therapeutics \u2022 Computational biology</p><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> \u2022 Powered by <a class=\"link\" href=\"https://nf-co.re/drugresponseeval/dev/\" target=\"_blank\">nf-core/drugresponseeval</a> \u2022 Containerized execution \u2022 Continuous integration tested</p>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/drugresponseeval/master/docs/images/nf-core-drugresponseeval_logo_light.png",
+  "command": "nextflow run nf-core/drugresponseeval --models ${models} --baselines ${baselines} --dataset_name ${dataset_name} --outdir ${outdir} -r dev",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Select compute resources. Use MEDIUM for testing with small datasets, LARGE for standard pharmacogenomics databases, XLARGE for large-scale custom datasets or neural networks.",
+      "options": [
+        {
+          "label": "MEDIUM (32 CPUs, 120GB RAM) - Testing/small datasets",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "LARGE (64 CPUs, 240GB RAM) - Standard pharmacogenomics datasets (Recommended)",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLARGE (96 CPUs, 360GB RAM) - Large-scale custom data or deep learning",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Input",
+      "label": "Prediction Models",
+      "name": "models",
+      "description": "Comma-separated list of models to evaluate (e.g., RandomForest,ElasticNet,XGBoost). Supported: RandomForest, GradientBoosting, ElasticNet, Ridge, Lasso, SVM, NeuralNetwork.",
+      "defaultValue": "RandomForest,ElasticNet",
+      "required": true,
+      "hidden": false,
+      "disabled": false
+    },
+    {
+      "type": "Input",
+      "label": "Baseline Methods",
+      "name": "baselines",
+      "description": "Comma-separated list of baseline predictors for comparison (e.g., NaiveMeanEffectsPredictor,DrugMeanPredictor). Used to benchmark advanced models.",
+      "defaultValue": "NaiveMeanEffectsPredictor",
+      "required": true,
+      "hidden": false,
+      "disabled": false
+    },
+    {
+      "type": "Select",
+      "label": "Dataset Selection",
+      "name": "dataset_name",
+      "description": "Choose a public pharmacogenomics dataset or select 'custom' to provide your own drug response data.",
+      "defaultValue": "CTRPv2",
+      "required": true,
+      "hidden": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "CTRPv2 - Cancer Therapeutics Response Portal (860+ compounds, 800+ cell lines)",
+          "value": "CTRPv2"
+        },
+        {
+          "label": "GDSC - Genomics of Drug Sensitivity in Cancer",
+          "value": "GDSC"
+        },
+        {
+          "label": "CCLE - Cancer Cell Line Encyclopedia",
+          "value": "CCLE"
+        },
+        {
+          "label": "PRISM - Profiling Relative Inhibition in Mixtures",
+          "value": "PRISM"
+        },
+        {
+          "label": "gCSI - Genentech Cell Screening Initiative",
+          "value": "gCSI"
+        },
+        {
+          "label": "Custom Dataset (provide your own data)",
+          "value": "custom"
+        }
+      ]
+    },
+    {
+      "type": "Stash File",
+      "label": "Response Matrix (Custom Dataset)",
+      "name": "response_matrix",
+      "description": "CSV file with drug response data. Rows: cell lines, Columns: drugs. Only required when using custom dataset.",
+      "defaultValue": "",
+      "required": false,
+      "hidden": false,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Feature Matrix (Custom Dataset)",
+      "name": "feature_matrix",
+      "description": "CSV file with cell line genomic/molecular features. Rows: cell lines, Columns: features (mutations, expression, CNV, etc.). Only required when using custom dataset.",
+      "defaultValue": "",
+      "required": false,
+      "hidden": false,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Directory where evaluation results, performance metrics, visualizations, and trained models will be saved.",
+      "defaultValue": "./drugresponseeval-results",
+      "required": true,
+      "hidden": false,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

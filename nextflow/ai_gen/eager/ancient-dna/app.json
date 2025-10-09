@@ -1,0 +1,75 @@
+{
+  "name": "eager-ancient-dna",
+  "title": "Ancient DNA Analysis (nf-core/eager)",
+  "description": "Analyze ancient and degraded DNA from archaeological samples using nf-core/eager. Handles unique challenges of ancient DNA including short fragments, damage patterns, and contamination assessment for paleogenomics and evolutionary studies.",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/eager --input ${input} --outdir ${outdir} --fasta ${fasta} -r 2.5.2 ",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/eager/master/docs/images/nf-core-eager_logo_light.png",
+  "content": "<h2><strong>Ancient DNA Analysis</strong></h2><p>The <strong>nf-core/eager</strong> pipeline analyzes ancient and degraded DNA from archaeological and paleontological samples, handling unique challenges like DNA damage, short fragments, and contamination.</p><h3><strong>Applications</strong></h3><blockquote><ul><li><strong>Human Evolution</strong>: Ancient human genomes (Neanderthals, Denisovans)</li><li><strong>Archaeology</strong>: Study past populations and migrations</li><li><strong>Paleogenomics</strong>: Extinct species genomics</li><li><strong>Forensics</strong>: Degraded DNA from forensic samples</li><li><strong>Museum Specimens</strong>: Historical DNA from preserved samples</li></ul></blockquote><h3><strong>Ancient DNA Features</strong></h3><ul><li>DNA damage assessment and repair</li><li>Short fragment handling</li><li>Contamination estimation</li><li>Deduplication for ancient DNA</li><li>Sex determination from skeletal remains</li></ul><blockquote><p><strong>Perfect for:</strong> Archaeologists \u2022 Paleogeneticists \u2022 Evolutionary biologists \u2022 Museum researchers</p></blockquote>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "TSV with sample information",
+      "required": true
+    },
+    {
+      "type": "Stash File",
+      "label": "Reference FASTA",
+      "name": "fasta",
+      "description": "Reference genome FASTA",
+      "required": true
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory",
+      "defaultValue": "./eager-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "Compute Resources",
+      "name": "system_size",
+      "hidden": false,
+      "options": [
+        {
+          "label": "MEDIUM (Recommended)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "medium"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

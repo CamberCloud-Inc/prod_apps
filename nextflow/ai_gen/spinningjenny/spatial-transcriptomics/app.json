@@ -1,0 +1,94 @@
+{
+  "name": "spatialvi-spatial-transcriptomics",
+  "title": "Visium & Spatial Gene Expression Analysis",
+  "description": "Comprehensive spatial transcriptomics analysis pipeline for 10x Genomics Visium and other spatially-resolved gene expression data. Process raw or pre-processed spatial transcriptomics with quality control, normalization, clustering, differential expression, and spatially-varying gene detection. Samplesheet format: `sample,fastq_1,fastq_2`",
+  "version": "1.0.0",
+  "engineType": "NEXTFLOW",
+  "command": "nextflow run nf-core/spatialvi --input ${input} --outdir ${outdir} -r dev",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/spatialvi/master/docs/images/nf-core-spatialvi_logo_light.png",
+  "content": "<h1 class=\"heading-node\">\ud83e\uddec Spatial Transcriptomics Analysis</h1><p class=\"text-node\"><strong>Map Gene Expression Across Tissue Architecture</strong></p><p class=\"text-node\">Spatial transcriptomics revolutionizes our understanding of tissue biology by preserving spatial context during gene expression profiling. This pipeline processes 10x Genomics Visium data and other spatially-resolved platforms to reveal how gene expression varies across tissue structures, enabling groundbreaking insights into cell-cell interactions, tissue organization, and disease mechanisms.</p><img src=\"https://raw.githubusercontent.com/nf-core/spatialvi/master/docs/images/nf-core-spatialvi_logo_light.png\" alt=\"nf-core/spatialvi workflow\" width=\"600\" height=\"300\"><h2 class=\"heading-node\">\ud83c\udfaf What is Spatial Transcriptomics?</h2><p class=\"text-node\">Spatial transcriptomics combines histology with transcriptomics, providing both <strong>where</strong> and <strong>what</strong> genes are expressed:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udd2c Tissue Architecture:</strong> Maintain spatial coordinates during gene expression measurement</p></li><li><p class=\"text-node\"><strong>\ud83e\uddec Single-Cell Resolution:</strong> Near-cellular or subcellular gene expression profiling</p></li><li><p class=\"text-node\"><strong>\ud83c\udfa8 Histological Context:</strong> Overlay gene expression on tissue images</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca High-Throughput:</strong> Measure thousands of genes across entire tissue sections</p></li><li><p class=\"text-node\"><strong>\ud83d\uddfa\ufe0f Spatial Patterns:</strong> Identify spatial gene expression gradients and domains</p></li></ul><h2 class=\"heading-node\">\ud83d\udd27 Pipeline Features</h2><h3 class=\"heading-node\">Data Processing Options</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Raw Data Support:</strong> Optional Space Ranger integration for processing raw sequencing data</p></li><li><p class=\"text-node\"><strong>Pre-Processed Data:</strong> Import existing Space Ranger outputs for downstream analysis</p></li><li><p class=\"text-node\"><strong>Quality Control:</strong> Comprehensive filtering based on:</p><ul class=\"list-node\"><li><p class=\"text-node\">Total UMI counts per spot (default minimum: 500)</p></li><li><p class=\"text-node\">Number of expressed genes per spot (default minimum: 250)</p></li><li><p class=\"text-node\">Mitochondrial content threshold (default maximum: 20%)</p></li><li><p class=\"text-node\">Tissue presence detection</p></li></ul></li></ul><h3 class=\"heading-node\">Advanced Analysis Capabilities</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Normalization:</strong> Specialized methods for spatial data accounting for technical variation</p></li><li><p class=\"text-node\"><strong>Dimensionality Reduction:</strong> PCA, UMAP, and t-SNE for visualization</p></li><li><p class=\"text-node\"><strong>Leiden Clustering:</strong> Identify spatial domains and cell type regions</p></li><li><p class=\"text-node\"><strong>Spatial Visualization:</strong> Overlay expression and clusters on tissue images</p></li><li><p class=\"text-node\"><strong>Differential Expression:</strong> Identify genes distinguishing spatial regions</p></li><li><p class=\"text-node\"><strong>Spatially Variable Genes:</strong> Detect genes with spatial expression patterns using Moran's I statistic</p></li><li><p class=\"text-node\"><strong>Data Integration:</strong> Merge and integrate multiple samples for comparative analysis</p></li></ul><h2 class=\"heading-node\">\ud83d\udccb Sample Sheet Format</h2><p class=\"text-node\">Your CSV samplesheet defines spatial transcriptomics samples:</p><pre class=\"block-node\"><code>sample,fastq_1,fastq_2\nVisiumTissue1,/path/to/tissue1_R1.fastq.gz,/path/to/tissue1_R2.fastq.gz\nVisiumTissue2,/path/to/tissue2_R1.fastq.gz,/path/to/tissue2_R2.fastq.gz\nSpatialSample3,/path/to/sample3_R1.fastq.gz,</code></pre><p class=\"text-node\"><strong>Column Descriptions:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>sample:</strong> Unique sample identifier (tissue section name)</p></li><li><p class=\"text-node\"><strong>fastq_1:</strong> Path to Read 1 FASTQ file (spatial barcodes)</p></li><li><p class=\"text-node\"><strong>fastq_2:</strong> Path to Read 2 FASTQ file (transcript sequences, optional for single-end)</p></li></ul><blockquote class=\"block-node\"><p class=\"text-node\"><strong>Note:</strong> For pre-processed Space Ranger outputs, provide paths to the output directories instead of FASTQ files.</p></blockquote><h2 class=\"heading-node\">\ud83e\uddea Scientific Applications</h2><h3 class=\"heading-node\">Cancer Biology</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83c\udfaf Tumor Microenvironment:</strong> Map immune infiltration, stromal interactions, and tumor boundaries</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Intratumoral Heterogeneity:</strong> Identify spatial variation in oncogene expression</p></li><li><p class=\"text-node\"><strong>\ud83d\udd2c Invasion Fronts:</strong> Characterize gene expression at tumor-stroma interfaces</p></li><li><p class=\"text-node\"><strong>\ud83d\udc8a Drug Response:</strong> Map spatial patterns of therapeutic resistance</p></li></ul><h3 class=\"heading-node\">Neuroscience</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83e\udde0 Brain Anatomy:</strong> Map gene expression across cortical layers and brain regions</p></li><li><p class=\"text-node\"><strong>\ud83d\udd17 Circuit Organization:</strong> Identify spatial patterns of neurotransmitter receptors</p></li><li><p class=\"text-node\"><strong>\ud83e\ude7a Neurodegenerative Disease:</strong> Track pathology spread (plaques, tangles, neuroinflammation)</p></li></ul><h3 class=\"heading-node\">Developmental Biology</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83c\udf31 Organogenesis:</strong> Map gene expression gradients during organ formation</p></li><li><p class=\"text-node\"><strong>\ud83d\udccd Patterning:</strong> Identify spatial domains during embryonic development</p></li><li><p class=\"text-node\"><strong>\ud83d\udd04 Morphogenesis:</strong> Track cell fate specification across tissue axes</p></li></ul><h3 class=\"heading-node\">Immunology</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83e\udda0 Infection Sites:</strong> Map immune cell infiltration and cytokine gradients</p></li><li><p class=\"text-node\"><strong>\ud83d\udd2c Lymphoid Structures:</strong> Analyze spatial organization of germinal centers</p></li><li><p class=\"text-node\"><strong>\ud83e\ude79 Wound Healing:</strong> Track regeneration and inflammation across tissue space</p></li></ul><h2 class=\"heading-node\">\u2699\ufe0f Key Parameters</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>--qc_min_counts:</strong> Minimum UMIs per spot (default: 500)</p></li><li><p class=\"text-node\"><strong>--qc_min_genes:</strong> Minimum expressed genes per spot (default: 250)</p></li><li><p class=\"text-node\"><strong>--qc_mito_threshold:</strong> Maximum mitochondrial content percentage (default: 20%)</p></li><li><p class=\"text-node\"><strong>--cluster_resolution:</strong> Resolution parameter for Leiden clustering (default: 1.0)</p></li><li><p class=\"text-node\"><strong>--cluster_n_hvgs:</strong> Number of highly variable genes for analysis (default: 2000)</p></li><li><p class=\"text-node\"><strong>--merge_sdata:</strong> Merge multiple SpatialData objects for joint analysis</p></li><li><p class=\"text-node\"><strong>--integrate_sdata:</strong> Integrate samples to remove batch effects</p></li></ul><h2 class=\"heading-node\">\ud83d\udcca Comprehensive Results</h2><h3 class=\"heading-node\">Processed Data Objects</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udcc1 SpatialData Objects:</strong> Standardized format containing:</p><ul class=\"list-node\"><li><p class=\"text-node\">Gene expression matrices (raw and normalized counts)</p></li><li><p class=\"text-node\">Spatial coordinates for each spot</p></li><li><p class=\"text-node\">High-resolution tissue images</p></li><li><p class=\"text-node\">Quality control metrics</p></li><li><p class=\"text-node\">Dimensionality reduction embeddings (PCA, UMAP)</p></li></ul></li></ul><h3 class=\"heading-node\">Analysis Results</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\uddfa\ufe0f Spatial Clusters:</strong> Tissue domains identified by gene expression similarity</p></li><li><p class=\"text-node\"><strong>\ud83e\uddec Marker Genes:</strong> Genes defining each spatial cluster/domain</p></li><li><p class=\"text-node\"><strong>\ud83d\udcc8 Differential Expression:</strong> Statistical testing between spatial regions</p></li><li><p class=\"text-node\"><strong>\ud83d\udccd Spatially Variable Genes:</strong> Genes with significant spatial patterns (Moran's I scores)</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca Expression Heatmaps:</strong> Gene expression patterns across tissue</p></li></ul><h3 class=\"heading-node\">Visualizations</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83c\udfa8 Spatial Plots:</strong> Gene expression overlaid on tissue images</p></li><li><p class=\"text-node\"><strong>\ud83d\udd35 Cluster Maps:</strong> Spatial distribution of identified domains</p></li><li><p class=\"text-node\"><strong>\ud83d\udcca UMAP/t-SNE:</strong> Low-dimensional representations of spots</p></li><li><p class=\"text-node\"><strong>\ud83d\udd25 Heatmaps:</strong> Expression patterns across clusters and samples</p></li><li><p class=\"text-node\"><strong>\ud83d\udcc8 QC Plots:</strong> Violin plots of counts, genes, mitochondrial content</p></li><li><p class=\"text-node\"><strong>\ud83d\udccb MultiQC Report:</strong> Comprehensive quality metrics dashboard</p></li></ul><h2 class=\"heading-node\">\ud83d\udd2c Experimental Platforms Supported</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>10x Genomics Visium:</strong> Spots with ~1-10 cells, 55\u03bcm diameter</p></li><li><p class=\"text-node\"><strong>10x Visium HD:</strong> Near-single-cell resolution (8\u03bcm bins)</p></li><li><p class=\"text-node\"><strong>Slide-seq:</strong> Near-single-cell bead-based spatial transcriptomics</p></li><li><p class=\"text-node\"><strong>DBiT-seq:</strong> Deterministic barcoding for spatial resolution</p></li></ul><h2 class=\"heading-node\">\ud83d\udca1 Analysis Best Practices</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\ud83d\udcca Biological Replicates:</strong> Include 2-3 tissue sections per condition</p></li><li><p class=\"text-node\"><strong>\ud83d\udd2c Tissue Quality:</strong> Ensure fresh-frozen or properly fixed tissue</p></li><li><p class=\"text-node\"><strong>\ud83d\udccf Sequencing Depth:</strong> Target 25,000-50,000 reads per spot for Visium</p></li><li><p class=\"text-node\"><strong>\ud83c\udfa8 Histology:</strong> High-quality H&E images improve spatial mapping</p></li><li><p class=\"text-node\"><strong>\ud83e\uddee Normalization:</strong> Account for spot-to-spot technical variation</p></li><li><p class=\"text-node\"><strong>\ud83c\udfaf Resolution Tuning:</strong> Adjust clustering resolution for biological domains</p></li></ul><h2 class=\"heading-node\">\ud83c\udf93 Quality Metrics to Check</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>\u2705 Spot Detection:</strong> Verify spots align with tissue in images</p></li><li><p class=\"text-node\"><strong>\u2705 UMI Counts:</strong> Median 1,000-10,000 UMIs per spot (tissue-dependent)</p></li><li><p class=\"text-node\"><strong>\u2705 Gene Detection:</strong> 500-3,000 genes per spot on average</p></li><li><p class=\"text-node\"><strong>\u2705 Mitochondrial %:</strong> Low percentage indicates healthy tissue (&lt;20%)</p></li><li><p class=\"text-node\"><strong>\u2705 Spatial Patterns:</strong> Clusters correspond to anatomical structures</p></li></ul><h2 class=\"heading-node\">\ud83d\udcda Key Technologies</h2><p class=\"text-node\">The pipeline leverages cutting-edge computational methods:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>SpatialData Framework:</strong> Standardized data structure for spatial omics</p></li><li><p class=\"text-node\"><strong>Scanpy:</strong> Single-cell analysis adapted for spatial data</p></li><li><p class=\"text-node\"><strong>Squidpy:</strong> Specialized spatial transcriptomics analysis tools</p></li><li><p class=\"text-node\"><strong>Moran's I:</strong> Statistical test for spatial autocorrelation</p></li><li><p class=\"text-node\"><strong>Leiden Algorithm:</strong> Community detection for spatial clustering</p></li></ul><blockquote class=\"block-node\"><p class=\"text-node\"><strong>Perfect for:</strong> Tissue Architecture \u2022 Tumor Microenvironment \u2022 Brain Mapping \u2022 Developmental Biology \u2022 Cell-Cell Interactions \u2022 Disease Pathology \u2022 Spatial Gene Expression</p></blockquote><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> \u2022 Powered by <a class=\"link\" href=\"https://nf-co.re/spatialvi/dev/\" target=\"_blank\">nf-core/spatialvi</a> \u2022 Developed by Jackson Laboratory & SciLifeLab \u2022 Containerized execution \u2022 Continuous integration tested</p>",
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "CSV samplesheet with columns: sample, fastq_1, fastq_2. Each row represents a spatial transcriptomics tissue section.",
+      "required": true,
+      "restrictions": {
+        "allow_files": true,
+        "allowed_file_types": [
+          ".csv",
+          ".tsv"
+        ]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "outdir",
+      "description": "Output directory for spatial transcriptomics analysis results, spatial plots, and QC reports.",
+      "defaultValue": "./spatialvi-results",
+      "required": true,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true
+      }
+    }
+  ],
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Resource allocation for spatial transcriptomics analysis. LARGE recommended for typical Visium datasets.",
+      "options": [
+        {
+          "label": "Medium (32 CPUs, 180GB RAM) - Small experiments (<5 samples)",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Large (64 CPUs, 360GB RAM) - Recommended for most studies",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "XLarge (96 CPUs, 540GB RAM) - Large datasets (>10 samples)",
+          "value": "xlarge",
+          "mapValue": {
+            "nodeSize": "XLARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "tags": [
+    {
+      "id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+      "name": "biology",
+      "type": "field"
+    },
+    {
+      "id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+      "name": "genomics",
+      "type": "subfield"
+    },
+    {
+      "id": "831477f4-f572-4e27-af83-037661489800",
+      "name": "analysis",
+      "type": "task"
+    }
+  ]
+}

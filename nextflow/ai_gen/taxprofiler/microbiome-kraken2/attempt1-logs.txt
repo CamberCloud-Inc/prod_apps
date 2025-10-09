@@ -1,0 +1,78 @@
+Nextflow 25.04.7 is available - Please consider updating your version to it
+N E X T F L O W  ~  version 24.10.5
+Pulling nf-core/taxprofiler ...
+ downloaded from https://github.com/nf-core/taxprofiler.git
+Launching `https://github.com/nf-core/taxprofiler` [angry_bartik] DSL2 - revision: 970bdc2155 [1.2.3]
+
+-[2m----------------------------------------------------[0m-
+                                        [0;32m,--.[0;30m/[0;32m,-.[0m
+[0;34m        ___     __   __   __   ___     [0;32m/,-._.--~'[0m
+[0;34m  |\ | |__  __ /  ` /  \ |__) |__         [0;33m}  {[0m
+[0;34m  | \| |       \__, \__/ |  \ |___     [0;32m\`-._,-`-,[0m
+                                        [0;32m`._,._,'[0m
+[0;35m  nf-core/taxprofiler 1.2.3[0m
+-[2m----------------------------------------------------[0m-
+[1mInput/output options[0m
+  [0;34minput              : [0;32mhttps://raw.githubusercontent.com/nf-core/test-datasets/taxprofiler/samplesheet.csv[0m
+  [0;34mdatabases          : [0;32mhttps://raw.githubusercontent.com/nf-core/test-datasets/taxprofiler/database_v1.2.csv[0m
+  [0;34moutdir             : [0;32m./taxprofiler-test-attempt1[0m
+
+[1mPreprocessing run merging options[0m
+  [0;34mperform_runmerging : [0;32mtrue[0m
+
+[1mProfiling options[0m
+  [0;34mrun_kraken2        : [0;32mtrue[0m
+  [0;34mrun_bracken        : [0;32mtrue[0m
+
+[1mGeneric options[0m
+  [0;34mtrace_report_suffix: [0;32m2025-09-30_08-55-04[0m
+
+[1mCore Nextflow options[0m
+  [0;34mrevision           : [0;32m1.2.3[0m
+  [0;34mrunName            : [0;32mangry_bartik[0m
+  [0;34mcontainerEngine    : [0;32msingularity[0m
+  [0;34mlaunchDir          : [0;32m/home/camber[0m
+  [0;34mworkDir            : [0;32m/camber_work/temp[0m
+  [0;34mprojectDir         : [0;32m/home/camber/.nextflow/assets/nf-core/taxprofiler[0m
+  [0;34muserName           : [0;32mcamber[0m
+  [0;34mprofile            : [0;32msingularity[0m
+  [0;34mconfigFiles        : [0;32m/home/camber/.nextflow/assets/nf-core/taxprofiler/nextflow.config, /etc/mpi/nextflow.camber.config[0m
+
+!! Only displaying parameters that differ from the pipeline defaults !!
+-[2m----------------------------------------------------[0m-
+* The pipeline
+    https://doi.org/10.1101/2023.10.20.563221
+
+* The nf-core framework
+    https://doi.org/10.1038/s41587-020-0439-x
+
+* Software dependencies
+    https://github.com/nf-core/taxprofiler/blob/master/CITATIONS.md
+
+WARN: The following invalid input values have been detected:
+
+* --skip_downstream_qc: true
+* --skip_krona: true
+
+
+WARN: Singularity cache directory has not been defined -- Remote image will be stored in the path: /camber_work/temp/singularity -- Use the environment variable NXF_SINGULARITY_CACHEDIR to specify a different location
+Pulling Singularity image https://depot.galaxyproject.org/singularity/ubuntu:22.04 [cache /camber_work/temp/singularity/depot.galaxyproject.org-singularity-ubuntu-22.04.img]
+ERROR ~ Error executing process > 'NFCORE_TAXPROFILER:TAXPROFILER:UNTAR (2)'
+
+Caused by:
+  Failed to pull singularity image
+    command: singularity pull  --name depot.galaxyproject.org-singularity-ubuntu-22.04.img.pulling.1759222538778 https://depot.galaxyproject.org/singularity/ubuntu:22.04 > /dev/null
+    status : 127
+    hint   : Try and increase singularity.pullTimeout in the config (current is "20m")
+    message:
+      bash: line 1: singularity: command not found
+
+
+
+ -- Check '/home/camber/jobs/4358/outputs/nextflow.log' file for details
+ERROR ~ Pipeline failed. Please refer to troubleshooting docs: https://nf-co.re/docs/usage/troubleshooting
+
+ -- Check '/home/camber/jobs/4358/outputs/nextflow.log' file for details
+-[0;35m[nf-core/taxprofiler][0;31m Pipeline completed with errors[0m-
+Pulling Singularity image https://depot.galaxyproject.org/singularity/fastqc:0.12.1--hdfd78af_0 [cache /camber_work/temp/singularity/depot.galaxyproject.org-singularity-fastqc-0.12.1--hdfd78af_0.img]
+Pulling Singularity image https://depot.galaxyproject.org/singularity/ubuntu:20.04 [cache /camber_work/temp/singularity/depot.galaxyproject.org-singularity-ubuntu-20.04.img]
