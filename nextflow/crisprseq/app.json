@@ -1,7 +1,8 @@
 {
   "name": "crisprseq-targeted",
-  "description": "Advanced bioinformatics pipeline for analyzing CRISPR-edited data from next-generation sequencing experiments. Supports targeted analysis for gene editing quality evaluation and screening analysis for gene discovery from CRISPR screens.",
-  "content": "<h2 class=\"heading-node\"><strong>Introduction</strong></h2><p class=\"text-node\"><strong>nf-core/crisprseq</strong> is an advanced bioinformatics pipeline for comprehensive analysis of CRISPR-edited genomic data from next-generation sequencing experiments. Developed by researchers at Universitat Pompeu Fabra and Universität Tübingen, it provides robust, reproducible workflows for CRISPR data analysis.</p><img src=\"https://raw.githubusercontent.com/nf-core/crisprseq/dev/docs/images/crisprseq_targeted_metro_map_dark.png\" alt=\"nf-core/crisprseq targeted workflow\" title=\"\" width=\"600\" height=\"400\"><h2 class=\"heading-node\"><strong>Analysis Modes</strong></h2><p class=\"text-node\"><strong>Targeted Analysis:</strong> Evaluates gene editing experiment quality using targeted NGS data. The workflow includes read merging, quality control, adapter trimming, optional UMI clustering, read mapping, and edit calling for gene knockouts, knock-ins, base editing, and prime editing experiments.</p><p class=\"text-node\"><strong>Screening Analysis:</strong> Discovers important genes from CRISPR knockout or activation screens using pooled DNA. Includes read quality control, mapping, optional CNV correction, and sgRNA/gene ranking.</p><h2 class=\"heading-node\"><strong>Pipeline Outputs</strong></h2><p class=\"text-node\"><strong>Targeted Analysis Outputs:</strong> Quality control reports, processed reads, alignment files, edit calling results, and comprehensive summary statistics for evaluating CRISPR editing efficiency and specificity.</p><p class=\"text-node\"><strong>Screening Analysis Outputs:</strong> sgRNA counts, gene-level analysis, ranking tables for identifying significant hits, and quality control metrics for pooled screen validation.</p><p class=\"text-node\">The pipeline is built using <a class=\"link\" href=\"https://www.nextflow.io/\"><u>Nextflow</u></a> with modular design, containerized processes, and automated continuous integration testing for maximum reproducibility and reliability.</p>",
+  "title": "CRISPR Gene Editing Analysis",
+  "description": "Comprehensive analysis pipeline for CRISPR gene editing experiments and pooled screens. Evaluates editing efficiency, specificity, and identifies significant hits in knockout/activation screens. Ideal for genome engineering validation and functional genomics discovery.",
+  "content": "<h2 class=\"heading-node\">🧬 Overview</h2><p class=\"text-node\">The <strong>CRISPR Gene Editing Analysis</strong> pipeline provides comprehensive analysis of CRISPR experiments, from single-gene edits to genome-wide screens. This workflow quantifies editing efficiency, identifies off-target effects, and discovers functionally important genes from pooled CRISPR screens.</p><img src=\"https://raw.githubusercontent.com/nf-core/crisprseq/dev/docs/images/crisprseq_targeted_metro_map_dark.png\" alt=\"CRISPR-seq workflow: From raw sequencing data to editing efficiency metrics and functional discoveries\"><h2 class=\"heading-node\">🔧 Main Capabilities</h2><p class=\"text-node\">This pipeline supports two distinct analysis modes:</p><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Targeted Analysis:</strong> Evaluate gene editing quality for knockouts, knock-ins, base editing, and prime editing</li><li class=\"list-item-node\"><strong>Quality Metrics:</strong> Editing efficiency, indel profiles, HDR rates, and off-target analysis</li><li class=\"list-item-node\"><strong>Read Processing:</strong> Paired-end merging, UMI clustering, and adapter trimming</li><li class=\"list-item-node\"><strong>Edit Calling:</strong> Precise quantification of insertions, deletions, and substitutions</li><li class=\"list-item-node\"><strong>Screening Analysis:</strong> Identify essential genes from pooled knockout/activation screens</li><li class=\"list-item-node\"><strong>Statistical Analysis:</strong> MAGeCK/DESeq2 for robust hit identification</li></ul><h2 class=\"heading-node\">📋 Input Parameters</h2><p class=\"text-node\"><strong>Samplesheet Format:</strong> Provide a CSV file with sample information following this structure:</p><p class=\"text-node\"><strong>For Targeted Analysis:</strong></p><pre><code>sample,fastq_1,fastq_2,reference,protospacer,template\ncontrol,control_R1.fastq.gz,control_R2.fastq.gz,reference.fa,ACTGTGAGCATGACTAGTGG,\nedited,edited_R1.fastq.gz,edited_R2.fastq.gz,reference.fa,ACTGTGAGCATGACTAGTGG,template.fa</code></pre><ul class=\"list-node\"><li class=\"list-item-node\"><strong>sample:</strong> Unique sample identifier</li><li class=\"list-item-node\"><strong>fastq_1/2:</strong> Paths to paired-end FASTQ files</li><li class=\"list-item-node\"><strong>reference:</strong> Reference sequence around target site</li><li class=\"list-item-node\"><strong>protospacer:</strong> 20bp guide RNA sequence (without PAM)</li><li class=\"list-item-node\"><strong>template:</strong> HDR template sequence (optional)</li></ul><p class=\"text-node\"><strong>For Screening Analysis:</strong></p><pre><code>sample,fastq_1,fastq_2\nday0_rep1,day0_rep1_R1.fastq.gz,day0_rep1_R2.fastq.gz\nday0_rep2,day0_rep2_R1.fastq.gz,day0_rep2_R2.fastq.gz\nday21_rep1,day21_rep1_R1.fastq.gz,day21_rep1_R2.fastq.gz\nday21_rep2,day21_rep2_R1.fastq.gz,day21_rep2_R2.fastq.gz</code></pre><blockquote class=\"block-node\"><p class=\"text-node\">💡 <strong>Resource Optimization:</strong> For optimal resource consumption, the number of nodes should not be greater than the number of samples in your samplesheet.</p></blockquote><h2 class=\"heading-node\">🔬 Scientific Relevance & Use Cases</h2><p class=\"text-node\">This pipeline is essential for:</p><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Gene Therapy Development:</strong> Validate therapeutic editing strategies and safety profiles</li><li class=\"list-item-node\"><strong>Functional Genomics:</strong> Discover essential genes and genetic interactions</li><li class=\"list-item-node\"><strong>Target Validation:</strong> Identify and validate drug targets through loss-of-function screens</li><li class=\"list-item-node\"><strong>Agricultural Biotechnology:</strong> Engineer crops with precise genetic modifications</li></ul><p class=\"text-node\">The pipeline handles diverse CRISPR technologies including SpCas9, dCas9-activation, base editors, and prime editors, enabling comprehensive genome engineering applications.</p><h2 class=\"heading-node\">📊 Expected Outputs</h2><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Editing Efficiency Reports:</strong> Quantification of indels, HDR, and base conversions</li><li class=\"list-item-node\"><strong>Allele Frequency Tables:</strong> Detailed breakdown of editing outcomes</li><li class=\"list-item-node\"><strong>Quality Control Metrics:</strong> Read quality, mapping rates, and coverage statistics</li><li class=\"list-item-node\"><strong>Gene Ranking Tables:</strong> Significant hits from screening experiments</li><li class=\"list-item-node\"><strong>Visualization Plots:</strong> Editing patterns, screen volcano plots, and QC summaries</li></ul><hr><p class=\"text-node\"><em>Built with <a href=\"https://www.nextflow.io/\">Nextflow</a> and the <a href=\"https://nf-co.re/crisprseq\">nf-core/crisprseq</a> pipeline v2.3.0</em></p>",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/crisprseq/dev/docs/images/crisprseq_targeted_metro_map_dark.png",
   "command": "export NXF_CACHE_DIR=/camber_work/temp/.nextflow; export NXF_LOG_FILE=/home/camber/jobs/${JOB_ID}/outputs/nextflow.log; nextflow run nf-core/crisprseq -r 2.3.0 --input ${samplesheet_location} --analysis ${analysis_type} --outdir ${outdir} --max_memory 3.GB --max_cpus 2 -c /etc/mpi/nextflow.camber.config -ansi-log false -profile k8s",
   "engineType": "NEXTFLOW",
@@ -31,7 +32,7 @@
       "type": "Stash File",
       "label": "Samplesheet Location",
       "name": "samplesheet_location",
-      "description": "Path to CSV file containing sample information with sample names and FASTQ file paths. Must end in .csv format.",
+      "description": "CSV file with sample information and FASTQ file paths.",
       "defaultValue": "https://raw.githubusercontent.com/nf-core/test-datasets/crisprseq/testdata-edition/samplesheet_test.csv",
       "hidden": false,
       "required": true,
@@ -41,7 +42,7 @@
       "type": "Select",
       "label": "Analysis Type",
       "name": "analysis_type",
-      "description": "Type of CRISPR analysis to perform: 'targeted' for gene editing quality evaluation or 'screening' for gene discovery from CRISPR screens",
+      "description": "Choose between targeted editing analysis or pooled screening analysis.",
       "defaultValue": "targeted",
       "hidden": false,
       "required": true,
@@ -61,11 +62,28 @@
       "type": "Stash File",
       "label": "Output Directory",
       "name": "outdir",
-      "description": "Output directory for analysis results. If not specified, results will be written to ~/jobs/<jobid>/outputs/",
+      "description": "Directory where results will be saved.",
       "defaultValue": "./",
       "hidden": false,
       "required": false,
       "disabled": false
     }
-  ]
+  ],
+   "tags": [
+		{
+			"id": "fb1ee42a-629a-4d99-9e7f-1da3c5f7a691",
+			"name": "biology",
+			"type": "field"
+		},
+		{
+			"id": "6e4e74a4-560e-4674-95c3-60fe895b8c91",
+			"name": "genomics",
+			"type": "subfield"
+		},
+		{
+			"id": "831477f4-f572-4e27-af83-037661489800",
+			"name": "analysis",
+			"type": "task"
+		}
+	]
 }

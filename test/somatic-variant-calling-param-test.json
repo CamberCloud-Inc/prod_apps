@@ -1,0 +1,160 @@
+{
+  "name": "somatic-variant-calling-param-test",
+  "title": "Somatic Variant Calling Parameter Testing Tool",
+  "description": "Comprehensive parameter handling test for somatic variant calling pipeline command generation",
+  "content": "<h1>🧪 Somatic Variant Calling Command Parameter Testing</h1><p>This tool validates the complex parameter handling logic for the somatic variant calling pipeline, ensuring all tool selections and annotation configurations generate correct commands.</p><h2>Test Scenarios Covered:</h2><ul><li>✅ All tool combinations: mutect2, manta, cnvkit, strelka, etc.</li><li>✅ Annotation handling: VEP, snpEff, BCFtools annotate</li><li>✅ Conditional logic: tools parameter construction with annotations</li><li>✅ Edge cases: empty values, boolean switches, combined tools</li></ul>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/sarek/3.5.1/docs/images/nf-core-sarek_logo_light.png",
+  "command": "echo '=== Somatic Variant Calling Parameter Test ===' && echo && echo 'Test Configuration:' && echo '  Input: ${input}' && echo '  Output: ${output}' && echo '  Tools: ${tools}' && echo '  Genome: ${genome}' && echo '  Enable VEP: ${enable_vep}' && echo '  Enable snpEff: ${enable_snpeff}' && echo '  Enable BCFtools: ${enable_bcfann}' && echo && echo 'Command Construction Logic:' && echo && echo '1. Base tools: ${tools}' && if [ \"${tools}\" = \"none\" ]; then TOOLS=\"\"; else TOOLS=\"${tools}\"; fi && ANNOTATION_TOOLS=\"\" && if [ \"${enable_vep}\" = \"true\" ] || [ \"${enable_vep}\" = \"True\" ]; then ANNOTATION_TOOLS=\"vep\"; fi && if [ \"${enable_snpeff}\" = \"true\" ] || [ \"${enable_snpeff}\" = \"True\" ]; then if [ -n \"\\$ANNOTATION_TOOLS\" ]; then ANNOTATION_TOOLS=\"\\${ANNOTATION_TOOLS},snpeff\"; else ANNOTATION_TOOLS=\"snpeff\"; fi; fi && if [ \"${enable_bcfann}\" = \"true\" ] || [ \"${enable_bcfann}\" = \"True\" ]; then if [ -n \"\\$ANNOTATION_TOOLS\" ]; then ANNOTATION_TOOLS=\"\\${ANNOTATION_TOOLS},bcfann\"; else ANNOTATION_TOOLS=\"bcfann\"; fi; fi && echo '2. Annotation tools: '\\$ANNOTATION_TOOLS && if [ -n \"\\$ANNOTATION_TOOLS\" ]; then if [ -n \"\\$TOOLS\" ]; then TOOLS=\"\\${TOOLS},\\${ANNOTATION_TOOLS}\"; else TOOLS=\"\\$ANNOTATION_TOOLS\"; fi; fi && echo '3. Final tools list: '\\$TOOLS && echo && echo 'Generated Command:' && echo && echo 'nextflow run nf-core/sarek \\' && echo '  --input ${input} \\' && echo '  --outdir ${output} \\' && echo '  --tools \"'\\$TOOLS'\" \\' && echo '  --genome ${genome} \\' && echo '  --skip_tools baserecalibrator \\' && echo '  -r 3.5.1' && echo && echo '=== Validation Logic ===' && echo && echo '1. Tools Parameter Check:' && if [ \"${tools}\" != \"none\" ] && [ -n \"${tools}\" ]; then echo '   ✓ Base tools provided: ${tools}'; else echo '   → No base tools (annotations only)'; fi && echo && echo '2. Annotation Switches:' && ([ \"${enable_vep}\" = \"true\" ] || [ \"${enable_vep}\" = \"True\" ]) && echo '   ✓ VEP enabled' || echo '   ✗ VEP disabled' && ([ \"${enable_snpeff}\" = \"true\" ] || [ \"${enable_snpeff}\" = \"True\" ]) && echo '   ✓ snpEff enabled' || echo '   ✗ snpEff disabled' && ([ \"${enable_bcfann}\" = \"true\" ] || [ \"${enable_bcfann}\" = \"True\" ]) && echo '   ✓ BCFtools annotate enabled' || echo '   ✗ BCFtools annotate disabled' && echo && echo '3. Tools Concatenation:' && if [ -n \"\\$ANNOTATION_TOOLS\" ]; then echo '   ✓ Annotations appended to tools list'; if [ -z \"\\$TOOLS\" ]; then echo '   → Running with annotations only'; fi; else echo '   → No annotations to append'; fi && echo && echo '=== Edge Case Tests ===' && echo && echo '1. Empty base tools test:' && if [ -z \"\\$TOOLS\" ] && [ -n \"\\$ANNOTATION_TOOLS\" ]; then echo '   ✓ Can run with only annotations'; else echo '   → Base tools provided'; fi && echo && echo '2. Multiple annotations test:' && NUM_ANN=0; ([ \"${enable_vep}\" = \"true\" ] || [ \"${enable_vep}\" = \"True\" ]) && NUM_ANN=\\$((NUM_ANN+1)); ([ \"${enable_snpeff}\" = \"true\" ] || [ \"${enable_snpeff}\" = \"True\" ]) && NUM_ANN=\\$((NUM_ANN+1)); ([ \"${enable_bcfann}\" = \"true\" ] || [ \"${enable_bcfann}\" = \"True\" ]) && NUM_ANN=\\$((NUM_ANN+1)); echo '   → '\\$NUM_ANN' annotation(s) enabled' && [ \\$NUM_ANN -gt 1 ] && echo '   ✓ Multiple annotations properly concatenated' || echo '   → Single or no annotations' && echo && echo '=== Test Complete ===' && echo",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Minimal resources for testing",
+      "options": [
+        {
+          "label": "XSmall (Testing Only)",
+          "value": "xsmall",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xsmall"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Samplesheet CSV",
+      "name": "input",
+      "description": "Sample sheet path (simulated)",
+      "defaultValue": "test_samplesheet.csv",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": ["csv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "output",
+      "description": "Output directory path (simulated)",
+      "defaultValue": "./results",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Analysis Tools",
+      "name": "tools",
+      "description": "Test various tool combinations",
+      "defaultValue": "mutect2",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "None (test annotations-only)",
+          "value": "none"
+        },
+        {
+          "label": "Basic: mutect2",
+          "value": "mutect2"
+        },
+        {
+          "label": "Standard: mutect2,manta",
+          "value": "mutect2,manta"
+        },
+        {
+          "label": "Comprehensive: mutect2,manta,cnvkit",
+          "value": "mutect2,manta,cnvkit"
+        },
+        {
+          "label": "Clinical: mutect2,manta,cnvkit,msisensorpro",
+          "value": "mutect2,manta,cnvkit,msisensorpro"
+        },
+        {
+          "label": "Tumor-only: freebayes,cnvkit",
+          "value": "freebayes,cnvkit"
+        },
+        {
+          "label": "Precision: strelka,manta,cnvkit",
+          "value": "strelka,manta,cnvkit"
+        },
+        {
+          "label": "Advanced: mutect2,strelka,manta,cnvkit",
+          "value": "mutect2,strelka,manta,cnvkit"
+        },
+        {
+          "label": "Research: mutect2,manta,tiddit,cnvkit,msisensorpro",
+          "value": "mutect2,manta,tiddit,cnvkit,msisensorpro"
+        }
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome for testing",
+      "defaultValue": "GATK.GRCh38",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {"label": "Human GRCh38 (GATK)", "value": "GATK.GRCh38"},
+        {"label": "Human GRCh37 (GATK)", "value": "GATK.GRCh37"},
+        {"label": "Test data", "value": "testdata.nf-core.sarek"}
+      ]
+    },
+    {
+      "type": "Switch",
+      "label": "Enable VEP Annotation",
+      "name": "enable_vep",
+      "description": "Test VEP annotation switch",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Enable snpEff Annotation",
+      "name": "enable_snpeff",
+      "description": "Test snpEff annotation switch",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Enable BCFtools Annotate",
+      "name": "enable_bcfann",
+      "description": "Test BCFtools annotation switch",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    }
+  ],
+  "tags": [
+    {"name": "testing", "type": "task"},
+    {"name": "validation", "type": "task"},
+    {"name": "genomics", "type": "subfield"}
+  ]
+}

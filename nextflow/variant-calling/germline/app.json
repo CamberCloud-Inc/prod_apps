@@ -1,0 +1,199 @@
+{
+  "name": "germline-variant-calling-sarek",
+  "title": "Germline Variant Calling - Constitutional Genomics Analysis",
+  "description": "Advanced germline variant calling pipeline powered by nf-core/sarek for detecting constitutional genetic variations from sequencing data. Identifies SNVs, INDELs, structural variants, and copy number variations with clinical-grade accuracy. Ideal for hereditary disease studies, population genomics, and genetic screening applications.",
+  "content": "<h1 class=\"heading-node\">🧬 Germline Variant Calling - Constitutional Genomics Analysis</h1><p class=\"text-node\"><strong>Overview</strong></p><p class=\"text-node\">Advanced germline variant calling pipeline powered by nf-core/sarek for detecting constitutional genetic variations from normal tissue samples. Built for clinical-grade accuracy in identifying SNVs, INDELs, structural variants, and copy number variations. Ideal for hereditary disease studies, population genomics research, and genetic screening applications.</p><img src=\"https://raw.githubusercontent.com/nf-core/sarek/3.5.1//docs/images/sarek_workflow.png\" alt=\"nf-core/sarek pipeline workflow diagram showing preprocessing, variant calling, and annotation steps\"><p class=\"text-node\"><strong>⚠️ Resource Optimization:</strong> For optimal resource consumption, the number of nodes should not be greater than the number of samples in your samplesheet.</p><h2 class=\"heading-node\">🔬 Main Capabilities</h2><h3 class=\"heading-node\">🧬 Variant Callers</h3><p class=\"text-node\"><strong>DeepVariant:</strong> Deep learning SNV/INDEL detection<br><strong>HaplotypeCaller:</strong> GATK germline standard with haplotype assembly<br><strong>FreeBayes:</strong> Bayesian caller for population studies<br><strong>Manta:</strong> Structural variant detection<br><strong>TIDDIT:</strong> Chromosomal rearrangement analysis<br><strong>CNVkit:</strong> Copy number variation calling</p><h3 class=\"heading-node\">🏷️ Annotation Tools</h3><p class=\"text-node\"><strong>bcftools:</strong> Population frequency annotation<br><strong>SnpEff:</strong> Functional effect prediction<br><strong>VEP:</strong> Comprehensive consequence analysis</p><h2 class=\"heading-node\">📋 Input Parameters</h2><h3 class=\"heading-node\">📄 Samplesheet Format (CSV)</h3><p class=\"text-node\"><strong>Required columns:</strong> patient, sample, lane, fastq_1, fastq_2</p><p class=\"text-node\"><strong>Example for single samples:</strong></p><pre class=\"block-node\"><code>patient,sample,lane,fastq_1,fastq_2\npatient1,normal,1,/path/to/normal_R1.fastq.gz,/path/to/normal_R2.fastq.gz\npatient2,sample,1,/path/to/sample_R1.fastq.gz,/path/to/sample_R2.fastq.gz</code></pre><p class=\"text-node\"><strong>Example for family studies:</strong></p><pre class=\"block-node\"><code>patient,sample,lane,fastq_1,fastq_2\nfamily1,proband,1,/path/to/proband_R1.fastq.gz,/path/to/proband_R2.fastq.gz\nfamily1,mother,1,/path/to/mother_R1.fastq.gz,/path/to/mother_R2.fastq.gz\nfamily1,father,1,/path/to/father_R1.fastq.gz,/path/to/father_R2.fastq.gz</code></pre><p class=\"text-node\"><strong>Notes:</strong> Use 'normal' for germline samples, ensure FASTQ paths are accessible, multiple lanes per sample supported with same patient/sample ID but different lane numbers.</p><h3 class=\"heading-node\">🧩 Analysis Types</h3><p class=\"text-node\"><strong>Basic:</strong> DeepVariant for SNVs/INDELs<br><strong>Standard:</strong> DeepVariant + Manta for structural variants<br><strong>Comprehensive:</strong> Multiple callers + CNV analysis<br><strong>Population:</strong> FreeBayes optimized for cohort studies<br><strong>Clinical:</strong> GATK HaplotypeCaller workflow</p><h2 class=\"heading-node\">🔬 Scientific Relevance</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🧪 Hereditary Disease Studies:</strong> Constitutional variants, Mendelian disorders</p></li><li><p class=\"text-node\"><strong>👨‍👩‍👧‍👦 Family Genomics:</strong> Trio analysis, inheritance patterns, de novo mutations</p></li><li><p class=\"text-node\"><strong>🌍 Population Genetics:</strong> Allele frequencies, genetic diversity, evolutionary studies</p></li><li><p class=\"text-node\"><strong>💊 Pharmacogenomics:</strong> Drug response variants, personalized medicine</p></li><li><p class=\"text-node\"><strong>🔍 Clinical Screening:</strong> Carrier screening, predisposition testing</p></li></ul><h2 class=\"heading-node\">📊 Output Files</h2><h3 class=\"heading-node\">🗂️ Variant Files</h3><p class=\"text-node\">Annotated VCF files with germline variants and quality scores</p><h3 class=\"heading-node\">✅ Filtered Results</h3><p class=\"text-node\">High-confidence variants passing quality thresholds</p><h3 class=\"heading-node\">📋 Quality Reports</h3><p class=\"text-node\">MultiQC summary with alignment and variant calling statistics</p><h3 class=\"heading-node\">📈 Annotation Data</h3><p class=\"text-node\">Population frequencies from gnomAD and functional predictions</p><p class=\"text-node\">Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/sarek/3.5.1/\" target=\"_blank\">nf-core/sarek v3.5.1</a> • Containerized execution • Clinical-grade quality</p>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/sarek/3.5.1/docs/images/nf-core-sarek_logo_light.png",
+  "command": "TOOLS=\"${tools}\"; ANNOTATION_TOOLS=\"\"; if [ \"${enable_vep}\" = \"true\" ] || [ \"${enable_vep}\" = \"True\" ]; then ANNOTATION_TOOLS=\"vep\"; fi; if [ \"${enable_snpeff}\" = \"true\" ] || [ \"${enable_snpeff}\" = \"True\" ]; then if [ -n \"\\$ANNOTATION_TOOLS\" ]; then ANNOTATION_TOOLS=\"\\${ANNOTATION_TOOLS},snpeff\"; else ANNOTATION_TOOLS=\"snpeff\"; fi; fi; if [ \"${enable_bcfann}\" = \"true\" ] || [ \"${enable_bcfann}\" = \"True\" ]; then if [ -n \"\\$ANNOTATION_TOOLS\" ]; then ANNOTATION_TOOLS=\"\\${ANNOTATION_TOOLS},bcfann\"; else ANNOTATION_TOOLS=\"bcfann\"; fi; fi; if [ -n \"\\$ANNOTATION_TOOLS\" ]; then if [ -n \"\\$TOOLS\" ]; then TOOLS=\"\\${TOOLS},\\${ANNOTATION_TOOLS}\"; else TOOLS=\"\\$ANNOTATION_TOOLS\"; fi; fi; echo \"Final tools list: \\$TOOLS\" >&2; nextflow run nf-core/sarek --input ${input} --outdir ${output} --tools \"\\$TOOLS\" --genome ${genome} -r 3.5.1",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Computing resources based on dataset size and complexity.",
+      "options": [
+        {
+          "label": "Small (16 CPUs, 90GB RAM) - WGS single sample",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Medium (32 CPUs, 180GB RAM) - WGS multiple samples",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Large (64 CPUs, 360GB RAM) - Recommended",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Samplesheet CSV",
+      "name": "input",
+      "description": "CSV samplesheet with required columns: patient, sample, lane, fastq_1, fastq_2.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": ["csv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "output",
+      "description": "Directory for results, QC reports, and intermediate files.",
+      "defaultValue": "./",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome assembly for alignment and variant calling.",
+      "defaultValue": "GATK.GRCh38",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {"label": "Human GRCh38 (GATK) [Recommended]", "value": "GATK.GRCh38"},
+        {"label": "Human GRCh37 (GATK)", "value": "GATK.GRCh37"},
+        {"label": "Human GRCh37 (Ensembl)", "value": "GRCh37"},
+        {"label": "Human GRCh38 (NCBI)", "value": "GRCh38"},
+        {"label": "Human CHM13 (T2T)", "value": "CHM13"},
+        {"label": "Human hg38 (UCSC)", "value": "hg38"},
+        {"label": "Human hg19 (UCSC)", "value": "hg19"},
+        {"label": "Mouse GRCm38 (Ensembl)", "value": "GRCm38"},
+        {"label": "Mouse mm10 (UCSC)", "value": "mm10"},
+        {"label": "Mouse GRCm39 (Ensembl)", "value": "GRCm39"},
+        {"label": "Mouse mm39 (UCSC)", "value": "mm39"},
+        {"label": "Arabidopsis TAIR10", "value": "TAIR10"},
+        {"label": "Cow UMD3.1", "value": "UMD3.1"},
+        {"label": "Cow bosTau8", "value": "bosTau8"},
+        {"label": "C. elegans WBcel235", "value": "WBcel235"},
+        {"label": "C. elegans ce10", "value": "ce10"},
+        {"label": "Dog CanFam3.1", "value": "CanFam3.1"},
+        {"label": "Dog canFam3", "value": "canFam3"},
+        {"label": "Zebrafish GRCz10", "value": "GRCz10"},
+        {"label": "Zebrafish danRer10", "value": "danRer10"},
+        {"label": "Zebrafish GRCz11", "value": "GRCz11"},
+        {"label": "Drosophila BDGP6", "value": "BDGP6"},
+        {"label": "Drosophila dm6", "value": "dm6"},
+        {"label": "Horse EquCab2", "value": "EquCab2"},
+        {"label": "Horse equCab2", "value": "equCab2"},
+        {"label": "Chicken Galgal4", "value": "Galgal4"},
+        {"label": "Chicken galGal4", "value": "galGal4"},
+        {"label": "Chimpanzee CHIMP2.1.4", "value": "CHIMP2.1.4"},
+        {"label": "Chimpanzee panTro4", "value": "panTro4"},
+        {"label": "Rat Rnor_5.0", "value": "Rnor_5.0"},
+        {"label": "Rat Rnor_6.0", "value": "Rnor_6.0"},
+        {"label": "Rat rn6", "value": "rn6"},
+        {"label": "Yeast R64-1-1", "value": "R64-1-1"},
+        {"label": "Yeast sacCer3", "value": "sacCer3"},
+        {"label": "Pig Sscrofa10.2", "value": "Sscrofa10.2"},
+        {"label": "Pig susScr3", "value": "susScr3"},
+        {"label": "Test data (small dataset)", "value": "testdata.nf-core.sarek"}
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Analysis Type",
+      "name": "tools",
+      "description": "Analysis type combining appropriate tools for germline variant calling.",
+      "defaultValue": "deepvariant",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Basic SNV/INDEL only (DeepVariant)",
+          "value": "deepvariant"
+        },
+        {
+          "label": "Standard Germline (DeepVariant + Manta)",
+          "value": "deepvariant,manta"
+        },
+        {
+          "label": "Comprehensive Constitutional (DeepVariant + Manta + CNVkit)",
+          "value": "deepvariant,manta,cnvkit"
+        },
+        {
+          "label": "Population Genomics (FreeBayes + Manta)",
+          "value": "freebayes,manta"
+        },
+        {
+          "label": "Clinical Workflow (HaplotypeCaller + Manta + CNVkit)",
+          "value": "haplotypecaller,manta,cnvkit"
+        },
+        {
+          "label": "Full Germline Suite (DeepVariant + Manta + TIDDIT + CNVkit)",
+          "value": "deepvariant,manta,tiddit,cnvkit"
+        },
+        {
+          "label": "Research Grade (HaplotypeCaller + FreeBayes + Manta + TIDDIT + CNVkit)",
+          "value": "haplotypecaller,freebayes,manta,tiddit,cnvkit"
+        }
+      ]
+    },
+    {
+      "type": "Switch",
+      "label": "Enable VEP Annotation",
+      "name": "enable_vep",
+      "description": "Variant Effect Predictor (VEP) - Determines effects of variants including SNPs, indels, structural variants, and CNVs on genes and proteins",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Enable snpEff Annotation",
+      "name": "enable_snpeff",
+      "description": "snpEff - Genetic variant annotation and functional effect prediction for variants in coding and non-coding regions",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Enable BCFtools Annotate",
+      "name": "enable_bcfann",
+      "description": "BCFtools Annotate - Custom annotation of VCF files using BCFtools annotate with user-provided annotation files",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    }
+  ]
+}

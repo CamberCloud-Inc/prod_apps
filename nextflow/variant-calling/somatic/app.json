@@ -1,0 +1,178 @@
+{
+  "name": "somatic-variant-calling-sarek",
+  "title": "Somatic Variant Calling - Cancer Genomics Analysis",
+  "description": "Advanced cancer genomics pipeline powered by nf-core/sarek for detecting somatic mutations, structural variants, and copy number variations from tumor-normal or tumor-only data. Optimized for oncology research and precision medicine applications.",
+  "content": "<h1 class=\"heading-node\">🧬 Somatic Variant Calling - Cancer Genomics Analysis</h1><p class=\"text-node\"><strong>Overview</strong></p><p class=\"text-node\">Advanced cancer genomics pipeline leveraging nf-core/sarek for comprehensive tumor analysis from sequencing data. Detects somatic mutations, structural variants, and copy number alterations with clinical-grade accuracy for precision oncology. Supports both tumor-normal paired analysis and tumor-only workflows for research and clinical applications.</p><img src=\"https://raw.githubusercontent.com/nf-core/sarek/3.5.1//docs/images/sarek_workflow.png\" alt=\"Comprehensive nf-core/sarek somatic variant calling workflow - from raw sequencing data to annotated cancer mutations\"><p class=\"text-node\">⚡ <strong>Resource Optimization:</strong> For optimal resource consumption, the number of nodes should not be greater than the number of samples in your samplesheet.</p><h2 class=\"heading-node\">🎯 Main Capabilities</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Somatic SNVs/INDELs:</strong> Mutect2, Strelka, freebayes for tumor-specific mutations</p></li><li><p class=\"text-node\"><strong>Structural Variants:</strong> Manta, TIDDIT for gene fusions and rearrangements</p></li><li><p class=\"text-node\"><strong>Copy Number Variations:</strong> CNVkit, Control-FREEC, ASCAT with purity estimation</p></li><li><p class=\"text-node\"><strong>Microsatellite Instability:</strong> MSIsensor-pro for immunotherapy stratification</p></li><li><p class=\"text-node\"><strong>Comprehensive QC:</strong> FastQC, contamination detection, purity assessment</p></li><li><p class=\"text-node\"><strong>Variant Annotation:</strong> VEP, snpEff, and BCFtools annotate for functional impact prediction</p></li></ul><h2 class=\"heading-node\">🔬 Variant Annotation Features</h2><p class=\"text-node\">This pipeline includes powerful variant annotation capabilities that can be enabled independently or combined:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>VEP (Variant Effect Predictor):</strong> Comprehensive annotation of genetic variants including consequences on genes, transcripts, and proteins</p></li><li><p class=\"text-node\"><strong>snpEff:</strong> Fast variant effect prediction and functional annotation for coding and non-coding regions</p></li><li><p class=\"text-node\"><strong>BCFtools Annotate:</strong> Custom annotation using user-provided databases and annotation files</p></li></ul><h2 class=\"heading-node\">📋 Input Parameters</h2><h3 class=\"heading-node\">CSV Samplesheet Requirements</h3><p class=\"text-node\">The pipeline requires a properly formatted CSV samplesheet defining your experimental design. This critical file specifies tumor-normal relationships and data locations.</p><p class=\"text-node\"><strong>📝 Samplesheet Format & Manual:</strong></p><pre class=\"block-node\"><code>patient,sample,lane,fastq_1,fastq_2\npatient1,normal,1,path/to/normal_R1.fastq.gz,path/to/normal_R2.fastq.gz\npatient1,tumor,1,path/to/tumor_R1.fastq.gz,path/to/tumor_R2.fastq.gz\npatient2,tumor,1,path/to/tumor_only_R1.fastq.gz,path/to/tumor_only_R2.fastq.gz</code></pre><p class=\"text-node\"><strong>🔗 Column Definitions:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>patient</strong> (REQUIRED): Unique patient identifier linking tumor-normal pairs<br><em>Examples: TCGA_001, patient1, case_A</em></p></li><li><p class=\"text-node\"><strong>sample</strong> (REQUIRED): Sample type designation<br><em>Use 'normal' and 'tumor' for paired analysis, or just 'tumor' for tumor-only</em></p></li><li><p class=\"text-node\"><strong>lane</strong> (REQUIRED): Sequencing lane number<br><em>Use 1 if lane information is unknown</em></p></li><li><p class=\"text-node\"><strong>fastq_1</strong> (REQUIRED): Path to forward/R1 FASTQ file</p></li><li><p class=\"text-node\"><strong>fastq_2</strong> (OPTIONAL): Path to reverse/R2 FASTQ file<br><em>Omit for single-end sequencing</em></p></li></ul><p class=\"text-node\"><strong>💡 Pairing Strategy:</strong> Identical patient IDs automatically pair tumor-normal samples. For tumor-only analysis, use unique patient IDs with only 'tumor' samples.</p><h3 class=\"heading-node\">Tool Selection Examples</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Basic Analysis:</strong> <code class=\"inline\">mutect2</code> - Essential somatic calling</p></li><li><p class=\"text-node\"><strong>Comprehensive:</strong> <code class=\"inline\">mutect2,manta,cnvkit,msisensorpro</code> - Full cancer profiling</p></li><li><p class=\"text-node\"><strong>Tumor-Only:</strong> <code class=\"inline\">freebayes,cnvkit</code> - Optimized for single samples</p></li><li><p class=\"text-node\"><strong>Research:</strong> <code class=\"inline\">mutect2,strelka,manta,tiddit,cnvkit,controlfreec</code> - Maximum sensitivity</p></li></ul><h2 class=\"heading-node\">🧪 Scientific Relevance & Use Cases</h2><p class=\"text-node\"><strong>🎯 Oncology Applications:</strong> Tumor mutation profiling • Precision medicine • Clinical diagnostics • Immunotherapy biomarkers • Drug resistance mechanisms</p><p class=\"text-node\"><strong>🔬 Research Applications:</strong> Cancer genomics • Tumor evolution studies • Metastasis analysis • Liquid biopsy • FFPE sample processing • Multi-omic integration</p><p class=\"text-node\"><strong>🏥 Clinical Workflows:</strong> Somatic mutation panels • CNV analysis • MSI testing • Companion diagnostics • Therapeutic target identification</p><h2 class=\"heading-node\">📊 Output Files</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🗂️ Somatic Variants:</strong> High-confidence tumor mutations (VCF format)</p></li><li><p class=\"text-node\"><strong>📈 Copy Number Profiles:</strong> CNV calls with purity and ploidy estimates</p></li><li><p class=\"text-node\"><strong>🔗 Structural Variants:</strong> Gene fusions and large rearrangements</p></li><li><p class=\"text-node\"><strong>📋 Quality Reports:</strong> MultiQC summaries with tumor-specific metrics</p></li><li><p class=\"text-node\"><strong>📁 Analysis Files:</strong> Processed alignments and intermediate results</p></li><li><p class=\"text-node\"><strong>📊 Cancer Metrics:</strong> Mutation burden, signatures, and clinical annotations</p></li></ul><hr><p class=\"text-node\">🔧 Built with <a class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\">Nextflow</a> • Powered by <a class=\"link\" href=\"https://nf-co.re/sarek/3.5.1/\" target=\"_blank\">nf-core/sarek v3.5.1</a> • Containerized execution • Cancer genomics optimized</p>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/sarek/3.5.1/docs/images/nf-core-sarek_logo_light.png",
+  "command": "TOOLS=\"${tools}\"; ANNOTATION_TOOLS=\"\"; if [ \"${enable_vep}\" = \"true\" ] || [ \"${enable_vep}\" = \"True\" ]; then ANNOTATION_TOOLS=\"vep\"; fi; if [ \"${enable_snpeff}\" = \"true\" ] || [ \"${enable_snpeff}\" = \"True\" ]; then if [ -n \"\\$ANNOTATION_TOOLS\" ]; then ANNOTATION_TOOLS=\"\\${ANNOTATION_TOOLS},snpeff\"; else ANNOTATION_TOOLS=\"snpeff\"; fi; fi; if [ \"${enable_bcfann}\" = \"true\" ] || [ \"${enable_bcfann}\" = \"True\" ]; then if [ -n \"\\$ANNOTATION_TOOLS\" ]; then ANNOTATION_TOOLS=\"\\${ANNOTATION_TOOLS},bcfann\"; else ANNOTATION_TOOLS=\"bcfann\"; fi; fi; if [ -n \"\\$ANNOTATION_TOOLS\" ]; then if [ -n \"\\$TOOLS\" ]; then TOOLS=\"\\${TOOLS},\\${ANNOTATION_TOOLS}\"; else TOOLS=\"\\$ANNOTATION_TOOLS\"; fi; fi; echo \"Final tools list: \\$TOOLS\" >&2; nextflow run nf-core/sarek --input ${input} --outdir ${output} --tools \"\\$TOOLS\" --genome ${genome} --skip_tools baserecalibrator -r 3.5.1",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Computing resources optimized for cancer genomics analysis.",
+      "options": [
+        {
+          "label": "Small (16 CPUs, 90GB RAM) - Single tumor-normal pair",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Medium (32 CPUs, 180GB RAM) - Multiple samples or WGS",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Large (64 CPUs, 360GB RAM) - Recommended for cancer analysis",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "large"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Samplesheet CSV",
+      "name": "input",
+      "description": "CSV samplesheet defining tumor-normal pairs and FASTQ file locations.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": ["csv"]
+      }
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "output",
+      "description": "Directory for results, reports, and intermediate files.",
+      "defaultValue": "./",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
+    },
+    {
+      "type": "Select",
+      "label": "Analysis Type",
+      "name": "tools",
+      "description": "Analysis type combining appropriate tools for somatic variant calling.",
+      "defaultValue": "mutect2",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Basic Somatic Calling (Mutect2)",
+          "value": "mutect2"
+        },
+        {
+          "label": "Standard Cancer Analysis (Mutect2 + Manta)",
+          "value": "mutect2,manta"
+        },
+        {
+          "label": "Comprehensive Tumor Profiling (Mutect2 + Manta + CNVkit)",
+          "value": "mutect2,manta,cnvkit"
+        },
+        {
+          "label": "Clinical Oncology Workflow (Mutect2 + Manta + CNVkit + MSI)",
+          "value": "mutect2,manta,cnvkit,msisensorpro"
+        },
+        {
+          "label": "Tumor-Only Analysis (FreeBayes + CNVkit)",
+          "value": "freebayes,cnvkit"
+        },
+        {
+          "label": "Precision Medicine Panel (Strelka + Manta + CNVkit)",
+          "value": "strelka,manta,cnvkit"
+        },
+        {
+          "label": "Advanced Cancer Genomics (Mutect2 + Strelka + Manta + CNVkit)",
+          "value": "mutect2,strelka,manta,cnvkit"
+        },
+        {
+          "label": "Research Grade Analysis (Mutect2 + Manta + TIDDIT + CNVkit + MSI)",
+          "value": "mutect2,manta,tiddit,cnvkit,msisensorpro"
+        }
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome assembly for alignment and somatic calling.",
+      "defaultValue": "GATK.GRCh38",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {"label": "Human GRCh38 (GATK) [Recommended for cancer]", "value": "GATK.GRCh38"},
+        {"label": "Human GRCh37 (GATK)", "value": "GATK.GRCh37"},
+        {"label": "Human GRCh37 (Ensembl)", "value": "GRCh37"},
+        {"label": "Human GRCh38 (NCBI)", "value": "GRCh38"},
+        {"label": "Human CHM13 (T2T)", "value": "CHM13"},
+        {"label": "Human hg38 (UCSC)", "value": "hg38"},
+        {"label": "Human hg19 (UCSC)", "value": "hg19"},
+        {"label": "Mouse GRCm38 (Ensembl)", "value": "GRCm38"},
+        {"label": "Mouse mm10 (UCSC)", "value": "mm10"},
+        {"label": "Mouse GRCm39 (Ensembl)", "value": "GRCm39"},
+        {"label": "Mouse mm39 (UCSC)", "value": "mm39"},
+        {"label": "Test data (small dataset)", "value": "testdata.nf-core.sarek"}
+      ]
+    },
+    {
+      "type": "Switch",
+      "label": "Enable VEP Annotation",
+      "name": "enable_vep",
+      "description": "Variant Effect Predictor (VEP) - Determines effects of variants including SNPs, indels, structural variants, and CNVs on genes and proteins",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Enable snpEff Annotation",
+      "name": "enable_snpeff",
+      "description": "snpEff - Genetic variant annotation and functional effect prediction for variants in coding and non-coding regions",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Enable BCFtools Annotate",
+      "name": "enable_bcfann",
+      "description": "BCFtools Annotate - Custom annotation of VCF files using BCFtools annotate with user-provided annotation files",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    }
+  ]
+}

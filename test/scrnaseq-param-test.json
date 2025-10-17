@@ -1,0 +1,189 @@
+{
+  "name": "scrnaseq-param-test",
+  "title": "scRNA-seq Parameter Testing Tool",
+  "description": "Comprehensive parameter handling test for scRNA-seq pipeline command generation",
+  "content": "<h1>🧪 scRNA-seq Command Parameter Testing</h1><p>This tool validates the complex parameter handling logic for the scRNA-seq pipeline, ensuring all alignment methods, protocols, and whitelist configurations generate correct commands.</p><h2>Test Scenarios Covered:</h2><ul><li>✅ All 4 aligners: simpleaf, kallisto, STARsolo, cellranger</li><li>✅ Protocol handling: 10x variants, custom chemistry strings, auto-detect</li><li>✅ Whitelist strategies: none, 10x_v3, 10x_v2, custom file path</li><li>✅ Edge cases: empty values, special characters, conditional logic</li></ul>",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/scrnaseq/master/docs/images/nf-core-scrnaseq_logo_light.png",
+  "command": "echo '=== scRNA-seq Parameter Test ===' && echo && echo 'Test Configuration:' && echo '  Aligner: ${aligner}' && echo '  Protocol: ${protocol}' && echo '  Genome: ${genome}' && echo '  Whitelist: ${barcode_whitelist}' && echo '  Custom WL: ${barcode_whitelist_param}' && echo && echo 'Generated Command:' && echo && if [ \"${aligner}\" = \"star\" ]; then echo 'nextflow run nf-core/scrnaseq -r 4.0.0 \\' && echo '  -profile test,k8s \\' && echo '  -c /etc/mpi/nextflow.camber.config \\' && echo '  -c platform-constrained-config.config \\' && echo '  --outdir results'; elif [ \"${barcode_whitelist}\" != \"none\" ] && [ \"${barcode_whitelist}\" != \"\" ] && [ \"${aligner}\" != \"star\" ] && [ \"${aligner}\" != \"cellranger\" ]; then if [ \"${barcode_whitelist}\" = \"custom\" ] && [ \"${barcode_whitelist_param}\" != \"\" ]; then echo 'nextflow run nf-core/scrnaseq -r 4.0.0 \\' && echo '  --input ${input} \\' && echo '  --outdir results \\' && echo '  --aligner ${aligner} \\' && echo '  --protocol ${protocol} \\' && echo '  --barcode_whitelist ${barcode_whitelist_param} \\' && echo '  --genome ${genome} \\' && echo '  --skip_cellbender \\' && echo '  -c /etc/mpi/nextflow.camber.config \\' && echo '  -c platform-constrained-config.config \\' && echo '  -profile k8s'; elif [ \"${barcode_whitelist}\" = \"10x_v3\" ]; then echo 'nextflow run nf-core/scrnaseq -r 4.0.0 \\' && echo '  --input ${input} \\' && echo '  --outdir results \\' && echo '  --aligner ${aligner} \\' && echo '  --protocol ${protocol} \\' && echo '  --barcode_whitelist 10x_v3 \\' && echo '  --genome ${genome} \\' && echo '  --skip_cellbender \\' && echo '  -c /etc/mpi/nextflow.camber.config \\' && echo '  -c platform-constrained-config.config \\' && echo '  -profile k8s'; elif [ \"${barcode_whitelist}\" = \"10x_v2\" ]; then echo 'nextflow run nf-core/scrnaseq -r 4.0.0 \\' && echo '  --input ${input} \\' && echo '  --outdir results \\' && echo '  --aligner ${aligner} \\' && echo '  --protocol ${protocol} \\' && echo '  --barcode_whitelist 10x_v2 \\' && echo '  --genome ${genome} \\' && echo '  --skip_cellbender \\' && echo '  -c /etc/mpi/nextflow.camber.config \\' && echo '  -c platform-constrained-config.config \\' && echo '  -profile k8s'; fi; else echo 'nextflow run nf-core/scrnaseq -r 4.0.0 \\' && echo '  --input ${input} \\' && echo '  --outdir results \\' && echo '  --aligner ${aligner} \\' && echo '  --protocol ${protocol} \\' && echo '  --genome ${genome} \\' && echo '  --skip_cellbender \\' && echo '  -c /etc/mpi/nextflow.camber.config \\' && echo '  -c platform-constrained-config.config \\' && echo '  -profile k8s'; fi && echo && echo '=== Validation Logic ===' && echo && echo '1. STARsolo Check:' && [ \"${aligner}\" = \"star\" ] && echo '   ✓ Uses test profile only (STARsolo special case)' || echo '   → Standard command generation' && echo && echo '2. Whitelist Eligibility:' && if [ \"${aligner}\" = \"star\" ] || [ \"${aligner}\" = \"cellranger\" ]; then echo '   ✗ ${aligner} does not support custom whitelists'; else echo '   ✓ ${aligner} supports whitelist configuration'; fi && echo && echo '3. Whitelist Application:' && if [ \"${barcode_whitelist}\" = \"none\" ] || [ \"${barcode_whitelist}\" = \"\" ]; then echo '   → No whitelist (auto-derive from data)'; elif [ \"${barcode_whitelist}\" = \"custom\" ]; then [ \"${barcode_whitelist_param}\" != \"\" ] && echo '   ✓ Custom whitelist: ${barcode_whitelist_param}' || echo '   ✗ Custom selected but no file provided'; else echo '   ✓ Predefined whitelist: ${barcode_whitelist}'; fi && echo && echo '=== Test Complete ===' && echo",
+  "engineType": "MPI",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Minimal resources for testing",
+      "options": [
+        {
+          "label": "XSmall (Testing Only)",
+          "value": "xsmall",
+          "mapValue": {
+            "nodeSize": "XSMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "xsmall"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Text",
+      "label": "Sample Sheet",
+      "name": "input",
+      "description": "Sample sheet path (simulated)",
+      "defaultValue": "test_samples.csv",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Select",
+      "label": "Alignment Method",
+      "name": "aligner",
+      "description": "Choose aligner to test parameter logic",
+      "defaultValue": "star",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "simpleaf (Alevin-fry) [Whitelist ✓]",
+          "value": "simpleaf"
+        },
+        {
+          "label": "kallisto [Whitelist ✓]",
+          "value": "kallisto"
+        },
+        {
+          "label": "STARsolo [Whitelist ✗]",
+          "value": "star"
+        },
+        {
+          "label": "cellranger [Whitelist ✗]",
+          "value": "cellranger"
+        }
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Protocol",
+      "name": "protocol",
+      "description": "Single-cell chemistry protocol",
+      "defaultValue": "10XV3",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "10X v1",
+          "value": "10XV1"
+        },
+        {
+          "label": "10X v2",
+          "value": "10XV2"
+        },
+        {
+          "label": "10X v3",
+          "value": "10XV3"
+        },
+        {
+          "label": "10X v4",
+          "value": "10XV4"
+        },
+        {
+          "label": "Auto-detect",
+          "value": "auto"
+        },
+        {
+          "label": "Custom simpleaf: 1{b[16]u[12]x:}2{r:}",
+          "value": "1{b[16]u[12]x:}2{r:}"
+        },
+        {
+          "label": "Custom kallisto: 0,0,16:0,16,26:1,0,0",
+          "value": "0,0,16:0,16,26:1,0,0"
+        },
+        {
+          "label": "DropSeq",
+          "value": "dropseq"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Reference Genome",
+      "name": "genome",
+      "description": "Reference genome for alignment",
+      "defaultValue": "GRCh38",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Human GRCh38",
+          "value": "GRCh38"
+        },
+        {
+          "label": "Mouse GRCm38",
+          "value": "GRCm38"
+        },
+        {
+          "label": "Test Genome",
+          "value": "test_genome"
+        }
+      ]
+    },
+    {
+      "type": "Select",
+      "label": "Barcode Whitelist",
+      "name": "barcode_whitelist",
+      "description": "Whitelist strategy (simpleaf/kallisto only)",
+      "defaultValue": "none",
+      "hidden": false,
+      "required": false,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Auto-derive (no whitelist)",
+          "value": "none"
+        },
+        {
+          "label": "10x v3 whitelist",
+          "value": "10x_v3"
+        },
+        {
+          "label": "10x v2 whitelist",
+          "value": "10x_v2"
+        },
+        {
+          "label": "Custom file path",
+          "value": "custom"
+        },
+        {
+          "label": "Empty value test",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "type": "Text",
+      "label": "Custom Whitelist Path",
+      "name": "barcode_whitelist_param",
+      "description": "Path when 'custom' selected",
+      "defaultValue": "",
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    }
+  ],
+  "tags": [
+    {"name": "testing", "type": "task"},
+    {"name": "validation", "type": "task"},
+    {"name": "genomics", "type": "subfield"}
+  ]
+}

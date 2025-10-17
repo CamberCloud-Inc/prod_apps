@@ -1,0 +1,128 @@
+{
+  "name": "sarek-germline-single-sample",
+  "title": "Sarek Germline Single Sample Analysis",
+  "description": "Specialized nf-core/sarek configuration for comprehensive germline variant calling on single normal samples. Detects SNVs/INDELs with GATK HaplotypeCaller, DeepVariant, FreeBayes; structural variants with Manta, TIDDIT; copy number variants with CNVkit, Control-FREEC; includes comprehensive quality control and coverage analysis.",
+  "content": "\u003ch1 class=\"heading-node\"\u003eSarek Germline Single Sample Analysis\u003c/h1\u003e\u003cp class=\"text-node\"\u003e\u003cstrong\u003eSpecialized Germline Variant Discovery Pipeline\u003c/strong\u003e\u003c/p\u003e\u003cp class=\"text-node\"\u003eThis optimized configuration of \u003cstrong\u003enf-core/sarek\u003c/strong\u003e is specifically designed for comprehensive germline variant calling on single normal samples without matched tumor data. Perfect for constitutional variant discovery, hereditary disease studies, and population genomics research.\u003c/p\u003e\u003ch2 class=\"heading-node\"\u003eAnalysis Capabilities\u003c/h2\u003e\u003ch3 class=\"heading-node\"\u003e📊 SNVs \u0026 INDELs\u003c/h3\u003e\u003cp class=\"text-node\"\u003e\u003cstrong\u003eTools:\u003c/strong\u003e GATK HaplotypeCaller, DeepVariant, FreeBayes, mpileup, Strelka2\u003cbr\u003e\u003cstrong\u003eApplications:\u003c/strong\u003e Single nucleotide variants and small insertions/deletions in germline samples\u003c/p\u003e\u003ch3 class=\"heading-node\"\u003e🔗 Structural Variants\u003c/h3\u003e\u003cp class=\"text-node\"\u003e\u003cstrong\u003eTools:\u003c/strong\u003e Manta, TIDDIT\u003cbr\u003e\u003cstrong\u003eApplications:\u003c/strong\u003e Large genomic rearrangements and chromosomal alterations\u003c/p\u003e\u003ch3 class=\"heading-node\"\u003e📈 Copy Number Variations\u003c/h3\u003e\u003cp class=\"text-node\"\u003e\u003cstrong\u003eTools:\u003c/strong\u003e CNVkit, Control-FREEC\u003cbr\u003e\u003cstrong\u003eApplications:\u003c/strong\u003e Germline CNV detection and copy number analysis\u003c/p\u003e\u003ch3 class=\"heading-node\"\u003e🔍 Quality Control\u003c/h3\u003e\u003cp class=\"text-node\"\u003e\u003cstrong\u003eTools:\u003c/strong\u003e indexcov, FastQC, MultiQC\u003cbr\u003e\u003cstrong\u003eApplications:\u003c/strong\u003e Comprehensive coverage analysis and quality assessment\u003c/p\u003e\u003ch2 class=\"heading-node\"\u003eInput Requirements\u003c/h2\u003e\u003ch3 class=\"heading-node\"\u003eCSV Samplesheet Format\u003c/h3\u003e\u003cp class=\"text-node\"\u003eThe pipeline requires a CSV samplesheet defining your germline samples:\u003c/p\u003e\u003cpre class=\"block-node\"\u003e\u003ccode\u003epatient,sample,lane,fastq_1,fastq_2\npatient1,normal,1,normal_R1.fastq.gz,normal_R2.fastq.gz\npatient2,sample,1,sample_R1.fastq.gz,sample_R2.fastq.gz\u003c/code\u003e\u003c/pre\u003e\u003ch3 class=\"heading-node\"\u003eColumn Specifications\u003c/h3\u003e\u003cul class=\"list-node\"\u003e\u003cli\u003e\u003cp class=\"text-node\"\u003e\u003cstrong\u003e✅ patient\u003c/strong\u003e (REQUIRED): Patient/subject identifier\u003cbr\u003e\u003cem\u003eExamples:\u003c/em\u003e \u003ccode class=\"inline\"\u003epatient1, subject_A, SAMPLE_001\u003c/code\u003e\u003c/p\u003e\u003c/li\u003e\u003cli\u003e\u003cp class=\"text-node\"\u003e\u003cstrong\u003e✅ sample\u003c/strong\u003e (REQUIRED): Sample identifier (typically 'normal' or 'sample' for germline)\u003cbr\u003e\u003cem\u003eExamples:\u003c/em\u003e \u003ccode class=\"inline\"\u003enormal, sample, control\u003c/code\u003e\u003c/p\u003e\u003c/li\u003e\u003cli\u003e\u003cp class=\"text-node\"\u003e\u003cstrong\u003e✅ lane\u003c/strong\u003e (REQUIRED): Sequencing lane number (use 1 if unknown)\u003c/p\u003e\u003c/li\u003e\u003cli\u003e\u003cp class=\"text-node\"\u003e\u003cstrong\u003e✅ fastq_1\u003c/strong\u003e (REQUIRED): Path to forward read FASTQ file\u003c/p\u003e\u003c/li\u003e\u003cli\u003e\u003cp class=\"text-node\"\u003e\u003cstrong\u003e❌ fastq_2\u003c/strong\u003e (OPTIONAL): Path to reverse read FASTQ file (omit for single-end)\u003c/p\u003e\u003c/li\u003e\u003c/ul\u003e\u003ch2 class=\"heading-node\"\u003eVariant Calling Tools\u003c/h2\u003e\u003cp class=\"text-node\"\u003eSelect from industry-standard germline variant callers:\u003c/p\u003e\u003ch3 class=\"heading-node\"\u003e🧬 Germline Callers\u003c/h3\u003e\u003cp class=\"text-node\"\u003e\u003cstrong\u003eGATK HaplotypeCaller\u003c/strong\u003e: Gold standard for germline SNVs/INDELs (Recommended)\u003cbr\u003e\u003cstrong\u003eDeepVariant\u003c/strong\u003e: Deep learning-based variant calling\u003cbr\u003e\u003cstrong\u003eFreeBayes\u003c/strong\u003e: Bayesian haplotype-based calling\u003cbr\u003e\u003cstrong\u003empileup\u003c/strong\u003e: Basic variant calling for quick analysis\u003c/p\u003e\u003ch3 class=\"heading-node\"\u003e🔗 Structural Variants\u003c/h3\u003e\u003cp class=\"text-node\"\u003e\u003cstrong\u003eManta\u003c/strong\u003e: Comprehensive structural variant detection\u003cbr\u003e\u003cstrong\u003eTIDDIT\u003c/strong\u003e: Chromosomal rearrangement identification\u003c/p\u003e\u003ch3 class=\"heading-node\"\u003e📈 Copy Number\u003c/h3\u003e\u003cp class=\"text-node\"\u003e\u003cstrong\u003eCNVkit\u003c/strong\u003e: Copy number variation detection\u003cbr\u003e\u003cstrong\u003eControl-FREEC\u003c/strong\u003e: Copy number and allelic content analysis\u003c/p\u003e\u003ch2 class=\"heading-node\"\u003eQuality Control \u0026 Preprocessing\u003c/h2\u003e\u003cul class=\"list-node\"\u003e\u003cli\u003e\u003cp class=\"text-node\"\u003e\u003cstrong\u003e📊 Read QC:\u003c/strong\u003e FastQC quality assessment and adapter trimming\u003c/p\u003e\u003c/li\u003e\u003cli\u003e\u003cp class=\"text-node\"\u003e\u003cstrong\u003e🎯 Alignment:\u003c/strong\u003e BWA-MEM2 mapping with duplicate marking\u003c/p\u003e\u003c/li\u003e\u003cli\u003e\u003cp class=\"text-node\"\u003e\u003cstrong\u003e⚖️ Base Recalibration:\u003c/strong\u003e GATK base quality score recalibration\u003c/p\u003e\u003c/li\u003e\u003cli\u003e\u003cp class=\"text-node\"\u003e\u003cstrong\u003e🔍 Coverage Analysis:\u003c/strong\u003e indexcov for comprehensive coverage assessment\u003c/p\u003e\u003c/li\u003e\u003c/ul\u003e\u003ch2 class=\"heading-node\"\u003eOutput Files\u003c/h2\u003e\u003ch3 class=\"heading-node\"\u003e🗂️ Variant Calls (VCF)\u003c/h3\u003e\u003cp class=\"text-node\"\u003eStandard variant call format with comprehensive annotations\u003c/p\u003e\u003ch3 class=\"heading-node\"\u003e✅ Filtered Variants (VCF)\u003c/h3\u003e\u003cp class=\"text-node\"\u003eHigh-confidence germline variant calls passing quality filters\u003c/p\u003e\u003ch3 class=\"heading-node\"\u003e📋 Quality Reports (HTML)\u003c/h3\u003e\u003cp class=\"text-node\"\u003eMultiQC comprehensive analysis summary\u003c/p\u003e\u003ch3 class=\"heading-node\"\u003e📁 Alignment Files (BAM/CRAM)\u003c/h3\u003e\u003cp class=\"text-node\"\u003eProcessed alignment files with indices\u003c/p\u003e\u003ch3 class=\"heading-node\"\u003e📊 Statistics (TSV/JSON)\u003c/h3\u003e\u003cp class=\"text-node\"\u003eCoverage, mapping quality, and variant metrics\u003c/p\u003e\u003ch2 class=\"heading-node\"\u003eApplications\u003c/h2\u003e\u003cp class=\"text-node\"\u003e\u003cstrong\u003ePerfect for:\u003c/strong\u003e Hereditary disease studies • Population genomics • Pharmacogenomics • Constitutional variant discovery • Genetic screening • Research genomics • Clinical genomics • Single-sample analysis\u003c/p\u003e\u003cp class=\"text-node\"\u003eBuilt with \u003ca class=\"link\" href=\"https://www.nextflow.io/\" target=\"_blank\"\u003eNextflow\u003c/a\u003e • Powered by \u003ca class=\"link\" href=\"https://nf-co.re/sarek/3.5.1/\" target=\"_blank\"\u003enf-core/sarek v3.5.1\u003c/a\u003e • Containerized execution • Continuous integration tested\u003c/p\u003e",
+  "imageUrl": "https://raw.githubusercontent.com/nf-core/sarek/3.5.1/docs/images/nf-core-sarek_logo_light.png",
+  "command": "nextflow run nf-core/sarek --input ${input} --outdir ${output} --tools ${tools} --no_intervals=${no_intervals} -r 3.5.1",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Choose computing resources based on dataset size. Germline variant calling requires substantial memory for whole genome analysis.",
+      "options": [
+        {
+          "label": "Small (16 CPUs, 90GB RAM) - Exome or targeted sequencing",
+          "value": "small",
+          "mapValue": {
+            "nodeSize": "SMALL",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Medium (32 CPUs, 180GB RAM) - Whole genome single sample",
+          "value": "medium",
+          "mapValue": {
+            "nodeSize": "MEDIUM",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        },
+        {
+          "label": "Large (64 CPUs, 360GB RAM) - Recommended for WGS",
+          "value": "large",
+          "mapValue": {
+            "nodeSize": "LARGE",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "medium"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Samplesheet CSV",
+      "name": "input",
+      "description": "CSV samplesheet with columns: patient, sample, lane, fastq_1, fastq_2. Defines experimental design and FASTQ file locations for germline samples.",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Stash File",
+      "label": "Output Directory",
+      "name": "output",
+      "description": "Directory where germline variant calling results, QC reports, and intermediate files will be saved.",
+      "defaultValue": "./",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Select",
+      "label": "Variant Calling Tools",
+      "name": "tools",
+      "description": "Select germline variant calling algorithms. HaplotypeCaller is recommended for most germline analyses. Multiple tools can be specified for comprehensive analysis.",
+      "defaultValue": "haplotypecaller",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "GATK HaplotypeCaller - Germline SNVs/INDELs [Recommended]",
+          "value": "haplotypecaller"
+        },
+        {
+          "label": "DeepVariant - Deep learning variant calling",
+          "value": "deepvariant"
+        },
+        {
+          "label": "FreeBayes - Bayesian haplotype-based calling",
+          "value": "freebayes"
+        },
+        {
+          "label": "mpileup - Basic variant calling",
+          "value": "mpileup"
+        },
+        {
+          "label": "Strelka2 - Fast germline variant calling",
+          "value": "strelka"
+        },
+        {
+          "label": "Manta - Structural variant detection",
+          "value": "manta"
+        },
+        {
+          "label": "TIDDIT - Chromosomal rearrangements",
+          "value": "tiddit"
+        },
+        {
+          "label": "CNVkit - Copy number variation detection",
+          "value": "cnvkit"
+        },
+        {
+          "label": "Control-FREEC - Copy number analysis",
+          "value": "controlfreec"
+        }
+      ]
+    },
+    {
+      "type": "Switch",
+      "label": "No Intervals",
+      "name": "no_intervals",
+      "description": "Disable usage of intervals for whole genome analysis. Enable this for unbiased whole genome variant calling without predefined intervals.",
+      "defaultValue": false,
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    }
+  ]
+}

@@ -1,4 +1,0 @@
-sampleID,forwardReads,reverseReads
-sample1_ITS,https://raw.githubusercontent.com/nf-core/test-datasets/ampliseq/testdata/its/SRR11843817_ITS_1.fastq.gz,https://raw.githubusercontent.com/nf-core/test-datasets/ampliseq/testdata/its/SRR11843817_ITS_2.fastq.gz
-sample2_ITS,https://raw.githubusercontent.com/nf-core/test-datasets/ampliseq/testdata/its/SRR11843818_ITS_1.fastq.gz,https://raw.githubusercontent.com/nf-core/test-datasets/ampliseq/testdata/its/SRR11843818_ITS_2.fastq.gz
-sample3_ITS,https://raw.githubusercontent.com/nf-core/test-datasets/ampliseq/testdata/its/SRR11843819_ITS_1.fastq.gz,https://raw.githubusercontent.com/nf-core/test-datasets/ampliseq/testdata/its/SRR11843819_ITS_2.fastq.gz

@@ -1,4 +1,0 @@
-Status: 📝 Ready
-App: clipseq-binding
-Version: 1.0.0
-Use Case: RNA-protein interaction mapping

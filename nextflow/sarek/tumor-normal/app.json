@@ -1,0 +1,119 @@
+{
+  "name": "sarek_tumor_normal_matched",
+  "description": "nf-core/sarek pipeline optimized for matched tumor-normal somatic variant calling. Detects SNVs/indels with Mutect2, Strelka2, FreeBayes; SVs with Manta, TIDDIT; CNVs with CNVkit, Control-FREEC; MSI with MSIsensor-pro; purity/ploidy with ASCAT.",
+  "content": "<img src=\"https://raw.githubusercontent.com/nf-core/sarek/3.4.0//docs/images/sarek_workflow.png\" alt=\"\" title=\"\" width=\"293\" height=\"600\"><p class=\"text-node\"></p><p class=\"text-node\"><strong>Matched Tumor-Normal Somatic Analysis</strong></p><p class=\"text-node\">This specialized configuration of <strong>nf-core/sarek</strong> is optimized for comprehensive somatic variant calling using matched tumor-normal sample pairs.</p><p class=\"text-node\"><strong>Analysis Pipeline:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>SNVs/indels:</strong> Mutect2, Strelka2, FreeBayes</p></li><li><p class=\"text-node\"><strong>Structural variants (SVs):</strong> Manta, TIDDIT</p></li><li><p class=\"text-node\"><strong>Copy number variants (CNVs):</strong> CNVkit, Control-FREEC</p></li><li><p class=\"text-node\"><strong>Microsatellite instability (MSI):</strong> MSIsensor-pro</p></li><li><p class=\"text-node\"><strong>Purity/Ploidy analysis:</strong> ASCAT</p></li></ul><p class=\"text-node\"><strong>Key Features:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\">Gold standard for somatic variant discovery with matched normal filtering</p></li><li><p class=\"text-node\">Comprehensive analysis including MSI and tumor purity/ploidy</p></li><li><p class=\"text-node\">Superior germline filtering reduces false positive somatic calls</p></li><li><p class=\"text-node\">Full spectrum of variant types: SNVs, indels, SVs, and CNVs</p></li><li><p class=\"text-node\">Advanced tumor characterization with ASCAT analysis</p></li></ul><p class=\"text-node\"><strong>Sample Requirements:</strong> Requires matched tumor-normal pairs in the input samplesheet.</p>",
+  "imageUrl": "https://sateeshperi.github.io/nextflow_varcal/nextflow/images/nf-core-variantcall_logo_light.png",
+  "command": "nextflow run nf-core/sarek --input ${input} --outdir ${output} --tools ${tools} --no_intervals=${no_intervals} -r ${revision}",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Selecting a preset will prefill the node configuration below. You can still edit the values.",
+      "options": [
+        {
+          "label": "Default",
+          "value": "default",
+          "mapValue": {
+            "nodeSize": "medium",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "default"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Input",
+      "name": "input",
+      "description": "Samplesheet CSV file with matched tumor-normal sample pairs",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Stash File",
+      "label": "Output",
+      "name": "output",
+      "description": "Output directory for matched tumor-normal somatic variant calling results",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Select",
+      "label": "Primary Variant Calling Tool",
+      "name": "tools",
+      "description": "Primary variant calling tool for matched tumor-normal analysis",
+      "defaultValue": "mutect2",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Mutect2 (somatic SNVs/indels)",
+          "value": "mutect2"
+        },
+        {
+          "label": "Strelka2 (somatic SNVs/indels)",
+          "value": "strelka"
+        },
+        {
+          "label": "FreeBayes",
+          "value": "freebayes"
+        },
+        {
+          "label": "Manta (SVs)",
+          "value": "manta"
+        },
+        {
+          "label": "TIDDIT (SVs)",
+          "value": "tiddit"
+        },
+        {
+          "label": "CNVkit (CNVs)",
+          "value": "cnvkit"
+        },
+        {
+          "label": "Control-FREEC (CNVs)",
+          "value": "controlfreec"
+        },
+        {
+          "label": "MSIsensor-pro (MSI)",
+          "value": "msisensorpro"
+        },
+        {
+          "label": "ASCAT (purity/ploidy)",
+          "value": "ascat"
+        }
+      ]
+    },
+    {
+      "type": "Switch",
+      "label": "No Intervals",
+      "name": "no_intervals",
+      "description": "Disable usage of intervals for whole genome analysis",
+      "defaultValue": false,
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Input",
+      "label": "Pipeline Version",
+      "name": "revision",
+      "description": "nf-core/sarek pipeline version",
+      "defaultValue": "3.5.1",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    }
+  ]
+}

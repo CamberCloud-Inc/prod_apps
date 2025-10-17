@@ -1,2 +1,0 @@
-sample,lane,fastq_1,fastq_2,sex,phenotype,paternal_id,maternal_id,case_id
-NA12878,1,https://raw.githubusercontent.com/nf-core/test-datasets/raredisease/testdata/fastq/NA12878_mito_1.fq.gz,https://raw.githubusercontent.com/nf-core/test-datasets/raredisease/testdata/fastq/NA12878_mito_2.fq.gz,2,2,,,testcase001

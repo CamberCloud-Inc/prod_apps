@@ -1,4 +1,0 @@
-Status: 📝 Ready
-App: pangenome-graph
-Version: 1.1.3
-Use Case: Pangenome graph construction

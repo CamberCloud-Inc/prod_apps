@@ -1,8 +1,0 @@
-Nextflow 25.04.7 is available - Please consider updating your version to it
-N E X T F L O W  ~  version 24.10.5
-Pulling nf-core/fetchngs ...
- downloaded from https://github.com/nf-core/fetchngs.git
-Launching `https://github.com/nf-core/fetchngs` [amazing_gauss] DSL2 - revision: 8ec2d934f9 [1.12.0]
-ERROR ~ /home/camber/fetchngs-test/results-attempt-1
-
- -- Check '/home/camber/jobs/4356/outputs/nextflow.log' file for details

@@ -1,0 +1,111 @@
+{
+  "name": "sarek_tumor_only",
+  "description": "nf-core/sarek pipeline optimized for tumor-only somatic variant calling without matched normal. Detects SNVs/indels with Mutect2 (tumor-only mode), FreeBayes, mpileup; SVs with Manta, TIDDIT; CNVs with CNVkit, Control-FREEC. Note: Strelka2 is not used in tumor-only mode.",
+  "content": "<img src=\"https://raw.githubusercontent.com/nf-core/sarek/3.4.0//docs/images/sarek_workflow.png\" alt=\"\" title=\"\" width=\"293\" height=\"600\"><p class=\"text-node\"></p><p class=\"text-node\"><strong>Tumor-Only Somatic Analysis</strong></p><p class=\"text-node\">This specialized configuration of <strong>nf-core/sarek</strong> is optimized for somatic variant calling on tumor samples without matched normal controls.</p><p class=\"text-node\"><strong>Analysis Pipeline:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>SNVs/indels:</strong> Mutect2 (tumor-only mode), FreeBayes, mpileup</p></li><li><p class=\"text-node\"><strong>Structural variants (SVs):</strong> Manta, TIDDIT</p></li><li><p class=\"text-node\"><strong>Copy number variants (CNVs):</strong> CNVkit, Control-FREEC</p></li><li><p class=\"text-node\"><strong>Note:</strong> Strelka2 is not used in tumor-only mode as it requires matched normal samples</p></li></ul><p class=\"text-node\"><strong>Key Features:</strong></p><ul class=\"list-node\"><li><p class=\"text-node\">Specialized for tumor-only somatic variant discovery</p></li><li><p class=\"text-node\">Mutect2 configured for tumor-only mode with panel of normals</p></li><li><p class=\"text-node\">Comprehensive structural and copy number variant analysis</p></li><li><p class=\"text-node\">Suitable when matched normal samples are unavailable</p></li></ul><p class=\"text-node\"><strong>Important:</strong> Results may have higher false positive rates compared to matched tumor-normal analysis due to lack of germline filtering.</p>",
+  "imageUrl": "https://sateeshperi.github.io/nextflow_varcal/nextflow/images/nf-core-variantcall_logo_light.png",
+  "command": "nextflow run nf-core/sarek --input ${input} --outdir ${output} --tools ${tools} --no_intervals=${no_intervals} -r ${revision}",
+  "engineType": "NEXTFLOW",
+  "jobConfig": [
+    {
+      "type": "Select",
+      "label": "System Size",
+      "name": "system_size",
+      "hidden": true,
+      "description": "Selecting a preset will prefill the node configuration below. You can still edit the values.",
+      "options": [
+        {
+          "label": "Default",
+          "value": "default",
+          "mapValue": {
+            "nodeSize": "small",
+            "numNodes": 1,
+            "withGpu": false
+          }
+        }
+      ],
+      "defaultValue": "default"
+    }
+  ],
+  "spec": [
+    {
+      "type": "Stash File",
+      "label": "Input",
+      "name": "input",
+      "description": "Samplesheet CSV file with tumor sample FASTQ files (no matched normal required)",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Stash File",
+      "label": "Output",
+      "name": "output",
+      "description": "Output directory for tumor-only somatic variant calling results",
+      "defaultValue": "",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Select",
+      "label": "Primary Variant Calling Tool",
+      "name": "tools",
+      "description": "Primary variant calling tool for tumor-only analysis",
+      "defaultValue": "mutect2",
+      "hidden": false,
+      "required": true,
+      "disabled": false,
+      "options": [
+        {
+          "label": "Mutect2 (tumor-only mode)",
+          "value": "mutect2"
+        },
+        {
+          "label": "FreeBayes",
+          "value": "freebayes"
+        },
+        {
+          "label": "mpileup",
+          "value": "mpileup"
+        },
+        {
+          "label": "Manta (SVs)",
+          "value": "manta"
+        },
+        {
+          "label": "TIDDIT (SVs)",
+          "value": "tiddit"
+        },
+        {
+          "label": "CNVkit (CNVs)",
+          "value": "cnvkit"
+        },
+        {
+          "label": "Control-FREEC (CNVs)",
+          "value": "controlfreec"
+        }
+      ]
+    },
+    {
+      "type": "Switch",
+      "label": "No Intervals",
+      "name": "no_intervals",
+      "description": "Disable usage of intervals for whole genome analysis",
+      "defaultValue": false,
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    },
+    {
+      "type": "Input",
+      "label": "Pipeline Version",
+      "name": "revision",
+      "description": "nf-core/sarek pipeline version",
+      "defaultValue": "3.5.1",
+      "hidden": false,
+      "required": true,
+      "disabled": false
+    }
+  ]
+}

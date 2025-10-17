@@ -1,4 +1,0 @@
-Status: 📝 Ready
-App: demultiplex-ngs
-Version: 1.5.1
-Use Case: Demultiplex pooled sequencing samples

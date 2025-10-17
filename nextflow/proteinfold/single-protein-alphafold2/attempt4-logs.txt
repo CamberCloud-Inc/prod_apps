@@ -1,8 +1,0 @@
-Nextflow 25.04.7 is available - Please consider updating your version to it
-N E X T F L O W  ~  version 24.10.5
-Pulling nf-core/proteinfold ...
- downloaded from https://github.com/nf-core/proteinfold.git
-Launching `https://github.com/nf-core/proteinfold` [shrivelled_minsky] DSL2 - revision: 9bea0dc4eb [1.1.1]
-ERROR ~ /home/camber/test-proteinfold/results-attempt-4
-
- -- Check '/home/camber/jobs/4384/outputs/nextflow.log' file for details
