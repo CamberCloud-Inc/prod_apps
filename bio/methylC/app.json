@@ -4,14 +4,14 @@
   "description": "Comprehensive DNA methylation analysis pipeline for CGmap format data. Performs differential methylation analysis between sample groups, generates methylation profiles across genomic features (promoters, gene bodies, intergenic regions), and produces publication-quality visualizations including heatmaps and distribution plots.",
   "content": "<h1 class=\"heading-node\">🧬 MethylC-analyzer: DNA Methylation Analysis</h1><p class=\"text-node\"><strong>Comprehensive DNA Methylation Pattern Discovery</strong></p><p class=\"text-node\">MethylC-analyzer is a powerful pipeline for analyzing DNA methylation patterns from bisulfite sequencing data in CGmap format. Discover differential methylation across genomic features and visualize methylation landscapes with publication-ready outputs.</p><h2 class=\"heading-node\">🎯 Key Features</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🔬 Differential Analysis:</strong> Compare methylation between experimental groups (e.g., mutant vs wildtype)</p></li><li><p class=\"text-node\"><strong>📊 Multi-context Support:</strong> Analyze CG, CHG, and CHH methylation contexts</p></li><li><p class=\"text-node\"><strong>🧬 Genomic Feature Profiling:</strong> Profile methylation across promoters, gene bodies, UTRs, and intergenic regions</p></li><li><p class=\"text-node\"><strong>📈 Publication-Quality Plots:</strong> Automated generation of heatmaps, distribution plots, and statistical summaries</p></li></ul><h2 class=\"heading-node\">📋 Input Requirements</h2><h3 class=\"heading-node\">CGmap Files</h3><p class=\"text-node\">Upload your bisulfite sequencing data in CGmap format (compressed .gz files supported). Each sample should be in CGmap format with columns:</p><pre class=\"block-node\"><code>chr  pos  context  methylation_level  coverage</code></pre><h3 class=\"heading-node\">GTF Annotation</h3><p class=\"text-node\">Provide a gene annotation file in GTF format (e.g., hg38, mm10, or custom annotation). The pipeline will automatically extract genomic features for methylation profiling.</p><h3 class=\"heading-node\">Sample Sheet</h3><p class=\"text-node\">Create a tab-delimited sample list with three columns (no header):</p><pre class=\"block-node\"><code>sample_name  cgmap_file.gz  group_name\nwt1          wt1.CGmap.gz   WT\nwt2          wt2.CGmap.gz   WT\ntreat1       treat1.CGmap.gz  treated\ntreat2       treat2.CGmap.gz  treated</code></pre><h2 class=\"heading-node\">🔧 Analysis Pipeline</h2><ol class=\"list-node\"><li><p class=\"text-node\"><strong>Setup:</strong> Installs all dependencies (bedtools, R, Python packages)</p></li><li><p class=\"text-node\"><strong>Data Preparation:</strong> Extracts annotations and validates input files</p></li><li><p class=\"text-node\"><strong>Methylation Quantification:</strong> Calculates methylation levels per genomic feature</p></li><li><p class=\"text-node\"><strong>Differential Analysis:</strong> Compares groups and identifies significant changes</p></li><li><p class=\"text-node\"><strong>Visualization:</strong> Generates comprehensive plots and summary tables</p></li></ol><h2 class=\"heading-node\">📊 Output Files</h2><h3 class=\"heading-node\">Primary Results</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>CommonRegion_CG.txt:</strong> Common methylated CG sites across samples</p></li><li><p class=\"text-node\"><strong>CommonRegion_CHG.txt:</strong> Common methylated CHG sites</p></li><li><p class=\"text-node\"><strong>CommonRegion_CHH.txt:</strong> Common methylated CHH sites</p></li><li><p class=\"text-node\"><strong>Unionsite.txt:</strong> Union of all methylation sites</p></li><li><p class=\"text-node\"><strong>Average_methylation_levels.pdf:</strong> Distribution plots of methylation levels</p></li></ul><h3 class=\"heading-node\">Genomic Feature Files</h3><ul class=\"list-node\"><li><p class=\"text-node\"><strong>BED files:</strong> Promoter, gene body, UTR, intron, exon, and intergenic regions</p></li><li><p class=\"text-node\"><strong>PNG files:</strong> Feature-specific methylation heatmaps and profiles</p></li><li><p class=\"text-node\"><strong>Statistical summaries:</strong> Differential methylation statistics per feature</p></li></ul><h2 class=\"heading-node\">🧪 Supported Organisms</h2><p class=\"text-node\">Works with any organism for which you have:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>🧑 Human:</strong> hg38, hg19, GRCh38, GRCh37</p></li><li><p class=\"text-node\"><strong>🐭 Mouse:</strong> mm10, mm39, GRCm38, GRCm39</p></li><li><p class=\"text-node\"><strong>🌱 Plants:</strong> Arabidopsis (TAIR10), rice, maize</p></li><li><p class=\"text-node\"><strong>🔬 Custom:</strong> Any organism with GTF annotation</p></li></ul><h2 class=\"heading-node\">⚙️ Configuration Options</h2><h3 class=\"heading-node\">Group Comparison</h3><p class=\"text-node\">Define two groups for differential analysis:</p><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Group A (Test):</strong> Experimental condition (e.g., mutant, treated)</p></li><li><p class=\"text-node\"><strong>Group B (Control):</strong> Control condition (e.g., wildtype, untreated)</p></li></ul><p class=\"text-node\">The pipeline will automatically compute methylation differences and statistical significance.</p><h2 class=\"heading-node\">📈 Performance</h2><ul class=\"list-node\"><li><p class=\"text-node\"><strong>Runtime:</strong> 10-30 minutes for typical datasets (depends on genome size and coverage)</p></li><li><p class=\"text-node\"><strong>Memory:</strong> Medium node (32 CPUs, 180GB RAM) recommended for human/mouse genomes</p></li><li><p class=\"text-node\"><strong>Storage:</strong> Outputs typically 100-500MB depending on genome size</p></li></ul><p class=\"text-node\"><strong>Perfect for Research in:</strong> Epigenetics • Cancer research • Developmental biology • Plant biology • Aging studies • Environmental epigenomics • Disease mechanisms</p><p class=\"text-node\">Built with Python and R • Based on <a class=\"link\" href=\"https://github.com/RitataLU/MethylC-analyzer\" target=\"_blank\">MethylC-analyzer</a> • Containerized execution • Reproducible analysis</p>",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/methylseq/master/docs/images/nf-core-methylseq_logo_light.png",
-  "command": "cp ${wrapper_script} /tmp/methylc_wrapper.sh && chmod +x /tmp/methylc_wrapper.sh && bash /tmp/methylc_wrapper.sh ${cgmap_file} ${gtf_file} ${outputDir} met1 WT",
+  "command": "cd ${outputDir} && rm -rf prod_apps && git clone --depth=1 --filter=blob:none --sparse https://github.com/CamberCloud-Inc/prod_apps.git && cd prod_apps && git sparse-checkout set bio/methylC && cd ${outputDir} && bash prod_apps/bio/methylC/methylc_wrapper.sh ${cgmap_file} ${gtf_file} ${outputDir} met1 WT",
   "engineType": "MPI",
   "jobConfig": [
     {
       "type": "Select",
       "label": "System Size",
       "name": "system_size",
-      "hidden": false,
+      "hidden": true,
       "description": "Computational resources for the analysis. Medium recommended for most datasets.",
       "options": [
         {
@@ -46,21 +46,6 @@
     }
   ],
   "spec": [
-    {
-      "type": "Stash File",
-      "label": "Wrapper Script",
-      "name": "wrapper_script",
-      "description": "Path to methylc_wrapper.sh script in stash (will be uploaded automatically).",
-      "defaultValue": "",
-      "hidden": false,
-      "required": true,
-      "disabled": false,
-      "restrictions": {
-        "allow_files": true,
-        "allow_folders": false,
-        "allowed_file_types": [".sh"]
-      }
-    },
     {
       "type": "Stash File",
       "label": "CGmap File",

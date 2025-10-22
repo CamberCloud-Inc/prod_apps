@@ -112,7 +112,9 @@ WORK_DIR="/home/camber/manu"
 SOURCE_CGMAP="$WORK_DIR/GSM5761347_S52_7B_01.CGmap_hq.CGmap.gz"
 GTF_FILE_GZ="$WORK_DIR/hg38.ncbiRefSeq.gtf.gz"
 GTF_FILE="$WORK_DIR/hg38.ncbiRefSeq.gtf"
-METHYLC_DIR="/home/camber/MethylC-analyzer"
+# Get OUTPUT_DIR from script parameters to construct METHYLC_DIR path
+OUTPUT_DIR_PARAM="$3"
+METHYLC_DIR="${OUTPUT_DIR_PARAM}/prod_apps/bio/methylC/MethylC-analyzer"
 GROUP_A="__GROUP_A__"
 GROUP_B="__GROUP_B__"
 
@@ -155,13 +157,13 @@ micromamba create -n methylc -c conda-forge -c bioconda -y \
 micromamba activate methylc
 log "✓ Dependencies installed via micromamba"
 
-# Clone MethylC-analyzer
-log "Cloning MethylC-analyzer..."
+# MethylC-analyzer code is already available from prod_apps repo
+log "Using MethylC-analyzer from prod_apps repository..."
 if [ -d "$METHYLC_DIR" ]; then
-    info "Repository already exists"
+    log "✓ MethylC-analyzer found at $METHYLC_DIR"
 else
-    git clone https://github.com/RitataLU/MethylC-analyzer.git "$METHYLC_DIR" > /dev/null 2>&1
-    log "✓ Repository cloned"
+    error "MethylC-analyzer not found at $METHYLC_DIR"
+    exit 1
 fi
 
 # Install Python dependencies
