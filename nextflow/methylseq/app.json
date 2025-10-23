@@ -1,7 +1,9 @@
 {
   "name": "methylseq",
-  "description": "nf-core/methylseq is a bioinformatics analysis pipeline used for Methylation (Bisulfite) sequencing data. It pre-processes raw data from FastQ inputs, aligns the reads and performs extensive quality-control on the results.",
-  "content": "<h2 class=\"heading-node\"><strong>Introduction</strong></h2><p class=\"text-node\"><strong>nf-core/methylseq</strong> is a bioinformatics analysis pipeline used for Methylation (Bisulfite) sequencing data. It pre-processes raw data from FastQ inputs, aligns the reads and performs extensive quality-control on the results.</p><img src=\"https://raw.githubusercontent.com/nf-core/methylseq/4.0.0//docs/images/4.0.0_metromap.png\" alt=\"nf-core/methylseq metro map\" title=\"\" width=\"309\" height=\"201\"><p class=\"text-node\">The pipeline is built using <a class=\"link\" href=\"https://www.nextflow.io/\"><u>Nextflow</u></a>, a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker / Singularity containers making installation trivial and results highly reproducible.</p><p class=\"text-node\">On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources.The results obtained from the full-sized test can be viewed on the <a class=\"link\" href=\"https://nf-co.re/methylseq/results\"><u>nf-core website</u></a>.</p><blockquote class=\"block-node\"><p class=\"text-node\"><em>Read more about </em><strong><em>Bisulfite Sequencing &amp; Three-Base Aligners</em></strong><em> used in this pipeline </em><a class=\"link\" href=\"https://nf-co.re/methylseq/4.0.0/docs/bs-seq-primer/\"><em><u>here</u></em></a></p></blockquote><h2 class=\"heading-node\"><strong>Pipeline Summary</strong></h2><p class=\"text-node\">The pipeline allows you to choose between running either <a class=\"link\" href=\"https://github.com/FelixKrueger/Bismark\"><u>Bismark</u></a> or <a class=\"link\" href=\"https://github.com/brentp/bwa-meth\"><u>bwa-meth</u></a> / <a class=\"link\" href=\"https://github.com/dpryan79/methyldackel\"><u>MethylDackel</u></a>.</p><p class=\"text-node\">Choose between workflows by using <code class=\"inline\" spellcheck=\"false\">--aligner bismark</code> (default, uses bowtie2 for alignment), <code class=\"inline\" spellcheck=\"false\">--aligner bismark_hisat</code> or <code class=\"inline\" spellcheck=\"false\">--aligner bwameth</code>. For higher performance, the pipeline can leverage the <a class=\"link\" href=\"https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam_meth.html\"><u>Parabricks implementation of bwa-meth (fq2bammeth)</u></a>, which implements the baseline tool <code class=\"inline\" spellcheck=\"false\">bwa-meth</code> in a performant method using fq2bam (BWA-MEM + GATK) as a backend for processing on GPU. To use this option, include the <code class=\"inline\" spellcheck=\"false\">gpu</code> profile along with <code class=\"inline\" spellcheck=\"false\">--aligner bwameth</code>.</p>",
+  "title": "DNA Methylation Sequencing Analysis",
+  "description": "Comprehensive pipeline for analyzing DNA methylation patterns from bisulfite sequencing data. Supports WGBS, RRBS, and targeted bisulfite approaches. Ideal for epigenetics research in cancer, development, and environmental studies.",
+  "content": "<h2 class=\"heading-node\">🧬 Overview</h2><p class=\"text-node\">The <strong>DNA Methylation Sequencing Analysis</strong> pipeline enables comprehensive profiling of cytosine methylation patterns from bisulfite sequencing data. This workflow performs methylation-aware alignment, quantifies methylation levels at single-base resolution, and provides detailed quality control metrics for epigenetic insights.</p><img src=\"https://raw.githubusercontent.com/nf-core/methylseq/4.0.0/docs/images/4.0.0_metromap.png\" alt=\"Methylseq workflow: From bisulfite-treated reads to genome-wide methylation profiles\"><h2 class=\"heading-node\">🔧 Main Capabilities</h2><p class=\"text-node\">This pipeline integrates specialized tools for bisulfite sequencing analysis:</p><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Quality Control:</strong> FastQC and Trim Galore for bisulfite-specific read processing</li><li class=\"list-item-node\"><strong>Alignment Options:</strong> Bismark (default) or bwa-meth for methylation-aware mapping</li><li class=\"list-item-node\"><strong>Methylation Calling:</strong> Single-base resolution CpG, CHG, and CHH context analysis</li><li class=\"list-item-node\"><strong>Deduplication:</strong> Remove PCR duplicates to ensure accurate methylation quantification</li><li class=\"list-item-node\"><strong>Coverage Analysis:</strong> Genome-wide methylation coverage and distribution reports</li><li class=\"list-item-node\"><strong>Visualization:</strong> MultiQC report with bisulfite conversion rates and M-bias plots</li></ul><h2 class=\"heading-node\">📋 Input Parameters</h2><p class=\"text-node\"><strong>Samplesheet Format:</strong> Provide a CSV file with sample information following this structure:</p><pre><code>sample,fastq_1,fastq_2\ncontrol_rep1,/path/to/control_rep1_R1.fastq.gz,/path/to/control_rep1_R2.fastq.gz\ncontrol_rep2,/path/to/control_rep2_R1.fastq.gz,/path/to/control_rep2_R2.fastq.gz\ntreated_rep1,/path/to/treated_rep1_R1.fastq.gz,/path/to/treated_rep1_R2.fastq.gz\ntreated_rep2,/path/to/treated_rep2_R1.fastq.gz,/path/to/treated_rep2_R2.fastq.gz</code></pre><ul class=\"list-node\"><li class=\"list-item-node\"><strong>sample:</strong> Unique sample identifier</li><li class=\"list-item-node\"><strong>fastq_1/2:</strong> Paths to paired-end bisulfite FASTQ files (single-end: fastq_1 only)</li></ul><p class=\"text-node\"><strong>Reference Genome:</strong> Select from pre-configured genomes (Human, Mouse, Arabidopsis, E. coli, etc.) or provide a custom FASTA file. The pipeline will automatically prepare bisulfite conversion indices.</p><blockquote class=\"block-node\"><p class=\"text-node\">💡 <strong>Resource Optimization:</strong> For optimal resource consumption, the number of nodes should not be greater than the number of samples in your samplesheet.</p></blockquote><h2 class=\"heading-node\">🔬 Scientific Relevance & Use Cases</h2><p class=\"text-node\">This pipeline is essential for:</p><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Epigenetic Studies:</strong> Understanding methylation changes in development and differentiation</li><li class=\"list-item-node\"><strong>Cancer Research:</strong> Identifying aberrant methylation patterns in tumor vs normal tissues</li><li class=\"list-item-node\"><strong>Environmental Epigenetics:</strong> Studying methylation responses to environmental factors</li><li class=\"list-item-node\"><strong>Imprinting Analysis:</strong> Characterizing parent-of-origin specific methylation</li><li class=\"list-item-node\"><strong>Aging Studies:</strong> Tracking epigenetic drift and DNA methylation clocks</li></ul><p class=\"text-node\">The pipeline supports whole-genome bisulfite sequencing (WGBS), reduced representation bisulfite sequencing (RRBS), and targeted bisulfite sequencing approaches.</p><h2 class=\"heading-node\">📊 Expected Outputs</h2><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Methylation Calls:</strong> BED/bedGraph files with methylation percentages per cytosine (CpG, CHG, CHH contexts)</li><li class=\"list-item-node\"><strong>Coverage Reports:</strong> Genome-wide methylation coverage statistics and depth distributions</li><li class=\"list-item-node\"><strong>M-bias Plots:</strong> Position-specific methylation bias assessment for quality control</li><li class=\"list-item-node\"><strong>Bisulfite Conversion:</strong> Non-CpG methylation rates indicating conversion efficiency (>99% expected)</li><li class=\"list-item-node\"><strong>Aligned BAMs:</strong> Methylation-aware alignments for visualization in genome browsers</li><li class=\"list-item-node\"><strong>MultiQC Report:</strong> Comprehensive quality control summary with all metrics</li></ul><hr><p class=\"text-node\"><em>Built with <a href=\"https://www.nextflow.io/\">Nextflow</a> and the <a href=\"https://nf-co.re/methylseq\">nf-core/methylseq</a> pipeline v4.1.0</em></p>",
+  "version": "1.0.0",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/methylseq/1.6//docs/images/nf-core-methylseq_logo.png",
   "command": "rm -rf prod_apps && git clone --depth=1 --filter=blob:none --sparse https://github.com/CamberCloud-Inc/prod_apps.git && cd prod_apps && git sparse-checkout set nextflow/methylseq && cd .. && nextflow run nf-core/methylseq --input \"${input}\" --outdir \"${output}\" --genome ${genome} -r ${revision} -c /etc/mpi/nextflow.camber.config $(if [ $(nproc) -ge 60 ]; then echo \"-c prod_apps/nextflow/methylseq/override.config\"; fi)",
   "engineType": "NEXTFLOW",
@@ -11,7 +13,7 @@
       "label": "System Size",
       "name": "system_size",
       "hidden": true,
-      "description": "Selecting a preset will prefill the node configuration below. You can still edit the values.",
+      "description": "Choose computing power based on your dataset size. Larger genomes or more samples require more computational resources.",
       "options": [
         {
           "label": "Default",
@@ -36,29 +38,39 @@
   "spec": [
     {
       "type": "Stash File",
-      "label": "Input",
+      "label": "Input Samplesheet",
       "name": "input",
-      "description": "",
+      "description": "CSV file with sample information and FASTQ file paths (columns: sample, fastq_1, fastq_2).",
       "defaultValue": "",
       "hidden": false,
       "required": true,
-      "disabled": false
+      "disabled": false,
+      "restrictions": {
+        "allow_files": true,
+        "allow_folders": false,
+        "allowed_file_types": [".csv"]
+      }
     },
     {
       "type": "Stash File",
-      "label": "Output",
+      "label": "Output Directory",
       "name": "output",
-      "description": "",
+      "description": "Directory where results will be saved.",
       "defaultValue": "",
       "hidden": false,
       "required": true,
-      "disabled": false
+      "disabled": false,
+      "restrictions": {
+        "allow_files": false,
+        "allow_folders": true,
+        "allowed_file_types": []
+      }
     },
     {
       "type": "Input",
-      "label": "Revision",
+      "label": "Pipeline Revision",
       "name": "revision",
-      "description": "",
+      "description": "Version of nf-core/methylseq pipeline to use.",
       "defaultValue": "4.1.0",
       "hidden": true,
       "required": true,
@@ -66,9 +78,9 @@
     },
     {
       "type": "Select",
-      "label": "Genome",
+      "label": "Reference Genome",
       "name": "genome",
-      "description": "",
+      "description": "Select pre-configured reference genome. The pipeline will automatically download and prepare bisulfite conversion indices.",
       "defaultValue": "GRCh37",
       "hidden": false,
       "required": true,
