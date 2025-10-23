@@ -1,9 +1,9 @@
 {
-  "name": "methylseq-1",
+  "name": "methylseq",
   "description": "nf-core/methylseq is a bioinformatics analysis pipeline used for Methylation (Bisulfite) sequencing data. It pre-processes raw data from FastQ inputs, aligns the reads and performs extensive quality-control on the results.",
-  "content": "<h2 class=\"heading-node\"><strong>Introduction</strong></h2><p class=\"text-node\"><strong>nf-core/methylseq</strong> is a bioinformatics analysis pipeline used for Methylation (Bisulfite) sequencing data. It pre-processes raw data from FastQ inputs, aligns the reads and performs extensive quality-control on the results.</p><img src=\"https://raw.githubusercontent.com/nf-core/methylseq/4.0.0//docs/images/4.0.0_metromap.png\" alt=\"nf-core/methylseq metro map\" title=\"\" width=\"392\" height=\"256\"><p class=\"text-node\">The pipeline is built using <a class=\"link\" href=\"https://www.nextflow.io/\"><u>Nextflow</u></a>, a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker / Singularity containers making installation trivial and results highly reproducible.</p><p class=\"text-node\">On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources.The results obtained from the full-sized test can be viewed on the <a class=\"link\" href=\"https://nf-co.re/methylseq/results\"><u>nf-core website</u></a>.</p><blockquote class=\"block-node\"><p class=\"text-node\"><em>Read more about </em><strong><em>Bisulfite Sequencing &amp; Three-Base Aligners</em></strong><em> used in this pipeline </em><a class=\"link\" href=\"https://nf-co.re/methylseq/4.0.0/docs/bs-seq-primer/\"><em><u>here</u></em></a></p></blockquote><h2 class=\"heading-node\"><strong>Pipeline Summary</strong></h2><p class=\"text-node\">The pipeline allows you to choose between running either <a class=\"link\" href=\"https://github.com/FelixKrueger/Bismark\"><u>Bismark</u></a> or <a class=\"link\" href=\"https://github.com/brentp/bwa-meth\"><u>bwa-meth</u></a> / <a class=\"link\" href=\"https://github.com/dpryan79/methyldackel\"><u>MethylDackel</u></a>.</p><p class=\"text-node\">Choose between workflows by using <code class=\"inline\" spellcheck=\"false\">--aligner bismark</code> (default, uses bowtie2 for alignment), <code class=\"inline\" spellcheck=\"false\">--aligner bismark_hisat</code> or <code class=\"inline\" spellcheck=\"false\">--aligner bwameth</code>. For higher performance, the pipeline can leverage the <a class=\"link\" href=\"https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam_meth.html\"><u>Parabricks implementation of bwa-meth (fq2bammeth)</u></a>, which implements the baseline tool <code class=\"inline\" spellcheck=\"false\">bwa-meth</code> in a performant method using fq2bam (BWA-MEM + GATK) as a backend for processing on GPU. To use this option, include the <code class=\"inline\" spellcheck=\"false\">gpu</code> profile along with <code class=\"inline\" spellcheck=\"false\">--aligner bwameth</code>.</p>",
+  "content": "<h2 class=\"heading-node\"><strong>Introduction</strong></h2><p class=\"text-node\"><strong>nf-core/methylseq</strong> is a bioinformatics analysis pipeline used for Methylation (Bisulfite) sequencing data. It pre-processes raw data from FastQ inputs, aligns the reads and performs extensive quality-control on the results.</p><img src=\"https://raw.githubusercontent.com/nf-core/methylseq/4.0.0//docs/images/4.0.0_metromap.png\" alt=\"nf-core/methylseq metro map\" title=\"\" width=\"309\" height=\"201\"><p class=\"text-node\">The pipeline is built using <a class=\"link\" href=\"https://www.nextflow.io/\"><u>Nextflow</u></a>, a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker / Singularity containers making installation trivial and results highly reproducible.</p><p class=\"text-node\">On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources.The results obtained from the full-sized test can be viewed on the <a class=\"link\" href=\"https://nf-co.re/methylseq/results\"><u>nf-core website</u></a>.</p><blockquote class=\"block-node\"><p class=\"text-node\"><em>Read more about </em><strong><em>Bisulfite Sequencing &amp; Three-Base Aligners</em></strong><em> used in this pipeline </em><a class=\"link\" href=\"https://nf-co.re/methylseq/4.0.0/docs/bs-seq-primer/\"><em><u>here</u></em></a></p></blockquote><h2 class=\"heading-node\"><strong>Pipeline Summary</strong></h2><p class=\"text-node\">The pipeline allows you to choose between running either <a class=\"link\" href=\"https://github.com/FelixKrueger/Bismark\"><u>Bismark</u></a> or <a class=\"link\" href=\"https://github.com/brentp/bwa-meth\"><u>bwa-meth</u></a> / <a class=\"link\" href=\"https://github.com/dpryan79/methyldackel\"><u>MethylDackel</u></a>.</p><p class=\"text-node\">Choose between workflows by using <code class=\"inline\" spellcheck=\"false\">--aligner bismark</code> (default, uses bowtie2 for alignment), <code class=\"inline\" spellcheck=\"false\">--aligner bismark_hisat</code> or <code class=\"inline\" spellcheck=\"false\">--aligner bwameth</code>. For higher performance, the pipeline can leverage the <a class=\"link\" href=\"https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam_meth.html\"><u>Parabricks implementation of bwa-meth (fq2bammeth)</u></a>, which implements the baseline tool <code class=\"inline\" spellcheck=\"false\">bwa-meth</code> in a performant method using fq2bam (BWA-MEM + GATK) as a backend for processing on GPU. To use this option, include the <code class=\"inline\" spellcheck=\"false\">gpu</code> profile along with <code class=\"inline\" spellcheck=\"false\">--aligner bwameth</code>.</p>",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/methylseq/1.6//docs/images/nf-core-methylseq_logo.png",
-  "command": "nextflow run nf-core/methylseq --input ${input} --outdir ${output} --genome ${genome} -r ${revision}",
+  "command": "rm -rf prod_apps && git clone --depth=1 --filter=blob:none --sparse https://github.com/CamberCloud-Inc/prod_apps.git && cd prod_apps && git sparse-checkout set nextflow/methylseq && cd .. && bash prod_apps/nextflow/methylseq/methylseq_wrapper.sh --input \"${input}\" --outdir \"${output}\" --genome ${genome} -r ${revision} --override-config \"${overrideConfig}\"",
   "engineType": "NEXTFLOW",
   "jobConfig": [
     {
@@ -26,6 +26,13 @@
       "defaultValue": "default"
     }
   ],
+  "tags": [
+    {"name": "genomics", "type": "subfield"},
+    {"name": "analysis", "type": "task"},
+    {"name": "biology", "type": "field"}
+  ],
+  "upstreamApps": [],
+  "downstreamApps": [],
   "spec": [
     {
       "type": "Stash File",
@@ -52,8 +59,8 @@
       "label": "Revision",
       "name": "revision",
       "description": "",
-      "defaultValue": "3.0.0",
-      "hidden": false,
+      "defaultValue": "4.1.0",
+      "hidden": true,
       "required": true,
       "disabled": false
     },
@@ -61,52 +68,180 @@
       "type": "Select",
       "label": "Genome",
       "name": "genome",
-      "description": "Reference genome to use for alignment and methylation calling",
-      "defaultValue": "GRCh38",
+      "description": "",
+      "defaultValue": "GRCh37",
       "hidden": false,
       "required": true,
       "disabled": false,
       "options": [
-        {"label": "Human GRCh37 (Ensembl)", "value": "GRCh37"},
-        {"label": "Human GRCh38 (NCBI)", "value": "GRCh38"},
-        {"label": "Human CHM13 (UCSC)", "value": "CHM13"},
-        {"label": "Mouse GRCm38 (Ensembl)", "value": "GRCm38"},
-        {"label": "Arabidopsis TAIR10 (Ensembl)", "value": "TAIR10"},
-        {"label": "B. subtilis EB2 (Ensembl)", "value": "EB2"},
-        {"label": "Cow UMD3.1 (Ensembl)", "value": "UMD3.1"},
-        {"label": "C. elegans WBcel235 (Ensembl)", "value": "WBcel235"},
-        {"label": "Dog CanFam3.1 (Ensembl)", "value": "CanFam3.1"},
-        {"label": "Zebrafish GRCz10 (Ensembl)", "value": "GRCz10"},
-        {"label": "Fly BDGP6 (Ensembl)", "value": "BDGP6"},
-        {"label": "Horse EquCab2 (Ensembl)", "value": "EquCab2"},
-        {"label": "E. coli EB1 (Ensembl)", "value": "EB1"},
-        {"label": "Chicken Galgal4 (Ensembl)", "value": "Galgal4"},
-        {"label": "Soybean Gm01 (Ensembl)", "value": "Gm01"},
-        {"label": "Macaque Mmul_1 (Ensembl)", "value": "Mmul_1"},
-        {"label": "Rice IRGSP-1.0 (Ensembl)", "value": "IRGSP-1.0"},
-        {"label": "Chimp CHIMP2.1.4 (Ensembl)", "value": "CHIMP2.1.4"},
-        {"label": "Rat Rnor_5.0 (Ensembl)", "value": "Rnor_5.0"},
-        {"label": "Rat Rnor_6.0 (Ensembl)", "value": "Rnor_6.0"},
-        {"label": "Yeast R64-1-1 (Ensembl)", "value": "R64-1-1"},
-        {"label": "S. pombe EF2 (Ensembl)", "value": "EF2"},
-        {"label": "Sorghum Sbi1 (Ensembl)", "value": "Sbi1"},
-        {"label": "Pig Sscrofa10.2 (Ensembl)", "value": "Sscrofa10.2"},
-        {"label": "Maize AGPv3 (Ensembl)", "value": "AGPv3"},
-        {"label": "Human hg38 (UCSC)", "value": "hg38"},
-        {"label": "Human hg19 (UCSC)", "value": "hg19"},
-        {"label": "Mouse mm10 (UCSC)", "value": "mm10"},
-        {"label": "Cow bosTau8 (UCSC)", "value": "bosTau8"},
-        {"label": "C. elegans ce10 (UCSC)", "value": "ce10"},
-        {"label": "Dog canFam3 (UCSC)", "value": "canFam3"},
-        {"label": "Zebrafish danRer10 (UCSC)", "value": "danRer10"},
-        {"label": "Fly dm6 (UCSC)", "value": "dm6"},
-        {"label": "Horse equCab2 (UCSC)", "value": "equCab2"},
-        {"label": "Chicken galGal4 (UCSC)", "value": "galGal4"},
-        {"label": "Chimp panTro4 (UCSC)", "value": "panTro4"},
-        {"label": "Rat rn6 (UCSC)", "value": "rn6"},
-        {"label": "Yeast sacCer3 (UCSC)", "value": "sacCer3"},
-        {"label": "Pig susScr3 (UCSC)", "value": "susScr3"}
+        {
+          "label": "Human GRCh37 (Ensembl)",
+          "value": "GRCh37"
+        },
+        {
+          "label": "Human GRCh38 (NCBI)",
+          "value": "GRCh38"
+        },
+        {
+          "label": "Human CHM13 (UCSC)",
+          "value": "CHM13"
+        },
+        {
+          "label": "Mouse GRCm38 (Ensembl)",
+          "value": "GRCm38"
+        },
+        {
+          "label": "Arabidopsis TAIR10 (Ensembl)",
+          "value": "TAIR10"
+        },
+        {
+          "label": "B. subtilis EB2 (Ensembl)",
+          "value": "EB2"
+        },
+        {
+          "label": "Cow UMD3.1 (Ensembl)",
+          "value": "UMD3.1"
+        },
+        {
+          "label": "C. elegans WBcel235 (Ensembl)",
+          "value": "WBcel235"
+        },
+        {
+          "label": "Dog CanFam3.1 (Ensembl)",
+          "value": "CanFam3.1"
+        },
+        {
+          "label": "Zebrafish GRCz10 (Ensembl)",
+          "value": "GRCz10"
+        },
+        {
+          "label": "Fly BDGP6 (Ensembl)",
+          "value": "BDGP6"
+        },
+        {
+          "label": "Horse EquCab2 (Ensembl)",
+          "value": "EquCab2"
+        },
+        {
+          "label": "E. coli EB1 (Ensembl)",
+          "value": "EB1"
+        },
+        {
+          "label": "Chicken Galgal4 (Ensembl)",
+          "value": "Galgal4"
+        },
+        {
+          "label": "Soybean Gm01 (Ensembl)",
+          "value": "Gm01"
+        },
+        {
+          "label": "Macaque Mmul_1 (Ensembl)",
+          "value": "Mmul_1"
+        },
+        {
+          "label": "Rice IRGSP-1.0 (Ensembl)",
+          "value": "IRGSP-1.0"
+        },
+        {
+          "label": "Chimp CHIMP2.1.4 (Ensembl)",
+          "value": "CHIMP2.1.4"
+        },
+        {
+          "label": "Rat Rnor_5.0 (Ensembl)",
+          "value": "Rnor_5.0"
+        },
+        {
+          "label": "Rat Rnor_6.0 (Ensembl)",
+          "value": "Rnor_6.0"
+        },
+        {
+          "label": "Yeast R64-1-1 (Ensembl)",
+          "value": "R64-1-1"
+        },
+        {
+          "label": "S. pombe EF2 (Ensembl)",
+          "value": "EF2"
+        },
+        {
+          "label": "Sorghum Sbi1 (Ensembl)",
+          "value": "Sbi1"
+        },
+        {
+          "label": "Pig Sscrofa10.2 (Ensembl)",
+          "value": "Sscrofa10.2"
+        },
+        {
+          "label": "Maize AGPv3 (Ensembl)",
+          "value": "AGPv3"
+        },
+        {
+          "label": "Human hg38 (UCSC)",
+          "value": "hg38"
+        },
+        {
+          "label": "Human hg19 (UCSC)",
+          "value": "hg19"
+        },
+        {
+          "label": "Mouse mm10 (UCSC)",
+          "value": "mm10"
+        },
+        {
+          "label": "Cow bosTau8 (UCSC)",
+          "value": "bosTau8"
+        },
+        {
+          "label": "C. elegans ce10 (UCSC)",
+          "value": "ce10"
+        },
+        {
+          "label": "Dog canFam3 (UCSC)",
+          "value": "canFam3"
+        },
+        {
+          "label": "Zebrafish danRer10 (UCSC)",
+          "value": "danRer10"
+        },
+        {
+          "label": "Fly dm6 (UCSC)",
+          "value": "dm6"
+        },
+        {
+          "label": "Horse equCab2 (UCSC)",
+          "value": "equCab2"
+        },
+        {
+          "label": "Chicken galGal4 (UCSC)",
+          "value": "galGal4"
+        },
+        {
+          "label": "Chimp panTro4 (UCSC)",
+          "value": "panTro4"
+        },
+        {
+          "label": "Rat rn6 (UCSC)",
+          "value": "rn6"
+        },
+        {
+          "label": "Yeast sacCer3 (UCSC)",
+          "value": "sacCer3"
+        },
+        {
+          "label": "Pig susScr3 (UCSC)",
+          "value": "susScr3"
+        }
       ]
+    },
+    {
+      "type": "Stash File",
+      "label": "Override Config",
+      "name": "overrideConfig",
+      "description": "Optional configurations for tuning workflow resources",
+      "defaultValue": "",
+      "hidden": false,
+      "required": false,
+      "disabled": false
     }
   ]
 }
+
