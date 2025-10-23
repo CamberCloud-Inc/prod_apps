@@ -307,19 +307,22 @@ if [ $EXIT_CODE -eq 0 ]; then
     echo ""
     echo "[INFO] Preparing results for stash upload..."
 
-    # Determine absolute path for output directory
-    # Files in /home/camber are automatically synced to stash
-    if [[ "$OUTPUT_DIR" = /* ]]; then
-        # Absolute path
-        STASH_OUTPUT_DIR="$OUTPUT_DIR"
+    # Resolve output directory to /home/camber (stash root)
+    # Remove any ./ prefix and ensure clean path
+    CLEAN_OUTPUT_DIR=$(echo "$OUTPUT_DIR" | sed 's|^\./||')
+
+    if [[ "$CLEAN_OUTPUT_DIR" = /* ]]; then
+        # Already absolute path
+        STASH_OUTPUT_DIR="$CLEAN_OUTPUT_DIR"
     else
-        # Relative path - resolve to /home/camber base
-        STASH_OUTPUT_DIR="/home/camber/$OUTPUT_DIR"
+        # Relative path - place in /home/camber (stash root)
+        STASH_OUTPUT_DIR="/home/camber/$CLEAN_OUTPUT_DIR"
     fi
 
-    # Create output directory
-    mkdir -p "$STASH_OUTPUT_DIR"
     echo "[INFO] Output directory: $STASH_OUTPUT_DIR"
+
+    # Ensure directory exists
+    mkdir -p "$STASH_OUTPUT_DIR"
 
     # Copy all output files to output directory
     echo "[INFO] Copying results..."
