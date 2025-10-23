@@ -31,6 +31,9 @@ mkdir -p "$WORK_DIR"
 # Capture the current directory where prod_apps was cloned
 PROD_APPS_DIR="$(pwd)/prod_apps"
 
+# Capture the stash mount point (current working directory) before changing dirs
+STASH_MOUNT_DIR="$(pwd)"
+
 echo "=============================================="
 echo "  MethylC-analyzer Camber Wrapper"
 echo "=============================================="
@@ -308,21 +311,21 @@ if [ $EXIT_CODE -eq 0 ]; then
     echo "[INFO] Preparing results for stash upload..."
 
     # Ensure output is in the working directory where stash is mounted
-    # The stash is mounted at /home/camber/workdir ($(pwd)), NOT at /home/camber directly
+    # The stash is mounted at /home/camber/workdir (saved in $STASH_MOUNT_DIR)
     # Remove any ./ prefix
     CLEAN_OUTPUT_DIR=$(echo "$OUTPUT_DIR" | sed 's|^\./||')
 
-    # Always place output in current working directory (where stash is mounted)
+    # Always place output in stash mount directory (captured at script start)
     if [[ "$CLEAN_OUTPUT_DIR" = /* ]]; then
         # Absolute path - use as is
         STASH_OUTPUT_DIR="$CLEAN_OUTPUT_DIR"
     else
-        # Relative path - place in current working directory (stash mount point)
-        STASH_OUTPUT_DIR="$(pwd)/$CLEAN_OUTPUT_DIR"
+        # Relative path - place in stash mount directory
+        STASH_OUTPUT_DIR="$STASH_MOUNT_DIR/$CLEAN_OUTPUT_DIR"
     fi
 
     echo "[INFO] Output directory: $STASH_OUTPUT_DIR"
-    echo "[INFO] Working directory (stash mount point): $(pwd)"
+    echo "[INFO] Stash mount directory: $STASH_MOUNT_DIR"
 
     # Ensure directory exists
     mkdir -p "$STASH_OUTPUT_DIR"
