@@ -307,28 +307,37 @@ if [ $EXIT_CODE -eq 0 ]; then
     echo ""
     echo "[INFO] Preparing results for stash upload..."
 
-    # Create output directory in current working directory
-    # The path is relative to /home/camber (workdir), which auto-syncs to stash
-    mkdir -p "$OUTPUT_DIR"
+    # Determine absolute path for output directory
+    # Files in /home/camber are automatically synced to stash
+    if [[ "$OUTPUT_DIR" = /* ]]; then
+        # Absolute path
+        STASH_OUTPUT_DIR="$OUTPUT_DIR"
+    else
+        # Relative path - resolve to /home/camber base
+        STASH_OUTPUT_DIR="/home/camber/$OUTPUT_DIR"
+    fi
+
+    # Create output directory
+    mkdir -p "$STASH_OUTPUT_DIR"
+    echo "[INFO] Output directory: $STASH_OUTPUT_DIR"
 
     # Copy all output files to output directory
-    echo "[INFO] Copying results to $OUTPUT_DIR..."
-    cp "$WORK_DIR"/*.txt "$OUTPUT_DIR/" 2>/dev/null || true
-    cp "$WORK_DIR"/*.pdf "$OUTPUT_DIR/" 2>/dev/null || true
-    cp "$WORK_DIR"/*.png "$OUTPUT_DIR/" 2>/dev/null || true
-    cp "$WORK_DIR"/*.bed "$OUTPUT_DIR/" 2>/dev/null || true
+    echo "[INFO] Copying results..."
+    cp "$WORK_DIR"/*.txt "$STASH_OUTPUT_DIR/" 2>/dev/null || true
+    cp "$WORK_DIR"/*.pdf "$STASH_OUTPUT_DIR/" 2>/dev/null || true
+    cp "$WORK_DIR"/*.png "$STASH_OUTPUT_DIR/" 2>/dev/null || true
+    cp "$WORK_DIR"/*.bed "$STASH_OUTPUT_DIR/" 2>/dev/null || true
 
     echo ""
-    echo "Output files copied to $OUTPUT_DIR:"
-    ls -lh "$OUTPUT_DIR" | tail -n +2
+    echo "Output files copied to $STASH_OUTPUT_DIR:"
+    ls -lh "$STASH_OUTPUT_DIR" | tail -n +2
     echo ""
 
     echo "=============================================="
     echo "  Analysis Complete!"
     echo "=============================================="
     echo ""
-    echo "Results location: $OUTPUT_DIR"
-    echo "Files will be automatically uploaded to stash"
+    echo "Results will be automatically uploaded to stash"
 fi
 
 exit $EXIT_CODE
