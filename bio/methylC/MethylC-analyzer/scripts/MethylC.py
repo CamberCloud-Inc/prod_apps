@@ -7,6 +7,9 @@ import numpy as np
 #import seaborn as sns
 import os
 import random
+
+# Get the directory where this script is located
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 #import matplotlib
 #if os.environ.get('DISPLAY','') == '':
 #    print('no display found. Using non-interactive Agg backend')
@@ -527,7 +530,7 @@ bed12=[exon,intron,utr5,cds,utr3]
 
 annotation_name=[promoter,gene,exon,intron,utr5,cds,utr3,igr]
 
-subprocess.call('''python /MethylC-analyzer/scripts/extract_transcript_regions.py -i %s -o %s --gtf'''%(input_gtf_file,input_gtf_file), shell=True)
+subprocess.call('''python %s/extract_transcript_regions.py -i %s -o %s --gtf'''%(SCRIPT_DIR,input_gtf_file,input_gtf_file), shell=True)
 
 #Convert this blockbed (bed12) to bed6|
 for i in bed12:
@@ -538,7 +541,7 @@ subprocess.call('''rm %s*3utr.bed %s*5utr.bed %s*_cds.bed %s*_exons.bed %s*_intr
 subprocess.call('''rm %s*_coding*.bed %s*noncoding*.bed %s*5utr_start.bed'''%(path_to_files,path_to_files,path_to_files),shell=True)
 
 #find gene_body.bed
-genes = pd.read_csv(str(input_gtf_file), header=None, sep="\t",dtype = {0 :str})
+genes = pd.read_csv(str(input_gtf_file), header=None, sep="\t",dtype = {0 :str}, comment='#')
 #input_gene=pd.read_csv(str(input_gtf_file),sep='\t',header=None)
 
 #genes=genes[genes[0].str.len()<=5]
