@@ -307,21 +307,22 @@ if [ $EXIT_CODE -eq 0 ]; then
     echo ""
     echo "[INFO] Preparing results for stash upload..."
 
-    # Ensure output is in ~/ (/home/camber) for write permissions and stash sync
+    # Ensure output is in the working directory where stash is mounted
+    # The stash is mounted at /home/camber/workdir ($(pwd)), NOT at /home/camber directly
     # Remove any ./ prefix
     CLEAN_OUTPUT_DIR=$(echo "$OUTPUT_DIR" | sed 's|^\./||')
 
-    # Always place in ~/  (/home/camber) - required for write permissions
+    # Always place output in current working directory (where stash is mounted)
     if [[ "$CLEAN_OUTPUT_DIR" = /* ]]; then
-        # Absolute path - use as is if already in /home/camber
+        # Absolute path - use as is
         STASH_OUTPUT_DIR="$CLEAN_OUTPUT_DIR"
     else
-        # Relative path - place in ~/ (/home/camber)
-        STASH_OUTPUT_DIR="$HOME/$CLEAN_OUTPUT_DIR"
+        # Relative path - place in current working directory (stash mount point)
+        STASH_OUTPUT_DIR="$(pwd)/$CLEAN_OUTPUT_DIR"
     fi
 
     echo "[INFO] Output directory: $STASH_OUTPUT_DIR"
-    echo "[INFO] HOME is: $HOME"
+    echo "[INFO] Working directory (stash mount point): $(pwd)"
 
     # Ensure directory exists
     mkdir -p "$STASH_OUTPUT_DIR"
