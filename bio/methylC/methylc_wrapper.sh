@@ -302,42 +302,33 @@ bash "$WORK_DIR/methylc_setup.sh"
 
 EXIT_CODE=$?
 
-# Copy results to output directory (stash)
+# Copy results to output directory (which is automatically synced to stash)
 if [ $EXIT_CODE -eq 0 ]; then
     echo ""
-    echo "[INFO] Preparing results for upload to stash..."
+    echo "[INFO] Preparing results for stash upload..."
 
-    # Create temporary results directory
-    RESULTS_DIR="/tmp/methylc_results"
-    mkdir -p "$RESULTS_DIR"
+    # Create output directory in current working directory
+    # The path is relative to /home/camber (workdir), which auto-syncs to stash
+    mkdir -p "$OUTPUT_DIR"
 
-    # Copy all output files to temp directory
-    cp "$WORK_DIR"/*.txt "$RESULTS_DIR/" 2>/dev/null || true
-    cp "$WORK_DIR"/*.pdf "$RESULTS_DIR/" 2>/dev/null || true
-    cp "$WORK_DIR"/*.png "$RESULTS_DIR/" 2>/dev/null || true
-    cp "$WORK_DIR"/*.bed "$RESULTS_DIR/" 2>/dev/null || true
-
-    echo "[INFO] Files prepared in $RESULTS_DIR"
-    echo ""
-    echo "Output files:"
-    ls -lh "$RESULTS_DIR" | tail -n +2
-    echo ""
-
-    # Copy results to stash using camber CLI
-    echo "[INFO] Uploading results to stash: $OUTPUT_DIR"
-    if command -v camber >/dev/null 2>&1; then
-        camber stash cp -r "$RESULTS_DIR" "$OUTPUT_DIR/" || echo "[WARNING] Failed to upload to stash, results are in $RESULTS_DIR"
-    else
-        echo "[WARNING] camber CLI not available, results remain in $RESULTS_DIR"
-    fi
+    # Copy all output files to output directory
+    echo "[INFO] Copying results to $OUTPUT_DIR..."
+    cp "$WORK_DIR"/*.txt "$OUTPUT_DIR/" 2>/dev/null || true
+    cp "$WORK_DIR"/*.pdf "$OUTPUT_DIR/" 2>/dev/null || true
+    cp "$WORK_DIR"/*.png "$OUTPUT_DIR/" 2>/dev/null || true
+    cp "$WORK_DIR"/*.bed "$OUTPUT_DIR/" 2>/dev/null || true
 
     echo ""
+    echo "Output files copied to $OUTPUT_DIR:"
+    ls -lh "$OUTPUT_DIR" | tail -n +2
+    echo ""
+
     echo "=============================================="
     echo "  Analysis Complete!"
     echo "=============================================="
     echo ""
-    echo "Results location: $RESULTS_DIR"
-    echo "Stash location: $OUTPUT_DIR"
+    echo "Results location: $OUTPUT_DIR"
+    echo "Files will be automatically uploaded to stash"
 fi
 
 exit $EXIT_CODE
