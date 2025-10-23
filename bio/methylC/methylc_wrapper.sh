@@ -112,8 +112,10 @@ WORK_DIR="/home/camber/manu"
 SOURCE_CGMAP="$WORK_DIR/GSM5761347_S52_7B_01.CGmap_hq.CGmap.gz"
 GTF_FILE_GZ="$WORK_DIR/hg38.ncbiRefSeq.gtf.gz"
 GTF_FILE="$WORK_DIR/hg38.ncbiRefSeq.gtf"
-# MethylC-analyzer is cloned to /tmp/prod_apps by the app command
-METHYLC_DIR="/tmp/prod_apps/bio/methylC/MethylC-analyzer"
+# MethylC-analyzer is cloned to current directory by app command
+# Capture the calling directory before we cd to WORK_DIR
+CALLING_DIR="$(pwd)"
+METHYLC_DIR="${CALLING_DIR}/prod_apps/bio/methylC/MethylC-analyzer"
 GROUP_A="__GROUP_A__"
 GROUP_B="__GROUP_B__"
 
