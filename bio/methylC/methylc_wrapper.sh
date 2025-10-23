@@ -84,14 +84,48 @@ if [ -z "$GTF_FOUND" ]; then
     exit 1
 fi
 
-# Copy input files to working directory
-echo "[INFO] Copying input files to $WORK_DIR..."
-cp "$CGMAP_FOUND" "$WORK_DIR/GSM5761347_S52_7B_01.CGmap_hq.CGmap.gz"
+# Check file type and convert if needed
+echo "[INFO] Checking input file type..."
+CGMAP_BASENAME=$(basename "$CGMAP_FOUND")
+FINAL_CGMAP="$WORK_DIR/GSM5761347_S52_7B_01.CGmap_hq.CGmap.gz"
+
+# Check if file is a CX report (Bismark format) that needs conversion
+if [[ "$CGMAP_BASENAME" =~ \.txt(\.gz)?$ ]] && [[ ! "$CGMAP_BASENAME" =~ \.CGmap\.gz$ ]]; then
+    echo "[INFO] Detected Bismark CX report file. Converting to CGmap format..."
+
+    # Copy the CX report file to working directory first
+    cp "$CGMAP_FOUND" "$WORK_DIR/$CGMAP_BASENAME"
+
+    # Install pandas if not available (required for conversion script)
+    pip3 install --quiet pandas numpy 2>/dev/null || echo "[WARNING] pandas/numpy may already be installed"
+
+    # Run conversion script
+    python3 "$PROD_APPS_DIR/bio/methylC/MethylC-analyzer/scripts/methcalls2cgmap.py" \
+        -n "$WORK_DIR/$CGMAP_BASENAME" \
+        -f bismark
+
+    # The conversion creates a file with .CGmap.gz appended
+    CONVERTED_FILE="$WORK_DIR/${CGMAP_BASENAME}.CGmap.gz"
+
+    if [ -f "$CONVERTED_FILE" ]; then
+        mv "$CONVERTED_FILE" "$FINAL_CGMAP"
+        echo "[INFO] ✓ Conversion successful: $CGMAP_BASENAME → CGmap format"
+    else
+        echo "[ERROR] Conversion failed. Expected output: $CONVERTED_FILE"
+        exit 1
+    fi
+else
+    echo "[INFO] CGmap format detected. No conversion needed."
+    cp "$CGMAP_FOUND" "$FINAL_CGMAP"
+fi
+
+# Copy GTF file to working directory
+echo "[INFO] Copying GTF file to $WORK_DIR..."
 cp "$GTF_FOUND" "$WORK_DIR/hg38.ncbiRefSeq.gtf.gz"
 
 cd "$WORK_DIR"
 
-echo "[INFO] Files copied successfully"
+echo "[INFO] Files prepared successfully"
 echo ""
 
 # Create the main setup script with parameterized values

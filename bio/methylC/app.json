@@ -48,9 +48,9 @@
   "spec": [
     {
       "type": "Stash File",
-      "label": "CGmap File",
+      "label": "Methylation Calls File",
       "name": "cgmap_file",
-      "description": "Source CGmap file (compressed .gz format) from bisulfite sequencing. This file will be used to create sample replicates.",
+      "description": "Methylation calls file from bisulfite sequencing. Accepts CGmap format (.CGmap.gz) OR Bismark CX report files (.txt, .txt.gz). CX report files will be automatically converted to CGmap format.",
       "defaultValue": "",
       "hidden": false,
       "required": true,
@@ -58,7 +58,7 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".gz", ".CGmap.gz"]
+        "allowed_file_types": [".gz", ".CGmap.gz", ".txt", ".txt.gz"]
       }
     },
     {
