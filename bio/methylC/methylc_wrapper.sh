@@ -28,6 +28,9 @@ fi
 WORK_DIR="/home/camber/manu"
 mkdir -p "$WORK_DIR"
 
+# Capture the current directory where prod_apps was cloned
+PROD_APPS_DIR="$(pwd)/prod_apps"
+
 echo "=============================================="
 echo "  MethylC-analyzer Camber Wrapper"
 echo "=============================================="
@@ -112,10 +115,8 @@ WORK_DIR="/home/camber/manu"
 SOURCE_CGMAP="$WORK_DIR/GSM5761347_S52_7B_01.CGmap_hq.CGmap.gz"
 GTF_FILE_GZ="$WORK_DIR/hg38.ncbiRefSeq.gtf.gz"
 GTF_FILE="$WORK_DIR/hg38.ncbiRefSeq.gtf"
-# MethylC-analyzer is cloned to current directory by app command
-# Capture the calling directory before we cd to WORK_DIR
-CALLING_DIR="$(pwd)"
-METHYLC_DIR="${CALLING_DIR}/prod_apps/bio/methylC/MethylC-analyzer"
+# MethylC-analyzer path will be substituted from outer wrapper
+METHYLC_DIR="__PROD_APPS_DIR__/bio/methylC/MethylC-analyzer"
 GROUP_A="__GROUP_A__"
 GROUP_B="__GROUP_B__"
 
@@ -253,6 +254,7 @@ exit $EXIT_CODE
 MAINSCRIPT
 
 # Replace placeholders with actual values
+sed -i "s|__PROD_APPS_DIR__|$PROD_APPS_DIR|g" "$WORK_DIR/methylc_setup.sh"
 sed -i "s/__GROUP_A__/$GROUP_A/g" "$WORK_DIR/methylc_setup.sh"
 sed -i "s/__GROUP_B__/$GROUP_B/g" "$WORK_DIR/methylc_setup.sh"
 
