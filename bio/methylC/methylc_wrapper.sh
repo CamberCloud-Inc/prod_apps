@@ -307,19 +307,21 @@ if [ $EXIT_CODE -eq 0 ]; then
     echo ""
     echo "[INFO] Preparing results for stash upload..."
 
-    # Resolve output directory to /home/camber (stash root)
-    # Remove any ./ prefix and ensure clean path
+    # Ensure output is in ~/ (/home/camber) for write permissions and stash sync
+    # Remove any ./ prefix
     CLEAN_OUTPUT_DIR=$(echo "$OUTPUT_DIR" | sed 's|^\./||')
 
+    # Always place in ~/  (/home/camber) - required for write permissions
     if [[ "$CLEAN_OUTPUT_DIR" = /* ]]; then
-        # Already absolute path
+        # Absolute path - use as is if already in /home/camber
         STASH_OUTPUT_DIR="$CLEAN_OUTPUT_DIR"
     else
-        # Relative path - place in /home/camber (stash root)
-        STASH_OUTPUT_DIR="/home/camber/$CLEAN_OUTPUT_DIR"
+        # Relative path - place in ~/ (/home/camber)
+        STASH_OUTPUT_DIR="$HOME/$CLEAN_OUTPUT_DIR"
     fi
 
     echo "[INFO] Output directory: $STASH_OUTPUT_DIR"
+    echo "[INFO] HOME is: $HOME"
 
     # Ensure directory exists
     mkdir -p "$STASH_OUTPUT_DIR"
@@ -332,15 +334,15 @@ if [ $EXIT_CODE -eq 0 ]; then
     cp "$WORK_DIR"/*.bed "$STASH_OUTPUT_DIR/" 2>/dev/null || true
 
     echo ""
-    echo "Output files copied to $STASH_OUTPUT_DIR:"
-    ls -lh "$STASH_OUTPUT_DIR" | tail -n +2
+    echo "Output files in $STASH_OUTPUT_DIR:"
+    ls -lh "$STASH_OUTPUT_DIR" 2>/dev/null | tail -n +2 || echo "  Directory empty or inaccessible"
     echo ""
 
     echo "=============================================="
     echo "  Analysis Complete!"
     echo "=============================================="
     echo ""
-    echo "Results will be automatically uploaded to stash"
+    echo "Results location: $STASH_OUTPUT_DIR"
 fi
 
 exit $EXIT_CODE
