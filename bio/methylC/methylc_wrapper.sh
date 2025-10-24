@@ -5,22 +5,26 @@
 # This wrapper script accepts parameters from the Camber app and runs the
 # main setup and analysis script with custom configuration.
 #
-# Usage: bash methylc_wrapper.sh <cgmap_file> <gtf_file> <output_dir> <group_a> <group_b>
+# Usage: bash methylc_wrapper.sh <input_path> <gtf_file> <output_dir> <group_a> <group_b>
+#        input_path can be:
+#          - Single CGmap.gz file
+#          - Single CpG_report.txt.gz file (will be converted)
+#          - Directory containing multiple CpG_report.txt.gz files (auto-discover)
 #==============================================================================
 
 set -e  # Exit on any error
 
 # Parse command line arguments
-CGMAP_FILE="$1"
+INPUT_PATH="$1"
 GTF_FILE="$2"
 OUTPUT_DIR="$3"
 GROUP_A="${4:-met1}"
 GROUP_B="${5:-WT}"
 
 # Validate arguments
-if [ -z "$CGMAP_FILE" ] || [ -z "$GTF_FILE" ] || [ -z "$OUTPUT_DIR" ]; then
+if [ -z "$INPUT_PATH" ] || [ -z "$GTF_FILE" ] || [ -z "$OUTPUT_DIR" ]; then
     echo "Error: Missing required arguments"
-    echo "Usage: $0 <cgmap_file> <gtf_file> <output_dir> [group_a] [group_b]"
+    echo "Usage: $0 <input_path> <gtf_file> <output_dir> [group_a] [group_b]"
     exit 1
 fi
 
@@ -39,7 +43,7 @@ echo "  MethylC-analyzer Camber Wrapper"
 echo "=============================================="
 echo ""
 echo "Configuration:"
-echo "  CGmap File:    $CGMAP_FILE"
+echo "  Input Path:    $INPUT_PATH"
 echo "  GTF File:      $GTF_FILE"
 echo "  Output Dir:    $OUTPUT_DIR"
 echo "  Group A:       $GROUP_A"
@@ -52,19 +56,33 @@ echo "[INFO] Current directory: $(pwd)"
 echo "[INFO] Looking for input files..."
 ls -lah . 2>/dev/null | head -20
 
-# Try to find the files in various locations
-CGMAP_FOUND=""
-GTF_FOUND=""
+# Find input path (file or directory)
+INPUT_FOUND=""
+IS_DIRECTORY=false
 
-# Search for files
-for search_path in "$CGMAP_FILE" "./$CGMAP_FILE" "/home/camber/$CGMAP_FILE" "$(pwd)/$CGMAP_FILE"; do
-    if [ -f "$search_path" ]; then
-        CGMAP_FOUND="$search_path"
-        echo "[INFO] Found CGmap at: $CGMAP_FOUND"
+for search_path in "$INPUT_PATH" "./$INPUT_PATH" "/home/camber/$INPUT_PATH" "$(pwd)/$INPUT_PATH"; do
+    if [ -d "$search_path" ]; then
+        INPUT_FOUND="$search_path"
+        IS_DIRECTORY=true
+        echo "[INFO] Found input directory at: $INPUT_FOUND"
+        break
+    elif [ -f "$search_path" ]; then
+        INPUT_FOUND="$search_path"
+        IS_DIRECTORY=false
+        echo "[INFO] Found input file at: $INPUT_FOUND"
         break
     fi
 done
 
+if [ -z "$INPUT_FOUND" ]; then
+    echo "[ERROR] Input path not found. Searched: $INPUT_PATH"
+    echo "[DEBUG] Directory listing:"
+    find . -maxdepth 2 -type f -name "*.gz" -o -name "*.CGmap*" -o -type d 2>/dev/null | head -10
+    exit 1
+fi
+
+# Find GTF file
+GTF_FOUND=""
 for search_path in "$GTF_FILE" "./$GTF_FILE" "/home/camber/$GTF_FILE" "$(pwd)/$GTF_FILE"; do
     if [ -f "$search_path" ]; then
         GTF_FOUND="$search_path"
@@ -73,13 +91,6 @@ for search_path in "$GTF_FILE" "./$GTF_FILE" "/home/camber/$GTF_FILE" "$(pwd)/$G
     fi
 done
 
-if [ -z "$CGMAP_FOUND" ]; then
-    echo "[ERROR] CGmap file not found. Searched: $CGMAP_FILE"
-    echo "[DEBUG] Directory listing:"
-    find . -name "*.gz" -o -name "*.CGmap*" 2>/dev/null | head -10
-    exit 1
-fi
-
 if [ -z "$GTF_FOUND" ]; then
     echo "[ERROR] GTF file not found. Searched: $GTF_FILE"
     echo "[DEBUG] Directory listing:"
@@ -87,44 +98,148 @@ if [ -z "$GTF_FOUND" ]; then
     exit 1
 fi
 
-# Check file type and convert if needed
-echo "[INFO] Checking input file type..."
-CGMAP_BASENAME=$(basename "$CGMAP_FOUND")
-FINAL_CGMAP="$WORK_DIR/GSM5761347_S52_7B_01.CGmap_hq.CGmap.gz"
-
-# Check if file is a CX report (Bismark format) that needs conversion
-if [[ "$CGMAP_BASENAME" =~ \.txt(\.gz)?$ ]] && [[ ! "$CGMAP_BASENAME" =~ \.CGmap\.gz$ ]]; then
-    echo "[INFO] Detected Bismark CX report file. Converting to CGmap format..."
-
-    # Copy the CX report file to working directory first
-    cp "$CGMAP_FOUND" "$WORK_DIR/$CGMAP_BASENAME"
-
-    # Install pandas if not available (required for conversion script)
-    pip3 install --quiet pandas numpy 2>/dev/null || echo "[WARNING] pandas/numpy may already be installed"
-
-    # Run conversion script
-    python3 "$PROD_APPS_DIR/bio/methylC/MethylC-analyzer/scripts/methcalls2cgmap.py" \
-        -n "$WORK_DIR/$CGMAP_BASENAME" \
-        -f bismark
-
-    # The conversion creates a file with .CGmap.gz appended
-    CONVERTED_FILE="$WORK_DIR/${CGMAP_BASENAME}.CGmap.gz"
-
-    if [ -f "$CONVERTED_FILE" ]; then
-        mv "$CONVERTED_FILE" "$FINAL_CGMAP"
-        echo "[INFO] ✓ Conversion successful: $CGMAP_BASENAME → CGmap format"
-    else
-        echo "[ERROR] Conversion failed. Expected output: $CONVERTED_FILE"
-        exit 1
-    fi
-else
-    echo "[INFO] CGmap format detected. No conversion needed."
-    cp "$CGMAP_FOUND" "$FINAL_CGMAP"
-fi
-
 # Copy GTF file to working directory
 echo "[INFO] Copying GTF file to $WORK_DIR..."
 cp "$GTF_FOUND" "$WORK_DIR/hg38.ncbiRefSeq.gtf.gz"
+
+# Install pandas if not available (required for conversion script)
+echo "[INFO] Installing Python dependencies..."
+pip3 install --quiet pandas numpy 2>/dev/null || echo "[WARNING] pandas/numpy may already be installed"
+
+# Process input based on type
+if [ "$IS_DIRECTORY" = true ]; then
+    echo ""
+    echo "=============================================="
+    echo "  DIRECTORY MODE: Auto-discovering Bismark reports"
+    echo "=============================================="
+    echo ""
+
+    # Find all CpG_report files in the directory
+    echo "[INFO] Searching for CpG_report.txt.gz files in: $INPUT_FOUND"
+
+    # Search for bismark report files (recursively, up to 3 levels deep)
+    REPORT_FILES=$(find "$INPUT_FOUND" -maxdepth 3 -type f \( -name "*CpG_report.txt.gz" -o -name "*report.txt.gz" \) 2>/dev/null | sort)
+
+    if [ -z "$REPORT_FILES" ]; then
+        echo "[ERROR] No CpG_report.txt.gz files found in directory: $INPUT_FOUND"
+        echo "[DEBUG] Directory contents:"
+        find "$INPUT_FOUND" -maxdepth 2 -type f 2>/dev/null | head -20
+        exit 1
+    fi
+
+    echo "[INFO] Found $(echo "$REPORT_FILES" | wc -l) report file(s):"
+    echo "$REPORT_FILES"
+    echo ""
+
+    # Convert each report file to CGmap format
+    SAMPLE_INDEX=0
+    > "$WORK_DIR/samples_list.txt"  # Clear samples list
+
+    for REPORT_FILE in $REPORT_FILES; do
+        SAMPLE_INDEX=$((SAMPLE_INDEX + 1))
+        REPORT_BASENAME=$(basename "$REPORT_FILE")
+        SAMPLE_NAME=$(echo "$REPORT_BASENAME" | sed 's/\.CpG_report\.txt\.gz$//' | sed 's/\.txt\.gz$//')
+
+        echo "[INFO] Processing sample $SAMPLE_INDEX: $SAMPLE_NAME"
+        echo "       Source: $REPORT_FILE"
+
+        # Copy report to working directory
+        cp "$REPORT_FILE" "$WORK_DIR/$REPORT_BASENAME"
+
+        # Convert to CGmap format
+        echo "       Converting to CGmap format..."
+        python3 "$PROD_APPS_DIR/bio/methylC/MethylC-analyzer/scripts/methcalls2cgmap.py" \
+            -n "$WORK_DIR/$REPORT_BASENAME" \
+            -f bismark
+
+        # The conversion creates a file with .CGmap.gz appended
+        CONVERTED_FILE="$WORK_DIR/${REPORT_BASENAME}.CGmap.gz"
+        FINAL_CGMAP="$WORK_DIR/${SAMPLE_NAME}.CGmap.gz"
+
+        if [ -f "$CONVERTED_FILE" ]; then
+            mv "$CONVERTED_FILE" "$FINAL_CGMAP"
+            echo "       ✓ Converted: $FINAL_CGMAP"
+        else
+            echo "[ERROR] Conversion failed for $REPORT_BASENAME"
+            exit 1
+        fi
+
+        # Assign to groups: first half to GROUP_B (control), second half to GROUP_A (treatment)
+        TOTAL_SAMPLES=$(echo "$REPORT_FILES" | wc -l)
+        HALF_SAMPLES=$(( (TOTAL_SAMPLES + 1) / 2 ))
+
+        if [ $SAMPLE_INDEX -le $HALF_SAMPLES ]; then
+            GROUP="$GROUP_B"
+        else
+            GROUP="$GROUP_A"
+        fi
+
+        # Add to samples list (tab-delimited)
+        echo -e "${SAMPLE_NAME}\t${SAMPLE_NAME}.CGmap.gz\t${GROUP}" >> "$WORK_DIR/samples_list.txt"
+        echo "       Assigned to group: $GROUP"
+        echo ""
+    done
+
+    echo "[INFO] ✓ Processed $SAMPLE_INDEX samples successfully"
+    echo "[INFO] Samples list:"
+    cat "$WORK_DIR/samples_list.txt"
+    echo ""
+
+else
+    echo ""
+    echo "=============================================="
+    echo "  SINGLE FILE MODE"
+    echo "=============================================="
+    echo ""
+
+    # Single file processing
+    INPUT_BASENAME=$(basename "$INPUT_FOUND")
+    FINAL_CGMAP="$WORK_DIR/sample.CGmap.gz"
+
+    # Check if file is a CX report (Bismark format) that needs conversion
+    if [[ "$INPUT_BASENAME" =~ \.txt(\.gz)?$ ]] && [[ ! "$INPUT_BASENAME" =~ \.CGmap\.gz$ ]]; then
+        echo "[INFO] Detected Bismark CX report file. Converting to CGmap format..."
+
+        # Copy the CX report file to working directory first
+        cp "$INPUT_FOUND" "$WORK_DIR/$INPUT_BASENAME"
+
+        # Run conversion script
+        python3 "$PROD_APPS_DIR/bio/methylC/MethylC-analyzer/scripts/methcalls2cgmap.py" \
+            -n "$WORK_DIR/$INPUT_BASENAME" \
+            -f bismark
+
+        # The conversion creates a file with .CGmap.gz appended
+        CONVERTED_FILE="$WORK_DIR/${INPUT_BASENAME}.CGmap.gz"
+
+        if [ -f "$CONVERTED_FILE" ]; then
+            mv "$CONVERTED_FILE" "$FINAL_CGMAP"
+            echo "[INFO] ✓ Conversion successful: $INPUT_BASENAME → CGmap format"
+        else
+            echo "[ERROR] Conversion failed. Expected output: $CONVERTED_FILE"
+            exit 1
+        fi
+    else
+        echo "[INFO] CGmap format detected. No conversion needed."
+        cp "$INPUT_FOUND" "$FINAL_CGMAP"
+    fi
+
+    # Create sample replicates for testing (duplicate same file 4 times)
+    echo "[INFO] Creating test replicates (duplicating input file)..."
+    cp "$FINAL_CGMAP" "$WORK_DIR/wt1.CGmap.gz"
+    cp "$FINAL_CGMAP" "$WORK_DIR/wt2.CGmap.gz"
+    cp "$FINAL_CGMAP" "$WORK_DIR/met1_1.CGmap.gz"
+    cp "$FINAL_CGMAP" "$WORK_DIR/met1_2.CGmap.gz"
+
+    # Create samples_list.txt with replicate structure
+    cat > "$WORK_DIR/samples_list.txt" << EOF
+wt1	wt1.CGmap.gz	$GROUP_B
+wt2	wt2.CGmap.gz	$GROUP_B
+met1_1	met1_1.CGmap.gz	$GROUP_A
+met1_2	met1_2.CGmap.gz	$GROUP_A
+EOF
+
+    echo "[INFO] ✓ Sample files prepared (4 replicates for testing)"
+fi
 
 cd "$WORK_DIR"
 
@@ -149,7 +264,6 @@ warning() { echo -e "${YELLOW}[WARNING]${NC} $1"; }
 info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 
 WORK_DIR="/home/camber/manu"
-SOURCE_CGMAP="$WORK_DIR/GSM5761347_S52_7B_01.CGmap_hq.CGmap.gz"
 GTF_FILE_GZ="$WORK_DIR/hg38.ncbiRefSeq.gtf.gz"
 GTF_FILE="$WORK_DIR/hg38.ncbiRefSeq.gtf"
 # MethylC-analyzer path will be substituted from outer wrapper
@@ -236,24 +350,27 @@ else
     info "GTF already extracted: $(wc -l < $GTF_FILE) lines"
 fi
 
-# Create sample replicates with absolute paths
-log "Creating sample replicates..."
-cp "$SOURCE_CGMAP" "$WORK_DIR/wt1.CGmap.gz"
-cp "$SOURCE_CGMAP" "$WORK_DIR/wt2.CGmap.gz"
-cp "$SOURCE_CGMAP" "$WORK_DIR/met1_1.CGmap.gz"
-cp "$SOURCE_CGMAP" "$WORK_DIR/met1_2.CGmap.gz"
+# Verify samples_list.txt exists and has content
+log "Verifying sample files..."
+if [ ! -f "$WORK_DIR/samples_list.txt" ]; then
+    error "samples_list.txt not found in $WORK_DIR"
+    exit 1
+fi
 
-# Create samples_list.txt with absolute path
-cat > "$WORK_DIR/samples_list.txt" << 'EOF'
-wt1	wt1.CGmap.gz	WT
-wt2	wt2.CGmap.gz	WT
-met1_1	met1_1.CGmap.gz	met1
-met1_2	met1_2.CGmap.gz	met1
-EOF
+info "samples_list.txt content:"
+cat "$WORK_DIR/samples_list.txt"
+echo ""
 
-log "✓ Sample files prepared"
-info "samples_list.txt created at: $WORK_DIR/samples_list.txt"
-ls -lh "$WORK_DIR"/samples_list.txt "$WORK_DIR"/*.CGmap.gz 2>/dev/null | head -5
+# Verify all CGmap files exist
+while IFS=$'\t' read -r sample_name cgmap_file group; do
+    if [ ! -f "$WORK_DIR/$cgmap_file" ]; then
+        error "CGmap file not found: $WORK_DIR/$cgmap_file"
+        exit 1
+    fi
+    info "✓ Found: $cgmap_file ($(du -h $WORK_DIR/$cgmap_file | cut -f1))"
+done < "$WORK_DIR/samples_list.txt"
+
+log "✓ All sample files verified"
 
 # Run analysis (ensure micromamba environment is active)
 log "Running MethylC-analyzer..."
