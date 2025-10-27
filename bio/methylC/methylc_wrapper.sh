@@ -63,8 +63,10 @@ ls -lah . 2>/dev/null | head -20
 INPUT_FOUND=""
 IS_DIRECTORY=false
 MOUNT_DIR="/home/camber/workdir"
+# Strip leading ./ if present for clean mount dir prepending
+INPUT_STRIPPED="${INPUT_PATH#./}"
 
-for search_path in "$INPUT_PATH" "./$INPUT_PATH" "$MOUNT_DIR/$INPUT_PATH" "$(pwd)/$INPUT_PATH"; do
+for search_path in "$INPUT_PATH" "./$INPUT_PATH" "$MOUNT_DIR/$INPUT_PATH" "$MOUNT_DIR/$INPUT_STRIPPED" "$(pwd)/$INPUT_PATH"; do
     if [ -d "$search_path" ]; then
         INPUT_FOUND="$search_path"
         IS_DIRECTORY=true
@@ -88,7 +90,9 @@ fi
 # Find GTF file - search relative to mount directory
 GTF_FOUND=""
 MOUNT_DIR="/home/camber/workdir"
-for search_path in "$GTF_FILE" "./$GTF_FILE" "$MOUNT_DIR/$GTF_FILE" "$(pwd)/$GTF_FILE"; do
+# Strip leading ./ if present for clean mount dir prepending
+GTF_STRIPPED="${GTF_FILE#./}"
+for search_path in "$GTF_FILE" "./$GTF_FILE" "$MOUNT_DIR/$GTF_FILE" "$MOUNT_DIR/$GTF_STRIPPED" "$(pwd)/$GTF_FILE"; do
     if [ -f "$search_path" ]; then
         GTF_FOUND="$search_path"
         echo "[INFO] Found GTF at: $GTF_FOUND"
