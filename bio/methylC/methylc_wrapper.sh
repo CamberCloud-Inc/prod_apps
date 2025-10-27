@@ -397,8 +397,10 @@ micromamba activate methylc
 # Change to work directory and run analysis
 cd "$WORK_DIR"
 python3 "$METHYLC_DIR/scripts/MethylC.py" \
+    all \
     samples_list.txt \
     "$(basename "$GTF_FILE")" \
+    "$WORK_DIR/" \
     -a "$GROUP_A" \
     -b "$GROUP_B"
 
