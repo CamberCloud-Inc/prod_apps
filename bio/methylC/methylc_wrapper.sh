@@ -59,11 +59,12 @@ echo "[INFO] Current directory: $(pwd)"
 echo "[INFO] Looking for input files..."
 ls -lah . 2>/dev/null | head -20
 
-# Find input path (file or directory)
+# Find input path (file or directory) - search relative to mount directory
 INPUT_FOUND=""
 IS_DIRECTORY=false
+MOUNT_DIR="/home/camber/workdir"
 
-for search_path in "$INPUT_PATH" "./$INPUT_PATH" "/home/camber/$INPUT_PATH" "$(pwd)/$INPUT_PATH"; do
+for search_path in "$INPUT_PATH" "./$INPUT_PATH" "$MOUNT_DIR/$INPUT_PATH" "$(pwd)/$INPUT_PATH"; do
     if [ -d "$search_path" ]; then
         INPUT_FOUND="$search_path"
         IS_DIRECTORY=true
@@ -84,9 +85,10 @@ if [ -z "$INPUT_FOUND" ]; then
     exit 1
 fi
 
-# Find GTF file
+# Find GTF file - search relative to mount directory
 GTF_FOUND=""
-for search_path in "$GTF_FILE" "./$GTF_FILE" "/home/camber/$GTF_FILE" "$(pwd)/$GTF_FILE"; do
+MOUNT_DIR="/home/camber/workdir"
+for search_path in "$GTF_FILE" "./$GTF_FILE" "$MOUNT_DIR/$GTF_FILE" "$(pwd)/$GTF_FILE"; do
     if [ -f "$search_path" ]; then
         GTF_FOUND="$search_path"
         echo "[INFO] Found GTF at: $GTF_FOUND"
