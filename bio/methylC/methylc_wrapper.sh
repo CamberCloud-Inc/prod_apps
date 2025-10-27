@@ -31,6 +31,8 @@ fi
 # Setup working directory - use OUTPUT_DIR
 WORK_DIR="$OUTPUT_DIR"
 mkdir -p "$WORK_DIR"
+# Convert to absolute path for use in inner script
+WORK_DIR=$(realpath "$WORK_DIR")
 
 # Capture the current directory where prod_apps was cloned
 PROD_APPS_DIR="$(pwd)/prod_apps"
