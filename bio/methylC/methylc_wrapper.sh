@@ -101,9 +101,8 @@ if [ -z "$GTF_FOUND" ]; then
     exit 1
 fi
 
-# Copy GTF file to working directory
-echo "[INFO] Copying GTF file to $WORK_DIR..."
-cp "$GTF_FOUND" "$WORK_DIR/$GTF_BASENAME"
+# Use GTF file path as-is without copying
+echo "[INFO] Using GTF file at: $GTF_FOUND"
 
 # Install pandas if not available (required for conversion script)
 echo "[INFO] Installing Python dependencies..."
@@ -267,8 +266,8 @@ warning() { echo -e "${YELLOW}[WARNING]${NC} $1"; }
 info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 
 WORK_DIR="__WORK_DIR__"
-GTF_BASENAME="__GTF_BASENAME__"
-GTF_FILE_GZ="$WORK_DIR/$GTF_BASENAME"
+GTF_FILE_PATH="__GTF_FILE_PATH__"
+GTF_FILE_GZ="$GTF_FILE_PATH"
 GTF_FILE="${GTF_FILE_GZ%.gz}"
 # MethylC-analyzer path will be substituted from outer wrapper
 METHYLC_DIR="__PROD_APPS_DIR__/bio/methylC/MethylC-analyzer"
@@ -412,7 +411,7 @@ MAINSCRIPT
 
 # Replace placeholders with actual values
 sed -i "s|__WORK_DIR__|$WORK_DIR|g" "methylc_setup.sh"
-sed -i "s|__GTF_BASENAME__|$GTF_BASENAME|g" "methylc_setup.sh"
+sed -i "s|__GTF_FILE_PATH__|$GTF_FOUND|g" "methylc_setup.sh"
 sed -i "s|__PROD_APPS_DIR__|$PROD_APPS_DIR|g" "methylc_setup.sh"
 sed -i "s/__GROUP_A__/$GROUP_A/g" "methylc_setup.sh"
 sed -i "s/__GROUP_B__/$GROUP_B/g" "methylc_setup.sh"
