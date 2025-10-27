@@ -103,8 +103,9 @@ if [ -z "$GTF_FOUND" ]; then
     exit 1
 fi
 
-# Use GTF file path as-is without copying
-echo "[INFO] Using GTF file at: $GTF_FOUND"
+# Convert to absolute path so it works after cd into WORK_DIR
+GTF_FOUND=$(realpath "$GTF_FOUND")
+echo "[INFO] Using GTF file at (absolute path): $GTF_FOUND"
 
 # Install pandas if not available (required for conversion script)
 echo "[INFO] Installing Python dependencies..."
