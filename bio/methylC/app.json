@@ -93,24 +93,45 @@
       }
     },
     {
-      "type": "Text",
+      "type": "Select",
       "label": "Group A Name (Experimental/Treatment)",
       "name": "group_a",
-      "description": "Name for the experimental/treatment group (e.g., 'mutant', 'treated', 'tumor', 'MT'). In directory mode, this is assigned to the second half of samples (alphabetically sorted).",
+      "description": "Name for the experimental/treatment group. In directory mode, this is assigned to the second half of samples (alphabetically sorted).",
       "defaultValue": "treated",
       "hidden": false,
       "required": true,
-      "disabled": false
+      "disabled": false,
+      "options": [
+        {"label": "treated", "value": "treated"},
+        {"label": "mutant", "value": "mutant"},
+        {"label": "tumor", "value": "tumor"},
+        {"label": "diseased", "value": "diseased"},
+        {"label": "experiment", "value": "experiment"},
+        {"label": "test", "value": "test"},
+        {"label": "MT", "value": "MT"},
+        {"label": "met1", "value": "met1"},
+        {"label": "KO (knockout)", "value": "KO"},
+        {"label": "het (heterozygous)", "value": "het"}
+      ]
     },
     {
-      "type": "Text",
+      "type": "Select",
       "label": "Group B Name (Control/Reference)",
       "name": "group_b",
-      "description": "Name for the control/reference group (e.g., 'wildtype', 'untreated', 'normal', 'WT'). In directory mode, this is assigned to the first half of samples (alphabetically sorted).",
+      "description": "Name for the control/reference group. In directory mode, this is assigned to the first half of samples (alphabetically sorted).",
       "defaultValue": "control",
       "hidden": false,
       "required": true,
-      "disabled": false
+      "disabled": false,
+      "options": [
+        {"label": "control", "value": "control"},
+        {"label": "wildtype", "value": "wildtype"},
+        {"label": "untreated", "value": "untreated"},
+        {"label": "normal", "value": "normal"},
+        {"label": "reference", "value": "reference"},
+        {"label": "WT", "value": "WT"},
+        {"label": "healthy", "value": "healthy"}
+      ]
     }
   ],
   "tags": [
