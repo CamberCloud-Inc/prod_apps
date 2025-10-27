@@ -250,7 +250,7 @@ echo "[INFO] Files prepared successfully"
 echo ""
 
 # Create the main setup script with parameterized values
-cat > "$WORK_DIR/methylc_setup.sh" << 'MAINSCRIPT'
+cat > "methylc_setup.sh" << 'MAINSCRIPT'
 #!/bin/bash
 set -e
 
@@ -411,19 +411,19 @@ exit $EXIT_CODE
 MAINSCRIPT
 
 # Replace placeholders with actual values
-sed -i "s|__WORK_DIR__|$WORK_DIR|g" "$WORK_DIR/methylc_setup.sh"
-sed -i "s|__GTF_BASENAME__|$GTF_BASENAME|g" "$WORK_DIR/methylc_setup.sh"
-sed -i "s|__PROD_APPS_DIR__|$PROD_APPS_DIR|g" "$WORK_DIR/methylc_setup.sh"
-sed -i "s/__GROUP_A__/$GROUP_A/g" "$WORK_DIR/methylc_setup.sh"
-sed -i "s/__GROUP_B__/$GROUP_B/g" "$WORK_DIR/methylc_setup.sh"
+sed -i "s|__WORK_DIR__|$WORK_DIR|g" "methylc_setup.sh"
+sed -i "s|__GTF_BASENAME__|$GTF_BASENAME|g" "methylc_setup.sh"
+sed -i "s|__PROD_APPS_DIR__|$PROD_APPS_DIR|g" "methylc_setup.sh"
+sed -i "s/__GROUP_A__/$GROUP_A/g" "methylc_setup.sh"
+sed -i "s/__GROUP_B__/$GROUP_B/g" "methylc_setup.sh"
 
 # Make script executable
-chmod +x "$WORK_DIR/methylc_setup.sh"
+chmod +x "methylc_setup.sh"
 
 # Run the main script
 echo "[INFO] Starting MethylC-analyzer pipeline..."
 echo ""
-bash "$WORK_DIR/methylc_setup.sh"
+bash "methylc_setup.sh"
 
 EXIT_CODE=$?
 
