@@ -3,9 +3,9 @@
   "title": "DNA Methylation Sequencing Analysis",
   "description": "Comprehensive pipeline for analyzing DNA methylation patterns from bisulfite sequencing data. Supports WGBS, RRBS, and targeted bisulfite approaches. Ideal for epigenetics research in cancer, development, and environmental studies.",
   "content": "<h2 class=\"heading-node\">🧬 Overview</h2><p class=\"text-node\">The <strong>DNA Methylation Sequencing Analysis</strong> pipeline enables comprehensive profiling of cytosine methylation patterns from bisulfite sequencing data. This workflow performs methylation-aware alignment, quantifies methylation levels at single-base resolution, and provides detailed quality control metrics for epigenetic insights.</p><img src=\"https://raw.githubusercontent.com/nf-core/methylseq/4.0.0/docs/images/4.0.0_metromap.png\" alt=\"Methylseq workflow: From bisulfite-treated reads to genome-wide methylation profiles\"><h2 class=\"heading-node\">🔧 Main Capabilities</h2><p class=\"text-node\">This pipeline integrates specialized tools for bisulfite sequencing analysis:</p><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Quality Control:</strong> FastQC and Trim Galore for bisulfite-specific read processing</li><li class=\"list-item-node\"><strong>Alignment Options:</strong> Bismark (default) or bwa-meth for methylation-aware mapping</li><li class=\"list-item-node\"><strong>Methylation Calling:</strong> Single-base resolution CpG, CHG, and CHH context analysis</li><li class=\"list-item-node\"><strong>Deduplication:</strong> Remove PCR duplicates to ensure accurate methylation quantification</li><li class=\"list-item-node\"><strong>Coverage Analysis:</strong> Genome-wide methylation coverage and distribution reports</li><li class=\"list-item-node\"><strong>Visualization:</strong> MultiQC report with bisulfite conversion rates and M-bias plots</li></ul><h2 class=\"heading-node\">📋 Input Parameters</h2><p class=\"text-node\"><strong>Samplesheet Format:</strong> Provide a CSV file with sample information following this structure:</p><pre><code>sample,fastq_1,fastq_2\ncontrol_rep1,/path/to/control_rep1_R1.fastq.gz,/path/to/control_rep1_R2.fastq.gz\ncontrol_rep2,/path/to/control_rep2_R1.fastq.gz,/path/to/control_rep2_R2.fastq.gz\ntreated_rep1,/path/to/treated_rep1_R1.fastq.gz,/path/to/treated_rep1_R2.fastq.gz\ntreated_rep2,/path/to/treated_rep2_R1.fastq.gz,/path/to/treated_rep2_R2.fastq.gz</code></pre><ul class=\"list-node\"><li class=\"list-item-node\"><strong>sample:</strong> Unique sample identifier</li><li class=\"list-item-node\"><strong>fastq_1/2:</strong> Paths to paired-end bisulfite FASTQ files (single-end: fastq_1 only)</li></ul><p class=\"text-node\"><strong>Reference Genome:</strong> Select from pre-configured genomes (Human, Mouse, Arabidopsis, E. coli, etc.) or provide a custom FASTA file. The pipeline will automatically prepare bisulfite conversion indices.</p><blockquote class=\"block-node\"><p class=\"text-node\">💡 <strong>Resource Optimization:</strong> For optimal resource consumption, the number of nodes should not be greater than the number of samples in your samplesheet.</p></blockquote><h2 class=\"heading-node\">🔬 Scientific Relevance & Use Cases</h2><p class=\"text-node\">This pipeline is essential for:</p><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Epigenetic Studies:</strong> Understanding methylation changes in development and differentiation</li><li class=\"list-item-node\"><strong>Cancer Research:</strong> Identifying aberrant methylation patterns in tumor vs normal tissues</li><li class=\"list-item-node\"><strong>Environmental Epigenetics:</strong> Studying methylation responses to environmental factors</li><li class=\"list-item-node\"><strong>Imprinting Analysis:</strong> Characterizing parent-of-origin specific methylation</li><li class=\"list-item-node\"><strong>Aging Studies:</strong> Tracking epigenetic drift and DNA methylation clocks</li></ul><p class=\"text-node\">The pipeline supports whole-genome bisulfite sequencing (WGBS), reduced representation bisulfite sequencing (RRBS), and targeted bisulfite sequencing approaches.</p><h2 class=\"heading-node\">📊 Expected Outputs</h2><ul class=\"list-node\"><li class=\"list-item-node\"><strong>Methylation Calls:</strong> BED/bedGraph files with methylation percentages per cytosine (CpG, CHG, CHH contexts)</li><li class=\"list-item-node\"><strong>Coverage Reports:</strong> Genome-wide methylation coverage statistics and depth distributions</li><li class=\"list-item-node\"><strong>M-bias Plots:</strong> Position-specific methylation bias assessment for quality control</li><li class=\"list-item-node\"><strong>Bisulfite Conversion:</strong> Non-CpG methylation rates indicating conversion efficiency (>99% expected)</li><li class=\"list-item-node\"><strong>Aligned BAMs:</strong> Methylation-aware alignments for visualization in genome browsers</li><li class=\"list-item-node\"><strong>MultiQC Report:</strong> Comprehensive quality control summary with all metrics</li></ul><hr><p class=\"text-node\"><em>Built with <a href=\"https://www.nextflow.io/\">Nextflow</a> and the <a href=\"https://nf-co.re/methylseq\">nf-core/methylseq</a> pipeline v4.1.0</em></p>",
-  "version": "1.0.0",
+  "version": "1.3.0",
   "imageUrl": "https://raw.githubusercontent.com/nf-core/methylseq/1.6//docs/images/nf-core-methylseq_logo.png",
-  "command": "mkdir -p ${output} && rm -rf ${output}/prod_apps && git clone --depth=1 --filter=blob:none --sparse https://github.com/CamberCloud-Inc/prod_apps.git ${output}/prod_apps && cd ${output}/prod_apps && git sparse-checkout set nextflow/methylseq && cd /home/camber && nextflow run nf-core/methylseq --input \"${input}\" --outdir \"${output}\" --genome ${genome} -r ${revision} -c /etc/mpi/nextflow.camber.config -c ${output}/prod_apps/nextflow/methylseq/override.config",
+  "command": "if [ \"${comprehensive}\" = \"true\" ] || [ \"${comprehensive}\" = \"True\" ] || [ \"${comprehensive}\" = \"1\" ]; then COMPREHENSIVE_FLAG=\"--comprehensive=true\"; else COMPREHENSIVE_FLAG=\"--comprehensive=false\"; fi && if [ \"${cytosine_report}\" = \"true\" ] || [ \"${cytosine_report}\" = \"True\" ] || [ \"${cytosine_report}\" = \"1\" ]; then CYTOSINE_REPORT_FLAG=\"--cytosine_report\"; else CYTOSINE_REPORT_FLAG=\"\"; fi && mkdir -p ${output} && rm -rf ${output}/prod_apps && git clone --depth=1 --filter=blob:none --sparse https://github.com/CamberCloud-Inc/prod_apps.git ${output}/prod_apps && cd ${output}/prod_apps && git sparse-checkout set nextflow/methylseq && cd /home/camber && nextflow run nf-core/methylseq --input \"${input}\" --outdir \"${output}\" --genome ${genome} \\$COMPREHENSIVE_FLAG \\$CYTOSINE_REPORT_FLAG -r ${revision} -c /etc/mpi/nextflow.camber.config -c ${output}/prod_apps/nextflow/methylseq/override.config",
   "engineType": "NEXTFLOW",
   "jobConfig": [
     {
@@ -19,7 +19,7 @@
           "label": "Default",
           "value": "default",
           "mapValue": {
-            "nodeSize": "SMALL",
+            "nodeSize": "LARGE",
             "numNodes": 1,
             "withGpu": false
           }
@@ -48,7 +48,7 @@
       "restrictions": {
         "allow_files": true,
         "allow_folders": false,
-        "allowed_file_types": [".csv"]
+        "allowed_file_types": ["csv"]
       }
     },
     {
@@ -243,6 +243,26 @@
           "value": "susScr3"
         }
       ]
+    },
+    {
+      "type": "Switch",
+      "label": "Comprehensive Analysis",
+      "name": "comprehensive",
+      "description": "Enable comprehensive methylation analysis with extended reporting and additional metrics",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false
+    },
+    {
+      "type": "Switch",
+      "label": "Cytosine Report",
+      "name": "cytosine_report",
+      "description": "Generate stranded cytosine report (CX_report.txt) compatible with MethylC-analyzer and other downstream tools",
+      "defaultValue": false,
+      "hidden": false,
+      "required": false,
+      "disabled": false
     }
   ]
 }

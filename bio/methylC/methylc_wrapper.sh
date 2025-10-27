@@ -28,8 +28,8 @@ if [ -z "$INPUT_PATH" ] || [ -z "$GTF_FILE" ] || [ -z "$OUTPUT_DIR" ]; then
     exit 1
 fi
 
-# Setup working directory
-WORK_DIR="/home/camber/manu"
+# Setup working directory - use OUTPUT_DIR
+WORK_DIR="$OUTPUT_DIR"
 mkdir -p "$WORK_DIR"
 
 # Capture the current directory where prod_apps was cloned
@@ -37,6 +37,9 @@ PROD_APPS_DIR="$(pwd)/prod_apps"
 
 # Capture the stash mount point (current working directory) before changing dirs
 STASH_MOUNT_DIR="$(pwd)"
+
+# Extract GTF basename for use throughout the script
+GTF_BASENAME=$(basename "$GTF_FILE")
 
 echo "=============================================="
 echo "  MethylC-analyzer Camber Wrapper"
@@ -100,7 +103,7 @@ fi
 
 # Copy GTF file to working directory
 echo "[INFO] Copying GTF file to $WORK_DIR..."
-cp "$GTF_FOUND" "$WORK_DIR/hg38.ncbiRefSeq.gtf.gz"
+cp "$GTF_FOUND" "$WORK_DIR/$GTF_BASENAME"
 
 # Install pandas if not available (required for conversion script)
 echo "[INFO] Installing Python dependencies..."
@@ -263,9 +266,10 @@ error() { echo -e "${RED}[ERROR]${NC} $1" >&2; }
 warning() { echo -e "${YELLOW}[WARNING]${NC} $1"; }
 info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 
-WORK_DIR="/home/camber/manu"
-GTF_FILE_GZ="$WORK_DIR/hg38.ncbiRefSeq.gtf.gz"
-GTF_FILE="$WORK_DIR/hg38.ncbiRefSeq.gtf"
+WORK_DIR="__WORK_DIR__"
+GTF_BASENAME="__GTF_BASENAME__"
+GTF_FILE_GZ="$WORK_DIR/$GTF_BASENAME"
+GTF_FILE="${GTF_FILE_GZ%.gz}"
 # MethylC-analyzer path will be substituted from outer wrapper
 METHYLC_DIR="__PROD_APPS_DIR__/bio/methylC/MethylC-analyzer"
 GROUP_A="__GROUP_A__"
@@ -384,10 +388,9 @@ micromamba activate methylc
 
 # Change to work directory and run analysis
 cd "$WORK_DIR"
-python3 "$METHYLC_DIR/scripts/MethylC.py" run \
+python3 "$METHYLC_DIR/scripts/MethylC.py" \
     samples_list.txt \
-    hg38.ncbiRefSeq.gtf \
-    "$WORK_DIR/" \
+    "$(basename "$GTF_FILE")" \
     -a "$GROUP_A" \
     -b "$GROUP_B"
 
@@ -408,6 +411,8 @@ exit $EXIT_CODE
 MAINSCRIPT
 
 # Replace placeholders with actual values
+sed -i "s|__WORK_DIR__|$WORK_DIR|g" "$WORK_DIR/methylc_setup.sh"
+sed -i "s|__GTF_BASENAME__|$GTF_BASENAME|g" "$WORK_DIR/methylc_setup.sh"
 sed -i "s|__PROD_APPS_DIR__|$PROD_APPS_DIR|g" "$WORK_DIR/methylc_setup.sh"
 sed -i "s/__GROUP_A__/$GROUP_A/g" "$WORK_DIR/methylc_setup.sh"
 sed -i "s/__GROUP_B__/$GROUP_B/g" "$WORK_DIR/methylc_setup.sh"
