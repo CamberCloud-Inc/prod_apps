@@ -87,24 +87,17 @@ print           "=========================================="
 print           "Starting Production Phase"
 print           "=========================================="
 
-# Reset timestep counter for clean RDF output
-reset_timestep  0
-
-# Calculate Radial Distribution Function (RDF) if enabled
-# RDF syntax: compute ID group-ID rdf Nbin type1 type2 cutoff value
-# Computing g(r) for type 1 atoms (self-correlation)
-# ave/time syntax: Nevery Nrepeat Nfreq (sample every Nevery, repeat Nrepeat times, output every Nfreq)
-# Sample every 50 steps, take 20 samples, output every 1000 steps (matches working reference)
-# TESTING: Temporarily always enabled to debug
-compute         rdf_calc all rdf 200 1 1 cutoff 2.5
-fix             rdf_output all ave/time 50 20 1000 c_rdf_calc[*] file rdf.dat mode vector
+# Calculate Radial Distribution Function (RDF) - EXACT copy from working example
+# TESTING: Using exact syntax from /home/ubuntu/prod_apps/MD/lammps/lj_liquid/in.lj_liquid
+compute         myRDF all rdf 100 1 1 cutoff 2.5
+fix             2 all ave/time 50 20 1000 c_myRDF[*] file rdf.dat mode vector
 print           'RDF calculation enabled - output will be saved to rdf.dat'
 
 run             ${prodSteps}
 
 # Clean up RDF compute
-unfix           rdf_output
-uncompute       rdf_calc
+unfix           2
+uncompute       myRDF
 
 # ==================== Final Output ====================
 print           "=========================================="
