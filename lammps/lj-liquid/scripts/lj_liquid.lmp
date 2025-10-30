@@ -16,6 +16,8 @@ boundary        p p p           # Periodic boundary conditions
 variable        L equal (${numAtoms}/${density})^(1.0/3.0)
 region          box block 0 $L 0 $L 0 $L
 create_box      1 box
+# Explicitly set lattice to none to ensure random placement works
+lattice         none 1.0
 # Use random atom placement to avoid lattice overlaps at high density
 create_atoms    1 random ${numAtoms} 12345 box
 
