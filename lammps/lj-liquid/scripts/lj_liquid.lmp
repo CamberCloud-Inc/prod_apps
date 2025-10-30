@@ -1,0 +1,104 @@
+# LAMMPS Input Script for Lennard-Jones Liquid Simulation
+# This script simulates a simple atomic liquid using the Lennard-Jones potential
+
+# ==================== Initialization ====================
+units           lj              # Use reduced LJ units
+dimension       3
+atom_style      atomic
+boundary        p p p           # Periodic boundary conditions
+
+# ==================== System Setup ====================
+# Calculate box size from number of atoms and density
+# density = N / V, where V = L^3
+# L = (N / density)^(1/3)
+
+variable        L equal (${numAtoms}/${density})^(1.0/3.0)
+lattice         fcc ${density}  # FCC lattice with given density
+region          box block 0 $L 0 $L 0 $L
+create_box      1 box
+create_atoms    1 box
+
+# ==================== Interaction Potential ====================
+# Lennard-Jones potential with cutoff
+# V(r) = 4*epsilon*[(sigma/r)^12 - (sigma/r)^6]
+# In LJ units: epsilon = 1.0, sigma = 1.0
+
+pair_style      lj/cut ${cutoff}
+pair_coeff      1 1 1.0 1.0     # epsilon=1.0, sigma=1.0
+mass            1 1.0            # mass = 1.0 in LJ units
+
+# ==================== Neighbor List Settings ====================
+neighbor        0.3 bin
+neigh_modify    every 1 delay 0 check yes
+
+# ==================== Initial Velocities ====================
+velocity        all create ${temperature} 12345 dist gaussian mom yes rot yes
+
+# ==================== Output Settings ====================
+# Thermodynamic output
+if "${calcTemp} == true" then &
+    "thermo_style   custom step temp press pe ke etotal vol density" &
+else &
+    "thermo_style   custom step press pe ke etotal vol density"
+
+thermo          ${outputFreq}
+
+# Trajectory output
+dump            1 all custom ${outputFreq} trajectory.lammpstrj id type x y z vx vy vz
+dump_modify     1 sort id
+
+# Temperature output (if enabled)
+if "${calcTemp} == true" then &
+    "fix            tempout all print ${outputFreq} '$(step),$(temp)' file temperature.csv screen no title 'Step,Temperature'"
+
+# Energy output
+fix             energyout all print ${outputFreq} '$(step),$(pe),$(ke),$(etotal)' file energy.csv screen no title 'Step,PE,KE,TotalEnergy'
+
+# Pressure output
+fix             pressout all print ${outputFreq} '$(step),$(press)' file pressure.csv screen no title 'Step,Pressure'
+
+# ==================== Equilibration Phase ====================
+print           "=========================================="
+print           "Starting Equilibration Phase"
+print           "=========================================="
+
+timestep        ${timestep}
+
+# Apply appropriate ensemble for equilibration
+if "${ensemble} == nve" then &
+    "fix            1 all nve" &
+elif "${ensemble} == nvt" &
+    "fix            1 all nvt temp ${temperature} ${temperature} $(100.0*dt)" &
+elif "${ensemble} == npt" &
+    "fix            1 all npt temp ${temperature} ${temperature} $(100.0*dt) iso 1.0 1.0 $(1000.0*dt)"
+
+run             ${equilSteps}
+
+# Reset time counter
+reset_timestep  0
+
+# ==================== Production Phase ====================
+print           "=========================================="
+print           "Starting Production Phase"
+print           "=========================================="
+
+run             ${prodSteps}
+
+# ==================== Final Output ====================
+print           "=========================================="
+print           "Simulation Complete"
+print           "=========================================="
+
+# Write final configuration
+write_data      final_config.data
+write_restart   final_restart.restart
+
+print           "Final thermodynamic state:"
+print           "  Temperature: $(temp)"
+print           "  Pressure: $(press)"
+print           "  Potential Energy: $(pe)"
+print           "  Kinetic Energy: $(ke)"
+print           "  Total Energy: $(etotal)"
+print           "  Volume: $(vol)"
+print           "  Density: $(density)"
+print           "=========================================="
