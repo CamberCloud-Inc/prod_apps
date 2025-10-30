@@ -14,7 +14,9 @@ TIMESTEP=${7:-0.002}
 EQUIL_STEPS=${8:-20000}
 PROD_STEPS=${9:-100000}
 OUTPUT_FREQ=${10:-500}
-CALC_RDF=${11:-false}
+# Convert to lowercase to ensure LAMMPS comparison works
+CALC_RDF_RAW=${11:-false}
+CALC_RDF=$(echo "$CALC_RDF_RAW" | tr '[:upper:]' '[:lower:]')
 
 # Create output directory
 mkdir -p output
@@ -58,5 +60,5 @@ echo "=========================================="
 echo "Simulation completed!"
 echo "=========================================="
 echo "Output files:"
-ls -lh *.csv *.lammpstrj *.log *.data 2>/dev/null || echo "No output files found"
+ls -lh *.csv *.lammpstrj *.log *.data *.dat *.restart 2>/dev/null || echo "No output files found"
 echo "=========================================="
