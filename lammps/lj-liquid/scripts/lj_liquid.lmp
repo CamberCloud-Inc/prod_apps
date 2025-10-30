@@ -1,5 +1,6 @@
 # LAMMPS Input Script for Lennard-Jones Liquid Simulation
 # This script simulates a simple atomic liquid using the Lennard-Jones potential
+# Version: 2025-10-30 - Fixed random atom placement
 
 # ==================== Initialization ====================
 units           lj              # Use reduced LJ units
