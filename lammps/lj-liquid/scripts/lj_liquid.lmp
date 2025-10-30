@@ -48,10 +48,9 @@ velocity        all create ${temperature} 12345 dist gaussian mom yes rot yes
 
 # ==================== Output Settings ====================
 # Thermodynamic output
-if "${calcTemp} == true" then &
-    "thermo_style   custom step temp press pe ke etotal vol density" &
-else &
-    "thermo_style   custom step press pe ke etotal vol density"
+# LAMMPS if statements can only execute one command, so we use two separate thermo_style commands
+if "${calcTemp} == true" then "thermo_style   custom step temp press pe ke etotal vol density"
+if "${calcTemp} == false" then "thermo_style   custom step press pe ke etotal vol density"
 
 thermo          ${outputFreq}
 
@@ -60,8 +59,7 @@ dump            1 all custom ${outputFreq} trajectory.lammpstrj id type x y z vx
 dump_modify     1 sort id
 
 # Temperature output (if enabled)
-if "${calcTemp} == true" then &
-    "fix            tempout all print ${outputFreq} '$(step),$(temp)' file temperature.csv screen no title 'Step,Temperature'"
+if "${calcTemp} == true" then "fix            tempout all print ${outputFreq} '$(step),$(temp)' file temperature.csv screen no title 'Step,Temperature'"
 
 # Energy output
 fix             energyout all print ${outputFreq} '$(step),$(pe),$(ke),$(etotal)' file energy.csv screen no title 'Step,PE,KE,TotalEnergy'
@@ -77,12 +75,10 @@ print           "=========================================="
 timestep        ${timestep}
 
 # Apply appropriate ensemble for equilibration
-if "${ensemble} == nve" then &
-    "fix            1 all nve" &
-elif "${ensemble} == nvt" &
-    "fix            1 all nvt temp ${temperature} ${temperature} $(100.0*dt)" &
-elif "${ensemble} == npt" &
-    "fix            1 all npt temp ${temperature} ${temperature} $(100.0*dt) iso 1.0 1.0 $(1000.0*dt)"
+# LAMMPS if statements can only execute one command, so we use separate if statements
+if "${ensemble} == nve" then "fix            1 all nve"
+if "${ensemble} == nvt" then "fix            1 all nvt temp ${temperature} ${temperature} $(100.0*dt)"
+if "${ensemble} == npt" then "fix            1 all npt temp ${temperature} ${temperature} $(100.0*dt) iso 1.0 1.0 $(1000.0*dt)"
 
 run             ${equilSteps}
 
@@ -93,17 +89,16 @@ print           "Starting Production Phase"
 print           "=========================================="
 
 # Calculate Radial Distribution Function (RDF) if enabled
-if "${calculateRDF} == true" then &
-    "compute         rdf_calc all rdf 200 cutoff ${cutoff}" &
-    "fix             rdf_output all ave/time 1 ${prodSteps} ${prodSteps} c_rdf_calc[*] file rdf.dat mode vector" &
-    "print           'RDF calculation enabled - output will be saved to rdf.dat'"
+# LAMMPS if statements can only execute one command, so we use separate if statements
+if "${calculateRDF} == true" then "compute         rdf_calc all rdf 200 cutoff ${cutoff}"
+if "${calculateRDF} == true" then "fix             rdf_output all ave/time 1 ${prodSteps} ${prodSteps} c_rdf_calc[*] file rdf.dat mode vector"
+if "${calculateRDF} == true" then "print           'RDF calculation enabled - output will be saved to rdf.dat'"
 
 run             ${prodSteps}
 
 # Clean up RDF compute if it was enabled
-if "${calculateRDF} == true" then &
-    "unfix           rdf_output" &
-    "uncompute       rdf_calc"
+if "${calculateRDF} == true" then "unfix           rdf_output"
+if "${calculateRDF} == true" then "uncompute       rdf_calc"
 
 # ==================== Final Output ====================
 print           "=========================================="
