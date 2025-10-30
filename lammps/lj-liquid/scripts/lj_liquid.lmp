@@ -92,9 +92,9 @@ print           "=========================================="
 # RDF syntax: compute ID group-ID rdf Nbin type1 type2 cutoff value
 # Computing g(r) for type 1 atoms (self-correlation)
 # ave/time syntax: Nevery Nrepeat Nfreq (sample every Nevery, repeat Nrepeat times, output every Nfreq)
-# Sample every 100 steps, take 50 samples (5000 steps), output every 5000 steps
+# Sample every 50 steps, take 20 samples, output every 1000 steps (matches working reference)
 if ${calculateRDF}==1 then "compute         rdf_calc all rdf 200 1 1 cutoff ${cutoff}"
-if ${calculateRDF}==1 then "fix             rdf_output all ave/time 100 50 5000 c_rdf_calc[*] file rdf.dat mode vector"
+if ${calculateRDF}==1 then "fix             rdf_output all ave/time 50 20 1000 c_rdf_calc[*] file rdf.dat mode vector"
 if ${calculateRDF}==1 then "print           'RDF calculation enabled - output will be saved to rdf.dat'"
 
 run             ${prodSteps}
