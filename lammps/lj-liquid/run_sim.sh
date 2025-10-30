@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Lennard-Jones Liquid Simulation Runner
-# Usage: bash run_sim.sh <numAtoms> <density> <temperature> <ensemble> <calculateTemp> <cutoff> <timestep> <equilSteps> <prodSteps> <outputFreq>
+# Usage: bash run_sim.sh <numAtoms> <density> <temperature> <ensemble> <calculateTemp> <cutoff> <timestep> <equilSteps> <prodSteps> <outputFreq> <calculateRDF>
 
 # Parse command line arguments
 NUM_ATOMS=${1:-2000}
@@ -14,6 +14,7 @@ TIMESTEP=${7:-0.002}
 EQUIL_STEPS=${8:-20000}
 PROD_STEPS=${9:-100000}
 OUTPUT_FREQ=${10:-500}
+CALC_RDF=${11:-false}
 
 # Create output directory
 mkdir -p output
@@ -34,6 +35,7 @@ echo "  Timestep: $TIMESTEP"
 echo "  Equilibration steps: $EQUIL_STEPS"
 echo "  Production steps: $PROD_STEPS"
 echo "  Output frequency: $OUTPUT_FREQ"
+echo "  Calculate RDF: $CALC_RDF"
 echo "=========================================="
 
 # Run LAMMPS simulation
@@ -48,6 +50,7 @@ mpirun -np ${OMPI_COMM_WORLD_SIZE:-1} lmp -var numAtoms $NUM_ATOMS \
     -var equilSteps $EQUIL_STEPS \
     -var prodSteps $PROD_STEPS \
     -var outputFreq $OUTPUT_FREQ \
+    -var calculateRDF $CALC_RDF \
     -in ../scripts/lj_liquid.lmp \
     -log lammps.log
 

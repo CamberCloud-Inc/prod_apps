@@ -80,15 +80,18 @@ print           "=========================================="
 print           "Starting Production Phase"
 print           "=========================================="
 
-# Calculate Radial Distribution Function (RDF)
-compute         rdf_calc all rdf 200 cutoff ${cutoff}
-fix             rdf_output all ave/time 1 ${prodSteps} ${prodSteps} c_rdf_calc[*] file rdf.dat mode vector
+# Calculate Radial Distribution Function (RDF) if enabled
+if "${calculateRDF} == true" then &
+    "compute         rdf_calc all rdf 200 cutoff ${cutoff}" &
+    "fix             rdf_output all ave/time 1 ${prodSteps} ${prodSteps} c_rdf_calc[*] file rdf.dat mode vector" &
+    "print           'RDF calculation enabled - output will be saved to rdf.dat'"
 
 run             ${prodSteps}
 
-# Clean up RDF compute
-unfix           rdf_output
-uncompute       rdf_calc
+# Clean up RDF compute if it was enabled
+if "${calculateRDF} == true" then &
+    "unfix           rdf_output" &
+    "uncompute       rdf_calc"
 
 # ==================== Final Output ====================
 print           "=========================================="
