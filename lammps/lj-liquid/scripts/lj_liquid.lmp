@@ -13,10 +13,10 @@ boundary        p p p           # Periodic boundary conditions
 # L = (N / density)^(1/3)
 
 variable        L equal (${numAtoms}/${density})^(1.0/3.0)
-lattice         fcc ${density}  # FCC lattice with given density
 region          box block 0 $L 0 $L 0 $L
 create_box      1 box
-create_atoms    1 box
+# Use random atom placement to avoid lattice overlaps at high density
+create_atoms    1 random ${numAtoms} 12345 box
 
 # ==================== Interaction Potential ====================
 # Lennard-Jones potential with cutoff
