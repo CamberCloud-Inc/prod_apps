@@ -14,12 +14,12 @@ boundary        p p p           # Periodic boundary conditions
 # L = (N / density)^(1/3)
 
 variable        L equal (${numAtoms}/${density})^(1.0/3.0)
-region          box block 0 $L 0 $L 0 $L
-create_box      1 box
-# Explicitly set lattice to none to ensure random placement works
-lattice         none 1.0
-# Use random atom placement to avoid lattice overlaps at high density
-create_atoms    1 random ${numAtoms} 12345 box
+variable        halfL equal $L/2.0
+# Create box centered at origin following Google DeepMind example
+region          simbox block -${halfL} ${halfL} -${halfL} ${halfL} -${halfL} ${halfL} units box
+create_box      1 simbox
+# Use random atom placement to avoid overlaps
+create_atoms    1 random ${numAtoms} 12345 simbox
 
 # ==================== Interaction Potential ====================
 # Lennard-Jones potential with cutoff
