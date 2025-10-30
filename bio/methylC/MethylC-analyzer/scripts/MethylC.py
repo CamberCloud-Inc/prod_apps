@@ -423,21 +423,56 @@ cg = pd.read_csv(path_to_files+"CommonRegion_CG.txt",sep="\t")
 chg = pd.read_csv(path_to_files+"CommonRegion_CHG.txt",sep="\t")
 chh = pd.read_csv(path_to_files+"CommonRegion_CHH.txt",sep="\t")
 
-end = cg.shape[1]
-cgdf = pd.DataFrame(cg.iloc[:,3:end].mean())
-cgdf['context'] = 'CG'
-chgdf = pd.DataFrame(chg.iloc[:,3:end].mean())
-chgdf['context'] = 'CHG'
-chhdf = pd.DataFrame(chh.iloc[:,3:end].mean())
-chhdf['context'] = 'CHH'
-merge1 = pd.concat([cgdf,chgdf])
-merge2 = pd.concat([merge1,chhdf])
-merge2['sample'] = merge2.index
-merge2.columns =['methylation level', 'context', 'sample']
-merge2['methylation level'] = merge2['methylation level']*100
-merge2['group'] = merge2.index.map(samples.set_index(0)[2])
+# Get the expected columns from the first non-empty file
+sample_columns = None
+for df in [cg, chg, chh]:
+    if len(df) > 0:
+        sample_columns = df.columns[3:]
+        break
 
-#ploting barplot 
+# Process all three contexts, using 0 for empty contexts
+if sample_columns is not None:
+    # CG context
+    if len(cg) > 0:
+        end = cg.shape[1]
+        cgdf = pd.DataFrame(cg.iloc[:,3:end].mean())
+        cgdf['context'] = 'CG'
+    else:
+        # Create dataframe with 0 values for all samples
+        cgdf = pd.DataFrame(0.0, index=sample_columns, columns=[0])
+        cgdf['context'] = 'CG'
+
+    # CHG context
+    if len(chg) > 0:
+        end = chg.shape[1]
+        chgdf = pd.DataFrame(chg.iloc[:,3:end].mean())
+        chgdf['context'] = 'CHG'
+    else:
+        # Create dataframe with 0 values for all samples
+        chgdf = pd.DataFrame(0.0, index=sample_columns, columns=[0])
+        chgdf['context'] = 'CHG'
+
+    # CHH context
+    if len(chh) > 0:
+        end = chh.shape[1]
+        chhdf = pd.DataFrame(chh.iloc[:,3:end].mean())
+        chhdf['context'] = 'CHH'
+    else:
+        # Create dataframe with 0 values for all samples
+        chhdf = pd.DataFrame(0.0, index=sample_columns, columns=[0])
+        chhdf['context'] = 'CHH'
+
+    merge1 = pd.concat([cgdf,chgdf])
+    merge2 = pd.concat([merge1,chhdf])
+    merge2['sample'] = merge2.index
+    merge2.columns =['methylation level', 'context', 'sample']
+    merge2['methylation level'] = merge2['methylation level']*100
+    merge2['group'] = merge2.index.map(samples.set_index(0)[2])
+else:
+    # All files are empty - create empty DataFrame
+    merge2 = pd.DataFrame(columns=['methylation level', 'context', 'sample', 'group'])
+
+#ploting barplot
 import seaborn as sns
 import matplotlib
 if os.environ.get('DISPLAY','') == '':
@@ -450,38 +485,42 @@ import matplotlib as mpl
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['ps.fonttype'] = 42
 
-sns.set_style("whitegrid")
-# sns.set_context("talk")
-sns.set_context("notebook", font_scale=2, rc={"lines.linewidth": 2.5})
+# Only plot if we have data
+if len(merge2) > 0:
+    sns.set_style("whitegrid")
+    # sns.set_context("talk")
+    sns.set_context("notebook", font_scale=2, rc={"lines.linewidth": 2.5})
 
-plt.figure(figsize=(8,6)) 
+    plt.figure(figsize=(8,6))
 
-# fig.set_size_inches(8,6)
-g = sns.catplot(
-    data=merge2, kind="bar",
-    x="context", y= 'methylation level', hue='group', palette="dark", 
-    alpha=.6, height=6, legend = False)
+    # fig.set_size_inches(8,6)
+    g = sns.catplot(
+        data=merge2, kind="bar",
+        x="context", y= 'methylation level', hue='group', palette="dark",
+        alpha=.6, height=6, legend = False)
 
-plt.legend(fontsize = 15, 
-               bbox_to_anchor= (1.3, 1), 
-               title="", 
-               shadow = False, 
-               facecolor = 'white')
-ax = g.facet_axis(0,0)
-for p in ax.patches:
-    ax.text(p.get_x() - 0.001, 
-            p.get_height() * 1.05, 
-           '{0:.1f}'.format(p.get_height()),   #Used to format it K representation
-            color='black', 
-            rotation='horizontal', 
-            size='x-small')
+    plt.legend(fontsize = 15,
+                   bbox_to_anchor= (1.3, 1),
+                   title="",
+                   shadow = False,
+                   facecolor = 'white')
+    ax = g.facet_axis(0,0)
+    for p in ax.patches:
+        ax.text(p.get_x() - 0.001,
+                p.get_height() * 1.05,
+               '{0:.1f}'.format(p.get_height()),   #Used to format it K representation
+                color='black',
+                rotation='horizontal',
+                size='x-small')
 
-g.set_axis_labels("", "Methylation level (%)")
-mpl.rcParams['pdf.fonttype'] = 42
-mpl.rcParams['ps.fonttype'] = 42
-mpl.rcParams["axes.labelsize"] = 40
+    g.set_axis_labels("", "Methylation level (%)")
+    mpl.rcParams['pdf.fonttype'] = 42
+    mpl.rcParams['ps.fonttype'] = 42
+    mpl.rcParams["axes.labelsize"] = 40
 
-plt.savefig(path_to_files +'Average_methylation_levels.pdf',dpi=300,bbox_inches="tight")
+    plt.savefig(path_to_files +'Average_methylation_levels.pdf',dpi=300,bbox_inches="tight")
+else:
+    print("Warning: No data available to plot Average_methylation_levels. All CommonRegion files are empty.")
 
 #heatmap_PCA
 if(command=='Heatmap_PCA' or command=='all'):
