@@ -74,8 +74,25 @@ elif "${ensemble} == npt" &
 
 run             ${equilSteps}
 
+# Undump and unfix before resetting timestep
+undump          1
+unfix           energyout
+unfix           pressout
+if "${calcTemp} == true" then "unfix tempout"
+
 # Reset time counter
 reset_timestep  0
+
+# Re-establish output fixes
+dump            1 all custom ${outputFreq} trajectory.lammpstrj id type x y z vx vy vz
+dump_modify     1 sort id
+
+if "${calcTemp} == true" then &
+    "fix            tempout all print ${outputFreq} '$(step),$(temp)' file temperature.csv screen no title 'Step,Temperature' append yes"
+
+fix             energyout all print ${outputFreq} '$(step),$(pe),$(ke),$(etotal)' file energy.csv screen no title 'Step,PE,KE,TotalEnergy' append yes
+
+fix             pressout all print ${outputFreq} '$(step),$(press)' file pressure.csv screen no title 'Step,Pressure' append yes
 
 # ==================== Production Phase ====================
 print           "=========================================="
