@@ -89,19 +89,15 @@ print           "Starting Production Phase"
 print           "=========================================="
 
 # Calculate Radial Distribution Function (RDF) if enabled
-# Debug: print variable value
-print           "DEBUG: calculateRDF = ${calculateRDF}"
-
-# TESTING: Always enable RDF to verify the code works
-compute         rdf_calc all rdf 200 cutoff ${cutoff}
-fix             rdf_output all ave/time 1 ${prodSteps} ${prodSteps} c_rdf_calc[*] file rdf.dat mode vector
-print           "RDF calculation ENABLED (testing mode - always on)"
+if ${calculateRDF}==1 then "compute         rdf_calc all rdf 200 cutoff ${cutoff}"
+if ${calculateRDF}==1 then "fix             rdf_output all ave/time 1 ${prodSteps} ${prodSteps} c_rdf_calc[*] file rdf.dat mode vector"
+if ${calculateRDF}==1 then "print           'RDF calculation enabled - output will be saved to rdf.dat'"
 
 run             ${prodSteps}
 
-# Clean up RDF compute
-unfix           rdf_output
-uncompute       rdf_calc
+# Clean up RDF compute if it was enabled
+if ${calculateRDF}==1 then "unfix           rdf_output"
+if ${calculateRDF}==1 then "uncompute       rdf_calc"
 
 # ==================== Final Output ====================
 print           "=========================================="
