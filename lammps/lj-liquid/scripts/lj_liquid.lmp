@@ -48,9 +48,9 @@ velocity        all create ${temperature} 12345 dist gaussian mom yes rot yes
 
 # ==================== Output Settings ====================
 # Thermodynamic output
-# LAMMPS if statements can only execute one command, so we use two separate thermo_style commands
-if ${calcTemp}==true then "thermo_style   custom step temp press pe ke etotal vol density"
-if ${calcTemp}==false then "thermo_style   custom step press pe ke etotal vol density"
+# LAMMPS if statements with numeric comparison (1=true, 0=false)
+if ${calcTemp}==1 then "thermo_style   custom step temp press pe ke etotal vol density"
+if ${calcTemp}==0 then "thermo_style   custom step press pe ke etotal vol density"
 
 thermo          ${outputFreq}
 
@@ -59,7 +59,7 @@ dump            1 all custom ${outputFreq} trajectory.lammpstrj id type x y z vx
 dump_modify     1 sort id
 
 # Temperature output (if enabled)
-if ${calcTemp}==true then "fix            tempout all print ${outputFreq} '$(step),$(temp)' file temperature.csv screen no title 'Step,Temperature'"
+if ${calcTemp}==1 then "fix            tempout all print ${outputFreq} '$(step),$(temp)' file temperature.csv screen no title 'Step,Temperature'"
 
 # Energy output
 fix             energyout all print ${outputFreq} '$(step),$(pe),$(ke),$(etotal)' file energy.csv screen no title 'Step,PE,KE,TotalEnergy'
@@ -89,16 +89,16 @@ print           "Starting Production Phase"
 print           "=========================================="
 
 # Calculate Radial Distribution Function (RDF) if enabled
-# LAMMPS if statements can only execute one command, so we use separate if statements
-if ${calculateRDF}==true then "compute         rdf_calc all rdf 200 cutoff ${cutoff}"
-if ${calculateRDF}==true then "fix             rdf_output all ave/time 1 ${prodSteps} ${prodSteps} c_rdf_calc[*] file rdf.dat mode vector"
-if ${calculateRDF}==true then "print           'RDF calculation enabled - output will be saved to rdf.dat'"
+# LAMMPS if statements with numeric comparison (1=true, 0=false)
+if ${calculateRDF}==1 then "compute         rdf_calc all rdf 200 cutoff ${cutoff}"
+if ${calculateRDF}==1 then "fix             rdf_output all ave/time 1 ${prodSteps} ${prodSteps} c_rdf_calc[*] file rdf.dat mode vector"
+if ${calculateRDF}==1 then "print           'RDF calculation enabled - output will be saved to rdf.dat'"
 
 run             ${prodSteps}
 
 # Clean up RDF compute if it was enabled
-if ${calculateRDF}==true then "unfix           rdf_output"
-if ${calculateRDF}==true then "uncompute       rdf_calc"
+if ${calculateRDF}==1 then "unfix           rdf_output"
+if ${calculateRDF}==1 then "uncompute       rdf_calc"
 
 # ==================== Final Output ====================
 print           "=========================================="

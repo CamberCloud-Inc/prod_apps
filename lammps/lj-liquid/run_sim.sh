@@ -8,15 +8,25 @@ NUM_ATOMS=${1:-2000}
 DENSITY=${2:-0.8}
 TEMPERATURE=${3:-1.0}
 ENSEMBLE=${4:-nvt}
-CALC_TEMP=${5:-true}
+# Convert to numeric boolean (1/0) for LAMMPS comparison
+CALC_TEMP_RAW=${5:-true}
+if [ "$CALC_TEMP_RAW" = "true" ] || [ "$CALC_TEMP_RAW" = "True" ] || [ "$CALC_TEMP_RAW" = "TRUE" ]; then
+    CALC_TEMP=1
+else
+    CALC_TEMP=0
+fi
 CUTOFF=${6:-2.5}
 TIMESTEP=${7:-0.002}
 EQUIL_STEPS=${8:-20000}
 PROD_STEPS=${9:-100000}
 OUTPUT_FREQ=${10:-500}
-# Convert to lowercase to ensure LAMMPS comparison works
+# Convert to numeric boolean (1/0) for LAMMPS comparison
 CALC_RDF_RAW=${11:-false}
-CALC_RDF=$(echo "$CALC_RDF_RAW" | tr '[:upper:]' '[:lower:]')
+if [ "$CALC_RDF_RAW" = "true" ] || [ "$CALC_RDF_RAW" = "True" ] || [ "$CALC_RDF_RAW" = "TRUE" ]; then
+    CALC_RDF=1
+else
+    CALC_RDF=0
+fi
 
 # Create output directory
 mkdir -p output
