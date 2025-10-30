@@ -83,10 +83,12 @@ if ${ensemble}==npt then "fix            1 all npt temp ${temperature} ${tempera
 run             ${equilSteps}
 
 # ==================== Production Phase ====================
-# Note: Timesteps continue from equilibration (no reset needed)
 print           "=========================================="
 print           "Starting Production Phase"
 print           "=========================================="
+
+# Reset timestep counter for clean RDF output
+reset_timestep  0
 
 # Calculate Radial Distribution Function (RDF) if enabled
 # RDF syntax: compute ID group-ID rdf Nbin type1 type2 cutoff value
