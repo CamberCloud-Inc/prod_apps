@@ -31,7 +31,16 @@ mass            1 1.0            # mass = 1.0 in LJ units
 neighbor        0.3 bin
 neigh_modify    every 1 delay 0 check yes
 
+# ==================== Energy Minimization ====================
+# Minimize energy to remove any overlapping atoms before starting dynamics
+# This prevents "lost atoms" errors from atoms with excessive forces
+print           "=========================================="
+print           "Starting Energy Minimization"
+print           "=========================================="
+minimize        1.0e-4 1.0e-6 1000 10000
+
 # ==================== Initial Velocities ====================
+# Create velocities after minimization to match target temperature
 velocity        all create ${temperature} 12345 dist gaussian mom yes rot yes
 
 # ==================== Output Settings ====================
